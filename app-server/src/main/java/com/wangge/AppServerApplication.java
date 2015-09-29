@@ -25,7 +25,6 @@ public class AppServerApplication {
 		public void run(String... args) throws Exception {
 			User user=new User();
 			user.setPassword("zhangsan");
-			user.setHmacKey("11111111");
 			user.setUsername("zhangsan");
 			userRepository.save(user);
 		}

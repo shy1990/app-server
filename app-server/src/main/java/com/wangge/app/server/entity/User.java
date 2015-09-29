@@ -22,8 +22,6 @@ public class User extends  AbstractPersistable<Long>{
 	private String username;
 	private String password;
 	
-	private String hmacKey;
-	
 	public String getUsername() {
 		return username;
 	}
@@ -35,12 +33,6 @@ public class User extends  AbstractPersistable<Long>{
 	}
 	public void setPassword(String password) {
 		this.password = password;
-	}
-	public String getHmacKey() {
-		return hmacKey;
-	}
-	public void setHmacKey(String hmacKey) {
-		this.hmacKey = hmacKey;
 	}
 	
 }
