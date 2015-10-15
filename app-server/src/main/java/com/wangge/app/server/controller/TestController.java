@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TestController {
 	@RequestMapping(value = "/test")
-	public String test(String test,@RequestBody String content) {
-		System.out.println("test:"+test+"  "+content);
+	public String test(String test) {
+		System.out.println("test:"+test);
 		return test;
 	}
 }
