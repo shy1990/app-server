@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Component;
 
+import com.wangge.app.server.client.RestClient;
 import com.wangge.app.server.entity.User;
 import com.wangge.app.server.repository.UserRepository;
 
@@ -14,6 +15,8 @@ public class AppServerApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(AppServerApplication.class, args);
+		RestClient client=new RestClient();
+		client.test("hello");
 	}
 
 	@Component

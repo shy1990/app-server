@@ -11,7 +11,7 @@ import com.wangge.data.entity.AbstractPersistable;
  *
  */
 @Entity
-@Table(name="T_SERVER_PERSONNEL")
+@Table(name="T_SERVER_USER")
 public class User extends  AbstractPersistable<Long>{
 	/**
 	 * 
