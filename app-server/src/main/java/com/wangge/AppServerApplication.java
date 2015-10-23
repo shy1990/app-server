@@ -15,8 +15,8 @@ public class AppServerApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(AppServerApplication.class, args);
-		RestClient client=new RestClient();
-		client.test("hello");
+//		RestClient client=new RestClient();
+//		client.test("hello");
 	}
 
 	@Component

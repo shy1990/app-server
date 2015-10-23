@@ -16,7 +16,7 @@ public class JsonTest {
 		list.add("xiaoqiang");
 		System.out.println(JsonUtil.listToJson(list));
 		
-		Map<Object,Object> map = new HashMap<Object,Object>();
+		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("1", "shitou");
 		map.put("2", "xiaoming");
 		map.put("3", "xiaoqiang");

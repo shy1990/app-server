@@ -11,7 +11,7 @@ import com.wangge.data.entity.AbstractPersistable;
  *
  */
 @Entity
-@Table(name="T_SERVER_USER")
+@Table(name="T_USER")
 public class User extends  AbstractPersistable<Long>{
 	/**
 	 * 
@@ -21,7 +21,15 @@ public class User extends  AbstractPersistable<Long>{
 	@Column(unique=true)
 	private String username;
 	private String password;
+	private String nick;
 	
+	
+	public String getNick() {
+		return nick;
+	}
+	public void setNick(String nick) {
+		this.nick = nick;
+	}
 	public String getUsername() {
 		return username;
 	}
