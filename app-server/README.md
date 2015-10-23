@@ -29,20 +29,6 @@
 | v1/saleman/{username}/payPassword           | PUT       |   修改会员支付密码,要求输入旧密码      |
 | v1/saleman                       | POST            |  新增会员   |
 
-### 交易
-
-| URL     | HTTP Method     |  功能     |
-| :-------------                   | :-------------  | :------------- |
-| v1/tradings    | GET             |  查询交易列表  |
-| v1/tradings    | POST      | 新增交易     |
-| v1/tradings/{tradingNo}/status    | PUT      | 更改交易状态     |
-| v1/tradings/stats    | GET     | 交易信息统计     |
-
-
-### 其他
-| URL     | HTTP Method     |  功能     |
-| :-------------                   | :-------------  | :------------- |
-| v1/members/{username}/change    | POST             |  会员信息修改回调     |
 
 ## 请求格式
 
