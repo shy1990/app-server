@@ -4,10 +4,12 @@
 包含:
 * 区域管理
 * 业务员管理
-* 任务分配
+* 任务
+* 获取业务区域(业务是指扫街、注册、客户维护)
+* 客户管理
+* 照片上传
 * 扫街
 * 注册
-* 客户管理
 * 通知
 
 ## 快速参考
@@ -18,8 +20,10 @@
 ### 区域管理
 | URL     | HTTP Method     |  功能     |
 | :-------------                   | :-------------  | :------------- |
-| v1/region_custom                    | POST            |  新增自定义区域   |
-| v1/region_custom/{id}                   | GET            |  获取自定义区域信息   |
+| v1/region_custom                 | POST            |  新增自定义区域   |
+| v1/region_custom/{id}            | GET             |  获取自定义区域信息   |
+| v1/region_custom/{username}                | GET             |  获取业务区域信息(扫街、注册、维护)   |
+
 
 
 ### 业务员管理
@@ -31,15 +35,33 @@
 | v1/saleman/{username}/password           | PUT       |   修改会员支付密码,要求输入旧密码      |
 | v1/saleman                       | POST            |  新增业务员  |
 
-### 任务分配
+### 任务
 
 | URL     | HTTP Method     |  功能     |
 | :-------------                   | :-------------  | :------------- |
-| v1/task                       | POST            |  任务分配   |
-| v1/task/{username}      | GET             |  任务审核    |
-| v1/saleman/{username}/password           | PUT       |   修改会员支付密码,要求输入旧密码      |
-| v1/saleman                       | POST            |  新增业务员  |
+| v1/task/sweep                       | POST            |  扫街任务分配   |
+| v1/task/visit                       | POST            |  拜访任务分配   |
+| v1/task/{id}                        | GET             |  任务审核    |
 
+### 客户管理
+
+| URL     | HTTP Method     |  功能     |
+| :-------------                   | :-------------  | :------------- |
+| v1/member/{username}                   | get            |  查询扫街数据   |
+| v1/task/visit                       | POST            |  拜访任务分配   |
+| v1/task/{id}                        | GET             |  任务审核    |
+
+### 照片上传
+| URL     | HTTP Method     |  功能     |
+| :-------------                   | :-------------  | :------------- |
+| v1/image/upload                  | POST            |  照片上传 |
+
+### 扫街
+| URL     | HTTP Method     |  功能     |
+| :-------------                   | :-------------  | :------------- |
+| v1/saojie                       | POST            |  扫街数据上传 |
+| v1/saojie/visit                       | POST            |  拜访任务分配   |
+| v1/saojie/{id}                        | GET             |  任务审核    |
 
 ## 请求格式
 
@@ -147,6 +169,96 @@ curl -X GET \
 
 
 
+### 获取业务区域信息(扫街、注册、维护)
+
+#### 接口
+```
+GET v1/region_custom/{username}
+```
+#### 请求参数:
+
+通过username查询各个业务阶段所需要的区域数据
+
+* 示例:
+
+```shell
+curl -X GET \
+  -H "hmac:username:sign" \
+  -H "Content-Type:application/json" \
+  http://xxxx.com/region_custom/zhangsan 
+
+```
+
+#### 响应
+* 成功: 200
+
+  响应内容格式:`JSON` ，注册，客户维护字段不够自己添加,及时更新
+```json
+  {	
+  	"username":"zhangsan",
+    "open":[
+    		{"region_name":"大桥镇",
+    		"points":"123.123,87.565^123.123,87.565^123.123,87.565"},
+    		{"region_name":"B镇",
+    		"points":"123.123,87.565^123.123,87.565^123.123,87.565"}
+           ],
+     "nopne":[
+    		{"region_name":"大桥镇",
+    		"points":"123.123,87.565^123.123,87.565^123.123,87.565"},
+    		{"region_name":"B镇",
+    		"points":"123.123,87.565^123.123,87.565^123.123,87.565"}
+           ]
+  }
+
+
+## 客户管理
+### 获取扫街数据v1/member/{username}
+
+username不许为空.且唯一.
+
+#### 接口
+```
+GET v1/member/{username}
+```
+
+#### 请求参数:
+通过业务员username去查询
+
+* 示例:
+
+```shell
+curl -X POST \
+  -H "hmac:username:sign" \
+  -H "Content-Type:application/json" \
+  http://xxxx.com/v1/member/{username}
+
+```
+
+#### 响应
+* 成功: 200
+
+  响应内容格式:`JSON` 暂时这些不够可加，及时更新
+```json
+  
+  	[	
+  		{
+  			"name":"山大北路店",
+  			"id":"1001",
+  			"point":"120.333,67.333",
+  			"remark":"扫的第一家店"
+  		},
+  		{
+  			"name":"山大南路店",
+  			"id":"1002",
+  			"point":"124.333,67.343",
+  			"remark":"扫的第二家店"
+  		}
+  		
+  ]
+  
+
+
+
 
 ## 业务员
 
@@ -191,6 +303,40 @@ curl -X POST \
     "region":"ct10010"
   }
 
+
+
+## 图片上传
+
+### 新增业务员
+
+#### 接口
+```
+POST v1/images/upload
+```
+
+#### 请求参数:
+
+无
+
+* 示例:
+
+```shell
+curl -X POST \
+  -H "hmac:username:sign" \
+  -H "Content-Type:application/json" \
+  -d "{\"data\":\"图片压缩编码\"}"\
+  http://xxxx.com/images/upload
+
+```
+
+#### 响应
+* 成功: 200
+
+  响应内容格式:`JSON`
+```json
+  {
+    "image_url":"http://image.3j1688.com/a.jpg"
+  }
 
 
 
@@ -298,4 +444,189 @@ curl -X GET \
 #### 响应
 * 成功: 201
   created,无返回值
+  
+  
+### 扫街任务分配
+
+#### 接口
+```
+post  v1/task/sweep
+```
+
+#### 请求参数:
+
+
+| 名称          | 类型           | 定义          | 必需           | 默认值        | 说明           |
+|:------------- | :------------- |:------------- | :------------- |:------------- | :------------- |
+| name      | string         | 任务名字      |    是          |               |                |
+| description      | string         | 描述      |    否          |               |                |
+| end_time         | date         | 结束时间      |    是          |               |                |
+| status         | int         |任务状态  1:"未开始" 2："进行中" 3："审核中" 4:"已完结"5："已过期"     |    是          |               |                |
+| region_id         | string         | 行政区     |    是          |               |                |
+|
+| username         | string         | 任务责任人     |    是          |               |               |
+|
+| min_count         | int         | 最小扫街数     |    是          |               |                |
+
+
+
+* 示例:
+
+```shell
+curl -X POST \
+  -H "hmac:username:sign" \
+  -H "Content-Type:application/json" \
+   -d "{\"name\":\"扫街任务\",\"description\":\"这是一个扫街任务\",\"end_time\":\"2015-12-12\",\"status\":\"1\",\"region\":\"ct10010\",\"username\":\"zhangsan\",\"min_count\":\"100\"}"\
+  http://xxxx.com/v1/task/sweep
+
+```
+
+#### 响应
+* 成功: 201
+
+  响应内容格式:无
+ * 失败: 404
+ 
+ 
+### 拜访任务分配
+
+#### 接口
+```
+post  v1/task/visit
+```
+
+#### 请求参数:
+
+
+| 名称          | 类型           | 定义          | 必需           | 默认值        | 说明           |
+|:------------- | :------------- |:------------- | :------------- |:------------- | :------------- |
+| name      | string         | 任务名字      |    是          |               |                |
+| description      | string         | 描述      |    否          |               |                |
+| end_time         | date         | 结束时间      |    是          |               |                |
+| status         | int         |任务状态  1:"未开始" 2："进行中" 3："审核中" 4:"已完结" 5:"已过期"    |    是          |               |                |
+| username         | string         | 任务责任人     |    是          |               |               |
+|
+| member         | string         | 商城用户名    |    是          |               |                |
+|
+| image_url         | string         | 拜访图片url    |    是          |               |                |
+|
+| point         | string         | 拜访坐标   |    是          |               |                |
+|
+| remark         | string         | 备注    |    是          |               |                |
+|
+| visit_time         | date         | 拜访日期   |    是          |               |                |
+|
+
+
+
+* 示例:
+
+```shell
+curl -X POST \
+  -H "hmac:username:sign" \
+  -H "Content-Type:application/json" \
+   -d "{\"name\":\"拜访任务\",\"description\":\"这是一个拜访任务\",\"visit_time\":\"2015-12-12\",\"status\":\"1\",\"username\":\"zhangsan\",\"member\":\"xiaoming\",\"image_url\":\"http://xxx.com/xxxx.jpg\"
+   ,\"point\":\"1111.111,80.122\",\"remark\":\"备注\",\"visit_time\":\"2015-12-12\"}"\
+  http://xxxx.com/v1/task/sweep
+
+```
+
+#### 响应
+* 成功: 201
+
+  响应内容格式:无
+ * 失败: 404
+ 
+
+
+### 任务审核
+
+#### 接口
+GET  v1/task/{id}
+id审核任务的id
+
+
+#### 请求参数:
+ 名称          | 类型           | 定义          | 必需           | 默认值        | 说明           |
+|:------------- | :------------- |:------------- | :------------- |:------------- | :------------- |
+| name      | string         | 审核名称      |    是          |               |                |
+| description      | string         | 描述      |    否          |               |                |
+| accept         | int         | 1：接受 0：拒绝      |    是          |               |                |
+| remark         | string         |备注    |    否          |               |                |
+| username         | string         | 任务责任人     |    是          |               |               |
+| task_id         | string         | 任务id     |    是          |               |               |
+|
+
+
+
+* 示例:
+
+```shell
+curl -X GET \
+  -H "hmac:username:sign" \
+  -H "Content-Type:application/json" 
+   -d "{\"name\":\"审核任务\",\"description\":\"这是一个描述\",\"accept\":\"1\",\"remark\":\"备注\",\"username\":\"zhangsan\","task_id":\"任务id\"}"\
+  http://xxxx.com/v1/task/{id}
+
+```
+
+#### 响应
+* 成功: 200
+```json
+{
+ "task_id":"1125",
+ "accept":1,
+ "username":"zhangsan"
+	
+}
+
+  响应内容格式:无
+ * 失败: 404
+ 
+### 业务区域获取
+
+#### 接口
+GET  v1/task/{id}
+id审核任务的id
+
+
+#### 请求参数:
+ 名称          | 类型           | 定义          | 必需           | 默认值        | 说明           |
+|:------------- | :------------- |:------------- | :------------- |:------------- | :------------- |
+| name      | string         | 审核名称      |    是          |               |                |
+| description      | string         | 描述      |    否          |               |                |
+| accept         | int         | 1：接受 0：拒绝      |    是          |               |                |
+| remark         | string         |备注    |    否          |               |                |
+| username         | string         | 任务责任人     |    是          |               |               |
+| task_id         | string         | 任务id     |    是          |               |               |
+|
+
+
+
+* 示例:
+
+```shell
+curl -X GET \
+  -H "hmac:username:sign" \
+  -H "Content-Type:application/json" 
+   -d "{\"name\":\"审核任务\",\"description\":\"这是一个描述\",\"accept\":\"1\",\"remark\":\"备注\",\"username\":\"zhangsan\","task_id":\"任务id\"}"\
+  http://xxxx.com/v1/task/{id}
+
+```
+
+#### 响应
+* 成功: 200
+```json
+{
+ "task_id":"1125",
+ "accept":1,
+ "username":"zhangsan"
+	
+}
+
+  响应内容格式:无
+ * 失败: 404
+ 
+ 
+ 
   
