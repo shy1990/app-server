@@ -1,18 +1,26 @@
 package com.wangge;
 
+import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.web.client.RestTemplate;
+
+import com.wangge.common.web.client.HmacRestTemplet;
+import com.wangge.common.web.client.HmacRestTemplet.HttpClientOption;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = AppServerApplication.class)
-@WebAppConfiguration
 public class AppServerApplicationTests {
-
+	
 	@Test
 	public void contextLoads() {
+		RestTemplate rt=new HmacRestTemplet("zhangsan","zhangsan",HttpClientOption.ENABLE_REDIRECTS);
+		ResponseEntity obj=rt.getForEntity("http://localhost:8080/test?test={test}", JSONObject.class, "hello");
+		System.out.println(obj.getBody().toString());
+		
 	}
 
 }
