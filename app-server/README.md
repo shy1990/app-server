@@ -13,21 +13,32 @@
 ## 快速参考
 
 所有API访问都是通过http进行的.所有发送和接受的数据都是`json` 格式.
-### 区域
+
+
+### 区域管理
 | URL     | HTTP Method     |  功能     |
 | :-------------                   | :-------------  | :------------- |
 | v1/region_custom                    | POST            |  新增自定义区域   |
 | v1/region_custom/{id}                   | GET            |  获取自定义区域信息   |
 
 
-### 业务员
+### 业务员管理
 
 | URL     | HTTP Method     |  功能     |
 | :-------------                   | :-------------  | :------------- |
 | v1/saleman/login                       | POST            |  登陆   |
 | v1/saleman/{username}      | GET             |  获取指定业务员信息    |
-| v1/saleman/{username}/payPassword           | PUT       |   修改会员支付密码,要求输入旧密码      |
-| v1/saleman                       | POST            |  新增会员   |
+| v1/saleman/{username}/password           | PUT       |   修改会员支付密码,要求输入旧密码      |
+| v1/saleman                       | POST            |  新增业务员  |
+
+### 任务分配
+
+| URL     | HTTP Method     |  功能     |
+| :-------------                   | :-------------  | :------------- |
+| v1/task                       | POST            |  任务分配   |
+| v1/task/{username}      | GET             |  任务审核    |
+| v1/saleman/{username}/password           | PUT       |   修改会员支付密码,要求输入旧密码      |
+| v1/saleman                       | POST            |  新增业务员  |
 
 
 ## 请求格式
@@ -63,7 +74,8 @@ curl -X GET \
   http://xxxx.com/v1/tradings?sc_GT_amount=100&sc_EQ_status=success&sort=createTime,asc
 
 ```
-## 区域
+
+## 区域管理
 
 ### 新增自定义区域
 
@@ -89,6 +101,7 @@ curl -X POST \
   http://xxxx.com/v1/region_custom
 
 ```
+
 #### 响应
 * 成功: 201
 
@@ -99,7 +112,41 @@ curl -X POST \
     "points":"123,2345;123,3532",
     "region_country":"0102"
   }
+
+
+### 获取自定义区域信息
+
+#### 接口
 ```
+GET v1/region_custom/{id}   
+```
+#### 请求参数:
+
+id根据自定义区域id查询自定义区域信息
+
+* 示例:
+
+```shell
+curl -X GET \
+  -H "hmac:username:sign" \
+  -H "Content-Type:application/json" \
+  http://xxxx.com/region_custom/1001 
+
+```
+
+#### 响应
+* 成功: 200
+
+  响应内容格式:`JSON`
+```json
+  {
+    name:"大桥镇",
+    "points":"123,2345;123,3532",
+    "region_country":"0102"
+  }
+
+
+
 
 ## 业务员
 
@@ -143,5 +190,112 @@ curl -X POST \
     "nickname":"张三",
     "region":"ct10010"
   }
+
+
+
+
+### 业务员登录
+username,password,sim卡号,username不许为空.且唯一,password不许为空,phone不许为空.
+
+#### 接口
+```
+GET v1/saleman/login
 ```
 
+#### 请求参数:
+
+| 名称          | 类型           | 定义          | 必需           | 默认值        | 说明           |
+|:------------- | :------------- |:------------- | :------------- |:------------- | :------------- |
+| username      | string         | 用户名        |    是          |               |                |
+| password      | string         | 登陆密码      |    否          |               |                |
+| phone         | string         | 手机号码      |    是          |               |                |
+
+
+* 示例:
+
+```shell
+curl -X GET \
+  -H "hmac:username:sign" \
+  -H "Content-Type:application/json" \
+  -d "{\"username\":\"yewuzhangsan\",\"password\":\"1234556\",\"phone\":\"1888888888\"}"\
+  http://xxxx.com/v1/login
+
+```
+
+#### 响应
+* 成功: 201
+
+  响应内容格式:`JSON`
+```json
+  {
+    username:"yewuzhangsan",
+    "phone":"1888888888",
+    "nickname":"张三",
+    "region":"ct10010"
+  }
+
+  
+  
+### 获取业务员信息
+username不为空
+
+#### 接口
+```
+GET  v1/saleman/{username}
+```
+
+#### 请求参数:
+
+username是业务员的能录名唯一
+
+
+* 示例:
+
+```shell
+curl -X GET \
+  -H "hmac:username:sign" \
+  -H "Content-Type:application/json" \
+  http://xxxx.com/v1/saleman/zhangsan
+
+```
+
+#### 响应
+* 成功: 201
+
+  响应内容格式:`JSON`
+```json
+  {
+    username:"zhangsan ",
+    "phone":"1888888888",
+    "nickname":"张三",
+    "region":"ct10010"
+  }
+  
+  
+### 修改业务员密码
+username不为空,password
+
+#### 接口
+```
+GET  v1/saleman/{username}/password
+```
+
+#### 请求参数:
+
+username是业务员的能录名唯一
+
+
+* 示例:
+
+```shell
+curl -X GET \
+  -H "hmac:username:sign" \
+  -H "Content-Type:application/json" \
+  http://xxxx.com/v1/saleman/{username}/password
+
+```
+
+#### 响应
+* 成功: 201
+  created,无返回值
+  
