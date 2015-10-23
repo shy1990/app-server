@@ -14,11 +14,13 @@ import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Profile;
 
-import com.wangge.app.server.shiro.realm.UserRealm;
+import com.wangge.app.server.shiro.realm.SalesmanHmacReaml;
 import com.wangge.security.shiro.web.filter.authc.HmacAuthcFilter;
 
 @Configuration
+@Profile("prod")
 public class ShiroConfig {
 
 
@@ -37,7 +39,6 @@ public class ShiroConfig {
 
 		Map<String, String> filterChainDefinitionMapping = new LinkedHashMap<String, String>();
 		
-		filterChainDefinitionMapping.put("/console/**", "anon");
 		filterChainDefinitionMapping.put("/login", "anon");
 		filterChainDefinitionMapping.put("/**", "rest,hmacAuthc");
 		shiroFilter.setFilterChainDefinitionMap(filterChainDefinitionMapping);
@@ -48,14 +49,14 @@ public class ShiroConfig {
 	@Bean(name = "securityManager")
 	public org.apache.shiro.mgt.SecurityManager securityManager() {
 		DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-		securityManager.setRealm(userRealm());
+		securityManager.setRealm(salesmanRealm());
 		return securityManager;
 	}
 	
 	@Bean
-	@DependsOn({ "lifecycleBeanPostProcessor", "userRepository" })
-	public UserRealm userRealm() {
-		return new UserRealm();
+	@DependsOn({ "lifecycleBeanPostProcessor", "salesmanRepository" })
+	public SalesmanHmacReaml salesmanRealm() {
+		return new SalesmanHmacReaml();
 	}
 	@Bean
 	public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
