@@ -176,7 +176,7 @@ curl -X GET \
 ### 获取业务区域信息(扫街、注册、维护)
 
 #### 接口
-```
+
 GET v1/region_custom/{username}
 ```
 #### 请求参数:
