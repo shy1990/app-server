@@ -175,7 +175,7 @@ curl -X GET \
 ### 获取业务区域信息(扫街、注册、维护)
 
 #### 接口
-
+```
 GET v1/region_custom/{username}
 ```
 #### 请求参数:
@@ -212,7 +212,7 @@ curl -X GET \
     		"points":"123.123,87.565^123.123,87.565^123.123,87.565"}
            ]
   }
-
+```
 
 ## 客户管理
 ### 获取扫街数据v1/member/{username}
@@ -258,7 +258,7 @@ curl -X POST \
   		}
   		
   ]
-  
+  ```
 ### 注册地图查询
 
 username不许为空.且唯一.
@@ -317,7 +317,7 @@ curl -X POST \
 	  		  }
 	  		]
   	}
-   
+   ```
 
 ### 客户信息添加（信息录入）
 
@@ -385,7 +385,7 @@ curl -X POST \
 	  		]
   	}
   	
-  	
+ ``` 	
   	
 ### 关联店铺查询
 #### 接口
@@ -438,7 +438,7 @@ curl -X POST \
 	  		  }
 	  		]
   	}  	
-
+```
 
 ### 添加关联店铺
 #### 接口
@@ -511,7 +511,7 @@ curl -X POST \
 	  		]
   	}  	
 
-
+```
 
 
 
@@ -548,7 +548,7 @@ curl -X POST \
   {
     "image_url":"http://image.3j1688.com/a.jpg"
   }
-
+```
 
 
 ## 扫街
@@ -624,7 +624,7 @@ curl -X POST \
     "nickname":"张三",
     "region":"ct10010"
   }
-
+```
 
 
 
@@ -670,7 +670,7 @@ curl -X GET \
     "region":"ct10010"
   }
 
-  
+```  
   
 ### 获取业务员信息
 username不为空
@@ -706,7 +706,7 @@ curl -X GET \
     "nickname":"张三",
     "region":"ct10010"
   }
-  
+ ``` 
   
 ### 修改业务员密码
 username不为空,password
@@ -859,7 +859,7 @@ curl -X GET \
  "username":"zhangsan"
 	
 }
-
+```
   响应内容格式:无
  * 失败: 404
  
@@ -942,7 +942,7 @@ curl -X GET \
  "username":"zhangsan"
 	
 }
-
+```
   响应内容格式:无
  * 失败: 404
  
