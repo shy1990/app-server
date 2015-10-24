@@ -10,6 +10,7 @@
 * 照片上传
 * 扫街
 * 注册
+* 商品
 * 通知
 
 ## 快速参考
@@ -54,6 +55,9 @@
 | v1/member/rel              | get            |  关联店铺查询|
 | v1/member/rel/add            | POST            | 添加关联店铺 |
 | v1/member/phoneCount          | GET            | 根据月份分组查销量 |
+| v1/member/findMember         | GET            | 查询活跃客户、正常、暂缓、沉寂|
+| v1/member/findMemberName         | GET            |根据店铺名查询客户|
+| v1/member/findMemberName         | GET            |根据店铺名查询客户|
 
 ### 照片上传
 | URL     | HTTP Method     |  功能     |
@@ -66,6 +70,13 @@
 | v1/saojie                       | POST            |  扫街数据上传 |
 | v1/saojie/visit                       | POST            |  拜访任务分配   |
 | v1/saojie/{id}                        | GET             |  任务审核    |
+
+### 商品
+| URL     | HTTP Method     |  功能     |
+| :-------------                   | :-------------  | :------------- |
+| v1/goods/findName                       | GET            |  缺货根据商品名查询 |
+| v1/goods/findAll                       | GET            |  缺货查询所有  |
+
 
 ## 请求格式
 
@@ -295,11 +306,13 @@ curl -X POST \
 	  		  {
 	  		  	"name":"山大北路店",
 	  		  	"point":"123.23,68.36",
+	  		  	"purchase_number":"10",
 	  		  	"id":"1001"
 	  		  },
 	  		  {
 	  		  	"name":"山大南路店",
 	  		  	"point":"123.23,68.36",
+	  		  	"purchase_number":"12",
 	  		  	"id":"1002"
 	  		  }
 	  		],
@@ -308,11 +321,13 @@ curl -X POST \
 	  		  {
 	  		  	"name":"山大南路店",
 	  		  	"point":"121.23,69.36",
+	  		  	 "purchase_number":"13",
 	  		  	"id":"1003"
 	  		  },
 	  		  {
 	  		  	"name":"山大南路店",
 	  		  	"point":"127.23,61.36",
+	  		  	"purchase_number":"14",
 	  		  	"id":"1004"
 	  		  }
 	  		]
@@ -514,6 +529,92 @@ curl -X POST \
 ```
 
 
+### 查询活跃客户、正常、暂缓、沉寂
+#### 接口
+```
+GET  v1/member/findMember
+```
+
+#### 请求参数:
+member_type:1:活跃 2：正常 3：暂缓 4：沉寂
+
+* 示例:
+
+```shell
+curl -X POST \
+  -H "hmac:username:sign" \
+  -H "Content-Type:application/json" \
+  http://xxxx.com/v1/member/findMember
+
+```
+
+#### 响应
+* 成功: 200
+
+  响应内容格式:`JSON` 暂时这些不够可加，及时更新
+```json
+  
+  	{
+  		"username":"zhangsan",
+  		"region":"大桥镇",
+  		"name":"大桥手机专卖"
+	  		[ 
+	  		  {
+	  		  	"name":"魅族手机专卖店"
+	  		  	"adress":"山大路2999号路东",
+	  		  	"img_url":"http://www.3j1688.cn/11.jpg",
+	  		  	"before_date":"2015-12-12",
+	  		  	"id":"1001"
+	  		  }
+	  		]
+  	}  	
+
+```
+
+
+
+
+### 根据店铺名查询
+#### 接口
+```
+GET  v1/member/findMemberName
+```
+
+#### 请求参数:
+name:"小明手机店"
+
+* 示例:
+
+```shell
+curl -X POST \
+  -H "hmac:username:sign" \
+  -H "Content-Type:application/json" \
+  http://xxxx.com/v1/member/findMember
+
+```
+
+#### 响应
+* 成功: 200
+
+  响应内容格式:`JSON` 暂时这些不够可加，及时更新
+```json
+  
+  	{
+  		"username":"zhangsan",
+  		"region":"大桥镇",
+  		"name":"大桥手机专卖"
+	  		[ 
+	  		  {
+	  		  	"name":"魅族手机专卖店"
+	  		  	"adress":"山大路2999号路东",
+	  		  	"img_url":"http://www.3j1688.cn/11.jpg",
+	  		  	"before_date":"2015-12-12",
+	  		  	"id":"1001"
+	  		  }
+	  		]
+  	}
+
+```
 
 
 
@@ -945,6 +1046,53 @@ curl -X GET \
 ```
   响应内容格式:无
  * 失败: 404
+ 
+
+
+## 商品
+### 缺货查询
+
+#### 接口
+GET  v1/goods/findName
+id审核任务的id
+
+
+#### 请求参数:
+name:商品名字
+
+
+* 示例:
+
+```shell
+curl -X GET \
+  -H "hmac:username:sign" \
+  -H "Content-Type:application/json" 
+  http://xxxx.com/v1/goods/findName
+
+```
+
+#### 响应
+* 成功: 200
+```json
+{
+ "data":[
+ 	{
+ 		"img_url":"http://www.3j1688.cn/22.jpg",
+ 		"phone_name":"小米Note高配 双4G",
+ 		"stock_num":"3"
+ 	},
+ 	{
+ 		"img_url":"http://www.3j1688.cn/111.jpg",
+ 		"phone_name":"苹果手机",
+ 		"stock_num":"3"
+ 	}
+ ]
+	
+}
+```
+  响应内容格式:无
+ * 失败: 404
+ 
  
  
  
