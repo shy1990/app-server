@@ -19,6 +19,7 @@ public class Salesman extends User{
 	 */
 	private static final long serialVersionUID = 1L;
 	private String phone;
+	private String regionId;
 
 	public String getPhone() {
 		return phone;
@@ -27,6 +28,15 @@ public class Salesman extends User{
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
+
+	public String getRegionId() {
+		return regionId;
+	}
+
+	public void setRegionId(String regionId) {
+		this.regionId = regionId;
+	}
+	
 	
 	
 }
