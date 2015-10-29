@@ -13,6 +13,7 @@ import com.wangge.common.entity.CountryRegion;
 import com.wangge.common.entity.CustomRegion;
 import com.wangge.common.entity.Region;
 import com.wangge.common.repository.RegionRepository;
+//git.oschina.net/sylarlove/app-server.git
 import com.wangge.common.web.client.HmacRestTemplet;
 import com.wangge.common.web.client.HmacRestTemplet.HttpClientOption;
 

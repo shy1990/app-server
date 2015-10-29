@@ -9,25 +9,25 @@ import com.wangge.common.entity.User;
 
 /**
  * 业务员
+ * 
  * @author wujiming
  *
  */
 @Entity
 @Table(schema = "SANJI", name = "T_SALESMAN")
-public class Salesman extends User{
+public class Salesman extends User {
 	private static final long serialVersionUID = 1L;
 	@OneToOne
 	private Region region;
 	private String phone;
-	
-	
+
 	public Salesman() {
 		super();
 	}
 
-	public Salesman(String id, String username, String password,Region region) {
+	public Salesman(String id, String username, String password, Region region) {
 		super(id, username, password);
-		this.region=region;
+		this.region = region;
 	}
 
 	public Region getRegion() {
@@ -45,6 +45,5 @@ public class Salesman extends User{
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	
-	
+
 }
