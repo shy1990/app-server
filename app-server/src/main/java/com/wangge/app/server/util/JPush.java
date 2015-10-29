@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.net.SocketFactory;
 import javax.net.ssl.SSLContext;
@@ -36,13 +37,18 @@ public class JPush {
 	/*final static String app_key = "dfeb118726a94e1db31dcc30";
 	final static String secret = "867a719bfa592b9b217a8bcb";*/
 	//base64(appKey:masterSecret)
-	private static final String app_key = "4fc94e2480cad7414abc3e2a";
-	private static final String secret = "52943e21f5912d773e5f5be6";
-
+	private static final String app_key = "6f270e9813a7f75cc8e5558b";
+	private static final String secret = "310d355dc8a3229ea3355fbe";
+	
+//	final static String app_key_jzg = "d6aafc7b5e180b52ea0105b8"; // 教师端  AppKey	
+//	final static String secret_jzg = "066c9628866fb16827cb71c4"; // 教师端  API 主密码	
+//	
+//	final static String app_key_jzg_ios = "fdf7b575db5a349cbfdcac70"; // 教师端  AppKey	
+//	final static String secret_jzg_ios = "ff1bf4c0ee0f4d5783a46474"; // 教师端  API 主密码	
 	
 	final static String receiver_type = "5";// 是按imei值发送通知
-//	final static String platform = "android,ios";// String 必须
-//	final static String platformIOS = "ios";// String 必须
+	final static String platform = "android,ios";// String 必须
+	final static String platformIOS = "ios";// String 必须
 	final static String platformAndroid = "android";// String 必须  "android", "ios", "winphone"。
 	final static String msg_type = "1";// 指定是通知
 	final static int sendno = 3321;// int 必须
@@ -64,7 +70,7 @@ public class JPush {
 		map.put("context_type", context_type);
 		map.put("title", title);
 		map.put("extras", extras);
-		Gson gson = new Gson();	
+		Gson gson = new Gson();
 		String jsonString = gson.toJson(map);
 		return jsonString;
 	}
@@ -107,7 +113,7 @@ public class JPush {
 	 * @param extrasMap <额外字段主要用于业务需要>
 	 * @throws ParseException
 	 * @throws IOException
-	
+	 */
 	public static void sendNotificationV3(String pushType, Object jpushObj, String message, String title, Map<String, Object> extrasMap) throws ParseException, IOException {
 		Gson gson = new Gson();
 		HttpPost hp = new HttpPost(uriV3);// 请求方法对象
@@ -159,7 +165,6 @@ public class JPush {
 		String result = EntityUtils.toString(entity);
 		System.out.println(result);
 	}
-	 */
 	
 	/**
 	 * 推送 消息 Android
@@ -250,7 +255,7 @@ public class JPush {
 				ctx.init(null, new TrustManager[] { xtm }, null);
 				SSLSocketFactory socketFactory = new SSLSocketFactory(ctx);
 				httpClient.getConnectionManager().getSchemeRegistry().register(
-						new Scheme("https", (org.apache.http.conn.scheme.SocketFactory) socketFactory, 443));
+						new Scheme("https", socketFactory, 443));
 			} catch (Exception e) {
 				throw new RuntimeException();
 			}

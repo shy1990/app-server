@@ -6,13 +6,20 @@ import java.util.Map;
 
 import net.sf.json.JSONObject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping(value = "/mine")
 public class MineController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(MineController.class);
 	/**
 	 * 
 	 * @Description: 考核状态
@@ -23,8 +30,9 @@ public class MineController {
 	 * @author changjun
 	 * @date 2015年10月21日
 	 */
-	@RequestMapping(value = "/mine/examStatus")
-	public ResponseEntity<JSONObject> examStatus(String username){
+	@RequestMapping(value = "/examStatus",method = RequestMethod.POST)
+	public ResponseEntity<JSONObject> examStatus(@RequestBody	JSONObject json){
+		String username = json.getString("username");
 		Map<String,Object> map = new HashMap<String, Object>();
 		JSONObject jsonStr= JSONObject.fromObject(map);
 		return new ResponseEntity<JSONObject>(jsonStr, HttpStatus.OK);
@@ -39,8 +47,9 @@ public class MineController {
 	 * @author changjun
 	 * @date 2015年10月21日
 	 */
-	@RequestMapping(value = "/mine/takeGoodsMoney")
-	public ResponseEntity<JSONObject> takeGoodsMoney(String username){
+	@RequestMapping(value = "/takeGoodsMoney")
+	public ResponseEntity<JSONObject> takeGoodsMoney(@RequestBody  JSONObject json){
+		String username = json.getString("username");
 		Map<String,Object> map = new HashMap<String, Object>();
 		JSONObject jsonStr= JSONObject.fromObject(map);
 		return new ResponseEntity<JSONObject>(jsonStr, HttpStatus.OK);
@@ -57,7 +66,7 @@ public class MineController {
 	 * @author changjun
 	 * @date 2015年10月21日
 	 */
-	@RequestMapping(value = "/mine/noTaskMoneyRemark")
+	@RequestMapping(value = "/noTaskMoneyRemark")
 	public ResponseEntity<JSONObject> noTaskMoneyRemark(String username,String orderNum,String reason){
 		Map<String,Object> map = new HashMap<String, Object>();
 		JSONObject jsonStr= JSONObject.fromObject(map);
@@ -77,7 +86,7 @@ public class MineController {
 	 * @author changjun
 	 * @date 2015年10月21日
 	 */
-	@RequestMapping(value = "/mine/applyUpdatePrice")
+	@RequestMapping(value = "/applyUpdatePrice")
 	public ResponseEntity<JSONObject> applyUpdatePrice(String username,String town,String goodsname,Integer amount,String reason){
 		Map<String,Object> map = new HashMap<String, Object>();
 		JSONObject jsonStr= JSONObject.fromObject(map);
@@ -93,7 +102,7 @@ public class MineController {
 	 * @author changjun
 	 * @date 2015年10月21日
 	 */
-	@RequestMapping(value = "/mine/applyPriceState")
+	@RequestMapping(value = "/applyPriceState")
 	public ResponseEntity<JSONObject> applyPriceState(String username){
 		Map<String,Object> map = new HashMap<String, Object>();
 		JSONObject jsonStr= JSONObject.fromObject(map);
@@ -112,7 +121,7 @@ public class MineController {
 	 * @author changjun
 	 * @date 2015年10月21日
 	 */
-	@RequestMapping(value = "/mine/saveMoveMark")
+	@RequestMapping(value = "/saveMoveMark")
 	public ResponseEntity<JSONObject> saveMoveMark(String username,String[] potints,Date beginDate,Date endDate){
 		Map<String,Object> map = new HashMap<String, Object>();
 		JSONObject jsonStr= JSONObject.fromObject(map);
@@ -128,7 +137,7 @@ public class MineController {
 	 * @author changjun
 	 * @date 2015年10月21日
 	 */
-	@RequestMapping(value = "/mine/selMoveMarkList")
+	@RequestMapping(value = "/selMoveMarkList")
 	public ResponseEntity<JSONObject> selMoveMarkList(String username){
 		Map<String,Object> map = new HashMap<String, Object>();
 		JSONObject jsonStr= JSONObject.fromObject(map);
