@@ -15,7 +15,7 @@ public class JsonUtil {
      * @return 得到的Map解析的json语句
      */
     public  static String mapToJson(Map<Object, Object> map) {
-        return JSONArray.fromObject(map).toString();     
+        return JSONArray.fromObject(map).toString();
     }
     
     /**
