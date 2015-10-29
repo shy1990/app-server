@@ -17,11 +17,11 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(schema = "SANJI", name = "T_DATA_SAOJIE")
-@SequenceGenerator(schema="SANJI",name="SEQ_SAOJIE_DATA")
+@SequenceGenerator(schema="SANJI",sequenceName="SEQ_SAOJIE_DATA",name="seq")
 public class SaojieData implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="SEQ_SAOJIE_DATA")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="seq")
 	private Long id;
 	private String name;
 	private String remark;
