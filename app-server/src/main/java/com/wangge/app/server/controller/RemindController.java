@@ -1,9 +1,5 @@
 package com.wangge.app.server.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import net.sf.json.JSONObject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,10 +24,8 @@ public class RemindController {
 	 * @date 2015年10月21日
 	 */
 	@RequestMapping(value = "/orderList")
-	public ResponseEntity<JSONObject> orderList(String username){
-		Map<String,Object> map = new HashMap<String, Object>();
-		JSONObject jsonStr= JSONObject.fromObject(map);
-		return new ResponseEntity<JSONObject>(jsonStr, HttpStatus.OK);
+	public ResponseEntity<Object> orderList(String username){
+		return new ResponseEntity<Object>(null, HttpStatus.OK);
 	}
 	/**
 	 * 
@@ -44,10 +38,8 @@ public class RemindController {
 	 * @date 2015年10月29日
 	 */
 	@RequestMapping(value = "/selOrderDetail")
-	public ResponseEntity<JSONObject> selOrderDetail(String ordernum){
-		Map<String,Object> map = new HashMap<String, Object>();
-		JSONObject jsonStr= JSONObject.fromObject(map);
-		return new ResponseEntity<JSONObject>(jsonStr, HttpStatus.OK);
+	public ResponseEntity<Object> selOrderDetail(String ordernum){
+		return new ResponseEntity<Object>(null, HttpStatus.OK);
 	}
 	/**
 	 * 
@@ -60,10 +52,8 @@ public class RemindController {
 	 * @date 2015年10月21日
 	 */
 	@RequestMapping(value = "/newsRemindList")
-	public ResponseEntity<JSONObject> newsRemindList(String username){
-		Map<String,Object> map = new HashMap<String, Object>();
-		JSONObject jsonStr= JSONObject.fromObject(map);
-		return new ResponseEntity<JSONObject>(jsonStr, HttpStatus.OK);
+	public ResponseEntity<Object> newsRemindList(String username){
+		return new ResponseEntity<Object>(null, HttpStatus.OK);
 	}
 	/**
 	 * 
@@ -76,10 +66,8 @@ public class RemindController {
 	 * @date 2015年10月29日
 	 */
 	@RequestMapping(value = "/newsDetail")
-	public ResponseEntity<JSONObject> newsDetail(String newsId){
-		Map<String,Object> map = new HashMap<String, Object>();
-		JSONObject jsonStr= JSONObject.fromObject(map);
-		return new ResponseEntity<JSONObject>(jsonStr, HttpStatus.OK);
+	public ResponseEntity<Object> newsDetail(String newsId){
+		return new ResponseEntity<Object>(null, HttpStatus.OK);
 	}
 	/**
 	 * 
@@ -91,10 +79,8 @@ public class RemindController {
 	 * @date 2015年10月21日
 	 */
 	@RequestMapping(value = "/activiRemind")
-	public ResponseEntity<JSONObject> activiRemind(){
-		Map<String,Object> map = new HashMap<String, Object>();
-		JSONObject jsonStr= JSONObject.fromObject(map);
-		return new ResponseEntity<JSONObject>(jsonStr, HttpStatus.OK);
+	public ResponseEntity<Object> activiRemind(){
+		return new ResponseEntity<Object>(null, HttpStatus.OK);
 	}
 	/**
 	 * 
@@ -107,9 +93,7 @@ public class RemindController {
 	 * @date 2015年10月29日
 	 */
 	@RequestMapping(value = "/activiDetail")
-	public ResponseEntity<JSONObject> activiDetail(String id){
-		Map<String,Object> map = new HashMap<String, Object>();
-		JSONObject jsonStr= JSONObject.fromObject(map);
-		return new ResponseEntity<JSONObject>(jsonStr, HttpStatus.OK);
+	public ResponseEntity<Object> activiDetail(String id){
+		return new ResponseEntity<Object>(null, HttpStatus.OK);
 	}
 }

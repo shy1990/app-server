@@ -6,4 +6,5 @@ import com.wangge.app.server.entity.Message;
 
 
 public interface MessageRepository extends JpaRepository<Message, Long>{
+	
 }

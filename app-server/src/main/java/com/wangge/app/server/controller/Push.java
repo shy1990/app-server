@@ -39,7 +39,6 @@ public class Push{
 	
 	@Autowired
 	private MessageRepository mes;
-	private Message message;
 	
 	/**
 	 * 
@@ -70,7 +69,7 @@ public class Push{
 //		}
 		//String title,String msg,String alias,String type
 		String str = jpush.send("下单通知", msg, mobiles);
-		message = new Message();
+		Message message = new Message();
 		message.setCreateDate(new java.sql.Date(new java.util.Date().getTime()));
 		message.setContent(msg);
 		message.setReceiver(mobiles);
