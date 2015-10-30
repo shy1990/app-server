@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.wangge.AppServerApplication;
-import com.wangge.app.server.entity.Order;
 import com.wangge.common.web.client.HmacRestTemplet;
 import com.wangge.common.web.client.HmacRestTemplet.HttpClientOption;
 
@@ -25,7 +24,6 @@ public class RestClient {
 	
 		@Test
 		public void contextLoads() {
-			Order order = new Order();
 			RestTemplate rt=new HmacRestTemplet("zhangsan","zhangsan",HttpClientOption.ENABLE_REDIRECTS);
 //			ResponseEntity obj=rt.getForEntity("http://localhost:8080/test?test={test}&str={str}", JSONObject.class, "hello","hi");
 //			ResponseEntity<JSONObject> obj=rt.getForEntity("http://localhost:8080/pushNewOrder?state={state}&info={info}",  JSONObject.class, "lisi","yewu01");

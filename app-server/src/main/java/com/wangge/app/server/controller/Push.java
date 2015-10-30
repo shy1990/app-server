@@ -2,6 +2,10 @@ package com.wangge.app.server.controller;
 
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -47,12 +51,13 @@ public class Push{
 	 * @param @param info
 	 * @param @return
 	 * @return ResponseEntity<JSONObject>
+	 * @throws ParseException 
 	 * @throws
 	 * @author changjun
 	 * @date 2015年10月23日
 	 */
 	@RequestMapping(value = { "/pushNewOrder" },method = RequestMethod.POST)
-	public boolean pushNewOrder(String msg,String mobiles) {
+	public boolean pushNewOrder(String msg,String mobiles) throws ParseException{
 		/**
 		 * 会员下单通知:【222222222222222】山东省济南市历下区天桥店下单成功，订单商品
 		 */
@@ -70,7 +75,7 @@ public class Push{
 		//String title,String msg,String alias,String type
 		String str = jpush.send("下单通知", msg, mobiles);
 		Message message = new Message();
-		message.setCreateDate(new java.sql.Date(new java.util.Date().getTime()));
+		message.setCreateTime(new Date());
 		message.setContent(msg);
 		message.setReceiver(mobiles);
 		message.setResult(str);
@@ -85,17 +90,32 @@ public class Push{
 
 	/**
 	 * 
-	 * @Description: 消息通知
-	 * @param @return
-	 * @return ResponseEntity<JSONObject>
+	 * @Description: 系统通知
+	 * @param @param title
+	 * @param @param msg
+	 * @param @param mobiles
+	 * @param @return   
+	 * @return boolean  
 	 * @throws
 	 * @author changjun
-	 * @date 2015年10月23日
+	 * @date 2015年10月30日
 	 */
 	@RequestMapping(value={ "/pushNews" },method = RequestMethod.POST)
-	public boolean pushNews(String msg,String mobiles) {
+	public boolean pushNews(String title,String msg,String mobiles) {
 		if(mobiles!=null && !"".equals(mobiles)){
-//			return jpush.send("系统通知", msg, mobiles);
+			String str = jpush.send(title, msg, mobiles);
+			Message message = new Message();
+			message.setCreateTime(new Date());
+			message.setContent(msg);
+			message.setReceiver(mobiles);
+			message.setResult(str);
+			message.setType("0");
+			mes.save(message);
+			if(str.contains("发送成功")){
+				return true;
+			}
+			return false;
+			
 		}
 		return false;
 	}
@@ -111,7 +131,17 @@ public class Push{
 	 */
 	@RequestMapping({ "/pushActivi" })
 	public boolean pushActivi(String msg) {
-//		return jpush.send("系统通知", msg, "all");
+		String str = jpush.send("活动通知", msg, "all");
+		Message message = new Message();
+		message.setCreateTime(new Date());
+		message.setContent(msg);
+		message.setReceiver("all");
+		message.setResult(str);
+		message.setType("0");
+		mes.save(message);
+		if(str.contains("发送成功")){
+			return true;
+		}
 		return false;
 	}
 
@@ -126,7 +156,17 @@ public class Push{
 	 */
 	@RequestMapping({ "/visitTask" })
 	public boolean visitTask(String msg,String mobiles) {
-//		return jpush.send("系统通知", msg, mobiles);
+		String str = jpush.send("拜访通知", msg, mobiles);
+		Message message = new Message();
+		message.setCreateTime(new Date());
+		message.setContent(msg);
+		message.setReceiver(mobiles);
+		message.setResult(str);
+		message.setType("0");
+		mes.save(message);
+		if(str.contains("发送成功")){
+			return true;
+		}
 		return false;
 	}
 
@@ -141,7 +181,17 @@ public class Push{
 	 */
 	@RequestMapping({ "/pushTakeMoney" })
 	public boolean pushTakeMoney(String msg,String mobiles) {
-//		return jpush.send("系统通知", msg, mobiles);
+		String str = jpush.send("收货款通知", msg, mobiles);
+		Message message = new Message();
+		message.setCreateTime(new Date());
+		message.setContent(msg);
+		message.setReceiver(mobiles);
+		message.setResult(str);
+		message.setType("0");
+		mes.save(message);
+		if(str.contains("发送成功")){
+			return true;
+		}
 		return false;
 	}
 }

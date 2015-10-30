@@ -67,7 +67,7 @@ public class JpushClient {
 			jpush.setEnableSSL(true);
 			MessageResult msgResult = null;
 			//如果别名为空,则向所有用户推送
-			if("all".equals(alias)){
+			if("all".equalsIgnoreCase(alias)){
 				msgResult = jpush.sendNotificationWithAppKey(sendNo, title, msg);
 				
 			}else{
