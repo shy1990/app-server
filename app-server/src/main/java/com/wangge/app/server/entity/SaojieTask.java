@@ -10,6 +10,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wangge.common.entity.Region;
 import com.wangge.common.entity.Task;
 
@@ -23,6 +24,7 @@ import com.wangge.common.entity.Task;
 @Table(schema = "SANJI", name = "T_TASK_SAOJIE")
 public class SaojieTask extends Task {
 	private static final long serialVersionUID = 1L;
+	@JsonIgnore
 	@OneToOne
 	@JoinColumn(name = "SAL_ID")
 	private Salesman salesman;
