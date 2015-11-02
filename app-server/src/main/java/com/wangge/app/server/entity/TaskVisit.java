@@ -19,7 +19,6 @@ import com.wangge.common.entity.User;
 public class TaskVisit extends User{
 	private static final long serialVersionUID = 1L;
 	
-	private int id; //任务id
 //	@OneToOne
 //	private String username; //业务员
 //	private String member; //商城用户名
@@ -28,12 +27,6 @@ public class TaskVisit extends User{
 	private String remark; //备注
 	private Date visit_time; //拜访时间
 	
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
 	/*public String getUsername() {
 		return username;
 	}

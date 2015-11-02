@@ -24,10 +24,9 @@ public class UserMember extends User{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private String id; //用户id
 //	@OneToOne(cascade=CascadeType.ALL)
 //    @JoinColumn(name="id")
-	private Region region;
+//	private Region region;
 	private String shopName; //店名
 	private String phone; //手机号
 	private String consignee; //收货人
@@ -39,18 +38,18 @@ public class UserMember extends User{
 	private Date createTime; //创建时间
 	private String coordinate; //坐标
 	
-	public String getId() {
+	/*public String getId() {
 		return id;
 	}
 	public void setId(String id) {
 		this.id = id;
-	}
-	public Region getRegion() {
+	}*/
+	/*public Region getRegion() {
 		return region;
 	}
 	public void setRegion(Region region) {
 		this.region = region;
-	}
+	}*/
 	public String getShopName() {
 		return shopName;
 	}
