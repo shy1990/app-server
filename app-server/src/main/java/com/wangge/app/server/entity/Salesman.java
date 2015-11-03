@@ -29,8 +29,6 @@ public class Salesman extends User {
 
 	@OneToMany(mappedBy="taskSaojie")
 	private Set<TaskSaojie>  taskSaojie;
-	@OneToMany(mappedBy="taskSaojie")
-	private Set<TaskSaojie>  taskSaojie;
 
 	public Salesman() {
 		super();
@@ -57,13 +55,6 @@ public class Salesman extends User {
 		this.customRegion = customRegion;
 	}
 	
-	public Set<TaskSaojie> getTaskSaojie() {
-		return taskSaojie;
-	}
-
-	public void setTaskSaojie(Set<TaskSaojie> taskSaojie) {
-		this.taskSaojie = taskSaojie;
-	}
 
 /*	public Region getRegion() {
 		return region;
