@@ -3,11 +3,18 @@ package com.wangge.app.server.entity;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.wangge.common.entity.Region;
 import com.wangge.common.entity.User;
 
 /**
@@ -17,16 +24,18 @@ import com.wangge.common.entity.User;
  */
 @Entity
 @Table(schema = "SANJI", name = "T_USER_MEMBER")
-public class UserMember extends User{
+public class UserMember extends User {
 	
 	/**
 	 * 已注册商城用户
 	 */
 	private static final long serialVersionUID = 1L;
 	
-//	@OneToOne(cascade=CascadeType.ALL)
-//    @JoinColumn(name="id")
-//	private Region region;
+	@OneToOne
+	private Region region;
+	@OneToOne
+	@JoinColumn(name = "id")
+	private Salesman salesman;
 	private String shopName; //店名
 	private String phone; //手机号
 	private String consignee; //收货人
@@ -38,18 +47,18 @@ public class UserMember extends User{
 	private Date createTime; //创建时间
 	private String coordinate; //坐标
 	
-	/*public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}*/
-	/*public Region getRegion() {
+	public Region getRegion() {
 		return region;
 	}
 	public void setRegion(Region region) {
 		this.region = region;
-	}*/
+	}
+	public Salesman getSalesman() {
+		return salesman;
+	}
+	public void setSalesman(Salesman salesman) {
+		this.salesman = salesman;
+	}
 	public String getShopName() {
 		return shopName;
 	}
