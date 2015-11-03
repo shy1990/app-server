@@ -54,7 +54,6 @@ public class Salesman extends User {
 	public void setCustomRegion(CustomRegion customRegion) {
 		this.customRegion = customRegion;
 	}
-	
 
 /*	public Region getRegion() {
 		return region;

@@ -1,4 +1,3 @@
-
 package com.wangge.app.server.pojo;
 
 import java.io.Serializable;
