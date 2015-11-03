@@ -1,6 +1,9 @@
 package com.wangge.app.server.entity;
 
+import java.util.Set;
+
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -20,6 +23,8 @@ public class Salesman extends User {
 	@OneToOne
 	private Region region;
 	private String phone;
+	@OneToMany(mappedBy="taskSaojie")
+	private Set<TaskSaojie>  taskSaojie;
 
 	public Salesman() {
 		super();
@@ -28,6 +33,14 @@ public class Salesman extends User {
 	public Salesman(String id, String username, String password, Region region) {
 		super(id, username, password);
 		this.region = region;
+	}
+	
+	public Set<TaskSaojie> getTaskSaojie() {
+		return taskSaojie;
+	}
+
+	public void setTaskSaojie(Set<TaskSaojie> taskSaojie) {
+		this.taskSaojie = taskSaojie;
 	}
 
 	public Region getRegion() {

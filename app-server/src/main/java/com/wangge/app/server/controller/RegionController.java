@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.collect.Lists;
+import com.wangge.app.server.repository.SalesmanRepository;
 import com.wangge.common.entity.CustomRegion;
 import com.wangge.common.entity.Region;
 
@@ -22,6 +25,8 @@ public class RegionController {
 
 	private static final Logger logger = Logger
 			.getLogger(RegionController.class);
+	@Resource
+	private SalesmanRepository salesmanRepository;
 	/**
 	 * 业务人员区域信息
 	 * @param username
@@ -30,6 +35,8 @@ public class RegionController {
 	@RequestMapping(value="/{username}/regions",method=RequestMethod.GET)
 	public ResponseEntity<Map<String,List<Region>>> salesmanRegions(@PathVariable("username") String username){
 		logger.debug("username:"+username);
+		
+		salesmanRepository.findByUsername(username);
 		
 		Region r1=new CustomRegion("101","女儿国","123.123,87.565^123.123,87.565^123.123,87.565");
 		Region r2=new CustomRegion("101","男儿国","123.123,87.565^123.123,87.565^123.123,87.565");
