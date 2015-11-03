@@ -36,9 +36,8 @@ public class JPush {
 	final static String uriV3 = "https://api.jpush.cn/v3/push";
 	/*final static String app_key = "dfeb118726a94e1db31dcc30";
 	final static String secret = "867a719bfa592b9b217a8bcb";*/
-	//base64(appKey:masterSecret)
 	private static final String app_key = "6f270e9813a7f75cc8e5558b";
-	private static final String secret = "310d355dc8a3229ea3355fbe";
+	private static final String secret =  "310d355dc8a3229ea3355fbe";
 	
 //	final static String app_key_jzg = "d6aafc7b5e180b52ea0105b8"; // 教师端  AppKey	
 //	final static String secret_jzg = "066c9628866fb16827cb71c4"; // 教师端  API 主密码	
@@ -46,12 +45,12 @@ public class JPush {
 //	final static String app_key_jzg_ios = "fdf7b575db5a349cbfdcac70"; // 教师端  AppKey	
 //	final static String secret_jzg_ios = "ff1bf4c0ee0f4d5783a46474"; // 教师端  API 主密码	
 	
-	final static String receiver_type = "5";// 是按imei值发送通知
-	final static String platform = "android,ios";// String 必须
-	final static String platformIOS = "ios";// String 必须
+//	final static String receiver_type = "5";// 是按imei值发送通知
+//	final static String platform = "android,ios";// String 必须
+//	final static String platformIOS = "ios";// String 必须
 	final static String platformAndroid = "android";// String 必须  "android", "ios", "winphone"。
-	final static String msg_type = "1";// 指定是通知
-	final static int sendno = 3321;// int 必须
+//	final static String msg_type = "1";// 指定是通知
+//	final static int sendno = 3321;// int 必须
 
 
 	/**
@@ -114,57 +113,57 @@ public class JPush {
 	 * @throws ParseException
 	 * @throws IOException
 	 */
-	public static void sendNotificationV3(String pushType, Object jpushObj, String message, String title, Map<String, Object> extrasMap) throws ParseException, IOException {
-		Gson gson = new Gson();
-		HttpPost hp = new HttpPost(uriV3);// 请求方法对象
-		List<NameValuePair> he = new ArrayList<NameValuePair>();// 请求参数对象
-		// 请求头设置
-		hp.addHeader("Content-Type", "application/json");
-		hp.addHeader("Authorization", "Basic "+(new sun.misc.BASE64Encoder().encode((app_key+":"+secret).getBytes())));
-		// 推送平台设置
-		he.add(new BasicNameValuePair("platform", platformIOS));
-		// 推送类型设置
-		Map<String, Object> audienceMap = new HashMap<String, Object>();
-		if(null == pushType || "".equals(pushType)){
-			pushType = "registration_id";
-		}
-		if("all".equals(pushType)){
-			he.add(new BasicNameValuePair("audience", "all"));
-		}else{
-			String[] jpushArr = null;
-			if(jpushObj instanceof String[]){
-				jpushArr = (String[])jpushObj;
-			} else if(jpushObj instanceof String){
-				jpushArr = ((String)jpushObj).split(",");
-			} else {
-				throw new ParseException("jpushObj:极光推送参数类型不正确！必须为String或者数组");
-			}
-			audienceMap.put(pushType, jpushArr);
-			he.add(new BasicNameValuePair("audience", gson.toJson(audienceMap)));
-		}
-		// 推送通知设置
-		Map<String, Object> notificationMap = new HashMap<String, Object>();
-		Map<String, Object> iosMap = new HashMap<String, Object>();
-		notificationMap.put("ios", iosMap);
-		iosMap.put("alert", message);
-		iosMap.put("extras", extrasMap);
-		iosMap.put("title", title);
-//		iosMap.put("sound", "default");
-//		iosMap.put("badge", "+1");
-		he.add(new BasicNameValuePair("notification", gson.toJson(notificationMap)));
-		// 推送可选项设置
-		Map<String, Object> optionsMap = new HashMap<String, Object>();
-		optionsMap.put("apns_production", false);  // true:生产环境 false:开发环境
-        he.add(new BasicNameValuePair("options", gson.toJson(optionsMap)));
-		hp.setEntity(new UrlEncodedFormEntity(he, HTTP.UTF_8));
-		
-        HttpClient httpClient = getClient(true);
-		HttpResponse hResponse = httpClient.execute(hp);
-		hResponse.getStatusLine().getStatusCode();
-		HttpEntity entity = hResponse.getEntity();
-		String result = EntityUtils.toString(entity);
-		System.out.println(result);
-	}
+//	public static void sendNotificationV3(String pushType, Object jpushObj, String message, String title, Map<String, Object> extrasMap) throws ParseException, IOException {
+//		Gson gson = new Gson();
+//		HttpPost hp = new HttpPost(uriV3);// 请求方法对象
+//		List<NameValuePair> he = new ArrayList<NameValuePair>();// 请求参数对象
+//		// 请求头设置
+//		hp.addHeader("Content-Type", "application/json");
+//		hp.addHeader("Authorization", "Basic "+(new sun.misc.BASE64Encoder().encode((app_key+":"+secret).getBytes())));
+//		// 推送平台设置
+//		he.add(new BasicNameValuePair("platform", platformIOS));
+//		// 推送类型设置
+//		Map<String, Object> audienceMap = new HashMap<String, Object>();
+//		if(null == pushType || "".equals(pushType)){
+//			pushType = "registration_id";
+//		}
+//		if("all".equals(pushType)){
+//			he.add(new BasicNameValuePair("audience", "all"));
+//		}else{
+//			String[] jpushArr = null;
+//			if(jpushObj instanceof String[]){
+//				jpushArr = (String[])jpushObj;
+//			} else if(jpushObj instanceof String){
+//				jpushArr = ((String)jpushObj).split(",");
+//			} else {
+//				throw new ParseException("jpushObj:极光推送参数类型不正确！必须为String或者数组");
+//			}
+//			audienceMap.put(pushType, jpushArr);
+//			he.add(new BasicNameValuePair("audience", gson.toJson(audienceMap)));
+//		}
+//		// 推送通知设置
+//		Map<String, Object> notificationMap = new HashMap<String, Object>();
+//		Map<String, Object> iosMap = new HashMap<String, Object>();
+//		notificationMap.put("ios", iosMap);
+//		iosMap.put("alert", message);
+//		iosMap.put("extras", extrasMap);
+//		iosMap.put("title", title);
+////		iosMap.put("sound", "default");
+////		iosMap.put("badge", "+1");
+//		he.add(new BasicNameValuePair("notification", gson.toJson(notificationMap)));
+//		// 推送可选项设置
+//		Map<String, Object> optionsMap = new HashMap<String, Object>();
+//		optionsMap.put("apns_production", false);  // true:生产环境 false:开发环境
+//        he.add(new BasicNameValuePair("options", gson.toJson(optionsMap)));
+//		hp.setEntity(new UrlEncodedFormEntity(he, HTTP.UTF_8));
+//		
+//        HttpClient httpClient = getClient(true);
+//		HttpResponse hResponse = httpClient.execute(hp);
+//		hResponse.getStatusLine().getStatusCode();
+//		HttpEntity entity = hResponse.getEntity();
+//		String result = EntityUtils.toString(entity);
+//		System.out.println(result);
+//	}
 	
 	/**
 	 * 推送 消息 Android

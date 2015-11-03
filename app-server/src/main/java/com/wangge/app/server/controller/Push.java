@@ -2,8 +2,8 @@ package com.wangge.app.server.controller;
 
 
 
+import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.EntityManager;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.wangge.app.server.entity.Message;
 import com.wangge.app.server.repository.MessageRepository;
 import com.wangge.app.server.repository.SalesmanRepository;
+import com.wangge.app.server.util.JPush;
 import com.wangge.app.server.util.JpushClient;
 
 @RestController
@@ -57,7 +58,7 @@ public class Push{
 	 * @date 2015年10月23日
 	 */
 	@RequestMapping(value = { "/pushNewOrder" },method = RequestMethod.POST)
-	public boolean pushNewOrder(String msg,String mobiles) throws ParseException{
+	public boolean pushNewOrder(String msg,String mobiles){
 		/**
 		 * 会员下单通知:【222222222222222】山东省济南市历下区天桥店下单成功，订单商品
 		 */
@@ -129,7 +130,7 @@ public class Push{
 	 * @author changjun
 	 * @date 2015年10月23日
 	 */
-	@RequestMapping({ "/pushActivi" })
+	@RequestMapping(value={"/pushActivi" },method = RequestMethod.POST)
 	public boolean pushActivi(String msg) {
 		String str = jpush.send("活动通知", msg, "all");
 		Message message = new Message();
@@ -154,19 +155,30 @@ public class Push{
 	 * @author changjun
 	 * @date 2015年10月23日
 	 */
-	@RequestMapping({ "/visitTask" })
+	@RequestMapping(value={"/visitTask"},method = RequestMethod.POST)
 	public boolean visitTask(String msg,String mobiles) {
-		String str = jpush.send("拜访通知", msg, mobiles);
-		Message message = new Message();
-		message.setCreateTime(new Date());
-		message.setContent(msg);
-		message.setReceiver(mobiles);
-		message.setResult(str);
-		message.setType("0");
-		mes.save(message);
-		if(str.contains("发送成功")){
-			return true;
+		try {
+			System.out.println(mobiles+"***"+msg);
+			JPush.sendMessageV3("all", mobiles, msg, "拜访通知", null);
+		} catch (org.apache.http.ParseException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		
+		
+		
+		
+//		String str = jpush.send("拜访通知", msg, mobiles);
+//		Message message = new Message();
+//		message.setCreateTime(new Date());
+//		message.setContent(msg);
+//		message.setReceiver(mobiles);
+//		message.setResult(str);
+//		message.setType("0");
+//		mes.save(message);
+//		if(str.contains("发送成功")){
+//			return true;
+//		}
 		return false;
 	}
 
@@ -179,7 +191,7 @@ public class Push{
 	 * @author changjun
 	 * @date 2015年10月23日
 	 */
-	@RequestMapping({ "/pushTakeMoney" })
+	@RequestMapping(value={"/pushTakeMoney" },method = RequestMethod.POST)
 	public boolean pushTakeMoney(String msg,String mobiles) {
 		String str = jpush.send("收货款通知", msg, mobiles);
 		Message message = new Message();

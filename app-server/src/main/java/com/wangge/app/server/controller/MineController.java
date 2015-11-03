@@ -1,7 +1,10 @@
 package com.wangge.app.server.controller;
 
 
+import java.text.DecimalFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
-import com.wangge.app.server.entity.Salesman;
+import com.wangge.app.server.entity.Exam;
 
 @RestController
 @RequestMapping(value = "/mine")
@@ -32,15 +35,24 @@ public class MineController {
 	 * @date 2015年10月21日
 	 */
 	@RequestMapping(value = "/examStatus",method = RequestMethod.POST)
-	public ResponseEntity<Salesman> examStatus(@RequestBody	JSONObject json){
+	public ResponseEntity<Exam> examStatus(@RequestBody	JSONObject json){
 		String username = json.getString("username");
-		logger.debug(username);
-		Salesman sa = new Salesman();
-		sa.setNickname("小明");
-		sa.setPassword("111");
-		sa.setPhone("110");
-		sa.setUsername(username);
-		return new ResponseEntity<Salesman>(sa, HttpStatus.OK);
+		Exam ex = new Exam();
+		ex.setStage("第一阶段");
+		ex.setBeginDate(new Date());
+		ex.setDoneNum("7");
+		ex.setEndDate(new Date());
+		ex.setKpiNum("10");
+		double rate = 7D / 10D;
+		DecimalFormat df = new DecimalFormat("0.00%");   
+		ex.setRate(df.format(rate));
+		ex.setRemark("考核审核标准：二次提货客户达到10家即为达标");
+		Map<String,Integer> map = new HashMap<String, Integer>();
+		map.put("郭屯镇", 5);
+		map.put("随官屯", 2);
+		ex.setMap(map);
+		
+		return new ResponseEntity<Exam>(ex, HttpStatus.OK);
 	}
 	/**
 	 * 
@@ -70,9 +82,12 @@ public class MineController {
 	 * @date 2015年10月21日
 	 */
 	@RequestMapping(value = "/noTaskMoneyRemark")
-	public ResponseEntity<Object> noTaskMoneyRemark(String username,String orderNum,String reason){
-		
-		return new ResponseEntity<Object>(null, HttpStatus.OK);
+	public ResponseEntity<Void> noTaskMoneyRemark(@RequestBody  JSONObject json){
+		String username = json.getString("username");
+		String orderNum = json.getString("orderNum");
+		String reason = json.getString("reason");
+		System.out.println(username+":"+orderNum+":"+reason);
+		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 	/**
 	 * 
@@ -89,8 +104,13 @@ public class MineController {
 	 * @date 2015年10月21日
 	 */
 	@RequestMapping(value = "/applyUpdatePrice")
-	public ResponseEntity<Object> applyUpdatePrice(String username,String town,String goodsname,Integer amount,String reason){
-		return new ResponseEntity<Object>(null, HttpStatus.OK);
+	public ResponseEntity<Void> applyUpdatePrice(@RequestBody  JSONObject json){
+		String username = json.getString("username");
+		String town = json.getString("town");
+		String goodsname = json.getString("goodsname");
+		String amount = json.getString("amount");
+		String reason = json.getString("reason");
+		return new ResponseEntity<Void>( HttpStatus.OK);
 	}
 	/**
 	 * 
