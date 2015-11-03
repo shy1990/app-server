@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.collect.Lists;
+import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.repository.SalesmanRepository;
 import com.wangge.common.entity.CustomRegion;
 import com.wangge.common.entity.Region;
@@ -36,12 +37,15 @@ public class RegionController {
 	public ResponseEntity<Map<String,List<Region>>> salesmanRegions(@PathVariable("username") String username){
 		logger.debug("username:"+username);
 		
-		salesmanRepository.findByUsername(username);
-		
+	    Salesman salesman =  salesmanRepository.findByUsername(username);
+	    
+	    salesman.getCustomRegion();
+	    
+
 		Region r1=new CustomRegion("101","女儿国","123.123,87.565^123.123,87.565^123.123,87.565");
 		Region r2=new CustomRegion("101","男儿国","123.123,87.565^123.123,87.565^123.123,87.565");
 		Map<String,List<Region>> map=new HashMap<String, List<Region>>();
-		map.put("open", Lists.newArrayList(r1));
+		map.put("open", Lists.newArrayList(salesman.getCustomRegion()));
 		map.put("nopen", Lists.newArrayList(r2));
 		return new ResponseEntity<Map<String,List<Region>>>(map,HttpStatus.OK);
 	}
