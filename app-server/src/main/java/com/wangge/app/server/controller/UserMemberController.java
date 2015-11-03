@@ -1,24 +1,26 @@
 package com.wangge.app.server.controller;
 
 import org.apache.log4j.Logger;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSONObject;
+import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.UserMember;
 import com.wangge.app.server.service.RegistService;
+import com.wangge.common.entity.Region;
 
 @RestController
 @RequestMapping(value="/v1")
-public class RegistController {
+public class UserMemberController {
 	private static final Logger logger = Logger
-			.getLogger(RegistController.class);
+			.getLogger(UserMemberController.class);
 	
 	@Autowired
 	private RegistService registService;
@@ -30,9 +32,9 @@ public class RegistController {
 		
 		UserMember um= 
 		return new ResponseEntity<String>(jsonStr, HttpStatus.OK);
-	}
+	}*/
 	
-	*//**
+	/**
 	 * 业务人员区域信息
 	 * @param username
 	 * @return
@@ -57,13 +59,19 @@ public class RegistController {
 	 */
 	@RequestMapping(value="/member",method=RequestMethod.POST)
 	public ResponseEntity<Void> add(@RequestBody JSONObject json){
-		UserMember um=new UserMember();
-		um.setId(json.getString("username"));
-		um.setShopName(json.getString("shopname"));
-		um.setPhone(json.getString("phone"));
-		um.setConsignee(json.getString("consignee"));
-		um.setCounterNumber(json.getInt("counter_number"));
-		registService.save(um);
-		return new ResponseEntity<Void>(HttpStatus.CREATED);
+		System.out.println(1111);
+		try {
+			UserMember um = registService.findById(json.getString("id"));
+			um.setUsername(json.getString("username"));
+			um.setShopName(json.getString("shopname"));
+			um.setPhone(json.getString("phone"));
+			um.setConsignee(json.getString("consignee"));
+			um.setCounterNumber(json.getIntValue("counter_number"));
+			registService.save(um);
+			return new ResponseEntity<Void>(HttpStatus.CREATED);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 }

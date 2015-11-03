@@ -1,6 +1,7 @@
 package com.wangge.app.server.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.wangge.common.entity.User;
@@ -17,6 +18,7 @@ public class Salesman extends User{
 	/**
 	 * 
 	 */
+	
 	private static final long serialVersionUID = 1L;
 	private String phone;
 
@@ -27,6 +29,6 @@ public class Salesman extends User{
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	
+
 	
 }
