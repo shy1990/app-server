@@ -5,10 +5,10 @@ import org.springframework.stereotype.Service;
 
 import com.wangge.app.server.entity.UserMember;
 import com.wangge.app.server.repository.UserMemberRepository;
-import com.wangge.app.server.service.RegistService;
+import com.wangge.app.server.service.UserMemberService;
 
 @Service
-public class RegistServiceImpl implements RegistService {
+public class UserMemberServiceImpl implements UserMemberService {
 	@Autowired
 	private UserMemberRepository registRepository;
 

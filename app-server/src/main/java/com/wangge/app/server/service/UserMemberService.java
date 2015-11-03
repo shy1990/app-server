@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import com.wangge.app.server.entity.UserMember;
 
 @Service
-public interface RegistService {
+public interface UserMemberService {
 	
 	public void save(UserMember userMember);
 	

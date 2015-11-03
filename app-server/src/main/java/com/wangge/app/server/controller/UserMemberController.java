@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.UserMember;
-import com.wangge.app.server.service.RegistService;
+import com.wangge.app.server.service.UserMemberService;
 import com.wangge.common.entity.Region;
 
 @RestController
@@ -23,7 +23,7 @@ public class UserMemberController {
 			.getLogger(UserMemberController.class);
 	
 	@Autowired
-	private RegistService registService;
+	private UserMemberService registService;
 	
 	/*@RequestMapping(value = "/findRegistMap/{region_id}")
 	public ResponseEntity<Map<String,List<?>>> test(@PathVariable String region_id) {
