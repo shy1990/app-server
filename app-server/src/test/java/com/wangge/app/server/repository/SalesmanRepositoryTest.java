@@ -10,9 +10,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.wangge.AppServerApplication;
 import com.wangge.app.server.entity.Salesman;
-import com.wangge.app.server.entity.TaskSaojie;
-import com.wangge.common.entity.Region;
-import com.wangge.common.entity.User;
 import com.wangge.common.repository.RegionRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -44,11 +41,11 @@ public class SalesmanRepositoryTest {
 	public  void test2(){
 		//saojieDateRepository.findByRegionId("");
 		Salesman s = sr.findByUsername("yewuzhangsan");
-		for(TaskSaojie tsj : s.getTaskSaojie()){
-			System.out.println("========"+tsj.getTaskSaoJieRegion());
-			
-		}
-		System.out.println("==========="+s.getTaskSaojie());
+//		for(TaskSaojie tsj : s.getTaskSaojie()){
+//			System.out.println("========"+tsj.getTaskSaoJieRegion());
+//			
+//		}
+//		System.out.println("==========="+s.getTaskSaojie());
 		
 		
 	}

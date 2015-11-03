@@ -2,6 +2,7 @@ package com.wangge.app.server.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
 @Entity
@@ -9,7 +10,8 @@ import javax.persistence.Table;
 public class TaskSaoJieRegion {
 	@Id
 	private String reginId;
-	private String taskId;
+	@JoinColumn(name = "TASK_ID")
+	private SaojieTask task;
 	
 	public String getReginId() {
 		return reginId;
@@ -17,11 +19,11 @@ public class TaskSaoJieRegion {
 	public void setReginId(String reginId) {
 		this.reginId = reginId;
 	}
-	public String getTaskId() {
-		return taskId;
+	public SaojieTask getTask() {
+		return task;
 	}
-	public void setTaskId(String taskId) {
-		this.taskId = taskId;
+	public void setTask(SaojieTask task) {
+		this.task = task;
 	}
 	
 	
