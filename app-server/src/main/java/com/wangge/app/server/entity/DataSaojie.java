@@ -2,12 +2,16 @@ package com.wangge.app.server.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.GenericGenerator;
 
 /**
  * 扫街数据
@@ -16,42 +20,47 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(schema = "SANJI", name = "T_DATA_SAOJIE")
-@SequenceGenerator(schema="SANJI",sequenceName="SEQ_SAOJIE_DATA",name="seq")
-public class SaojieData implements Serializable {
+@Table(schema = "YEWU", name = "T_DATA_SAOJIE")
+public class DataSaojie implements Serializable {
+
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="seq")
-	private Long id;
+	@GeneratedValue(generator = "uuidgenerator")
+	@GenericGenerator(name = "uuidgenerator", strategy = "uuid")
+	@Column(name = "SAOJIE_DATA_ID")
+	private String id;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "TASK_ID")
+	private Task task;
+
 	private String name;
 	private String remark;
 	private String imageUrl;
 	private String coordinate;
-	
-	private String taskId;
-	
-	
 
-	public SaojieData() {
+	public DataSaojie() {
 		super();
 	}
-	
-	
 
-	public SaojieData(String name, String coordinate) {
-		super();
-		this.name = name;
-		this.coordinate = coordinate;
-	}
-
-
-
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
+	}
+
+	public Task getTask() {
+		return task;
+	}
+
+	public void setTask(Task task) {
+		this.task = task;
 	}
 
 	public String getName() {
@@ -86,13 +95,6 @@ public class SaojieData implements Serializable {
 		this.coordinate = coordinate;
 	}
 
-	public String getTaskId() {
-		return taskId;
-	}
+	
 
-	public void setTaskId(String taskId) {
-		this.taskId = taskId;
-	}
-	
-	
 }

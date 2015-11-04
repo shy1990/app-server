@@ -14,7 +14,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.repository.SalesmanRepository;
-import com.wangge.common.entity.User;
 
 @RestController
 @RequestMapping(value = "/v1")

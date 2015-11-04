@@ -4,8 +4,8 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.wangge.app.server.entity.User;
 import com.wangge.app.server.repository.SalesmanRepository;
-import com.wangge.common.entity.User;
 import com.wangge.security.shiro.realm.HmacRealm;
 
 public class SalesmanHmacReaml extends HmacRealm {
@@ -13,7 +13,7 @@ public class SalesmanHmacReaml extends HmacRealm {
 	private SalesmanRepository salesmanRespository;
 
 	@Override
-	protected User getUser(String username) {
+	protected User getAuth(String username) {
 		return salesmanRespository.findByUsername(username);
 	}
 

@@ -9,10 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.RestTemplate;
 
-import com.wangge.common.entity.CountryRegion;
-import com.wangge.common.entity.CustomRegion;
-import com.wangge.common.entity.Region;
-import com.wangge.common.repository.RegionRepository;
+import com.wangge.app.server.repository.RegionRepository;
 //git.oschina.net/sylarlove/app-server.git
 import com.wangge.common.web.client.HmacRestTemplet;
 import com.wangge.common.web.client.HmacRestTemplet.HttpClientOption;
@@ -31,24 +28,4 @@ public class AppServerApplicationTests {
 
 	}
 
-	@Test
-	public void testRegion() {
-		Region r = new CountryRegion("103", "人妖国");
-		rp.save(r);
-
-	}
-
-	@Test
-	public void testRegion1() {
-		Region r = new CustomRegion("101", "男人国", "坐标你懂的");
-		rp.save(r);
-
-	}
-
-	@Test
-	public void testRegion3() {
-		CustomRegion r = (CustomRegion) rp.findOne("101");
-
-		System.out.println(r.getCoordinates());
-	}
 }

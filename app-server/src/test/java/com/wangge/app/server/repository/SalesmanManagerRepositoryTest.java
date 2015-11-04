@@ -7,19 +7,22 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.wangge.AppServerApplication;
-import com.wangge.app.server.entity.SaojieData;
+import com.wangge.app.server.entity.SalesmanManager;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = AppServerApplication.class)
-public class SaojieDateRepositoryTest {
+public class SalesmanManagerRepositoryTest {
 	@Autowired
-	private SaojieDateRepository sdr;
+	private SalesmanManagerRepository sr;
+
 	@Test
 	public void testAdd() {
-		SaojieData entity=new SaojieData("张三店", "123,5445");
-		entity.setTaskId("1");
-		entity.setRemark("fuck it");
-		sdr.save(entity);
+		SalesmanManager entity=new SalesmanManager();
+		entity.setId("10002");
+		entity.setPassword("123456");
+		entity.setPhone("18615696354");
+		entity.setUsername("yewum01");
+		sr.save(entity);
 	}
 
 }
