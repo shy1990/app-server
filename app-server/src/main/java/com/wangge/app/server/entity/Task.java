@@ -74,6 +74,16 @@ public abstract class Task implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="CREATE_BY")
 	private SalesmanManager createBy;
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL,mappedBy="task")
+	private Collection<DataSaojie> dataSaojie;
+
+	public Collection<DataSaojie> getDataSaojie() {
+		return dataSaojie;
+	}
+
+	public void setDataSaojie(Collection<DataSaojie> dataSaojie) {
+		this.dataSaojie = dataSaojie;
+	}
 
 	public String getId() {
 		return id;
