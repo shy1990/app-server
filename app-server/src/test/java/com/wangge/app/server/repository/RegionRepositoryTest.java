@@ -22,5 +22,11 @@ public class RegionRepositoryTest {
 		entity.setParent(rr.getOne("0"));
 		rr.save(entity);
 	}
+	
+	@Test
+	public void testFind(){
+		Region entity=rr.findOne("3");
+		System.out.println(entity);
+	}
 
 }

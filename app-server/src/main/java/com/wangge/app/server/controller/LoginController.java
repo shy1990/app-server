@@ -14,6 +14,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.repository.SalesmanRepository;
+import com.wangge.app.server.service.SalesmanService;
 
 @RestController
 @RequestMapping(value = "/v1")
@@ -23,6 +24,8 @@ public class LoginController {
 	
 	@Resource
 	private SalesmanRepository salesmanRepository;
+	@Resource
+	private SalesmanService salesmanService;
 	/**
 	 * 登录 
 	 * @param json
@@ -37,7 +40,7 @@ public class LoginController {
 	// User salesman = salesmanRepository.findByUsernameAndPasswordAndPhone(username,password,phone);
 		
 	 Json json1 = new Json();
-	 Salesman salesman = salesmanRepository.findByUsernameAndPassword(username,password);
+	 Salesman salesman = salesmanService.findByUsernameAndPassword(username,password);
 		try {
 			
 			
