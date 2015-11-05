@@ -1,0 +1,100 @@
+package com.wangge.app.server.util;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.wangge.app.server.util.jpush.api.DeviceEnum;
+import com.wangge.app.server.util.jpush.api.ErrorCodeEnum;
+import com.wangge.app.server.util.jpush.api.JPushClient;
+import com.wangge.app.server.util.jpush.api.MessageResult;
+
+public class JpushClient {
+	
+		private static final String appKey ="6f270e9813a7f75cc8e5558b";////必填，例如466f7032ac604e02fb7bda89
+		private static final String masterSecret = "310d355dc8a3229ea3355fbe";//必填，每个应用都对应一个masterSecret
+		private static JPushClient jpush = null;
+		
+		public static final int MAX = Integer.MAX_VALUE;
+		public static final int MIN = (int) MAX/2;
+		
+		/**
+		 * 保持 sendNo 的唯一性是有必要的
+		 * It is very important to keep sendNo unique.
+		 * @return sendNo
+		 */
+		private static int getRandomSendNo() {
+		    return (int) (MIN + Math.random() * (MAX - MIN));
+		}
+			
+		
+		
+		/*
+		 * 保存离线的时长。秒为单位。最多支持10天（864000秒）。
+		 * 0 表示该消息不保存离线。即：用户在线马上发出，当前不在线用户将不会收到此消息。
+		 * 此参数不设置则表示默认，默认为保存1天的离线消息（86400秒
+		 */
+		private static long timeToLive =  60 * 60 * 24;  
+
+		public static void main(String[] args) {
+			/*
+			 * Example1: 初始化,默认发送给android和ios，同时设置离线消息存活时间
+			 * jpush = new JPushClient(masterSecret, appKey, timeToLive);
+			 * 
+			 * Example2: 只发送给android
+			 * jpush = new JPushClient(masterSecret, appKey, DeviceEnum.Android);
+			 * 
+			 * Example3: 只发送给IOS
+			 * jpush = new JPushClient(masterSecret, appKey, DeviceEnum.IOS);
+			 * 
+			 * Example4: 只发送给android,同时设置离线消息存活时间
+			 * jpush = new JPushClient(masterSecret, appKey, timeToLive, DeviceEnum.Android);
+			 */
+			jpush = new JPushClient(masterSecret, appKey, timeToLive, DeviceEnum.Android);
+			/* 
+			 * 是否启用ssl安全连接, 可选
+			 * 参数：启用true， 禁用false，默认为非ssl连接
+			 */
+			//jpush.setEnableSSL(true);
+
+			//测试发送消息或者通知
+			send("下单通知","会员下单通知:【222222222222222】山东省济南市历下区天桥店下单成功，订单商品","18764157959");
+		}
+		public static String send(String title,String msg,String alias) {
+		    // 在实际业务中，建议 sendNo 是一个你自己的业务可以处理的一个自增数字。
+		    String sendNo=getRandomSendNo()+"";
+//			Map<String, Object> extra = new HashMap<String, Object>();
+//			extra.put("type", "1");
+			jpush = new JPushClient(masterSecret, appKey, timeToLive, DeviceEnum.Android);
+			jpush.setEnableSSL(true);
+			MessageResult msgResult = null;
+			//如果别名为空,则向所有用户推送
+			if("all".equalsIgnoreCase(alias)){
+				
+				msgResult = jpush.sendNotificationWithAppKey(sendNo, title, msg);
+				
+			}else{
+//				msgResult = 	jpush.sendCustomMessageWithAlias(sendNo, "18764157959", title, msg,"test", extra);
+				msgResult = jpush.sendNotificationWithAlias(sendNo, alias, title, msg);
+			}
+			//IOS和安卓一起
+//			MessageResult msgResult = jpush.sendNotificationWithAppKey(sendNo, title, msg, 0, extra);
+//			MessageResult msgResult = jpush.sendCustomMessageWithAlias(sendNo, alias, title, msg,  type, extra);
+			//对所有用户发送通知, 更多方法请参考文档
+		//	MessageResult msgResult = jpush.sendCustomMessageWithAppKey(sendNo,msgTitle, msgContentType);
+			String str = "";
+			if (null != msgResult) {
+				System.out.println("服务器返回数据: " + msgResult.toString());
+				if (msgResult.getErrcode() == ErrorCodeEnum.NOERROR.value()) {
+					str = "发送成功， sendNo=" + msgResult.getSendno();
+					System.out.println(str);
+				} else {
+					str = "发送失败， 错误代码=" + msgResult.getErrcode() + ", 错误消息=" + msgResult.getErrmsg();
+					System.out.println(str);
+				}
+			} else {
+				str = "无法获取数据";
+				System.out.println(str);
+			}
+			return str;
+		}
+}
