@@ -2,8 +2,10 @@ package com.wangge.app.server.controller;
 
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -16,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wangge.app.server.entity.Apply;
 import com.wangge.app.server.entity.Exam;
+import com.wangge.app.server.entity.OrderPub;
 
 @RestController
 @RequestMapping(value = "/mine")
@@ -56,6 +60,21 @@ public class MineController {
 	}
 	/**
 	 * 
+	 * @Description: 我的收益
+	 * @param @param json
+	 * @param @return   
+	 * @return ResponseEntity<Object>  
+	 * @throws
+	 * @author changjun
+	 * @date 2015年11月3日
+	 */
+	@RequestMapping(value = "/myEarn",method = RequestMethod.POST)
+	public ResponseEntity<Object> myEarn(@RequestBody JSONObject json){
+		
+		return new ResponseEntity<Object>(null,HttpStatus.OK);
+	}
+	/**
+	 * 
 	 * @Description:  任务-收货款
 	 * @param @param username
 	 * @param @return   
@@ -64,10 +83,19 @@ public class MineController {
 	 * @author changjun
 	 * @date 2015年10月21日
 	 */
-	@RequestMapping(value = "/takeGoodsMoney")
-	public ResponseEntity<Object> takeGoodsMoney(@RequestBody  JSONObject json){
+	@RequestMapping(value = "/takeGoodsMoney",method = RequestMethod.POST)
+	public ResponseEntity<List<OrderPub>> takeGoodsMoney(@RequestBody  JSONObject json){
 		String username = json.getString("username");
-		return new ResponseEntity<Object>(null, HttpStatus.OK);
+		//dao查询未收款订单
+		List<OrderPub> list = new ArrayList<OrderPub>();
+		OrderPub order = new OrderPub();
+		order.setOrderNum("123456789");
+		order.setUsername(username);
+		order.setAddress("大桥镇");
+		order.setCreateTime(new Date());
+		order.setPayState("未支付");
+		list.add(order);
+		return new ResponseEntity<List<OrderPub>>(list, HttpStatus.OK);
 	}
 	/**
 	 * 
@@ -81,7 +109,7 @@ public class MineController {
 	 * @author changjun
 	 * @date 2015年10月21日
 	 */
-	@RequestMapping(value = "/noTaskMoneyRemark")
+	@RequestMapping(value = "/noTaskMoneyRemark",method = RequestMethod.POST)
 	public ResponseEntity<Void> noTaskMoneyRemark(@RequestBody  JSONObject json){
 		String username = json.getString("username");
 		String orderNum = json.getString("orderNum");
@@ -103,13 +131,14 @@ public class MineController {
 	 * @author changjun
 	 * @date 2015年10月21日
 	 */
-	@RequestMapping(value = "/applyUpdatePrice")
+	@RequestMapping(value = "/applyUpdatePrice",method = RequestMethod.POST)
 	public ResponseEntity<Void> applyUpdatePrice(@RequestBody  JSONObject json){
 		String username = json.getString("username");
-		String town = json.getString("town");
+		String area = json.getString("area");
 		String goodsname = json.getString("goodsname");
 		String amount = json.getString("amount");
 		String reason = json.getString("reason");
+		//保存
 		return new ResponseEntity<Void>( HttpStatus.OK);
 	}
 	/**
@@ -122,9 +151,22 @@ public class MineController {
 	 * @author changjun
 	 * @date 2015年10月21日
 	 */
-	@RequestMapping(value = "/applyPriceState")
-	public ResponseEntity<Object> applyPriceState(String username){
-		return new ResponseEntity<Object>(null, HttpStatus.OK);
+	@RequestMapping(value = "/applyPriceState",method = RequestMethod.POST)
+	public ResponseEntity<List<Apply>> applyPriceState(@RequestBody  JSONObject json){
+		String username = json.getString("username");
+		List<Apply> list = new ArrayList<Apply>();
+		Apply apply = new Apply();
+		List<String> ls = new ArrayList<String>();
+		ls.add("随官屯");
+		ls.add("丁官屯");
+		apply.setArea(ls);
+		apply.setAmount(10D);
+		apply.setApplyDate(new Date());
+		apply.setGoodsName("小米2A");
+		apply.setReason("同行竞争");
+		apply.setApplyName(username);
+		list.add(apply);
+		return new ResponseEntity<List<Apply>>(list, HttpStatus.OK);
 	}
 	/**
 	 * 
@@ -139,7 +181,7 @@ public class MineController {
 	 * @author changjun
 	 * @date 2015年10月21日
 	 */
-	@RequestMapping(value = "/saveMoveMark")
+	@RequestMapping(value = "/saveMoveMark",method = RequestMethod.POST)
 	public ResponseEntity<Object> saveMoveMark(String username,String[] potints,Date beginDate,Date endDate){
 		return new ResponseEntity<Object>(null, HttpStatus.OK);
 	}
@@ -153,7 +195,7 @@ public class MineController {
 	 * @author changjun
 	 * @date 2015年10月21日
 	 */
-	@RequestMapping(value = "/selMoveMarkList")
+	@RequestMapping(value = "/selMoveMarkList",method = RequestMethod.POST)
 	public ResponseEntity<Object> selMoveMarkList(String username){
 		return new ResponseEntity<Object>(null, HttpStatus.OK);
 	}

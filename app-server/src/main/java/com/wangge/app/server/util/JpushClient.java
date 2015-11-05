@@ -62,19 +62,19 @@ public class JpushClient {
 		public static String send(String title,String msg,String alias) {
 		    // 在实际业务中，建议 sendNo 是一个你自己的业务可以处理的一个自增数字。
 		    String sendNo=getRandomSendNo()+"";
-			Map<String, Object> extra = new HashMap<String, Object>();
-			extra.put("type", 1);
+//			Map<String, Object> extra = new HashMap<String, Object>();
+//			extra.put("type", "1");
 			jpush = new JPushClient(masterSecret, appKey, timeToLive, DeviceEnum.Android);
 			jpush.setEnableSSL(true);
 			MessageResult msgResult = null;
 			//如果别名为空,则向所有用户推送
 			if("all".equalsIgnoreCase(alias)){
 				
-//				msgResult = jpush.sendNotificationWithAppKey(sendNo, title, msg);
+				msgResult = jpush.sendNotificationWithAppKey(sendNo, title, msg);
 				
 			}else{
-				msgResult = 	jpush.sendCustomMessageWithAlias(sendNo, alias, title, msg, "test", extra);
-//				msgResult = jpush.sendNotificationWithAlias(sendNo, alias, title, msg);
+//				msgResult = 	jpush.sendCustomMessageWithAlias(sendNo, "18764157959", title, msg,"test", extra);
+				msgResult = jpush.sendNotificationWithAlias(sendNo, alias, title, msg);
 			}
 			//IOS和安卓一起
 //			MessageResult msgResult = jpush.sendNotificationWithAppKey(sendNo, title, msg, 0, extra);

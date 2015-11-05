@@ -29,7 +29,7 @@ public class Message implements Serializable{
 	private String receiver;
 	private String result;
 	private String type;
-	
+	//消息状态 0未读 1已读
 	public Message() {
 		super();
 	}

@@ -2,7 +2,6 @@ package com.wangge.app.server.controller;
 
 
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 
@@ -17,16 +16,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wangge.app.server.entity.Message;
+import com.wangge.app.server.entity.Order;
 import com.wangge.app.server.repository.MessageRepository;
+import com.wangge.app.server.repository.OrderRepository;
 import com.wangge.app.server.repository.SalesmanRepository;
-import com.wangge.app.server.util.JPush;
 import com.wangge.app.server.util.JpushClient;
 
 @RestController
 @RequestMapping({ "/push" })
-public class Push{
+public class PushController{
 	
-	private static final Logger logger = LoggerFactory.getLogger(Push.class);
+	private static final Logger logger = LoggerFactory.getLogger(PushController.class);
 	
 	@Autowired
 	private static JpushClient jpush;
@@ -45,6 +45,8 @@ public class Push{
 	@Autowired
 	private MessageRepository mes;
 	
+	@Autowired
+	private OrderRepository orp;
 	/**
 	 * 
 	 * @Description: 新订单提醒
@@ -60,21 +62,28 @@ public class Push{
 	@RequestMapping(value = { "/pushNewOrder" },method = RequestMethod.POST)
 	public boolean pushNewOrder(String msg,String mobiles){
 		/**
-		 * 会员下单通知:【222222222222222】山东省济南市历下区天桥店下单成功，订单商品
+		 * 【20151029164718792】山东省潍坊市青州市潍坊市青州市|弥河镇慧霞手机店下单成功，
+		 * 订单商品:标准版Samsung/三星 三星SM-G5308W*1台,标准版Xiaomi/小米 红米 红米note2*2台
 		 */
-//		put("info", "logan");
-////	JSONObject jsonStr = JSONObject.fromObject(map);
-//		 JSONArray array = new JSONArray();
-//		  array.put(map);
-//		Order or = null;
-//		Task ta = null;
-//		if(mobiles!=null && !"".equals(mobiles)){
-////			sa = sale.findPidByPhone(mobiles);
-////			or = order.findByUsername(mobiles);
-//			ta = task.findOneByName(mobiles);
+//		try {
+//			Order order = new Order();
+//			if(msg!=null && msg.length()>10){
+//				order.setOrderNum(msg.substring(msg.indexOf("【")+1, msg.indexOf("】")));
+//				order.setUsername(msg.substring(msg.indexOf("|")+1,msg.indexOf("下单成功")));
+//				order.setOrderDetail( msg.substring(msg.indexOf("订单商品:")+5,msg.indexOf(";")));
+//				order.setAmount(msg.substring(msg.indexOf("总金额:")+4));
+//				order.setCreateTime(new Date());
+//				orp.save(order);
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
 //		}
-		//String title,String msg,String alias,String type
-		String str = jpush.send("下单通知", msg, mobiles);
+		String str = "";
+		try {
+			str = jpush.send("下单通知", msg.substring(0,msg.indexOf("下单成功")+4), mobiles);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		Message message = new Message();
 		message.setCreateTime(new Date());
 		message.setContent(msg);
@@ -110,7 +119,7 @@ public class Push{
 			message.setContent(msg);
 			message.setReceiver(mobiles);
 			message.setResult(str);
-			message.setType("0");
+			message.setType("1");
 			mes.save(message);
 			if(str.contains("发送成功")){
 				return true;
@@ -138,7 +147,7 @@ public class Push{
 		message.setContent(msg);
 		message.setReceiver("all");
 		message.setResult(str);
-		message.setType("0");
+		message.setType("2");
 		mes.save(message);
 		if(str.contains("发送成功")){
 			return true;
@@ -157,28 +166,21 @@ public class Push{
 	 */
 	@RequestMapping(value={"/visitTask"},method = RequestMethod.POST)
 	public boolean visitTask(String msg,String mobiles) {
-		try {
-			System.out.println(mobiles+"***"+msg);
-			JPush.sendMessageV3("all", mobiles, msg, "拜访通知", null);
-		} catch (org.apache.http.ParseException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		
+		
+		
+		
+		String str = jpush.send("拜访通知", msg, mobiles);
+		Message message = new Message();
+		message.setCreateTime(new Date());
+		message.setContent(msg);
+		message.setReceiver(mobiles);
+		message.setResult(str);
+		message.setType("1");
+		mes.save(message);
+		if(str.contains("发送成功")){
+			return true;
 		}
-		
-		
-		
-		
-//		String str = jpush.send("拜访通知", msg, mobiles);
-//		Message message = new Message();
-//		message.setCreateTime(new Date());
-//		message.setContent(msg);
-//		message.setReceiver(mobiles);
-//		message.setResult(str);
-//		message.setType("0");
-//		mes.save(message);
-//		if(str.contains("发送成功")){
-//			return true;
-//		}
 		return false;
 	}
 
@@ -199,7 +201,7 @@ public class Push{
 		message.setContent(msg);
 		message.setReceiver(mobiles);
 		message.setResult(str);
-		message.setType("0");
+		message.setType("1");
 		mes.save(message);
 		if(str.contains("发送成功")){
 			return true;
