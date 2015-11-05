@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.Message;
-import com.wangge.app.server.entity.OrderPub;
+import com.wangge.app.server.vo.OrderPub;
 
 @RestController
 @RequestMapping({"/remind"})

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wangge.app.server.entity.Message;
-import com.wangge.app.server.entity.Order;
 import com.wangge.app.server.repository.MessageRepository;
 import com.wangge.app.server.repository.OrderRepository;
 import com.wangge.app.server.repository.SalesmanRepository;
@@ -78,6 +77,7 @@ public class PushController{
 //		} catch (Exception e) {
 //			e.printStackTrace();
 //		}
+		
 		String str = "";
 		try {
 			str = jpush.send("下单通知", msg.substring(0,msg.indexOf("下单成功")+4), mobiles);

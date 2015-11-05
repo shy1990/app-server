@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
-import com.wangge.app.server.entity.Apply;
-import com.wangge.app.server.entity.Exam;
-import com.wangge.app.server.entity.OrderPub;
+import com.wangge.app.server.vo.Apply;
+import com.wangge.app.server.vo.Exam;
+import com.wangge.app.server.vo.OrderPub;
 
 @RestController
 @RequestMapping(value = "/mine")
