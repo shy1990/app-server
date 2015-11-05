@@ -3,6 +3,8 @@ package com.wangge.app.server.service;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,12 +14,15 @@ import com.wangge.app.server.entity.Region;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.Task.TaskStatus;
 import com.wangge.app.server.entity.TaskSaojie;
+import com.wangge.app.server.repository.RegionRepository;
 import com.wangge.app.server.repository.TaskSaojieRepository;
 
 @Service
 public class RegionService {
 	@Autowired
 	private TaskSaojieRepository taskSaojieRepository;
+	@Resource
+	private RegionRepository regionRepository;
 
 	/**
 	 * 获取扫街区域信息
@@ -43,4 +48,5 @@ public class RegionService {
 		return result;
 	}
 
+	
 }

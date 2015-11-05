@@ -13,6 +13,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * 扫街数据
  * 
@@ -24,6 +26,7 @@ import org.hibernate.annotations.GenericGenerator;
 public class DataSaojie implements Serializable {
 
 	/**
+	 * @author Administrator
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
@@ -45,6 +48,11 @@ public class DataSaojie implements Serializable {
 
 	public DataSaojie() {
 		super();
+	}
+
+	public DataSaojie(String name, String coordinate) {
+		this.name = name;
+		this.coordinate = coordinate;
 	}
 
 	public String getId() {
