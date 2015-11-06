@@ -5,6 +5,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.wangge.app.server.entity.Salesman;
+import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.repository.SalesmanRepository;
 
 /**
@@ -36,12 +37,19 @@ public class SalesmanService {
 		salesmanRepository.save(salesman);
 	}
 
-	public Salesman login(String username, String password, String phone) {
-		Salesman salesman = salesmanRepository.findByUsername(username);
-		if (salesman.getPassword().equals(password)&&salesman.getPhone().equals(phone)) {
-			return salesman;
+	public Json login(String username, String password, String phone) {
+		Json json = new Json();
+		Salesman salesman = salesmanRepository.findByUsernameAndPassword(username, password);
+		if(salesman !=null && !"".equals(salesman)){
+			if (!password.equals(salesman.getPassword()) || phone.equals(salesman.getPhone())) {
+				json.setMsg("用戶名或密码错误！");
+			}else if(!phone.equals(salesman.getPhone())){
+				json.setMsg("手机号错误！");
+			}else{
+				json.setMsg("登陆成功！");
+			}
 		}
-		return null;
+		return json;
 	}
 
 }

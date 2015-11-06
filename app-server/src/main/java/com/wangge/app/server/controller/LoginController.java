@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.Salesman;
+import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.service.SalesmanService;
 
 @RestController
@@ -28,16 +29,13 @@ public class LoginController {
 	 * @return
 	 */
 	@RequestMapping(value = "/login",method = RequestMethod.POST)
-	public ResponseEntity<Salesman> login(@RequestBody JSONObject json){
-		String username=json.getString("username");
-		String password=json.getString("password");
-		String phone=json.getString("phone");
+	public ResponseEntity<Json> login(@RequestBody JSONObject jsons){
+		String username=jsons.getString("username");
+		String password=jsons.getString("password");
+		String phone=jsons.getString("phone");
 	 
-		Salesman salesman=salesmanService.login(username,password,phone);
-		if (salesman == null) {
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-		}
-		return new ResponseEntity<Salesman>(salesman, HttpStatus.OK);
+		Json json =salesmanService.login(username,password,phone);
+		return new ResponseEntity<Json>(json, HttpStatus.OK);
 	}
 	
 }
