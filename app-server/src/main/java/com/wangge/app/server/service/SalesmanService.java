@@ -14,27 +14,34 @@ import com.wangge.app.server.repository.SalesmanRepository;
  */
 @Service
 public class SalesmanService {
-	
+
+
 	@Resource
 	private SalesmanRepository salesmanRepository;
-	
-    
-	public Salesman findByUsernameAndPassword(String username ,String password){
-	  
-		Salesman salesman = salesmanRepository.findByUsernameAndPassword(username,password);
-	
+
+	public Salesman findByUsernameAndPassword(String username, String password) {
+
+		Salesman salesman = salesmanRepository.findByUsernameAndPassword(
+				username, password);
+
 		return salesman;
 	}
 
-
 	public Salesman findByUsername(String username) {
-		
+
 		return salesmanRepository.findByUsername(username);
 	}
-
 
 	public void save(Salesman salesman) {
 		salesmanRepository.save(salesman);
 	}
-	
+
+	public Salesman login(String username, String password, String phone) {
+		Salesman salesman = salesmanRepository.findByUsername(username);
+		if (salesman.getPassword().equals(password)&&salesman.getPhone().equals(phone)) {
+			return salesman;
+		}
+		return null;
+	}
+
 }
