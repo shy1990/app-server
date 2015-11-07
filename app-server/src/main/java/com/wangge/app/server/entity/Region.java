@@ -16,8 +16,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -40,6 +42,8 @@ public abstract class Region implements Serializable {
 	@ManyToMany(mappedBy="regions",cascade=CascadeType.REFRESH,fetch = FetchType.EAGER)
 	private Collection<Task> task;
 	
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL,mappedBy="parent")
+	private Collection<Region> regions;
 
 	public Collection<Task> getTask() {
 		return task;
@@ -94,5 +98,14 @@ public abstract class Region implements Serializable {
 		this.parent = parent;
 	}
 
+	public Collection<Region> getRegions() {
+		return regions;
+	}
 
+	public void setRegions(Collection<Region> regions) {
+		this.regions = regions;
+	}
+
+	
+	
 }

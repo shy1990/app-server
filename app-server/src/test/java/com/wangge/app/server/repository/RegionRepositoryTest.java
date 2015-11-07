@@ -1,5 +1,7 @@
 package com.wangge.app.server.repository;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +27,8 @@ public class RegionRepositoryTest {
 	
 	@Test
 	public void testFind(){
-		Region entity=rr.findOne("3");
-		System.out.println(entity);
+		List<Region> regionList=(List<Region>) rr.findOne("370100").getRegions();
+		System.out.println(regionList);
 	}
 
 }

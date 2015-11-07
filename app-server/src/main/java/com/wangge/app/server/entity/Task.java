@@ -48,7 +48,7 @@ public abstract class Task implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date startTime;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL,mappedBy="task")
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,mappedBy="task")
 	private Collection<TaskTarget> targets;
 
 	@ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
@@ -74,7 +74,7 @@ public abstract class Task implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="CREATE_BY")
 	private SalesmanManager createBy;
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL,mappedBy="task")
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,mappedBy="task")
 	private Collection<DataSaojie> dataSaojie;
 
 	public Collection<DataSaojie> getDataSaojie() {

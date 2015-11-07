@@ -1,5 +1,6 @@
 package com.wangge.app.server.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ import com.wangge.app.server.entity.Task.TaskStatus;
 import com.wangge.app.server.entity.TaskSaojie;
 import com.wangge.app.server.repository.RegionRepository;
 import com.wangge.app.server.repository.TaskSaojieRepository;
+import com.wangge.app.server.vo.TreeVo;
 
 @Service
 public class RegionService {
@@ -47,6 +49,62 @@ public class RegionService {
 		result.put("cant", cant);
 		return result;
 	}
-
 	
+	/**
+	 * 
+	 * 功能: 查询区域树型接口
+	 * 详细： 	
+	 * 作者： 	jiabin
+	 * 版本：  1.0
+	 * 日期：  2015年11月6日下午3:05:14
+	 *
+	 */
+	public  List<TreeVo> findTreeRegion(String id){
+		List<Region> regionList=new ArrayList<Region>();
+		List<TreeVo> listTreeVo =new ArrayList<TreeVo>();
+		regionList=(List<Region>) regionRepository.findOne(id).getRegions();
+		for(Region region:regionList){
+			System.out.println(region.getId());
+			TreeVo treevo=new TreeVo();
+			treevo.setId(region.getId());
+			treevo.setName(region.getName());
+			//treevo.setIcon("zTree/css/zTreeStyle/img/diy/10.png");
+			treevo.setOpen(true);
+			treevo.setIsParent(true);
+			treevo.setpId(region.getParent().getId());
+			listTreeVo.add(treevo);
+		}
+		return listTreeVo;
+	}
+	
+	/**
+	 * 
+	 * 功能: 根据父id查询，用在添加自定义区域id增长
+	 * 详细： 	
+	 * 作者： 	jiabin
+	 * 版本：  1.0
+	 * 日期：  2015年11月6日下午3:50:54
+	 *
+	 */
+	public List<Object> findRegionSort(String id){
+		List<Object> listRegion=(List<Object>) regionRepository.findByParentId(id);
+		return listRegion;
+	}
+	
+	/**
+	 * 
+	 * 功能: 查询
+	 * 详细： 	
+	 * 作者： 	jiabin
+	 * 版本：  1.0
+	 * 日期：  2015年11月6日下午5:31:22
+	 *
+	 */
+	public Region findRegion(String id){
+		return regionRepository.findOne(id);
+	}
+	
+	public void saveRegion(Region region){
+		regionRepository.save(region);
+	}
 }
