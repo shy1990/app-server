@@ -98,5 +98,32 @@ public class RegionController {
 		regionService.saveRegion(entity);
 		return new ResponseEntity<String>("SUCCESS",HttpStatus.OK);
 	}
+	
+	
+	/**
+	 * 
+	 * 功能: dit
+	 * 详细： 	
+	 * 作者： 	jiabin
+	 * 版本：  1.0
+	 * 日期：  2015年11月9日上午9:28:18
+	 *
+	 */
+	@RequestMapping(value="/findbyParentid",method=RequestMethod.POST)
+	public ResponseEntity<List<CustomRegion>> findbyParentid(String parentid){
+		logger.debug("parentid"+parentid);
+		/*try {
+			name=Base64.decodeToString(name);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+		List<CustomRegion> listRegion=regionService.findCustomRegiond(parentid);
+		
+		return new ResponseEntity<List<CustomRegion>>(listRegion,HttpStatus.OK);
+	}
+	
+	
+	
 }
 

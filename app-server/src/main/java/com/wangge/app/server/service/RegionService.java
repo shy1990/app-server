@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.wangge.app.server.entity.CustomRegion;
 import com.wangge.app.server.entity.Region;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.Task.TaskStatus;
@@ -91,6 +92,11 @@ public class RegionService {
 		return listRegion;
 	}
 	
+	
+	public List<CustomRegion> findCustomRegiond(String id){
+		List<CustomRegion> listCustomRegion=(List<CustomRegion>) regionRepository.findCustomRegiond(id);
+		return listCustomRegion;
+	}
 	/**
 	 * 
 	 * 功能: 查询
