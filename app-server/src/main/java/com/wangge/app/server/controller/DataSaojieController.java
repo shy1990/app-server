@@ -20,12 +20,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
-
 import com.wangge.app.server.entity.DataSaojie;
-import com.wangge.app.server.entity.Region;
 import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.service.DataSaojieService;
 import com.wangge.app.server.util.UploadUtil;
+import com.wangge.common.entity.Region;
 
 @RestController
 @RequestMapping(value = "/v1")

@@ -11,14 +11,13 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.wangge.app.server.entity.CustomRegion;
-import com.wangge.app.server.entity.Region;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.Task.TaskStatus;
 import com.wangge.app.server.entity.TaskSaojie;
 import com.wangge.app.server.repository.RegionRepository;
 import com.wangge.app.server.repository.TaskSaojieRepository;
 import com.wangge.app.server.vo.TreeVo;
+import com.wangge.common.entity.Region;
 
 @Service
 public class RegionService {
@@ -63,7 +62,7 @@ public class RegionService {
 	public  List<TreeVo> findTreeRegion(String id){
 		List<Region> regionList=new ArrayList<Region>();
 		List<TreeVo> listTreeVo =new ArrayList<TreeVo>();
-		regionList=(List<Region>) regionRepository.findOne(id).getRegions();
+		regionList=(List<Region>) regionRepository.findOne(id);
 		for(Region region:regionList){
 			System.out.println(region.getId());
 			TreeVo treevo=new TreeVo();
@@ -93,8 +92,8 @@ public class RegionService {
 	}
 	
 	
-	public List<CustomRegion> findCustomRegiond(String id){
-		List<CustomRegion> listCustomRegion=(List<CustomRegion>) regionRepository.findCustomRegiond(id);
+	public List<Region> findCustomRegiond(String id){
+		List<Region> listCustomRegion=(List<Region>) regionRepository.findCustomRegiond(id);
 		return listCustomRegion;
 	}
 	/**

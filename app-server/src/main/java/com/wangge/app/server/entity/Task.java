@@ -28,6 +28,7 @@ import javax.persistence.TemporalType;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.wangge.common.entity.Region;
 
 @Entity
 @Table(schema = "YEWU", name = "T_TASK")

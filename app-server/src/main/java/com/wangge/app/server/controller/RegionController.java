@@ -1,6 +1,5 @@
 package com.wangge.app.server.controller;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +7,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
-import org.apache.shiro.codec.Base64;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,11 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.wangge.app.server.entity.CustomRegion;
-import com.wangge.app.server.entity.Region;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.service.RegionService;
 import com.wangge.app.server.vo.TreeVo;
+import com.wangge.common.entity.Region;
 
 /**
  * 
@@ -93,7 +90,7 @@ public class RegionController {
 		}else{
 			id=Integer.parseInt(parentid+"00")+1;
 		}
-		Region entity=new CustomRegion(String.valueOf(id), name, pointStr);
+		Region entity=new Region(String.valueOf(id), name, Region.RegionType.TOWN);
 		entity.setParent(regionService.findRegion(parentid));
 		regionService.saveRegion(entity);
 		return new ResponseEntity<String>("SUCCESS",HttpStatus.OK);
@@ -110,7 +107,7 @@ public class RegionController {
 	 *
 	 */
 	@RequestMapping(value="/findbyParentid",method=RequestMethod.POST)
-	public ResponseEntity<List<CustomRegion>> findbyParentid(String parentid){
+	public ResponseEntity<List<Region>> findbyParentid(String parentid){
 		logger.debug("parentid"+parentid);
 		/*try {
 			name=Base64.decodeToString(name);
@@ -118,9 +115,9 @@ public class RegionController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}*/
-		List<CustomRegion> listRegion=regionService.findCustomRegiond(parentid);
+		List<Region> listRegion=regionService.findCustomRegiond(parentid);
 		
-		return new ResponseEntity<List<CustomRegion>>(listRegion,HttpStatus.OK);
+		return new ResponseEntity<List<Region>>(listRegion,HttpStatus.OK);
 	}
 	
 	
