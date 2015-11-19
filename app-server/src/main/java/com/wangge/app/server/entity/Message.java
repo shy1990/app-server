@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 @Entity
-@Table(schema = "SANJI", name = "T_MESSAGE")
+@Table( name = "T_MESSAGE")
 @SequenceGenerator(schema="SANJI",sequenceName="SEQ_SAOJIE_DATA",name="seq")
 public class Message implements Serializable{
 	

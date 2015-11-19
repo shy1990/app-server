@@ -10,7 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.google.common.collect.Lists;
 import com.wangge.AppServerApplication;
-import com.wangge.app.server.entity.TaskSaojie;
+import com.wangge.app.server.entity.Saojie;
 import com.wangge.app.server.entity.TaskTarget;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -27,7 +27,7 @@ public class TaskSaojieRepositoryTest {
 
 	@Test
 	public void testAdd() {
-		TaskSaojie entity = new TaskSaojie();
+		Saojie entity = new Saojie();
 		entity.setDescription("扫街吧骚222年");
 		entity.setEndTime(new Date());
 		entity.setName("扫接任务1");
@@ -35,7 +35,7 @@ public class TaskSaojieRepositoryTest {
 		entity.setCreateBy(smr.findByUsername("yewum01"));
 		entity.setRegions(Lists.newArrayList(rr.getOne("3")));
 		entity.setTargets(Lists.newArrayList(new TaskTarget("最小数量",true,20.00f)));
-		TaskSaojie save = tsr.save(entity);
+		Saojie save = tsr.save(entity);
 		
 	}
 	@Test

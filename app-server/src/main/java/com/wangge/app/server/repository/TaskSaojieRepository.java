@@ -6,9 +6,9 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.wangge.app.server.entity.Salesman;
-import com.wangge.app.server.entity.TaskSaojie;
+import com.wangge.app.server.entity.Saojie;
 
-public interface TaskSaojieRepository extends JpaRepository<TaskSaojie, String> {
-	List<TaskSaojie> findBySalesman(Salesman salesman);
+public interface TaskSaojieRepository extends JpaRepository<Saojie, String> {
+	List<Saojie> findBySalesman(Salesman salesman);
 
 }

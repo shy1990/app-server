@@ -11,7 +11,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.Task.TaskStatus;
-import com.wangge.app.server.entity.TaskSaojie;
+import com.wangge.app.server.entity.Saojie;
 import com.wangge.app.server.repository.TaskSaojieRepository;
 import com.wangge.app.server.vo.TreeVo;
 import com.wangge.common.entity.Region;
@@ -34,9 +34,9 @@ public class RegionService {
 		Map<String, List<Region>> result = Maps.newHashMap();
 		List<Region> can = Lists.newArrayList();
 		List<Region> cant = Lists.newArrayList();
-		List<TaskSaojie> saojieTasks = taskSaojieRepository.findBySalesman(salesman);
+		List<Saojie> saojieTasks = taskSaojieRepository.findBySalesman(salesman);
 		// TODO 可用java8 stream过滤
-		for (TaskSaojie taskSaojie : saojieTasks) {
+		for (Saojie taskSaojie : saojieTasks) {
 			if (TaskStatus.PENDING.equals(taskSaojie.getStatus())) {
 				can.addAll(taskSaojie.getRegions());
 			} else {
