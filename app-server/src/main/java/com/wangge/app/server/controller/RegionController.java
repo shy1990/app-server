@@ -24,7 +24,7 @@ import com.wangge.common.entity.Region;
  * @author SongBaozhen
  *
  */
-@RestController
+//@RestController
 @RequestMapping(value = "/v1")
 public class RegionController {
 

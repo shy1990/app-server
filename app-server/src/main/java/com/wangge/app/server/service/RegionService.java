@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,16 +12,16 @@ import com.google.common.collect.Maps;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.Task.TaskStatus;
 import com.wangge.app.server.entity.TaskSaojie;
-import com.wangge.app.server.repository.RegionRepository;
 import com.wangge.app.server.repository.TaskSaojieRepository;
 import com.wangge.app.server.vo.TreeVo;
 import com.wangge.common.entity.Region;
+import com.wangge.common.repository.RegionRepository;
 
-@Service
+//@Service
 public class RegionService {
 	@Autowired
 	private TaskSaojieRepository taskSaojieRepository;
-	@Resource
+	@Autowired
 	private RegionRepository regionRepository;
 
 	/**
@@ -49,26 +47,22 @@ public class RegionService {
 		result.put("cant", cant);
 		return result;
 	}
-	
+
 	/**
 	 * 
-	 * 功能: 查询区域树型接口
-	 * 详细： 	
-	 * 作者： 	jiabin
-	 * 版本：  1.0
-	 * 日期：  2015年11月6日下午3:05:14
+	 * 功能: 查询区域树型接口 详细： 作者： jiabin 版本： 1.0 日期： 2015年11月6日下午3:05:14
 	 *
 	 */
-	public  List<TreeVo> findTreeRegion(String id){
-		List<Region> regionList=new ArrayList<Region>();
-		List<TreeVo> listTreeVo =new ArrayList<TreeVo>();
-		regionList=(List<Region>) regionRepository.findOne(id);
-		for(Region region:regionList){
+	public List<TreeVo> findTreeRegion(String id) {
+		List<Region> regionList = new ArrayList<Region>();
+		List<TreeVo> listTreeVo = new ArrayList<TreeVo>();
+		regionList = (List<Region>) regionRepository.findOne(id);
+		for (Region region : regionList) {
 			System.out.println(region.getId());
-			TreeVo treevo=new TreeVo();
+			TreeVo treevo = new TreeVo();
 			treevo.setId(region.getId());
 			treevo.setName(region.getName());
-			//treevo.setIcon("zTree/css/zTreeStyle/img/diy/10.png");
+			// treevo.setIcon("zTree/css/zTreeStyle/img/diy/10.png");
 			treevo.setOpen(true);
 			treevo.setIsParent(true);
 			treevo.setpId(region.getParent().getId());
@@ -76,40 +70,32 @@ public class RegionService {
 		}
 		return listTreeVo;
 	}
-	
+
 	/**
 	 * 
-	 * 功能: 根据父id查询，用在添加自定义区域id增长
-	 * 详细： 	
-	 * 作者： 	jiabin
-	 * 版本：  1.0
-	 * 日期：  2015年11月6日下午3:50:54
+	 * 功能: 根据父id查询，用在添加自定义区域id增长 详细： 作者： jiabin 版本： 1.0 日期： 2015年11月6日下午3:50:54
 	 *
 	 */
-	public List<Object> findRegionSort(String id){
-		List<Object> listRegion=(List<Object>) regionRepository.findByParentId(id);
+	public List<Object> findRegionSort(String id) {
+		List<Object> listRegion = (List<Object>) regionRepository.findByParentId(id);
 		return listRegion;
 	}
-	
-	
-	public List<Region> findCustomRegiond(String id){
-		List<Region> listCustomRegion=(List<Region>) regionRepository.findCustomRegiond(id);
+
+	public List<Region> findCustomRegiond(String id) {
+		List<Region> listCustomRegion = (List<Region>) regionRepository.findCustomRegiond(id);
 		return listCustomRegion;
 	}
+
 	/**
 	 * 
-	 * 功能: 查询
-	 * 详细： 	
-	 * 作者： 	jiabin
-	 * 版本：  1.0
-	 * 日期：  2015年11月6日下午5:31:22
+	 * 功能: 查询 详细： 作者： jiabin 版本： 1.0 日期： 2015年11月6日下午5:31:22
 	 *
 	 */
-	public Region findRegion(String id){
+	public Region findRegion(String id) {
 		return regionRepository.findOne(id);
 	}
-	
-	public void saveRegion(Region region){
+
+	public void saveRegion(Region region) {
 		regionRepository.save(region);
 	}
 }

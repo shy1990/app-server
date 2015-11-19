@@ -17,7 +17,7 @@ import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.repository.SalesmanRepository;
 import com.wangge.app.server.service.SalesmanService;
 
-@RestController
+//@RestController
 @RequestMapping(value = "/v1/saleman")
 public class SalesmanController {
 

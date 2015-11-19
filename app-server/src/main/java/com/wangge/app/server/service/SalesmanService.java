@@ -13,7 +13,7 @@ import com.wangge.app.server.repository.SalesmanRepository;
  * @author Administrator
  *
  */
-@Service
+//@Service
 public class SalesmanService {
 
 

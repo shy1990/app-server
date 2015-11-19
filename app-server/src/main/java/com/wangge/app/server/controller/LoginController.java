@@ -15,7 +15,7 @@ import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.service.SalesmanService;
 
-@RestController
+//@RestController
 @RequestMapping(value = "/v1")
 public class LoginController {
 	
