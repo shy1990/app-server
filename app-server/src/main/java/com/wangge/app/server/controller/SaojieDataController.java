@@ -28,10 +28,10 @@ import com.wangge.common.entity.Region;
 
 @RestController
 @RequestMapping(value = "/v1")
-public class DataSaojieController {
+public class SaojieDataController {
 
 	private static final Logger logger = Logger
-			.getLogger(DataSaojieController.class);
+			.getLogger(SaojieDataController.class);
 	@Resource
 	private DataSaojieService dataSaojieService;
 

@@ -21,30 +21,25 @@ import com.wangge.app.server.service.SalesmanService;
 @RequestMapping(value = "/v1/saleman")
 public class SalesmanController {
 
-	private static final Logger logger = Logger
-			.getLogger(SalesmanController.class);
 	@Resource
 	private SalesmanService salesmanService;
 
 	@RequestMapping(value = "/{username}/password", method = RequestMethod.PUT)
-	public ResponseEntity<Json> changePassword(@PathVariable("username") String username,@RequestBody JSONObject jsons) {
-		String oldPassword=jsons.getString("oldPassword");
-		String planPassword=jsons.getString("planPassword");
+	public ResponseEntity<Json> changePassword(@PathVariable("username") String username,
+			@RequestBody JSONObject jsons) {
+		String oldPassword = jsons.getString("oldPassword");
+		String planPassword = jsons.getString("planPassword");
 		Json json = new Json();
 		Salesman sa = salesmanService.findByUsernameAndPassword(username, oldPassword);
-		if(sa!= null && !"".equals(sa)){
+		if (sa != null && !"".equals(sa)) {
 			sa.setPassword(planPassword);
 			salesmanService.save(sa);
 			json.setMsg("修改成功！");
-			return new ResponseEntity<Json>(json,HttpStatus.OK);
-		}else{
+			return new ResponseEntity<Json>(json, HttpStatus.OK);
+		} else {
 			json.setMsg("修改失败！");
-			return new ResponseEntity<Json>(json,HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
 		}
-		
-		
-		
-		
-		
+
 	}
 }
