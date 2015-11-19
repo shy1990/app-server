@@ -23,14 +23,14 @@ import com.wangge.security.entity.User;
  *
  */
 @Entity
-@Table(schema = "SJ_YEWU", name = "BIZ_SALESMAN")
+@Table(name = "BIZ_SALESMAN")
 public class Salesman extends AbstractPersistable<String> {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(generator = "foreign")
 	@GenericGenerator(name = "foreign", strategy = "foreign", parameters = {
 			@Parameter(name = "property", value = "user") })
-	@Column(name="user_id")
+	@Column(name = "user_id")
 	private String id;
 
 	@OneToOne(fetch = FetchType.EAGER)
