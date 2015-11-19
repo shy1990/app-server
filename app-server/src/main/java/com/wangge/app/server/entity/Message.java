@@ -3,80 +3,125 @@ package com.wangge.app.server.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.GenericGenerator;
+
 @Entity
-@Table( name = "T_MESSAGE")
-@SequenceGenerator(schema="SANJI",sequenceName="SEQ_SAOJIE_DATA",name="seq")
-public class Message implements Serializable{
-	
+@Table(name = "SYS_MESSAGE")
+public class Message implements Serializable {
+
 	private static final long serialVersionUID = 1L;
-	
+
+	public enum SendChannel {
+		WX("微信"), SMS("短信"), PUSH("极光推送");
+		private String name;
+
+		private SendChannel(String name) {
+			this.name = name;
+		}
+
+		public String getName() {
+			return name;
+		}
+	}
+
+	public enum MessageType {
+		ORDER("下单通知"), SYSTEM("提交审核"), ACTIVE("活动");
+		private String name;
+
+		private MessageType(String name) {
+			this.name = name;
+		}
+
+		public String getName() {
+			return name;
+		}
+	}
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="seq")
+	@GenericGenerator(name = "idgen", strategy = "increment")
+	@GeneratedValue(generator = "idgen")
+	@Column(name = "MESSAGE_ID")
 	private Long id;
-	
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date createTime;
+	private Date sendTime;
 	private String content;
 	private String receiver;
 	private String result;
-	private String type;
-	//消息状态 0未读 1已读
+	@Enumerated(EnumType.ORDINAL)
+	@Column(name="MESSAGE_TYPE")
+	private MessageType type;
+	@Enumerated(EnumType.ORDINAL)
+	private SendChannel channel;
+
 	public Message() {
 		super();
 	}
-	
 
-
-	public Date getCreateTime() {
-		return createTime;
+	public Date getSendTime() {
+		return sendTime;
 	}
 
-
-
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
+	public void setSendTime(Date sendTime) {
+		this.sendTime = sendTime;
 	}
 
+	public SendChannel getChannel() {
+		return channel;
+	}
 
+	public void setChannel(SendChannel channel) {
+		this.channel = channel;
+	}
+
+	public void setType(MessageType type) {
+		this.type = type;
+	}
 
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
+
 	public String getContent() {
 		return content;
 	}
+
 	public void setContent(String content) {
 		this.content = content;
 	}
+
 	public String getReceiver() {
 		return receiver;
 	}
+
 	public void setReceiver(String receiver) {
 		this.receiver = receiver;
 	}
+
 	public String getResult() {
 		return result;
 	}
+
 	public void setResult(String result) {
 		this.result = result;
 	}
-	public String getType() {
+
+	public MessageType getType() {
 		return type;
 	}
-	public void setType(String type) {
-		this.type = type;
-	}
-	
+
 }
