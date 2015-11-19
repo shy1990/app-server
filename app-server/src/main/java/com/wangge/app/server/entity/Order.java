@@ -1,80 +1,99 @@
 package com.wangge.app.server.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(schema = "SANJI", name = "T_ORDER")
-@SequenceGenerator(schema="SANJI",sequenceName="SEQ_SAOJIE_DATA",name="seq")
-public class Order implements Serializable{
+@Table(name = "BIZ_ORDER")
+public class Order implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
-	
+
+	public enum ShipStatus {
+		NO_SEND("未发货"), SENDED("已发货"), SALESMAN_RESIVED("业务签收"), MEMBER_RESIVED("客户签收");
+		private String name;
+
+		private ShipStatus(String name) {
+			this.name = name;
+		}
+
+		public String getName() {
+			return name;
+		}
+	}
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="seq")
-	private Long id;
-	
-	private String username;//店铺名
-	private String orderNum;//订单号
-	private String salesMan;//业务人员电话
-	private String status;	//状态 0未读 1已读 默认0
-	private String amount; //订单金额
-	private String orderDetail;//订单详情
+	@Column(name = "ORDER_NUM")
+	private String id;
+	private String shopName;// 店铺名
+	private BigDecimal amount; // 订单金额
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date createTime;//下单时间
-	
-	public String getUsername() {
-		return username;
+	private Date createTime;// 下单时间
+	@Enumerated(EnumType.ORDINAL)
+	@Column(name="SHIP_STATUS")
+	private ShipStatus status;
+
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "order")
+	private Collection<OrderItem> items;
+
+	public String getId() {
+		return id;
 	}
-	public void setUsername(String username) {
-		this.username = username;
+
+	public void setId(String id) {
+		this.id = id;
 	}
-	public String getOrderNum() {
-		return orderNum;
+
+	public String getShopName() {
+		return shopName;
 	}
-	public void setOrderNum(String orderNum) {
-		this.orderNum = orderNum;
+
+	public void setShopName(String shopName) {
+		this.shopName = shopName;
 	}
-	
-	public String getSalesMan() {
-		return salesMan;
-	}
-	public void setSalesMan(String salesMan) {
-		this.salesMan = salesMan;
-	}
-	public String getOrderDetail() {
-		return orderDetail;
-	}
-	public void setOrderDetail(String orderDetail) {
-		this.orderDetail = orderDetail;
-	}
-	public String getStatus() {
-		return status;
-	}
-	public void setStatus(String status) {
-		this.status = status;
-	}
-	public String getAmount() {
+
+	public BigDecimal getAmount() {
 		return amount;
 	}
-	public void setAmount(String amount) {
+
+	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
+
 	public Date getCreateTime() {
 		return createTime;
 	}
+
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-	
-	
+
+	public ShipStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(ShipStatus status) {
+		this.status = status;
+	}
+
+	public Collection<OrderItem> getItems() {
+		return items;
+	}
+
+	public void setItems(Collection<OrderItem> items) {
+		this.items = items;
+	}
+
 }
