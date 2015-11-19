@@ -12,7 +12,7 @@ import com.google.common.collect.Maps;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.Task.TaskStatus;
 import com.wangge.app.server.entity.Saojie;
-import com.wangge.app.server.repository.TaskSaojieRepository;
+import com.wangge.app.server.repository.SaojieRepository;
 import com.wangge.app.server.vo.TreeVo;
 import com.wangge.common.entity.Region;
 import com.wangge.common.repository.RegionRepository;
@@ -20,7 +20,7 @@ import com.wangge.common.repository.RegionRepository;
 //@Service
 public class RegionService {
 	@Autowired
-	private TaskSaojieRepository taskSaojieRepository;
+	private SaojieRepository taskSaojieRepository;
 	@Autowired
 	private RegionRepository regionRepository;
 

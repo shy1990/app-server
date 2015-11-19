@@ -10,7 +10,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.wangge.AppServerApplication;
-import com.wangge.app.server.entity.DataSaojie;
+import com.wangge.app.server.entity.SaojieData;
 import com.wangge.app.server.repository.RegionRepository;
 import com.wangge.app.server.repository.SalesmanRepository;
 import com.wangge.common.entity.Region;
@@ -36,7 +36,7 @@ public class RegionServiceTest {
 	@Test
 	public void findRegionByid() {
 		
-		List<DataSaojie> Data = ds
+		List<SaojieData> Data = ds
 				.getSaojieDataByregion(rt.findOne("37010501"));
 		System.out.println(Data);
 	}

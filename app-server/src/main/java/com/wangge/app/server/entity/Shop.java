@@ -15,7 +15,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-@Entity
+//@Entity
 @Table(schema = "YEWU", name = "T_SHOP")
 public class Shop implements Serializable {
 
@@ -28,7 +28,7 @@ public class Shop implements Serializable {
 	@JsonIgnore
 	@OneToOne(fetch = FetchType.LAZY, cascade = { CascadeType.REFRESH })
 	@JoinColumn(name = "saojie_data_id")
-	private DataSaojie dataSaojie;
+	private SaojieData dataSaojie;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "TASK_ID")
@@ -47,10 +47,10 @@ public class Shop implements Serializable {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public DataSaojie getDataSaojie() {
+	public SaojieData getDataSaojie() {
 		return dataSaojie;
 	}
-	public void setDataSaojie(DataSaojie dataSaojie) {
+	public void setDataSaojie(SaojieData dataSaojie) {
 		this.dataSaojie = dataSaojie;
 	}
 	public Task getTask() {

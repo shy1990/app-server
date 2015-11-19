@@ -30,7 +30,7 @@ public class SalesmanService {
 
 	public Salesman findByUsername(String username) {
 
-		return salesmanRepository.findByUsername(username);
+		return salesmanRepository.findByUserUsername(username);
 	}
 
 	public void save(Salesman salesman) {

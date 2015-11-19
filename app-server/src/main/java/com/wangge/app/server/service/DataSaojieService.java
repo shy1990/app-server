@@ -7,32 +7,32 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.wangge.app.server.entity.DataSaojie;
-import com.wangge.app.server.repository.DataSaojieRepository;
-import com.wangge.app.server.repository.TaskSaojieRepository;
+import com.wangge.app.server.entity.SaojieData;
+import com.wangge.app.server.repository.SaojieDataRepository;
+import com.wangge.app.server.repository.SaojieRepository;
 import com.wangge.common.entity.Region;
 import com.wangge.common.repository.RegionRepository;
 
 @Service
 public class DataSaojieService {
 	@Resource
-	private DataSaojieRepository dataSaojieRepository;
+	private SaojieDataRepository dataSaojieRepository;
 
 	@Autowired
-	private TaskSaojieRepository taskSaojieRepository;
+	private SaojieRepository taskSaojieRepository;
 
 	@Autowired
 	private RegionRepository regionRepository;
 
-	public void addDataSaojie(DataSaojie dataSaojie) {
+	public void addDataSaojie(SaojieData dataSaojie) {
 
 		dataSaojieRepository.save(dataSaojie);
 	}
 
-	public List<DataSaojie> getSaojieDataByregion(Region region) {
+	public List<SaojieData> getSaojieDataByregion(Region region) {
 
 
-		return dataSaojieRepository.findByTaskRegionsIn(region);
+		return dataSaojieRepository.findByRegion(region);
 	}
 
 }

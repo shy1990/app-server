@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
-import com.wangge.app.server.entity.DataSaojie;
+import com.wangge.app.server.entity.SaojieData;
 import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.service.DataSaojieService;
 import com.wangge.app.server.util.UploadUtil;
@@ -42,17 +42,17 @@ public class DataSaojieController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{regionId}/saojie_data", method = RequestMethod.GET)
-	public ResponseEntity<List<DataSaojie>> list(
+	public ResponseEntity<List<SaojieData>> list(
 			@PathVariable("regionId") Region region) {
 
-		List<DataSaojie> Data = dataSaojieService
+		List<SaojieData> Data = dataSaojieService
 				.getSaojieDataByregion(region);
 
-		return new ResponseEntity<List<DataSaojie>>(Data, HttpStatus.OK);
+		return new ResponseEntity<List<SaojieData>>(Data, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/{username}/saojie_data", method = RequestMethod.POST)
-	public ResponseEntity<DataSaojie> add(
+	public ResponseEntity<SaojieData> add(
 			@PathVariable("username") String username,
 			@RequestBody JSONObject json) {
 		String name = json.getString("name");
@@ -62,12 +62,12 @@ public class DataSaojieController {
 		if (json.containsKey("imageUrl")) {
 			imageUrl = json.getString("imageUrl");
 		}
-		DataSaojie data = new DataSaojie(name, coordinate);
+		SaojieData data = new SaojieData(name, coordinate);
 		data.setRemark(remark);
 		data.setImageUrl(imageUrl);
 		data.setId(UUID.randomUUID().toString().replaceAll("-", ""));
 		dataSaojieService.addDataSaojie(data);
-		return new ResponseEntity<DataSaojie>(data, HttpStatus.CREATED);
+		return new ResponseEntity<SaojieData>(data, HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/images/upload", method = RequestMethod.POST)

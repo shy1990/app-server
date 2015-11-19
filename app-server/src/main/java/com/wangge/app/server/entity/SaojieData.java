@@ -1,7 +1,5 @@
 package com.wangge.app.server.entity;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,11 +7,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.wangge.common.entity.Region;
+import com.wangge.core.entity.AbstractPersistable;
 
 /**
  * 扫街数据
@@ -22,53 +22,44 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  *
  */
 @Entity
-@Table(schema = "YEWU", name = "T_DATA_SAOJIE")
-public class DataSaojie implements Serializable {
+@Table(name = "BIZ_SAOJIEDATA")
+public class SaojieData extends AbstractPersistable<Long> {
 
-	/**
-	 * @author Administrator
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(generator = "uuidgenerator")
-	@GenericGenerator(name = "uuidgenerator", strategy = "uuid")
-	@Column(name = "SAOJIE_DATA_ID")
-	private String id;
+	@GenericGenerator(name = "idgen", strategy = "increment")
+	@GeneratedValue(generator = "idgen")
+	@Column(name = "SAOJIEDATA_ID")
+	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "TASK_ID")
-	private Task task;
-
+	@JoinColumn(name = "SAOJIE_ID")
+	private Saojie saojie;
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "REGION_ID")
+	private Region region;
 	private String name;
-	private String remark;
+	private String description;
 	private String imageUrl;
 	private String coordinate;
 
-	public DataSaojie() {
+	public SaojieData() {
 		super();
 	}
 
-	public DataSaojie(String name, String coordinate) {
+	public SaojieData(String name, String coordinate) {
 		this.name = name;
 		this.coordinate = coordinate;
 	}
 
-	public String getId() {
+	@Override
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Task getTask() {
-		return task;
-	}
-
-	public void setTask(Task task) {
-		this.task = task;
 	}
 
 	public String getName() {
@@ -79,12 +70,20 @@ public class DataSaojie implements Serializable {
 		this.name = name;
 	}
 
-	public String getRemark() {
-		return remark;
+	public Saojie getSaojie() {
+		return saojie;
 	}
 
-	public void setRemark(String remark) {
-		this.remark = remark;
+	public void setSaojie(Saojie saojie) {
+		this.saojie = saojie;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public String getImageUrl() {
@@ -103,6 +102,12 @@ public class DataSaojie implements Serializable {
 		this.coordinate = coordinate;
 	}
 
-	
+	public Region getRegion() {
+		return region;
+	}
+
+	public void setRegion(Region region) {
+		this.region = region;
+	}
 
 }
