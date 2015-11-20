@@ -55,17 +55,11 @@ public class RegionController {
 	@RequestMapping(value="/findbyParentid",method=RequestMethod.POST)
 	public ResponseEntity<List<Region>> findbyParentid(String parentid,String flag){
 		logger.debug("parentid"+parentid);
-		/*try {
-			name=Base64.decodeToString(name);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
 		List<Region> listRegion=new ArrayList<Region>();
 		if("true".equals(flag)){
-			listRegion=regionService.findCustomRegiond(salesmanService.findByid(parentid).getRegion().getId());
+			//listRegion=regionService.findCustomRegiond(salesmanService.findByid(parentid).getRegion().getId());
 		}else{
-			listRegion=regionService.findCustomRegiond(parentid);
+			listRegion=regionService.findRegiondbyParentid(parentid);
 		}
 		
 		return new ResponseEntity<List<Region>>(listRegion,HttpStatus.OK);
