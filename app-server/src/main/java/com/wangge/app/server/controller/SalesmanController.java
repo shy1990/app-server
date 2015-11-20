@@ -42,4 +42,48 @@ public class SalesmanController {
 		}
 
 	}*/
+	
+	/**
+	 * 地区业务员列表
+	 * @param json
+	 * @return
+	 */
+	@RequestMapping(value = "/saleList",method = RequestMethod.POST)
+	public ResponseEntity<Json> saleList(){
+		
+		List<Salesman> salelist = smRepository.findAll();
+		
+		List<Map<String,Object>> slm = new ArrayList<Map<String,Object>>();
+		
+		for(Salesman salesman : salelist){
+			Map<String,Object> m = new HashMap<String,Object>();
+			m.put("username", salesman.getUsername());
+			m.put("password", salesman.getPassword());
+			m.put("phone", salesman.getPhone());
+			m.put("regionname", salesman.getRegion().getName());
+			m.put("userid", salesman.getId());
+			m.put("regionid", salesman.getRegion().getId());
+			slm.add(m);
+		}
+		
+		/*StringBuffer jsbuf=new StringBuffer();
+		int i=0;
+		jsbuf.append("{").append("\"").append("data").append("\"").append(":").append("[");
+		for(Salesman ssm:salelist){
+			if(i++>0){
+				jsbuf.append(",");
+			}
+			jsbuf.append("{").append("\"").append("username").append("\"").append(":").append("\"").append(ssm.getUsername()).append("\",")
+			.append("\"").append("password").append("\"").append(":").append("\"").append(ssm.getPassword()).append("\",")
+			.append("\"").append("phone").append("\"").append(":").append("\"").append(ssm.getPhone()).append("\",")
+			.append("\"").append("userid").append("\"").append(":").append("\"").append(ssm.getId()).append("\",")
+			.append("\"").append("regionid").append("\"").append(":").append("\"").append(ssm.getRegion().getId()).append("\"}");
+		}
+	jsbuf.append("]}");*/
+		Json j = new Json();
+		j.setObj(slm);
+		
+		return new ResponseEntity<Json>(j,HttpStatus.OK);
+	}
+	
 }
