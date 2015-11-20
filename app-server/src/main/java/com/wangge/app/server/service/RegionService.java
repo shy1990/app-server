@@ -5,12 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.wangge.app.server.entity.Salesman;
-import com.wangge.app.server.entity.Task.TaskStatus;
 import com.wangge.app.server.entity.Saojie;
 import com.wangge.app.server.repository.SaojieRepository;
 import com.wangge.app.server.vo.TreeVo;
