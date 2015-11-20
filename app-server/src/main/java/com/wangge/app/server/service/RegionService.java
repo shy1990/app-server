@@ -1,6 +1,7 @@
 package com.wangge.app.server.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +26,20 @@ public class RegionService {
 	 *
 	 */
 	public List<TreeVo> findTreeRegion(String id) {
-		List<Region> regionList = new ArrayList<Region>();
+//		List<Region> regionList = new ArrayList<Region>();
+		Collection<Region> regionList = new ArrayList<Region>();  
 		List<TreeVo> listTreeVo = new ArrayList<TreeVo>();
-		regionList = (List<Region>) regionRepository.findOne(id);
-		for (Region region : regionList) {
+		if("0".equals(id)){
+			id="370000";
+		}
+		
+		System.out.println(regionRepository.findOne(id).getChildren());
+		//regionList =  (List<Region>) regionRepository.findOne(id).getChildren();
+		
+	
+		
+		
+		for (Region region : regionRepository.findOne(id).getChildren()) {
 			System.out.println(region.getId());
 			TreeVo treevo = new TreeVo();
 			treevo.setId(region.getId());
