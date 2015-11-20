@@ -34,13 +34,13 @@ public class RegionService {
 		List<Region> cant = Lists.newArrayList();
 		List<Saojie> saojieTasks = taskSaojieRepository.findBySalesman(salesman);
 		// TODO 可用java8 stream过滤
-		for (Saojie taskSaojie : saojieTasks) {
+		/*for (Saojie taskSaojie : saojieTasks) {
 			if (TaskStatus.PENDING.equals(taskSaojie.getStatus())) {
 				can.addAll(taskSaojie.getRegions());
 			} else {
 				cant.addAll(taskSaojie.getRegions());
 			}
-		}
+		}*/
 		result.put("can", can);
 		result.put("cant", cant);
 		return result;
@@ -74,15 +74,15 @@ public class RegionService {
 	 * 功能: 根据父id查询，用在添加自定义区域id增长 详细： 作者： jiabin 版本： 1.0 日期： 2015年11月6日下午3:50:54
 	 *
 	 */
-	public List<Object> findRegionSort(String id) {
+	/*public List<Object> findRegionSort(String id) {
 		List<Object> listRegion = (List<Object>) regionRepository.findByParentId(id);
 		return listRegion;
-	}
+	}*/
 
-	public List<Region> findCustomRegiond(String id) {
+	/*public List<Region> findCustomRegiond(String id) {
 		List<Region> listCustomRegion = (List<Region>) regionRepository.findCustomRegiond(id);
 		return listCustomRegion;
-	}
+	}*/
 
 	/**
 	 * 

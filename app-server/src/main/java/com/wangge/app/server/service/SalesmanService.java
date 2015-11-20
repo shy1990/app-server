@@ -20,13 +20,13 @@ public class SalesmanService {
 	@Resource
 	private SalesmanRepository salesmanRepository;
 
-	public Salesman findByUsernameAndPassword(String username, String password) {
+	/*public Salesman findByUsernameAndPassword(String username, String password) {
 
 		Salesman salesman = salesmanRepository.findByUsernameAndPassword(
 				username, password);
 
 		return salesman;
-	}
+	}*/
 
 	public Salesman findByUsername(String username) {
 
@@ -37,7 +37,7 @@ public class SalesmanService {
 		salesmanRepository.save(salesman);
 	}
 
-	public Json login(String username, String password, String phone) {
+	/*public Json login(String username, String password, String phone) {
 		Json json = new Json();
 		Salesman salesman = salesmanRepository.findByUsernameAndPassword(username, password);
 		if(salesman !=null && !"".equals(salesman)){
@@ -50,6 +50,6 @@ public class SalesmanService {
 			}
 		}
 		return json;
-	}
+	}*/
 
 }

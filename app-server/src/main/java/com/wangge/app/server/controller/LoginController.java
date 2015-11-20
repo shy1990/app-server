@@ -28,7 +28,7 @@ public class LoginController {
 	 * @param json
 	 * @return
 	 */
-	@RequestMapping(value = "/login",method = RequestMethod.POST)
+	/*@RequestMapping(value = "/login",method = RequestMethod.POST)
 	public ResponseEntity<Json> login(@RequestBody JSONObject jsons){
 		String username=jsons.getString("username");
 		String password=jsons.getString("password");
@@ -36,6 +36,6 @@ public class LoginController {
 	 
 		Json json =salesmanService.login(username,password,phone);
 		return new ResponseEntity<Json>(json, HttpStatus.OK);
-	}
+	}*/
 	
 }

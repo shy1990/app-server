@@ -72,15 +72,15 @@ public class RegionController {
 	 * 日期：  2015年11月6日下午3:54:51
 	 *
 	 */
-	@RequestMapping(value="/saveRegions",method=RequestMethod.POST)
+	/*@RequestMapping(value="/saveRegions",method=RequestMethod.POST)
 	public ResponseEntity<String> addPoints(String parentid,String pointStr,String name){
 		logger.debug("parentid"+parentid+"pointStr"+pointStr);
-		/*try {
+		try {
 			name=Base64.decodeToString(name);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}*/
+		}
 		List<Object> listRegion=regionService.findRegionSort(parentid);
 		int id;
 		if(listRegion.size()>0){
@@ -94,7 +94,7 @@ public class RegionController {
 		entity.setParent(regionService.findRegion(parentid));
 		regionService.saveRegion(entity);
 		return new ResponseEntity<String>("SUCCESS",HttpStatus.OK);
-	}
+	}*/
 	
 	
 	/**
@@ -106,19 +106,19 @@ public class RegionController {
 	 * 日期：  2015年11月9日上午9:28:18
 	 *
 	 */
-	@RequestMapping(value="/findbyParentid",method=RequestMethod.POST)
+	/*@RequestMapping(value="/findbyParentid",method=RequestMethod.POST)
 	public ResponseEntity<List<Region>> findbyParentid(String parentid){
 		logger.debug("parentid"+parentid);
-		/*try {
+		try {
 			name=Base64.decodeToString(name);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}*/
+		}
 		List<Region> listRegion=regionService.findCustomRegiond(parentid);
 		
 		return new ResponseEntity<List<Region>>(listRegion,HttpStatus.OK);
-	}
+	}*/
 	
 	
 	

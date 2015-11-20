@@ -24,7 +24,7 @@ public class SalesmanController {
 	@Resource
 	private SalesmanService salesmanService;
 
-	@RequestMapping(value = "/{username}/password", method = RequestMethod.PUT)
+	/*@RequestMapping(value = "/{username}/password", method = RequestMethod.PUT)
 	public ResponseEntity<Json> changePassword(@PathVariable("username") String username,
 			@RequestBody JSONObject jsons) {
 		String oldPassword = jsons.getString("oldPassword");
@@ -32,7 +32,7 @@ public class SalesmanController {
 		Json json = new Json();
 		Salesman sa = salesmanService.findByUsernameAndPassword(username, oldPassword);
 		if (sa != null && !"".equals(sa)) {
-			sa.setPassword(planPassword);
+//			sa.setPassword(planPassword);
 			salesmanService.save(sa);
 			json.setMsg("修改成功！");
 			return new ResponseEntity<Json>(json, HttpStatus.OK);
@@ -41,5 +41,5 @@ public class SalesmanController {
 			return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
 		}
 
-	}
+	}*/
 }

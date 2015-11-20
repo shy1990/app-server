@@ -94,7 +94,7 @@ public class RemindController {
 		List<Message> list = new ArrayList<Message>();
 		Message msg = new Message();
 		msg.setContent("双11店庆");
-		msg.setCreateTime(new Date());
+//		msg.setCreateTime(new Date());
 		msg.setReceiver(mobile);
 		list.add(msg);
 		return new ResponseEntity<List<Message>>(list, HttpStatus.OK);
@@ -115,7 +115,7 @@ public class RemindController {
 		//根据ID查消息详情
 		Message msg = new Message();
 		msg.setContent("双11店庆");
-		msg.setCreateTime(new Date());
+//		msg.setCreateTime(new Date());
 		return new ResponseEntity<Message>(msg, HttpStatus.OK);
 	}
 	/**
@@ -132,7 +132,7 @@ public class RemindController {
 		//查询正在进行中的活动  不区分已读未读 活动 type=2
 		Message msg = new Message();
 		msg.setContent("双11店庆");
-		msg.setCreateTime(new Date());
+//		msg.setCreateTime(new Date());
 		return new ResponseEntity<Message>(msg, HttpStatus.OK);
 	}
 	/**
@@ -151,7 +151,7 @@ public class RemindController {
 		//根据id查询活动详情
 		Message msg = new Message();
 		msg.setContent("双11店庆");
-		msg.setCreateTime(new Date());
+//		msg.setCreateTime(new Date());
 		return new ResponseEntity<Message>(msg, HttpStatus.OK);
 	}
 }
