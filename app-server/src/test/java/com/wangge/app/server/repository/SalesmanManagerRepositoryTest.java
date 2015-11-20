@@ -7,13 +7,12 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.wangge.AppServerApplication;
-import com.wangge.app.server.entity.SalesmanManager;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = AppServerApplication.class)
 public class SalesmanManagerRepositoryTest {
-	@Autowired
-	private SalesmanManagerRepository sr;
+//	@Autowired
+//	private SalesmanManagerRepository sr;
 
 //	@Test
 //	public void testAdd() {

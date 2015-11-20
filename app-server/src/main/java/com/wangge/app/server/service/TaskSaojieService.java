@@ -7,7 +7,6 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.wangge.app.server.entity.Salesman;
-import com.wangge.app.server.entity.SalesmanManager;
 
 /**
  * 

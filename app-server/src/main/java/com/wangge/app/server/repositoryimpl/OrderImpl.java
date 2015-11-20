@@ -79,17 +79,29 @@ public class OrderImpl {
 	 * @author changjun
 	 * @date 2015年11月12日
 	 */
-	public String selOrderByOrderNumAndSale(String ordernum,String mobile){
+	public boolean selOrderByOrderNumAndSale(String ordernum,String mobile){
 		String sql = "select  m.username  from SJZAIXIAN.SJ_TB_ORDER o LEFT JOIN SJZAIXIAN.SJ_TB_MEMBERS m ON o.member_id=m.id  LEFT JOIN SJZAIXIAN.SJ_TB_ADMIN a on m.admin_id= a.id where o.order_num="+ordernum+" and a.MOBILEPHONE="+mobile+" and o.sale_signforTime is null";
+//		String sql = "select  o.id  from SJZAIXIAN.SJ_TB_ORDER o  where o.order_num="+ordernum+" and o.sale_signforTime is null";
 		Query query =  em.createNativeQuery(sql);
-		List list = query.getResultList();
-		if(list!=null && list.size()>0){
-			return list.get(0).toString();
-		}
-		return "";
+		return query.getResultList().size()>0?true:false;
 	}
 	
-	
+	/**
+	 * 
+	 * @Description: 根据订单号判断该订单是否已签收
+	 * @param @param ordernum
+	 * @param @param mobile
+	 * @param @return   
+	 * @return boolean  
+	 * @throws
+	 * @author changjun
+	 * @date 2015年11月12日
+	 */
+	public boolean checkByOrderNum(String ordernum){
+		String sql = "select  o.id  from SJZAIXIAN.SJ_TB_ORDER o  where o.order_num="+ordernum+" and o.YEWU_SIGNFOR_TIME is null";
+		Query query =  em.createNativeQuery(sql);
+		return query.getResultList().size()>0?true:false;
+	}
 	
 	
 	/**

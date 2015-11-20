@@ -4,8 +4,6 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.wangge.app.server.entity.SalesmanManager;
-import com.wangge.app.server.repository.SalesmanManagerRepository;
 
 /**
  * 

@@ -13,6 +13,7 @@ import com.wangge.AppServerApplication;
 import com.wangge.app.server.entity.SaojieData;
 import com.wangge.app.server.repository.SalesmanRepository;
 import com.wangge.common.entity.Region;
+import com.wangge.common.repository.RegionRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = AppServerApplication.class)

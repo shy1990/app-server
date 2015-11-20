@@ -10,6 +10,8 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +20,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wangge.app.server.entity.Order;
+import com.wangge.app.server.entity.OrderItem;
+import com.wangge.app.server.repository.MessageRepository;
+import com.wangge.app.server.repository.OrderRepository;
+import com.wangge.app.server.repositoryimpl.OrderImpl;
+import com.wangge.app.server.util.SortUtil;
 import com.wangge.app.server.vo.Apply;
 import com.wangge.app.server.vo.Exam;
 import com.wangge.app.server.vo.OrderPub;
@@ -27,6 +35,86 @@ import com.wangge.app.server.vo.OrderPub;
 public class MineController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(MineController.class);
+	
+	@Autowired
+	private OrderImpl opl ;
+	@Autowired
+	private MessageRepository mr;
+	@Autowired
+	private OrderRepository or;
+	/**
+	 * 
+	 * @Description: 根据业务手机号订单号判断该订单是否属于该业务员并返回订单详情
+	 * @param @param json
+	 * @param @return   
+	 * @return ResponseEntity<List<OrderPub>>  
+	 * @throws
+	 * @author changjun
+	 * @date 2015年11月12日
+	 */
+	@RequestMapping(value = "/checkByOrderNum",method = RequestMethod.POST)
+	public ResponseEntity<JSONObject> checkByOrderNum(@RequestBody  JSONObject json){
+//		String mobile = json.getString("mobile");
+		String ordernum = json.getString("ordernum");
+		JSONObject jo = new JSONObject();
+		if(opl.checkByOrderNum(ordernum)){
+			Order order = new Order();
+			order = or.findOne(ordernum);
+			if(order.getId()!=null && !"".equals(order.getId())){
+				StringBuffer sb = new StringBuffer();
+				for (OrderItem item : order.getItems()) {
+					sb.append(item.getName()+" ");
+				}
+				jo.put("username", order.getShopName());
+				jo.put("createTime", order.getCreateTime());
+				jo.put("orderNum", order.getId());
+				jo.put("shipStatus", order.getStatus());
+				jo.put("goods", sb);
+				jo.put("state", "正常订单");
+				return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
+			}
+			jo.put("state", "未查询相关信息");
+			return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
+		}
+		jo.put("state", "该订单已签收");
+		return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
+	}
+	
+	
+	/**
+	 * 
+	 * @Description: 根据业务手机号查询所属订单的派送状态
+	 * @param @param json
+	 * @param @return   
+	 * @return ResponseEntity<List<OrderPub>>  
+	 * @throws
+	 * @author changjun
+	 * @date 2015年11月11日
+	 */
+	@RequestMapping(value = "/orderStatusList",method = RequestMethod.POST)
+	public ResponseEntity<List<OrderPub>> orderStatusList(@RequestBody  JSONObject json){
+		String mobile = json.getString("mobile");
+		PageRequest pageRequest = SortUtil.buildPageRequest(json.getInteger("pageNumber"), json.getInteger("pageSize"),null);
+		List<OrderPub> list = opl.selOrderSignforStatus(mobile, pageRequest);
+		return new ResponseEntity<List<OrderPub>>( list, HttpStatus.OK);
+	}
+	
+	
+	
+	@RequestMapping(value = "/updateOrderStatus",method = RequestMethod.POST)
+	public ResponseEntity<JSONObject> updateOrderStatus(@RequestBody  JSONObject json){
+		String status =  opl.updateOrderShipStateByOrderNum(json.getString("ordernum"), json.getString("status"));
+		JSONObject jo = new JSONObject();
+		jo.put("state", status);
+		return new ResponseEntity<JSONObject>( jo, HttpStatus.OK);
+	}
+	
+	
+	
+	
+	
+	
+	
 	
 	/**
 	 * 

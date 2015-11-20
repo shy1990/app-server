@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wangge.app.server.entity.Message;
 import com.wangge.app.server.entity.Message.MessageType;
+import com.wangge.app.server.entity.Message.SendChannel;
 import com.wangge.app.server.jpush.client.JpushClient;
 import com.wangge.app.server.repository.MessageRepository;
 
@@ -24,8 +25,6 @@ public class PushController {
 	private static JpushClient jpush;
 	@Autowired
 	private MessageRepository mr;
-	
-	
 	/**
 	 * 
 	 * @Description: 新订单推送
@@ -45,14 +44,15 @@ public class PushController {
 		 */
 		JSONObject json = new JSONObject(msg);
 		
-		String send = json.getString("username")+"下单成功,订单总金额:"+json.getString("amount")+",订单号:"+json.getString("orderNum");
+		String send = json.getString("username")+",订单总金额:"+json.getString("amount")+",订单号:"+json.getString("orderNum");
 		String str = "";
 		try {
 			str = jpush.sendOrder("下单通知", 	send,json.getString("mobiles"),json.getString("orderNum"),json.getString("username"));
 			Message mes = new Message();
-			mes.setType(MessageType.JIGUANGPUSH_ORDER);
-//			mes.setCreateTime(new Date());
-			mes.setContent(send);
+			mes.setChannel(SendChannel.PUSH);
+			mes.setType(MessageType.ORDER);
+			mes.setSendTime(new Date());
+			mes.setContent(msg);
 			mes.setResult(str);
 			mes.setReceiver(json.getString("mobiles"));
 			mr.save(mes);
@@ -79,18 +79,12 @@ public class PushController {
 	public boolean pushNews(String msg) {
 		//msg={\"title\":\"天桥区扫街任务\",\"content\":\"天桥区可以开始扫啦啦啦啦!!!\",\"mobile\":\"18764157959\"}		
 		 JSONObject json = new JSONObject(msg);
-//		 SimpleMessage sm = new SimpleMessage();
-//		 sm.setChannel(MessageChannel.JIGUANGPUSH);
-//		 sm.setTitle("通知:"+json.getString("title"));
-//		 sm.setContent(json.getString("content"));
-//		 sm.setCreateTime(new Date());
-//		 sm.setReceiver(json.getString("mobile"));
-//		 smr.save(sm);
 		 Message mes = new Message();
-		 mes.setContent(json.getString("title")+"|"+json.getString("content"));
-		 mes.setCreateTime(new Date());
+		 mes.setContent(msg);
+		 mes.setSendTime(new Date());
 		 mes.setReceiver(json.getString("mobile"));
-		 mes.setType(MessageType.JIGUANGPUSH_SIMPLE);
+		 mes.setChannel(SendChannel.PUSH);
+		 mes.setType(MessageType.SYSTEM);
 		 mr.save(mes);
 		 String str = jpush.sendSimple("系统通知", json.getString("title"), json.getString("mobile"),mes.getId(),"1");
 		 if(str.contains("发送失败")){
@@ -111,11 +105,11 @@ public class PushController {
 	 */
 	@RequestMapping(value={"/pushActivi" },method = RequestMethod.POST)
 	public boolean pushActivi(String msg) {
-		 
 		 Message sm = new Message();
-		 sm.setType(MessageType.JIGUANGPUSH_SIMPLE);
+		 sm.setType(MessageType.ACTIVE);
+		 sm.setChannel(SendChannel.PUSH);
 		 sm.setContent(msg);
-		 sm.setCreateTime(new Date());
+		 sm.setSendTime(new Date());
 		 sm.setReceiver("all");
 		 mr.save(sm);
 		 String str = jpush.sendSimple("活动通知", msg, "all",sm.getId(),"2");

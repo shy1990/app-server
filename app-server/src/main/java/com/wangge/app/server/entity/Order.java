@@ -45,6 +45,7 @@ public class Order implements Serializable {
 	@Column(name="SHIP_STATUS")
 	private ShipStatus status;
 
+
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "order")
 	private Collection<OrderItem> items;
 

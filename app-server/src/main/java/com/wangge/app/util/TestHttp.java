@@ -125,8 +125,8 @@ public class TestHttp {
     public static void main(String[] args) {
         //发送 GET 请求
     	//http://192.168.2.146:8080/push/pushNewOrder?str=%E5%B8%B8%E4%BF%8A
-//    	   String s=TestHttp.sendPost("http://192.168.2.146:8080/message/pushNews", "msg={\"title\":\"天桥区扫街任务\",\"content\":\"天桥区可以开始扫啦啦啦啦!!!\",\"mobile\":\"18764157959\"}");
-    	String s=TestHttp.sendPost("http://localhost:8082/v1/push/pushNewOrder", "msg={\"orderNum\":\"201511041655352441\",\"mobiles\":\"15069046916,18764157959,123456789,qweqwe\",\"amount\":\"10.0\",\"username\":\"天桥魅族店1\"}");
+    	   String s=TestHttp.sendPost("http://192.168.2.146:8082/v1/push/pushNews", "msg={\"title\":\"天桥区扫街任务\",\"content\":\"天桥区可以开始扫啦啦啦啦!!!\",\"mobile\":\"18764\"}");
+//    	String s=TestHttp.sendPost("http://localhost:8082/v1/push/pushNewOrder", "msg={\"orderNum\":\"201511041655352441\",\"mobiles\":\"15069046916,18764157959,18615696354\",\"amount\":\"10.0\",\"username\":\"天桥魅族店\"}");
         System.out.println(s);
         
         //发送 POST 请求

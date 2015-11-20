@@ -11,13 +11,9 @@ public class SortUtil {
     public static PageRequest buildPageRequest(int pageNumber, int pagzSize, String sortType) {
         Sort sort = null;
         //根据下单时间降序排序
-        if ("order".equals(sortType)) {
-            sort = new Sort(Direction.DESC, "orderTime");
+        if ("push".equals(sortType)) {
+            sort = new Sort(Direction.DESC, "sendTime");
         } 
-        if ("news".equals(sortType)) {
-            sort = new Sort(Direction.DESC, "createTime");
-        } 
-        
         return new PageRequest(pageNumber - 1, pagzSize, sort);
     }
 }
