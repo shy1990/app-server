@@ -17,29 +17,12 @@ import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.repository.SalesmanRepository;
 import com.wangge.app.server.service.SalesmanService;
 
-//@RestController
+@RestController
 @RequestMapping(value = "/v1/saleman")
 public class SalesmanController {
 
 	@Resource
 	private SalesmanService salesmanService;
 
-	@RequestMapping(value = "/{username}/password", method = RequestMethod.PUT)
-	public ResponseEntity<Json> changePassword(@PathVariable("username") String username,
-			@RequestBody JSONObject jsons) {
-		String oldPassword = jsons.getString("oldPassword");
-		String planPassword = jsons.getString("planPassword");
-		Json json = new Json();
-		Salesman sa = salesmanService.findByUsernameAndPassword(username, oldPassword);
-		if (sa != null && !"".equals(sa)) {
-			sa.setPassword(planPassword);
-			salesmanService.save(sa);
-			json.setMsg("修改成功！");
-			return new ResponseEntity<Json>(json, HttpStatus.OK);
-		} else {
-			json.setMsg("修改失败！");
-			return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
-		}
-
-	}
+	
 }

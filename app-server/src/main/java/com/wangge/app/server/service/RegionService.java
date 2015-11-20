@@ -98,9 +98,17 @@ public class RegionService {
 		return regionRepository.findOne(id);
 	}
 	
-	
-	public boolean saveRegion(Region region){
+	/**
+	 * 
+	 * 功能: 保存
+	 * 详细： 	
+	 * 作者： 	jiabin
+	 * 版本：  1.0
+	 * 日期：  2015年11月20日下午4:48:27
+	 *
+	 */
+	public void saveRegion(Region region){
 		 
-		 return 
+		regionRepository.save(region); 
 	}
 }
