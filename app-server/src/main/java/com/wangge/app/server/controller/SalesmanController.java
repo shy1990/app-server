@@ -26,6 +26,35 @@ public class SalesmanController {
 	private SalesmanService salesmanService;
 	
 	/**
+	 * 业务员申请
+	 * @param json
+	 * @return
+	 */
+	@RequestMapping(value = "/addYw",method = RequestMethod.POST)
+	public ResponseEntity<String> addYw(String username,String password,String userid,String phone,String regionid){
+		Region region = reRepository.findById(regionid);
+		int num = smRepository.findSaleNum(regionid);
+		String uid=null;
+		if(num==0){
+			uid="A"+userid;
+		}else if(num==1){
+			uid="B"+userid;
+		}else if(num==2){
+			uid="C"+userid;
+		}else if(num==3){
+			uid="D"+userid;
+		}
+		Salesman salesman = new Salesman();
+		salesman.setId(uid);
+		salesman.setPassword(password);
+		salesman.setPhone(phone);
+		salesman.setUsername(username);
+		salesman.setRegion(region);
+		smRepository.save(salesman);
+		return new ResponseEntity<String>("OK",HttpStatus.OK);
+	}
+	
+	/**
 	 * 地区业务员列表
 	 * @param json
 	 * @return
