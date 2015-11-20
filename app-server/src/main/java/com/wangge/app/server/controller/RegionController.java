@@ -95,8 +95,8 @@ public class RegionController {
 		Region entity = new Region(String.valueOf(id), name,Region.RegionType.TOWN);
 		entity.setCoordinates(pointStr);
 				
-		entity.setParent(regionService.getOne(parentid));
-		rr.save(entity);
+		entity.setParent(regionService.findRegion(parentid));
+		regionService.saveRegion(entity);
 		
 		
 		return new ResponseEntity<String>("SUCCESS",HttpStatus.OK);

@@ -85,6 +85,22 @@ public class RegionService {
 		return listRegion;
 	}
 	
+	/**
+	 * 
+	 * 功能: 查询Region
+	 * 详细： 	
+	 * 作者： 	jiabin
+	 * 版本：  1.0
+	 * 日期：  2015年11月20日下午4:44:53
+	 *
+	 */
+	public Region findRegion(String id){
+		return regionRepository.findOne(id);
+	}
 	
-
+	
+	public boolean saveRegion(Region region){
+		 
+		 return 
+	}
 }
