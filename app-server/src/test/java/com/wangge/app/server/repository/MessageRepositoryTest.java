@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.wangge.AppServerApplication;
@@ -29,6 +30,14 @@ public class MessageRepositoryTest {
 		entity.setType(MessageType.ACTIVE);
 		entity.setResult("sucess");
 		mr.save(entity);
+	}
+	@Test
+	public void testQuery() {
+		Page<Message> messages = mr.findByTypeAndChannelAndReceiverContaining(MessageType.ORDER, SendChannel.PUSH, "15069046916",null);
+		for (Message message : messages) {
+			System.out.println(message.getContent());
+		}
+		
 	}
 
 }
