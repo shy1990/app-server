@@ -2,6 +2,7 @@ package com.wangge.app.server.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,11 @@ public class RegionService {
 		return listTreeVo;
 	}
 	
-	
+	public List<Region> findRegiondbyParentid(String id){
+		System.out.println(regionRepository.findOne(id).getChildren().);
+		 Collection<Region> unmodifiableCollection = Collections.unmodifiableCollection(regionRepository.findOne(id).getChildren());  
+		List<Region> listRegion=(List<Region>) regionRepository.findOne(id).getChildren();
+		return  listRegion;
+	}
 
 }
