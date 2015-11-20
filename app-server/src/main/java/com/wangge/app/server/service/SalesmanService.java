@@ -1,7 +1,10 @@
 package com.wangge.app.server.service;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wangge.app.server.entity.Salesman;
@@ -13,11 +16,11 @@ import com.wangge.app.server.repository.SalesmanRepository;
  * @author Administrator
  *
  */
-//@Service
+@Service
 public class SalesmanService {
 
 
-	@Resource
+	@Autowired
 	private SalesmanRepository salesmanRepository;
 
 	/*public Salesman findByUsernameAndPassword(String username, String password) {
@@ -37,6 +40,9 @@ public class SalesmanService {
 		salesmanRepository.save(salesman);
 	}
 
+	public List<Salesman> findAll(){
+		return salesmanRepository.findAll();
+	}
 	/*public Json login(String username, String password, String phone) {
 		Json json = new Json();
 		Salesman salesman = salesmanRepository.findByUsernameAndPassword(username, password);

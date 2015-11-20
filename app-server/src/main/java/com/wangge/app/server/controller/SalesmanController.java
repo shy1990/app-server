@@ -16,9 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.pojo.Json;
-import com.wangge.app.server.repository.SalesmanRepository;
 import com.wangge.app.server.service.SalesmanService;
-import com.wangge.common.repository.RegionRepository;
 
 @RestController
 @RequestMapping(value = "/v1/saleman")
@@ -26,27 +24,6 @@ public class SalesmanController {
 
 	@Resource
 	private SalesmanService salesmanService;
-	@Resource
-	private SalesmanRepository smRepository;
-
-	/*@RequestMapping(value = "/{username}/password", method = RequestMethod.PUT)
-	public ResponseEntity<Json> changePassword(@PathVariable("username") String username,
-			@RequestBody JSONObject jsons) {
-		String oldPassword = jsons.getString("oldPassword");
-		String planPassword = jsons.getString("planPassword");
-		Json json = new Json();
-		Salesman sa = salesmanService.findByUsernameAndPassword(username, oldPassword);
-		if (sa != null && !"".equals(sa)) {
-//			sa.setPassword(planPassword);
-			salesmanService.save(sa);
-			json.setMsg("修改成功！");
-			return new ResponseEntity<Json>(json, HttpStatus.OK);
-		} else {
-			json.setMsg("修改失败！");
-			return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
-		}
-
-	}*/
 	
 	/**
 	 * 地区业务员列表
@@ -56,12 +33,13 @@ public class SalesmanController {
 	@RequestMapping(value = "/saleList",method = RequestMethod.POST)
 	public ResponseEntity<Json> saleList(){
 		Json json = new Json();
-		List<Salesman> salelist = smRepository.findAll();
+		List<Salesman> salelist = salesmanService.findAll();
 		
 		List<Map<String,Object>> slm = new ArrayList<Map<String,Object>>();
-		
+		System.out.println(slm.size());
 		if(slm != null && slm.size()>0){
 			for(Salesman salesman : salelist){
+				System.out.println("11111111111111");
 				Map<String,Object> m = new HashMap<String,Object>();
 				m.put("username", salesman.getUser().getUsername());
 				m.put("password", salesman.getUser().getPassword());
