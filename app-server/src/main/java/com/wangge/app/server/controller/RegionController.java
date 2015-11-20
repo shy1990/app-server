@@ -51,7 +51,15 @@ public class RegionController {
 		return new ResponseEntity<List<TreeVo>>(listTreeVo,HttpStatus.OK);
 	}
 	
-	
+	/**
+	 * 
+	 * 功能: 通过parentid查询
+	 * 详细： 	
+	 * 作者： 	jiabin
+	 * 版本：  1.0
+	 * 日期：  2015年11月20日下午4:06:36
+	 *
+	 */
 	@RequestMapping(value="/findbyParentid",method=RequestMethod.POST)
 	public ResponseEntity<List<Region>> findbyParentid(String parentid,String flag){
 		logger.debug("parentid"+parentid);
@@ -63,6 +71,35 @@ public class RegionController {
 		}
 		
 		return new ResponseEntity<List<Region>>(listRegion,HttpStatus.OK);
+	}
+	
+	/**
+	 * 
+	 * 功能: 
+	 * 详细： 	
+	 * 作者： 	Administrator
+	 * 版本：  1.0
+	 * 日期：  2015年11月20日下午4:07:03
+	 *
+	 */
+	@RequestMapping(value="/saveRegions",method=RequestMethod.POST)
+	public ResponseEntity<String> addPoints(String parentid,String pointStr,String name){
+		logger.debug("parentid"+parentid+"pointStr"+pointStr);
+		List<Object> listRegion=regionService.findRegionSort(parentid);
+		int id;
+		if(listRegion.size()>0){
+			Object[]   region   =   (Object[])  listRegion.get(0);
+			
+			id=Integer.parseInt(region[0].toString())+1 ;
+		}else{
+			id=Integer.parseInt(parentid+"00")+1;
+		}
+		Region entity=new CustomRegion(String.valueOf(id), name, pointStr);
+		entity.setParent(regionService.findRegion(parentid));
+		regionService.saveRegion(entity);
+		
+		
+		return new ResponseEntity<String>("SUCCESS",HttpStatus.OK);
 	}
 	
 }

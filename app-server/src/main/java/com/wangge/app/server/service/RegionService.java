@@ -50,15 +50,24 @@ public class RegionService {
 		return listTreeVo;
 	}
 	
+	/**
+	 * 
+	 * 功能: 
+	 * 详细： 	
+	 * 作者： 	jiabin
+	 * 版本：  1.0
+	 * 日期：  2015年11月20日下午4:34:21
+	 *
+	 */
 	public List<Region> findRegiondbyParentid(String id){
 		System.out.println(regionRepository.findOne(id).getChildren());
-		//List<Region> listRegion = Collections.emptyList();  
-		//List<Region> listRegion=(List<Region>) regionRepository.findOne(id).getChildren();
 		List<Region> listRegion=new ArrayList<Region>();
 		for(Region region:regionRepository.findOne(id).getChildren()){
 			listRegion.add(region);
 		}
 		return  listRegion;
 	}
+	
+	
 
 }
