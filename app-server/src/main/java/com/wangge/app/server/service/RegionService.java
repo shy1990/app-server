@@ -51,9 +51,13 @@ public class RegionService {
 	}
 	
 	public List<Region> findRegiondbyParentid(String id){
-		System.out.println(regionRepository.findOne(id).getChildren().);
-		 Collection<Region> unmodifiableCollection = Collections.unmodifiableCollection(regionRepository.findOne(id).getChildren());  
-		List<Region> listRegion=(List<Region>) regionRepository.findOne(id).getChildren();
+		System.out.println(regionRepository.findOne(id).getChildren());
+		//List<Region> listRegion = Collections.emptyList();  
+		//List<Region> listRegion=(List<Region>) regionRepository.findOne(id).getChildren();
+		List<Region> listRegion=new ArrayList<Region>();
+		for(Region region:regionRepository.findOne(id).getChildren()){
+			listRegion.add(region);
+		}
 		return  listRegion;
 	}
 
