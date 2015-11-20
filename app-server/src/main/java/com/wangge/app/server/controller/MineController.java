@@ -23,7 +23,7 @@ import com.wangge.app.server.vo.Exam;
 import com.wangge.app.server.vo.OrderPub;
 
 @RestController
-@RequestMapping(value = "/mine")
+@RequestMapping(value = "/v1/mine")
 public class MineController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(MineController.class);

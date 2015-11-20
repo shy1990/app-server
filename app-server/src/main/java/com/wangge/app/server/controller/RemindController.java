@@ -19,7 +19,7 @@ import com.wangge.app.server.entity.Message;
 import com.wangge.app.server.vo.OrderPub;
 
 @RestController
-@RequestMapping({"/remind"})
+@RequestMapping({"/v1/remind"})
 public class RemindController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(RemindController.class);

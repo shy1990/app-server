@@ -15,14 +15,14 @@ public class SalesmanManagerRepositoryTest {
 	@Autowired
 	private SalesmanManagerRepository sr;
 
-	@Test
-	public void testAdd() {
-		SalesmanManager entity=new SalesmanManager();
-		entity.setId("10002");
-		entity.setPassword("123456");
-		entity.setPhone("18615696354");
-		entity.setUsername("yewum01");
-		sr.save(entity);
-	}
+//	@Test
+//	public void testAdd() {
+//		SalesmanManager entity=new SalesmanManager();
+//		entity.setId("10002");
+//		entity.setPassword("123456");
+//		entity.setPhone("18615696354");
+//		entity.setUsername("yewum01");
+//		sr.save(entity);
+//	}
 
 }

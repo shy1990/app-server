@@ -1,9 +1,13 @@
 package com.wangge.app.server.entity;
 
+
+
 import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,7 +32,8 @@ public class Message implements Serializable{
 	private String content;
 	private String receiver;
 	private String result;
-	private String type;
+	@Enumerated(EnumType.STRING)
+	private MessageType type;
 	//消息状态 0未读 1已读
 	public Message() {
 		super();
@@ -72,11 +77,20 @@ public class Message implements Serializable{
 	public void setResult(String result) {
 		this.result = result;
 	}
-	public String getType() {
+	
+
+	public MessageType getType() {
 		return type;
 	}
-	public void setType(String type) {
+
+
+
+	public void setType(MessageType type) {
 		this.type = type;
 	}
-	
+
+
+	public enum MessageType {
+		 JIGUANGPUSH_ORDER,JIGUANGPUSH_SIMPLE
+	}
 }

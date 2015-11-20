@@ -63,9 +63,9 @@ public class SaojieDataController {
 			imageUrl = json.getString("imageUrl");
 		}
 		SaojieData data = new SaojieData(name, coordinate);
-		data.setRemark(remark);
+		data.setDescription(remark);
 		data.setImageUrl(imageUrl);
-		data.setId(UUID.randomUUID().toString().replaceAll("-", ""));
+//		data.setId(UUID.randomUUID().toString().replaceAll("-", ""));
 		dataSaojieService.addDataSaojie(data);
 		return new ResponseEntity<SaojieData>(data, HttpStatus.CREATED);
 	}
