@@ -85,18 +85,18 @@ public class RegionController {
 	@RequestMapping(value="/saveRegions",method=RequestMethod.POST)
 	public ResponseEntity<String> addPoints(String parentid,String pointStr,String name){
 		logger.debug("parentid"+parentid+"pointStr"+pointStr);
-		List<Object> listRegion=regionService.findRegionSort(parentid);
+		List<Region> listRegion=regionService.findRegionSort(parentid);
 		int id;
 		if(listRegion.size()>0){
-			Object[]   region   =   (Object[])  listRegion.get(0);
-			
-			id=Integer.parseInt(region[0].toString())+1 ;
+			id=Integer.parseInt(listRegion.get(0).getId().toString())+1 ;
 		}else{
 			id=Integer.parseInt(parentid+"00")+1;
 		}
-		Region entity=new CustomRegion(String.valueOf(id), name, pointStr);
-		entity.setParent(regionService.findRegion(parentid));
-		regionService.saveRegion(entity);
+		Region entity = new Region(String.valueOf(id), name,Region.RegionType.TOWN);
+		entity.setCoordinates(pointStr);
+				
+		entity.setParent(regionService.getOne(parentid));
+		rr.save(entity);
 		
 		
 		return new ResponseEntity<String>("SUCCESS",HttpStatus.OK);

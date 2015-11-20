@@ -69,5 +69,22 @@ public class RegionService {
 	}
 	
 	
+	
+
+	/**
+	 * 
+	 * 功能: 根据父id查询，用在添加自定义区域id增长
+	 * 详细： 	
+	 * 作者： 	jiabin
+	 * 版本：  1.0
+	 * 日期：  2015年11月6日下午3:50:54
+	 *
+	 */
+	public List<Region> findRegionSort(String id){
+		List<Region> listRegion= regionRepository.findByParentId(id);
+		return listRegion;
+	}
+	
+	
 
 }
