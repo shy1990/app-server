@@ -7,7 +7,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.pojo.Json;
+import com.wangge.app.server.repository.SalesmanRepository;
 import com.wangge.app.server.service.SalesmanService;
+import com.wangge.common.entity.Region;
+import com.wangge.common.repository.RegionRepository;
 
 @RestController
 @RequestMapping(value = "/v1/saleman")
@@ -24,6 +26,10 @@ public class SalesmanController {
 
 	@Resource
 	private SalesmanService salesmanService;
+	@Resource
+	private SalesmanRepository smRepository;
+	@Resource
+	private RegionRepository reRepository;
 	
 	/**
 	 * 业务员申请
@@ -46,9 +52,9 @@ public class SalesmanController {
 		}
 		Salesman salesman = new Salesman();
 		salesman.setId(uid);
-		salesman.setPassword(password);
-		salesman.setPhone(phone);
-		salesman.setUsername(username);
+		salesman.getUser().setPassword(password);
+		salesman.getUser().setPhone(phone);
+		salesman.getUser().setUsername(username);
 		salesman.setRegion(region);
 		smRepository.save(salesman);
 		return new ResponseEntity<String>("OK",HttpStatus.OK);
