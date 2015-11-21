@@ -42,7 +42,6 @@ public class OrderService {
 				order.setUsername(o.getShopName());
 				order.setTotalCost(Double.parseDouble(o.getAmount()+""));
 				list.add(order);
-				order = null;
 			}
 		}
 		return list;

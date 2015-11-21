@@ -12,4 +12,7 @@ public interface SalesmanRepository extends JpaRepository<Salesman, String>  {
 	public Salesman findByUserUsername(String username);
 	@Query("select id,user.username,user.nickname from Salesman ") 
 	public List<Salesman> findUserName();
+	
+	@Query("select count(*) from Salesman r where r.region.id=?")
+	public int findSaleNum(String regionid);
 }

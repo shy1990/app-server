@@ -2,7 +2,7 @@ package com.wangge.app.server.service;
 
 import java.util.List;
 
-
+import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +36,14 @@ public class SalesmanService {
 	
 	public Salesman findSalesmanbyId(String id){
 		return salesmanRepository.findOne(id);
+
 	}
-	
+
+	public void save(Salesman salesman) {
+		salesmanRepository.save(salesman);
+	}
+
+	public List<Salesman> findAll(){
+		return salesmanRepository.findAll();
+	}
 }
