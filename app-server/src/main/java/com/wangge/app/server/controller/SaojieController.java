@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.Saojie;
+import com.wangge.app.server.entity.TaskSaojie;
 import com.wangge.app.server.entity.Saojie.SaojieStatus;
 import com.wangge.app.server.service.RegionService;
 import com.wangge.app.server.service.SalesmanService;
@@ -58,7 +59,12 @@ public class SaojieController {
 		return new ResponseEntity<String>("SUCCESS",HttpStatus.OK);
 	}
 	
-	
+	@RequestMapping(value = "/findAllSaojie", method = RequestMethod.POST)
+	public ResponseEntity<List<Saojie>> findAllTask(String userName){
+		List<Saojie> listTaskSaojie=tss.findBycreateBy(sms.findByUsername(userName));
+		
+		return new ResponseEntity<List<TaskSaojie>>(listTaskSaojie,HttpStatus.OK);
+	}
 	
 	
 }
