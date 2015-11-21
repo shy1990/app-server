@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,9 @@ import com.wangge.app.server.repository.SalesmanRepository;
 import com.wangge.app.server.service.SalesmanService;
 import com.wangge.common.entity.Region;
 import com.wangge.common.repository.RegionRepository;
+import com.wangge.security.entity.User;
+import com.wangge.security.entity.User.UserStatus;
+import com.wangge.security.repository.UserRepository;
 
 @RestController
 @RequestMapping(value = "/v1/saleman")
@@ -26,10 +30,12 @@ public class SalesmanController {
 
 	@Resource
 	private SalesmanService salesmanService;
-	@Resource
+	@Autowired
 	private SalesmanRepository smRepository;
-	@Resource
+	@Autowired
 	private RegionRepository reRepository;
+	@Autowired
+	private UserRepository ur;
 	
 	/**
 	 * 业务员申请
@@ -37,7 +43,8 @@ public class SalesmanController {
 	 * @return
 	 */
 	@RequestMapping(value = "/addYw",method = RequestMethod.POST)
-	public ResponseEntity<String> addYw(String username,String password,String userid,String phone,String regionid){
+	public ResponseEntity<String> addYw(String username,String password,String userid,String phone,String regionid,String nickname){
+		System.out.println("username:"+username);
 		Region region = reRepository.findById(regionid);
 		int num = smRepository.findSaleNum(regionid);
 		String uid=null;
@@ -51,10 +58,15 @@ public class SalesmanController {
 			uid="D"+userid;
 		}
 		Salesman salesman = new Salesman();
-		salesman.setId(uid);
-		salesman.getUser().setPassword(password);
-		salesman.getUser().setPhone(phone);
-		salesman.getUser().setUsername(username);
+		User user = new User();
+		user.setId(uid);
+		user.setPassword(password);
+		user.setPhone(phone);
+		user.setStatus(UserStatus.NORMAl);
+		user.setUsername(username);
+		user.setNickname(nickname);
+		ur.save(user);
+		salesman.setUser(user);
 		salesman.setRegion(region);
 		smRepository.save(salesman);
 		return new ResponseEntity<String>("OK",HttpStatus.OK);
@@ -71,12 +83,12 @@ public class SalesmanController {
 		List<Salesman> salelist = salesmanService.findAll();
 		
 		List<Map<String,Object>> slm = new ArrayList<Map<String,Object>>();
-		System.out.println(slm.size());
-		if(slm != null && slm.size()>0){
+//		System.out.println(salelist.size());
+		if(salelist != null && salelist.size()>0){
 			for(Salesman salesman : salelist){
-				System.out.println("11111111111111");
 				Map<String,Object> m = new HashMap<String,Object>();
 				m.put("username", salesman.getUser().getUsername());
+				m.put("nickname", salesman.getUser().getNickname());
 				m.put("password", salesman.getUser().getPassword());
 				m.put("phone", salesman.getUser().getPhone());
 				m.put("regionname", salesman.getRegion().getName());

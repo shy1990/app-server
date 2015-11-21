@@ -55,7 +55,7 @@ public class RegionController {
 	 *
 	 */
 	@RequestMapping(value="/findRegion",method=RequestMethod.POST)
-	public ResponseEntity<List<TreeVo>> findRegion(@PathVariable("id") String id){
+	public ResponseEntity<List<TreeVo>> findRegion(String id){
 		logger.debug("id:"+id);
 	     List<TreeVo> listTreeVo =new ArrayList<TreeVo>();
 	     listTreeVo=regionService.findTreeRegion(id);

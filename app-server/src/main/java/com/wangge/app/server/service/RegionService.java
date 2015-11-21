@@ -53,17 +53,23 @@ public class RegionService {
 	 *
 	 */
 	public List<TreeVo> findTreeRegion(String id) {
-		List<Region> regionList = new ArrayList<Region>();
 		List<TreeVo> listTreeVo = new ArrayList<TreeVo>();
-		regionList = (List<Region>) regionRepository.findOne(id);
-		for (Region region : regionList) {
+		if("0".equals(id)){
+			id="370000";
+		}
+		System.out.println(regionRepository.findOne(id).getChildren());
+		for (Region region : regionRepository.findOne(id).getChildren()) {
 			System.out.println(region.getId());
-			TreeVo treevo = new TreeVo();
+			TreeVo treevo=new TreeVo();
 			treevo.setId(region.getId());
 			treevo.setName(region.getName());
-			// treevo.setIcon("zTree/css/zTreeStyle/img/diy/10.png");
+			//treevo.setIcon("zTree/css/zTreeStyle/img/diy/10.png");
 			treevo.setOpen(true);
-			treevo.setIsParent(true);
+			if(region.getChildren().size()>0){
+				treevo.setIsParent(true);
+			}else{
+				treevo.setIsParent(false);
+			}
 			treevo.setpId(region.getParent().getId());
 			listTreeVo.add(treevo);
 		}
