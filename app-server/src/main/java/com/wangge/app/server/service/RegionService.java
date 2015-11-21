@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -15,7 +16,7 @@ import com.wangge.app.server.vo.TreeVo;
 import com.wangge.common.entity.Region;
 import com.wangge.common.repository.RegionRepository;
 
-//@Service
+@Service
 public class RegionService {
 	@Autowired
 	private SaojieRepository taskSaojieRepository;

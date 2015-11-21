@@ -24,7 +24,7 @@ import com.wangge.common.entity.Region;
  * @author SongBaozhen
  *
  */
-//@RestController
+@RestController
 @RequestMapping(value = "/v1")
 public class RegionController {
 
@@ -55,7 +55,7 @@ public class RegionController {
 	 *
 	 */
 	@RequestMapping(value="/findRegion",method=RequestMethod.POST)
-	public ResponseEntity<List<TreeVo>> findRegion(String id){
+	public ResponseEntity<List<TreeVo>> findRegion(@PathVariable("id") String id){
 		logger.debug("id:"+id);
 	     List<TreeVo> listTreeVo =new ArrayList<TreeVo>();
 	     listTreeVo=regionService.findTreeRegion(id);
