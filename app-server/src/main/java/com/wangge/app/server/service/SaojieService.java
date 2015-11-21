@@ -25,4 +25,10 @@ public class SaojieService {
 		return saojieRepository.findBySalesman(salesman);
 	}
 	
+	
+	public void saveSaojie(Saojie saojie){
+		saojieRepository.save(saojie);
+	}
+	
+	
 }
