@@ -1,6 +1,7 @@
 package com.wangge.app.server.controller;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,7 +21,7 @@ import com.wangge.app.server.service.SalesmanService;
 @RestController
 @RequestMapping(value = "/v1")
 public class SaojieController {
-
+	SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");//
 	@Resource
 	private SalesmanService salesmanService;
 
@@ -30,12 +31,12 @@ public class SaojieController {
 		
 			Saojie entity = new Saojie();
 			entity.setDescription(taskDes);
-			entity.setExpiredTime(taskEnd);
-			entity.setName("钓鱼岛");
+			entity.setExpiredTime(sdf.parse(taskEnd));
+			entity.setName(taskName);
 			entity.setSalesman(sr.findByUserUsername("yewu01"));
 			entity.setRegion(rr.getOne("100"));
-			entity.setBeginTime(new Date());
-			entity.setMinValue(10);
+			entity.setBeginTime(sdf.parse(taskStart));
+			entity.setMinValue(Integer.parseInt(taskCount));
 			entity.setOrder(0);
 			entity.setStatus(SaojieStatus.PENDING);
 			tsr.save(entity);
