@@ -11,10 +11,14 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.wangge.common.entity.Region;
 
 @Entity
 @Table(name = "BIZ_ORDER")
@@ -45,9 +49,12 @@ public class Order implements Serializable {
 	@Column(name="SHIP_STATUS")
 	private ShipStatus status;
 
-
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "order")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
 	private Collection<OrderItem> items;
+	
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "region_id")
+	private Region region;
 
 	public String getId() {
 		return id;
@@ -95,6 +102,14 @@ public class Order implements Serializable {
 
 	public void setItems(Collection<OrderItem> items) {
 		this.items = items;
+	}
+
+	public Region getRegion() {
+		return region;
+	}
+
+	public void setRegion(Region region) {
+		this.region = region;
 	}
 
 }

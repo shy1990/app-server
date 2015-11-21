@@ -13,6 +13,8 @@ public class SortUtil {
         //根据下单时间降序排序
         if ("push".equals(sortType)) {
             sort = new Sort(Direction.DESC, "sendTime");
+        }else if ("order".equals(sortType)) {
+            sort = new Sort(Direction.DESC, "createTime");
         } 
         return new PageRequest(pageNumber - 1, pagzSize, sort);
     }

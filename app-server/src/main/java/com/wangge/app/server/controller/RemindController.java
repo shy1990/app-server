@@ -62,10 +62,9 @@ public class RemindController {
 	@RequestMapping(value = "/selOrderDetail",method = RequestMethod.POST)
 	public ResponseEntity<JSONObject> selOrderDetail(@RequestBody  JSONObject json){
 		String orderNum = json.getString("orderNum");
-		Order order = new Order();
-		order = or.findOne(orderNum);
+		Order order = or.findOne(orderNum);
 		JSONObject jo = new JSONObject();
-		if(order.getId()!=null && !"".equals(order.getId())){
+		if(order!=null && !"".equals(order.getId())){
 			StringBuffer sb = new StringBuffer();
 			for (OrderItem item : order.getItems()) {
 				sb.append(item.getName()+" ");
@@ -74,53 +73,13 @@ public class RemindController {
 			jo.put("amount", order.getAmount());
 			jo.put("createTime", order.getCreateTime());
 			jo.put("orderNum", order.getId());
-			jo.put("shipStatus", order.getStatus());
+			jo.put("shipStatus", order.getStatus().getName());
 			jo.put("goods", sb);
 			jo.put("state", "正常订单");
 			return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
 		}
 			jo.put("state", "未查询相关信息");
 			return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
-		
-		
-//		String username = json.getString("username");
-//		OrderImpl opl = new OrderImpl();
-//		List<OrderPub> order =opl.selOrderDetailByOrderNum(orderNum);
-//		JSONObject jo = new JSONObject();
-//		StringBuffer sb = new StringBuffer();
-//		if(null != order && order.size()>0){
-//			for(OrderPub o:order){
-//				jo.put("username", username);
-//				jo.put("createTime", o.getCreateTime());
-//				jo.put("orderNum", o.getOrderNum());
-//				jo.put("shipStatus", o.getShipStatus());
-//				if(o.getName()!=null && !"null".equals(o.getName())){
-//					sb.append(o.getName()+" ");
-//				}
-//				if(o.getStandard()!=null && !"null".equals(o.getStandard())){
-//					sb.append("制式 ("+o.getStandard()+")");
-//				}
-//				if(o.getStorage()!=null && !"null".equals(o.getStorage())){
-//					sb.append(" 内存 ( "+o.getStorage()+")");
-//				}
-//				if(o.getColorName()!=null && !"null".equals(o.getColorName())){
-//					sb.append(" 颜色("+o.getColorName()+")");
-//				}
-//				if(o.getDealPrice()!=null && !"null".equals(o.getDealPrice())){
-//					sb.append(" 单价 ("+o.getDealPrice()+"元)");
-//				}
-//				if(o.getNums()!=null && !"null".equals(o.getNums())){
-//					sb.append(" 数量 ("+o.getNums()+"个) ;");
-//				}
-//				jo.put("amount", o.getAmount());
-//			}
-//			jo.put("goods", sb);
-//			jo.put("state", "正常订单");
-//			return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
-//		}	
-//			jo.put("state", "未查询相关信息");
-//			return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
-		
 	}
 	/**
 	 * 

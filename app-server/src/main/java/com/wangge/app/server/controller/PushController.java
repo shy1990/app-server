@@ -1,6 +1,8 @@
 package com.wangge.app.server.controller;
 import java.util.Date;
 
+import javax.annotation.Resource;
+
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +16,7 @@ import com.wangge.app.server.entity.Message.MessageType;
 import com.wangge.app.server.entity.Message.SendChannel;
 import com.wangge.app.server.jpush.client.JpushClient;
 import com.wangge.app.server.repository.MessageRepository;
+import com.wangge.app.server.service.MessageService;
 
 @RestController
 @RequestMapping({ "/v1/push"})
@@ -21,10 +24,8 @@ public class PushController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(PushController.class);
 	
-	@Autowired
-	private static JpushClient jpush;
-	@Autowired
-	private MessageRepository mr;
+	@Resource
+	private MessageService mr;
 	/**
 	 * 
 	 * @Description: 新订单推送
@@ -43,11 +44,10 @@ public class PushController {
 		 *{"orderNum":"222222222222222","mobiles":"1561069 62989","amount":"10.0","username":"天桥魅族店"}
 		 */
 		JSONObject json = new JSONObject(msg);
-		
-		String send = json.getString("username")+",订单总金额:"+json.getString("amount")+",订单号:"+json.getString("orderNum");
+		String send = json.getString("username")+",总金额:"+json.getString("amount")+",订单号:"+json.getString("orderNum");
 		String str = "";
 		try {
-			str = jpush.sendOrder("下单通知", 	send,json.getString("mobiles"),json.getString("orderNum"),json.getString("username"));
+			str = JpushClient.sendOrder("下单通知", send,json.getString("mobiles"),json.getString("orderNum"),json.getString("username"));
 			Message mes = new Message();
 			mes.setChannel(SendChannel.PUSH);
 			mes.setType(MessageType.ORDER);
@@ -86,7 +86,12 @@ public class PushController {
 		 mes.setChannel(SendChannel.PUSH);
 		 mes.setType(MessageType.SYSTEM);
 		 mr.save(mes);
-		 String str = jpush.sendSimple("系统通知", json.getString("title"), json.getString("mobile"),mes.getId(),"1");
+		 String str = "";
+		 try {
+			 str = JpushClient.sendSimple("系统通知", json.getString("title"), json.getString("mobile"),mes.getId(),"1");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		 if(str.contains("发送失败")){
 			 mr.updateMessageResult(str, mes.getId());
 			 return false;
@@ -112,7 +117,12 @@ public class PushController {
 		 sm.setSendTime(new Date());
 		 sm.setReceiver("all");
 		 mr.save(sm);
-		 String str = jpush.sendSimple("活动通知", msg, "all",sm.getId(),"2");
+		 String str = "";
+		 try {
+			  str = JpushClient.sendSimple("活动通知", msg, "all",sm.getId(),"2");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		 if(str.contains("发送失败")){
 			 mr.updateMessageResult(str, sm.getId());
 			 return false;
