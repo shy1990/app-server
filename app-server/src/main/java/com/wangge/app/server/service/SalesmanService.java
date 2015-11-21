@@ -33,6 +33,13 @@ public class SalesmanService {
 		List<Salesman> listSalesma=salesmanRepository.findUserName();;
 		return listSalesma;
 	}
+	public Salesman findByUsernameAndPassword(String username, String password) {
+
+		Salesman salesman = salesmanRepository.findByUserUsernameAndUserPassword(
+				username, password);
+
+		return salesman;
+	}
 	
 	public Salesman findSalesmanbyId(String id){
 		return salesmanRepository.findOne(id);
@@ -45,5 +52,9 @@ public class SalesmanService {
 
 	public List<Salesman> findAll(){
 		return salesmanRepository.findAll();
+	}
+	public Salesman login(String username, String password, String phone) {
+		
+		return  salesmanRepository.findByUserUsernameAndUserPassword(username, password);
 	}
 }

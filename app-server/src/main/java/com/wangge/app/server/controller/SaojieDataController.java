@@ -20,9 +20,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wangge.app.server.entity.Salesman;
+import com.wangge.app.server.entity.Saojie;
 import com.wangge.app.server.entity.SaojieData;
 import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.service.DataSaojieService;
+import com.wangge.app.server.service.SalesmanService;
 import com.wangge.app.server.util.UploadUtil;
 import com.wangge.common.entity.Region;
 
@@ -43,28 +46,40 @@ public class SaojieDataController {
 	 */
 	@RequestMapping(value = "/{regionId}/saojie_data", method = RequestMethod.GET)
 	public ResponseEntity<List<SaojieData>> list(
-			@PathVariable("regionId") Region region) {
+			@PathVariable("regionId") String regionId) {
 
 		List<SaojieData> Data = dataSaojieService
-				.getSaojieDataByregion(region);
+				.getSaojieDataByregion(regionId);
 
 		return new ResponseEntity<List<SaojieData>>(Data, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/{username}/saojie_data", method = RequestMethod.POST)
+	@RequestMapping(value = "/{userId}/saojie_data", method = RequestMethod.POST)
 	public ResponseEntity<SaojieData> add(
-			@PathVariable("username") String username,
+			@PathVariable("userId") Salesman salesman,
 			@RequestBody JSONObject json) {
 		String name = json.getString("name");
-		String remark = json.getString("remark");
+		String description = json.getString("description");
 		String coordinate = json.getString("coordinate");
 		String imageUrl = null;
 		if (json.containsKey("imageUrl")) {
 			imageUrl = json.getString("imageUrl");
 		}
+		Saojie saojie  = dataSaojieService.findBySalesman(salesman);
 		SaojieData data = new SaojieData(name, coordinate);
-		dataSaojieService.addDataSaojie(data);
-		return new ResponseEntity<SaojieData>(data, HttpStatus.CREATED);
+		data.setDescription(description);
+		data.setImageUrl(imageUrl);
+		data.setRegion(saojie.getRegion());
+		data.setSaojie(saojie);
+		//data.setId(UUID.randomUUID().toString().replaceAll("-", ""));
+		SaojieData saojiedata = dataSaojieService.addDataSaojie(data);
+		SaojieData sj = new SaojieData();
+		sj.setId(saojiedata.getId());
+		sj.setCoordinate(saojiedata.getCoordinate());
+		sj.setDescription(saojiedata.getDescription());
+		sj.setImageUrl(saojiedata.getImageUrl());
+		
+		return new ResponseEntity<SaojieData>(sj, HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/images/upload", method = RequestMethod.POST)
@@ -95,5 +110,41 @@ public class SaojieDataController {
 			return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
 		}
 
+	}
+	
+	/**
+	 * @description (修改扫街数据)
+	 * @param jsons
+	 * @return
+	 * @author SongBaozhen
+	 */
+	@RequestMapping(value = "/update_saojieData",method = RequestMethod.POST)
+	public ResponseEntity<Json> updateDataSaojie(@RequestBody JSONObject jsons){
+		String saojieDataId = jsons.getString("id");
+		String name = jsons.getString("name");
+		String description = jsons.getString("description");
+		Json json = new Json();
+		SaojieData dataSaojie = dataSaojieService.findSaojieDataById(Long.parseLong(saojieDataId));
+		if(dataSaojie != null && !"".equals(dataSaojie)){
+			dataSaojie.setName(name);
+			dataSaojie.setDescription(description);
+			
+			try {
+				dataSaojieService.addDataSaojie(dataSaojie);
+				json.setMsg("修改成功！");
+				return new ResponseEntity<Json>(json, HttpStatus.OK);
+			} catch (Exception e) {
+				logger.error("login() occur error. ", e);
+				e.printStackTrace();
+				json.setMsg("修改异常！");
+				return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
+				
+			}
+		}else{
+			json.setMsg("修改失败！");
+			return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
+		}
+		
+		
 	}
 }

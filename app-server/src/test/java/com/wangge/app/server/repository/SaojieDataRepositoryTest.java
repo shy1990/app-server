@@ -34,5 +34,11 @@ public class SaojieDataRepositoryTest {
 	public void testDel() {
 
 	}
+//	@Test
+//	public  void test(){
+//		SaojieData findOne = sdr.findById(6L);
+//	    //SaojieData findOne = sdr.findOne(6L);
+//		System.out.println("name ==============="+findOne.getName());
+//	}
 
 }
