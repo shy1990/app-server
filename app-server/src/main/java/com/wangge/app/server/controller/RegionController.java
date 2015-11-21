@@ -12,7 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.wangge.app.server.entity.Salesman;
+import com.wangge.app.server.entity.Saojie;
 import com.wangge.app.server.service.RegionService;
+import com.wangge.app.server.service.SalesmanService;
+import com.wangge.app.server.service.SaojieService;
 import com.wangge.app.server.vo.TreeVo;
 import com.wangge.common.entity.Region;
 
@@ -29,6 +33,10 @@ public class RegionController {
 			.getLogger(RegionController.class);
 	@Resource
 	private RegionService regionService;
+	@Resource
+	private SalesmanService salesmanService;
+	@Resource
+	private SaojieService saojieService;
 	
 	/**
 	 * 
@@ -98,6 +106,29 @@ public class RegionController {
 		
 		return new ResponseEntity<String>("SUCCESS",HttpStatus.OK);
 	}
+	
+	
+	@RequestMapping(value="/findTaskRegion",method=RequestMethod.POST)
+	public ResponseEntity<List<Region>> findTaskRegion(String salesmanid){
+		logger.debug("salesmanid"+salesmanid);
+		List<Region>  listRegion=new ArrayList<Region>();
+		Salesman man=salesmanService.findSalesmanbyId(salesmanid);
+		List<Saojie> listSaojie=saojieService.findBySalesman(man);
+		if(listSaojie.size()>0){
+			listRegion= regionService.findRegiondbyParentid(man.getRegion().getId());
+			for(int i=0;i<listRegion.size();i++){
+				for(int j=0;j<listSaojie.size();j++){
+					if(listRegion.get(i).getName().equals(listSaojie.get(j).getRegion().getName())){
+						listRegion.remove(i);
+					}
+				}
+			}
+		}else{
+			listRegion.add(man.getRegion());
+		}
+		return new ResponseEntity<List<Region>>(listRegion,HttpStatus.OK);
+	}
+	
 	
 }
 
