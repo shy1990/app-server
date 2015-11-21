@@ -14,6 +14,10 @@ public class Json implements Serializable{
 	private Boolean success=false;//是否成功
 	private String msg;
 	private Object obj;
+	private String id;
+	private String phone;
+	private String regionId;
+	
 	
 	public Boolean getSuccess() {
 		return success;
@@ -33,4 +37,23 @@ public class Json implements Serializable{
 	public void setObj(Object obj) {
 		this.obj = obj;
 	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getRegionId() {
+		return regionId;
+	}
+	public void setRegionId(String regionId) {
+		this.regionId = regionId;
+	}
+	
 }

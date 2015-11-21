@@ -36,7 +36,7 @@ public class SaojieData extends AbstractPersistable<Long> {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "SAOJIE_ID")
 	private Saojie saojie;
-	@OneToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "REGION_ID")
 	private Region region;
 	private String name;

@@ -4,23 +4,30 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.Saojie;
+import com.wangge.app.server.entity.Saojie.SaojieStatus;
+import com.wangge.app.server.repository.SalesmanRepository;
 import com.wangge.app.server.repository.SaojieRepository;
 import com.wangge.app.server.vo.TreeVo;
 import com.wangge.common.entity.Region;
 import com.wangge.common.repository.RegionRepository;
 
-//@Service
+@Service
 public class RegionService {
 	@Autowired
 	private SaojieRepository taskSaojieRepository;
 	@Autowired
 	private RegionRepository regionRepository;
+	@Resource
+	private SalesmanRepository salesmanRepository;
 
 	/**
 	 * 获取扫街区域信息
@@ -35,14 +42,19 @@ public class RegionService {
 		List<Saojie> saojieTasks = taskSaojieRepository.findBySalesman(salesman);
 		// TODO 可用java8 stream过滤
 		for (Saojie taskSaojie : saojieTasks) {
-			if (TaskStatus.PENDING.equals(taskSaojie.getStatus())) {
-				can.addAll(taskSaojie.getRegions());
+			if (SaojieStatus.PENDING.equals(taskSaojie.getStatus())) {
+				for(Saojie Saojie : taskSaojie.getChildren()){
+					can.add(Saojie.getRegion());
+				}
+				
 			} else {
-				cant.addAll(taskSaojie.getRegions());
+				for(Saojie Saojie : taskSaojie.getChildren()){
+					can.add(Saojie.getRegion());
+				}
 			}
 		}
-		result.put("can", can);
-		result.put("cant", cant);
+		result.put("open", can);
+		result.put("nopen", cant);
 		return result;
 	}
 

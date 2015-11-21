@@ -13,7 +13,7 @@ import com.wangge.app.server.repository.SalesmanRepository;
  * @author Administrator
  *
  */
-//@Service
+@Service
 public class SalesmanService {
 
 
@@ -22,7 +22,7 @@ public class SalesmanService {
 
 	public Salesman findByUsernameAndPassword(String username, String password) {
 
-		Salesman salesman = salesmanRepository.findByUsernameAndPassword(
+		Salesman salesman = salesmanRepository.findByUserUsernameAndUserPassword(
 				username, password);
 
 		return salesman;
@@ -37,19 +37,9 @@ public class SalesmanService {
 		salesmanRepository.save(salesman);
 	}
 
-	public Json login(String username, String password, String phone) {
-		Json json = new Json();
-		Salesman salesman = salesmanRepository.findByUsernameAndPassword(username, password);
-		if(salesman !=null && !"".equals(salesman)){
-			if (!password.equals(salesman.getPassword()) || phone.equals(salesman.getPhone())) {
-				json.setMsg("用戶名或密码错误！");
-			}else if(!phone.equals(salesman.getPhone())){
-				json.setMsg("手机号错误！");
-			}else{
-				json.setMsg("登陆成功！");
-			}
-		}
-		return json;
+	public Salesman login(String username, String password, String phone) {
+		
+		return  salesmanRepository.findByUserUsernameAndUserPassword(username, password);
 	}
 
 }

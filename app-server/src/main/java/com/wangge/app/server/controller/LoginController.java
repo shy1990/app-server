@@ -14,8 +14,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.service.SalesmanService;
+import com.wangge.security.entity.User;
 
-//@RestController
+@RestController
 @RequestMapping(value = "/v1")
 public class LoginController {
 	
@@ -33,9 +34,28 @@ public class LoginController {
 		String username=jsons.getString("username");
 		String password=jsons.getString("password");
 		String phone=jsons.getString("phone");
-	 
-		Json json =salesmanService.login(username,password,phone);
-		return new ResponseEntity<Json>(json, HttpStatus.OK);
+		Json json = new Json();
+		Salesman salesman =salesmanService.login(username,password,phone);
+		
+		if(salesman !=null && !"".equals(salesman)){
+			if (!password.equals(salesman.getUser().getPassword()) || !username.equals(salesman.getUser().getUsername())) {
+				json.setMsg("用戶名或密码错误！");
+				return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
+			}else if(!phone.equals(salesman.getUser().getPhone())){
+				json.setMsg("手机号错误！");
+				return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
+			}else{
+				//json.setObj(salesman);
+				json.setPhone(salesman.getUser().getPhone());
+				json.setRegionId(salesman.getRegion().getId());
+				json.setId(salesman.getId());
+				json.setMsg("登陆成功！");
+				return new ResponseEntity<Json>(json, HttpStatus.OK);
+			}
+		}else{
+			    json.setMsg("用户名密码不存在！");
+			return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
+		}
 	}
 	
 }

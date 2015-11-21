@@ -7,7 +7,10 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wangge.app.server.entity.Salesman;
+import com.wangge.app.server.entity.Saojie;
 import com.wangge.app.server.entity.SaojieData;
+import com.wangge.app.server.entity.Saojie.SaojieStatus;
 import com.wangge.app.server.repository.SaojieDataRepository;
 import com.wangge.app.server.repository.SaojieRepository;
 import com.wangge.common.entity.Region;
@@ -24,15 +27,37 @@ public class DataSaojieService {
 	@Autowired
 	private RegionRepository regionRepository;
 
-	public void addDataSaojie(SaojieData dataSaojie) {
+	public SaojieData addDataSaojie(SaojieData dataSaojie) {
 
-		dataSaojieRepository.save(dataSaojie);
+		SaojieData data =  dataSaojieRepository.save(dataSaojie);
+		
+		return data;
 	}
 
-	public List<SaojieData> getSaojieDataByregion(Region region) {
+	public List<SaojieData> getSaojieDataByregion(String regionId) {
 
 
-		return dataSaojieRepository.findByRegion(region);
+		return dataSaojieRepository.findByRegionId(regionId);
+	}
+
+	public SaojieData findSaojieDataById(Long saojieDataId) {
+		
+		return dataSaojieRepository.findOne(saojieDataId);
+	}
+
+
+	public Saojie findBySalesman(Salesman salesman) {
+	List<Saojie>	list = taskSaojieRepository.findBySalesman(salesman);
+	    for(Saojie saojie : list){
+	    	if(SaojieStatus.PENDING.equals(saojie.getStatus())){
+	    		for(Saojie sj : saojie.getChildren()){
+	    			if(SaojieStatus.PENDING.equals(sj.getStatus())){
+	    				return sj;
+	    			}
+	    		}
+	    	}
+	    }
+		return null;
 	}
 
 }

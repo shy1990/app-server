@@ -17,7 +17,7 @@ import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.repository.SalesmanRepository;
 import com.wangge.app.server.service.SalesmanService;
 
-//@RestController
+@RestController
 @RequestMapping(value = "/v1/saleman")
 public class SalesmanController {
 
@@ -32,7 +32,7 @@ public class SalesmanController {
 		Json json = new Json();
 		Salesman sa = salesmanService.findByUsernameAndPassword(username, oldPassword);
 		if (sa != null && !"".equals(sa)) {
-			sa.setPassword(planPassword);
+			sa.getUser().setPassword(planPassword);
 			salesmanService.save(sa);
 			json.setMsg("修改成功！");
 			return new ResponseEntity<Json>(json, HttpStatus.OK);

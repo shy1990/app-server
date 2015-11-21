@@ -24,7 +24,7 @@ import com.wangge.common.entity.Region;
  * @author SongBaozhen
  *
  */
-//@RestController
+@RestController
 @RequestMapping(value = "/v1")
 public class RegionController {
 
@@ -37,9 +37,10 @@ public class RegionController {
 	 * @param username
 	 * @return
 	 */
-	@RequestMapping(value="/{username}/regions",method=RequestMethod.GET)
-	public ResponseEntity<Map<String,List<Region>>> salesmanRegions(@PathVariable("username") Salesman salesman){
+	@RequestMapping(value="/{id}/regions",method=RequestMethod.GET)
+	public ResponseEntity<Map<String,List<Region>>> salesmanRegions(@PathVariable("id") Salesman salesman){
 		logger.debug("username:"+salesman);
+		
 	     Map<String, List<Region>>   regionMap = regionService.getSaojie(salesman);
 	   
 		return new ResponseEntity<Map<String,List<Region>>>(regionMap,HttpStatus.OK);
