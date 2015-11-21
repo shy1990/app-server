@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.RestTemplate;
 
-import com.wangge.common.repository.RegionRepository;
 //git.oschina.net/sylarlove/app-server.git
 import com.wangge.common.web.client.HmacRestTemplet;
 import com.wangge.common.web.client.HmacRestTemplet.HttpClientOption;
@@ -18,7 +17,7 @@ import com.wangge.common.web.client.HmacRestTemplet.HttpClientOption;
 @SpringApplicationConfiguration(classes = AppServerApplication.class)
 public class AppServerApplicationTests {
 	@Autowired
-	private RegionRepository rp;
+//	private RegionRepository rp;
 
 	@Test
 	public void contextLoads() {

@@ -1,4 +1,4 @@
-package com.wangge.app.server.util.jpush.api;
+package com.wangge.app.server.jpush;
 
 
 public class BaseURL {

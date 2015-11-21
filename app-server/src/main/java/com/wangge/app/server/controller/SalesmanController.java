@@ -27,4 +27,5 @@ public class SalesmanController {
 	 return new ResponseEntity<List<Salesman>>(listSalesman,HttpStatus.OK);
 	
 }
+
 }

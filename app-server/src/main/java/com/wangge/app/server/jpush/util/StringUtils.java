@@ -1,4 +1,4 @@
-package com.wangge.app.server.util.jpush.api.utils;
+package com.wangge.app.server.jpush.util;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.MessageDigest;

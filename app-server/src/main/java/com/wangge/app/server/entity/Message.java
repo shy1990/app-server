@@ -1,5 +1,7 @@
 package com.wangge.app.server.entity;
 
+
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -58,6 +60,7 @@ public class Message implements Serializable {
 	private String content;
 	private String receiver;
 	private String result;
+
 	@Enumerated(EnumType.ORDINAL)
 	@Column(name="MESSAGE_TYPE")
 	private MessageType type;

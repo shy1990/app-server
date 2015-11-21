@@ -28,14 +28,14 @@ public class LoginController {
 	 * @param json
 	 * @return
 	 */
-	@RequestMapping(value = "/login",method = RequestMethod.POST)
-	public ResponseEntity<Json> login(@RequestBody JSONObject jsons){
-		String username=jsons.getString("username");
-		String password=jsons.getString("password");
-		String phone=jsons.getString("phone");
-	 
-		Json json =salesmanService.login(username,password,phone);
-		return new ResponseEntity<Json>(json, HttpStatus.OK);
-	}
+//	@RequestMapping(value = "/login",method = RequestMethod.POST)
+//	public ResponseEntity<Json> login(@RequestBody JSONObject jsons){
+//		String username=jsons.getString("username");
+//		String password=jsons.getString("password");
+//		String phone=jsons.getString("phone");
+//	 
+//		Json json =salesmanService.login(username,password,phone);
+//		return new ResponseEntity<Json>(json, HttpStatus.OK);
+//	}
 	
 }

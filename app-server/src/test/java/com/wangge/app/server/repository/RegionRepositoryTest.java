@@ -40,5 +40,12 @@ public class RegionRepositoryTest {
 			System.out.println(region.getName()+region.getType().getName());
 		}
 	}
+//	@Test
+//	@Transactional
+//	public void testFindMaxId() {
+//		Region entity = rr.findOne("0");
+//		String maxId = rr.findMaxIdByParent(entity);
+//		System.out.println(maxId);
+//	}
 
 }
