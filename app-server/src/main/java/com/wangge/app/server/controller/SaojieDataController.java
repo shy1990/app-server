@@ -2,6 +2,7 @@ package com.wangge.app.server.controller;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.Saojie;
+import com.wangge.app.server.entity.Saojie.SaojieStatus;
 import com.wangge.app.server.entity.SaojieData;
 import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.service.DataSaojieService;
@@ -58,6 +60,9 @@ public class SaojieDataController {
 	public ResponseEntity<SaojieData> add(
 			@PathVariable("userId") Salesman salesman,
 			@RequestBody JSONObject json) {
+		int taskValue = 0;
+		int dataSaojieNum = 0;
+		List<Saojie> child = new ArrayList<Saojie>();
 		String name = json.getString("name");
 		String description = json.getString("description");
 		String coordinate = json.getString("coordinate");
@@ -73,11 +78,36 @@ public class SaojieDataController {
 		data.setSaojie(saojie);
 		//data.setId(UUID.randomUUID().toString().replaceAll("-", ""));
 		SaojieData saojiedata = dataSaojieService.addDataSaojie(data);
+		
 		SaojieData sj = new SaojieData();
 		sj.setId(saojiedata.getId());
 		sj.setCoordinate(saojiedata.getCoordinate());
 		sj.setDescription(saojiedata.getDescription());
 		sj.setImageUrl(saojiedata.getImageUrl());
+		
+		// taskValue = (int)saojie.getChildren();
+		//for(Saojie s : saojie.getChildren()){
+			//if(SaojieStatus.PENDING.equals(saojie.getStatus())){
+				taskValue = saojie.getMinValue();
+			    dataSaojieNum = dataSaojieService.getDtaCountBySaojieId(Integer.parseInt(String.valueOf(saojie.getId())));
+				if(taskValue == dataSaojieNum){
+					saojie.setStatus(SaojieStatus.COMMIT);
+					Saojie sj2 =  dataSaojieService.findByOrder(saojie.getOrder());
+					sj2.setStatus(SaojieStatus.AGREE);
+					child.add(saojie);
+					child.add(sj2);
+					//task.getNext().setStatus(TaskStatus.PENDING);
+					//taskSaojieService.save((TaskSaojie)task);
+					saojie.setChildren(child);
+					dataSaojieService.updateSaojie(saojie);
+				
+				}
+		//	}
+			
+		//}
+		
+		
+		
 		
 		return new ResponseEntity<SaojieData>(sj, HttpStatus.CREATED);
 	}
