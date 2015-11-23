@@ -46,30 +46,30 @@ public class JpushClient {
 		 */
 		private static long timeToLive =  60 * 60 * 24;  
 
-		public static void main(String[] args) {
-			/*
-			 * Example1: 初始化,默认发送给android和ios，同时设置离线消息存活时间
-			 * jpush = new JPushClient(masterSecret, appKey, timeToLive);
-			 * 
-			 * Example2: 只发送给android
-			 * jpush = new JPushClient(masterSecret, appKey, DeviceEnum.Android);
-			 * 
-			 * Example3: 只发送给IOS
-			 * jpush = new JPushClient(masterSecret, appKey, DeviceEnum.IOS);
-			 * 
-			 * Example4: 只发送给android,同时设置离线消息存活时间
-			 * jpush = new JPushClient(masterSecret, appKey, timeToLive, DeviceEnum.Android);
-			 */
-			jpush = new JPushClient(masterSecret, appKey, timeToLive, DeviceEnum.Android);
-			/* 
-			 * 是否启用ssl安全连接, 可选
-			 * 参数：启用true， 禁用false，默认为非ssl连接
-			 */
-			//jpush.setEnableSSL(true);
-
-			//测试发送消息或者通知
-			sendOrder("下单通知","会员下单通知:【222222222222222】山东省济南市历下区天桥店下单成功，订单商品","18764157959","20151111111111","天桥魅族手机");
-		}
+//		public static void main(String[] args) {
+//			/*
+//			 * Example1: 初始化,默认发送给android和ios，同时设置离线消息存活时间
+//			 * jpush = new JPushClient(masterSecret, appKey, timeToLive);
+//			 * 
+//			 * Example2: 只发送给android
+//			 * jpush = new JPushClient(masterSecret, appKey, DeviceEnum.Android);
+//			 * 
+//			 * Example3: 只发送给IOS
+//			 * jpush = new JPushClient(masterSecret, appKey, DeviceEnum.IOS);
+//			 * 
+//			 * Example4: 只发送给android,同时设置离线消息存活时间
+//			 * jpush = new JPushClient(masterSecret, appKey, timeToLive, DeviceEnum.Android);
+//			 */
+//			jpush = new JPushClient(masterSecret, appKey, timeToLive, DeviceEnum.Android);
+//			/* 
+//			 * 是否启用ssl安全连接, 可选
+//			 * 参数：启用true， 禁用false，默认为非ssl连接
+//			 */
+//			//jpush.setEnableSSL(true);
+//
+//			//测试发送消息或者通知
+//			sendOrder("下单通知","会员下单通知:【222222222222222】山东省济南市历下区天桥店下单成功，订单商品","18764157959","20151111111111","天桥魅族手机");
+//		}
 		/**
 		 * 
 		 * @Description: 订单通知
