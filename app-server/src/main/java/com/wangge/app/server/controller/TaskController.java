@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.collect.Lists;
+import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.Saojie;
 import com.wangge.app.server.service.RegionService;
 import com.wangge.app.server.service.SalesmanManagerService;
 import com.wangge.app.server.service.SalesmanService;
+import com.wangge.app.server.service.SaojieService;
 import com.wangge.app.server.service.TaskSaojieService;
 import com.wangge.common.entity.Region;
 
@@ -33,12 +35,12 @@ public class TaskController {
 //	SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");//
 //	@Resource
 //	private SalesmanService salesmanService;
-//	@Resource
-//	private SalesmanManagerService sms;
+	@Resource
+	private SalesmanService sms;
 //	@Resource
 //	private RegionService res;
 	@Resource
-	private TaskSaojieService tss;
+	private SaojieService sjs;
 		
 		/**
 		 * 
@@ -102,12 +104,13 @@ public class TaskController {
 	}
 		
 		
-//		@RequestMapping(value = "/findAllTask", method = RequestMethod.POST)
-//		public ResponseEntity<List<Saojie>> findAllTask(String userName){
-//			List<Saojie> listTaskSaojie=tss.findBycreateBy(sms.findByUsername(userName));
-//			
-//			return new ResponseEntity<List<Saojie>>(listTaskSaojie,HttpStatus.OK);
-//		}
+		@RequestMapping(value = "/findAllTask", method = RequestMethod.POST)
+		public ResponseEntity<List<Saojie>> findAllTask(String userid){
+			Salesman salesman = sms.findSalesmanbyId(userid);
+			List<Saojie> listTaskSaojie=sjs.findAllSaojie();
+			
+			return new ResponseEntity<List<Saojie>>(listTaskSaojie,HttpStatus.OK);
+		}
 //		
 //		@RequestMapping(value = "/upstatus", method = RequestMethod.POST)
 //		public ResponseEntity<Map<String, Object> > upstatus(String taskid,String userid){
