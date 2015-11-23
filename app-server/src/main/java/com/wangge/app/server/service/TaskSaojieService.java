@@ -17,14 +17,14 @@ import com.wangge.app.server.entity.Salesman;
 public class TaskSaojieService {
 
 
-//	@Resource
-//	private TaskSaojieRepository taskSaojieRepository;
-//	@Resource
-//	private TaskRepository taskRepository;
-//
-//	public void addSaojieTask(TaskSaojie taskSaojie) {
-//		taskSaojieRepository.save(taskSaojie);
-//	}
+	@Resource
+	private TaskSaojieRepository taskSaojieRepository;
+	@Resource
+	private TaskRepository taskRepository;
+
+	public void addSaojieTask(TaskSaojie taskSaojie) {
+		taskSaojieRepository.save(taskSaojie);
+	}
 //
 //
 //	public List<TaskSaojie> findTaskSJbysalesman(Salesman salesman){
@@ -53,4 +53,4 @@ public class TaskSaojieService {
 //		
 //		return task;
 //	}
-}
+

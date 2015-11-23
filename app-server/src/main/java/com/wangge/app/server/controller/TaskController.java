@@ -1,35 +1,31 @@
-//package com.wangge.app.server.controller;
-//
-//import java.text.ParseException;
-//import java.text.SimpleDateFormat;
-//import java.util.ArrayList;
-//import java.util.HashMap;
-//import java.util.List;
-//import java.util.Map;
-//
-//import javax.annotation.Resource;
-//
-//import org.apache.log4j.Logger;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RequestMethod;
-//import org.springframework.web.bind.annotation.RestController;
-//
-//import com.google.common.collect.Lists;
-//import com.wangge.app.server.entity.Task;
-//import com.wangge.app.server.entity.Task.TaskStatus;
-//import com.wangge.app.server.entity.TaskSaojie;
-//import com.wangge.app.server.entity.TaskTarget;
-//import com.wangge.app.server.service.RegionService;
-//import com.wangge.app.server.service.SalesmanManagerService;
-//import com.wangge.app.server.service.SalesmanService;
-//import com.wangge.app.server.service.TaskSaojieService;
-//import com.wangge.common.entity.Region;
-//
-//@RestController
-//@RequestMapping(value = "/v1/task")
-//public class TaskController {
+package com.wangge.app.server.controller;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.log4j.Logger;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.google.common.collect.Lists;
+import com.wangge.app.server.service.RegionService;
+import com.wangge.app.server.service.SalesmanManagerService;
+import com.wangge.app.server.service.SalesmanService;
+import com.wangge.app.server.service.TaskSaojieService;
+import com.wangge.common.entity.Region;
+
+@RestController
+@RequestMapping(value = "/v1/task")
+public class TaskController {
 //
 //	private static final Logger logger = Logger
 //			.getLogger(TaskController.class);
@@ -40,21 +36,27 @@
 //	private SalesmanManagerService sms;
 //	@Resource
 //	private RegionService res;
-//	@Resource
-//	private TaskSaojieService tss;
-//		
-//		/**
-//		 * 
-//		 * 功能: 添加扫街任务
-//		 * 详细： 	
-//		 * 作者： 	Administrator
-//		 * 版本：  1.0
-//		 * 日期：  2015年11月12日上午11:33:38
-//		 *
-//		 */
-//		@RequestMapping(value = "/addTask", method = RequestMethod.POST)
-//		public ResponseEntity<String> addTask(String taskName,String salesmanid,String regionid,String taskStart,String taskEnd,String taskCount,String taskDes,String userName ) {
-//			
+	@Resource
+	private TaskSaojieService tss;
+		
+		/**
+		 * 
+		 * 功能: 添加扫街任务
+		 * 详细： 	
+		 * 作者： 	Administrator
+		 * 版本：  1.0
+		 * 日期：  2015年11月12日上午11:33:38
+		 *
+		 */
+		@RequestMapping(value = "/addTask", method = RequestMethod.POST)
+		public ResponseEntity<String> addTask(String taskName,String salesmanid,String regionid,String taskStart,String taskEnd,String taskCount,String taskDes,String userName ) {
+			
+			
+			System.out.println(taskName+salesmanid+regionid+taskDes+taskEnd+taskStart+userName);
+			
+			
+			
+			
 //			TaskSaojie ts=new TaskSaojie();
 //			TaskSaojie entity = new TaskSaojie();
 //			List<Region> listRegion =new ArrayList<Region>();
@@ -95,32 +97,32 @@
 //				entity.setStatus(entity.getStatus().PENDING);
 //				tss.addSaojieTask(entity);
 //			}
-//			return new ResponseEntity<String>("SUCCESS",HttpStatus.OK);
-//	}
-//		
-//		
-//		@RequestMapping(value = "/findAllTask", method = RequestMethod.POST)
-//		public ResponseEntity<List<TaskSaojie>> findAllTask(String userName){
-//			List<TaskSaojie> listTaskSaojie=tss.findBycreateBy(sms.findByUsername(userName));
-//			
-//			return new ResponseEntity<List<TaskSaojie>>(listTaskSaojie,HttpStatus.OK);
-//		}
-//		
-//		@RequestMapping(value = "/upstatus", method = RequestMethod.POST)
-//		public ResponseEntity<Map<String, Object> > upstatus(String taskid,String userid){
-//
-//			Task task = tss.findByTaskId(taskid);
-//			task.setStatus(task.getStatus().MANUAL_AGREE);
-//		     tss.saveTask(task);
-//		     if(task.getNext()!=null){
-//		    	 task.getNext().setStatus(task.getStatus().PENDING);
-//		    	 tss.saveTask(task.getNext());
-//		     }
-//		     Map<String, Object>  map=new HashMap<String, Object>();
-//		     map.put("status", task.getStatus());
-//		     if(task.getNext()!=null){
-//		     map.put("nextid", task.getNext().getId());
-//		     }
-//			return new ResponseEntity<Map<String, Object> >(map,HttpStatus.OK);
-//		}
-//}
+			return new ResponseEntity<String>("SUCCESS",HttpStatus.OK);
+	}
+		
+		
+		@RequestMapping(value = "/findAllTask", method = RequestMethod.POST)
+		public ResponseEntity<List<TaskSaojie>> findAllTask(String userName){
+			List<TaskSaojie> listTaskSaojie=tss.findBycreateBy(sms.findByUsername(userName));
+			
+			return new ResponseEntity<List<TaskSaojie>>(listTaskSaojie,HttpStatus.OK);
+		}
+		
+		@RequestMapping(value = "/upstatus", method = RequestMethod.POST)
+		public ResponseEntity<Map<String, Object> > upstatus(String taskid,String userid){
+
+			Task task = tss.findByTaskId(taskid);
+			task.setStatus(task.getStatus().MANUAL_AGREE);
+		     tss.saveTask(task);
+		     if(task.getNext()!=null){
+		    	 task.getNext().setStatus(task.getStatus().PENDING);
+		    	 tss.saveTask(task.getNext());
+		     }
+		     Map<String, Object>  map=new HashMap<String, Object>();
+		     map.put("status", task.getStatus());
+		     if(task.getNext()!=null){
+		     map.put("nextid", task.getNext().getId());
+		     }
+			return new ResponseEntity<Map<String, Object> >(map,HttpStatus.OK);
+		}
+}
