@@ -123,6 +123,12 @@ public class RegionService {
 		return listRegion;
 	}
 	
+	
+	
+	public String findMaxIdByParent(Region region){
+		
+		return regionRepository.findMaxIdByParent(region);
+	}
 	/**
 	 * 
 	 * 功能: 查询Region
