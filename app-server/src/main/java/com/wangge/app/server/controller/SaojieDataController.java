@@ -40,6 +40,10 @@ public class SaojieDataController {
 			.getLogger(SaojieDataController.class);
 	@Resource
 	private DataSaojieService dataSaojieService;
+	
+	
+	private static String url="http:/192.168.2.247/uploadfile/";
+	
 
 	/**
 	 * 获取指定业务扫街数据
@@ -118,21 +122,22 @@ public class SaojieDataController {
 			@RequestParam("id") String id, HttpServletRequest request) {
 		Json json = new Json();
 		SimpleDateFormat dateformat = new SimpleDateFormat("yyyy/MM/dd/HH/");
-		String pathdir = "/images/uploadfile/" + dateformat.format(new Date());// 构件文件保存目录
+		//String pathdir = "/images/uploadfile/" + dateformat.format(new Date());// 构件文件保存目录
+		String pathdir = "/var/sanji/images/";// 构件文件保存目录
 		// 得到图片保存目录的真实路径
-		String realpathdir = request.getSession().getServletContext()
-				.getRealPath(pathdir);
-		System.out.println(realpathdir+"pathpath*******");
+//		String realpathdir = request.getSession().getServletContext()
+//				.getRealPath(pathdir);
+//		System.out.println(realpathdir+"pathpath*******");
 		String filename = UUID.randomUUID().toString() + ".jpg";// 构建文件名称
-		System.out.println("http://"+request.getLocalAddr()+":"+request.getLocalPort()+request.getContextPath()+"/"+pathdir+filename+"imageimage*******");
-		
+//		System.out.println("http://"+request.getLocalAddr()+":"+request.getLocalPort()+request.getContextPath()+"/"+pathdir+filename+"imageimage*******");
 		try {
 		//	String path = UploadUtil.saveImg(file, realpathdir, filename);
-			String path = UploadUtil.saveFile(realpathdir, filename,file);
+			String path = UploadUtil.saveFile(pathdir, filename,file);
 			if (path != null && !"".equals(path)) {
 				json.setMsg("上传成功！");
 				//json.setObj(path);
-				json.setObj("http://"+request.getLocalAddr()+":"+request.getLocalPort()+request.getContextPath()+"/"+pathdir+filename);
+				//json.setObj("http://"+request.getLocalAddr()+":"+request.getLocalPort()+request.getContextPath()+"/"+pathdir+filename);
+				json.setObj(url + dateformat.format(new Date())+filename);
 				return new ResponseEntity<Json>(json, HttpStatus.OK);
 			} else {
 				json.setMsg("上传失败！");
