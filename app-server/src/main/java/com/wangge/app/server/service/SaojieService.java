@@ -52,4 +52,8 @@ public class SaojieService {
 		
 		return saojieRepository.findAllSaojie();
 	}
+	public Saojie findSapjiebyId(Long id){
+		return saojieRepository.findOne(id);
+
+	}
 }

@@ -27,7 +27,7 @@ import com.wangge.app.server.service.TaskSaojieService;
 import com.wangge.common.entity.Region;
 
 @RestController
-@RequestMapping(value = "/v1/task")
+@RequestMapping(value = "/v1/task/")
 public class TaskController {
 //
 //	private static final Logger logger = Logger
@@ -104,29 +104,29 @@ public class TaskController {
 	}
 		
 		
-		@RequestMapping(value = "/findAllTask", method = RequestMethod.POST)
+		@RequestMapping(value = "/findAllSaojie", method = RequestMethod.POST)
 		public ResponseEntity<List<Saojie>> findAllTask(String userid){
-			Salesman salesman = sms.findSalesmanbyId(userid);
 			List<Saojie> listTaskSaojie=sjs.findAllSaojie();
 			
 			return new ResponseEntity<List<Saojie>>(listTaskSaojie,HttpStatus.OK);
 		}
-//		
-//		@RequestMapping(value = "/upstatus", method = RequestMethod.POST)
-//		public ResponseEntity<Map<String, Object> > upstatus(String taskid,String userid){
-//
-//			Saojie sj = tss.findByTaskId(taskid);
-//			sj.setStatus(sj.getStatus().MANUAL_AGREE);
-//		     tss.saveTask(sj);
-//		     if(sj.getNext()!=null){
-//		    	 sj.getNext().setStatus(sj.getStatus().PENDING);
-//		    	 tss.saveTask(sj.getNext());
-//		     }
-//		     Map<String, Object>  map=new HashMap<String, Object>();
-//		     map.put("status", sj.getStatus());
-//		     if(sj.getNext()!=null){
-//		     map.put("nextid", sj.getOrder());
-//		     }
-//			return new ResponseEntity<Map<String, Object> >(map,HttpStatus.OK);
-//		}
+		
+		@RequestMapping(value = "/upstatus", method = RequestMethod.POST)
+		public ResponseEntity<Map<String, Object> > upstatus(String taskid){
+System.out.println(taskid);
+			Saojie sj = sjs.findSapjiebyId(Long.valueOf(taskid.trim()).longValue());
+			sj.setStatus(sj.getStatus().AGREE);
+			sjs.saveSaojie(sj);
+		     if(sj.getOrder()!=null&&sj.getOrder()!=0){
+		    	 Saojie saojie = sjs.findSapjiebyId(Long.valueOf(sj.getOrder()).longValue());
+		    	 saojie.setStatus(sj.getStatus().PENDING);
+		    	 sjs.saveSaojie(saojie);
+		     }
+		     Map<String, Object>  map=new HashMap<String, Object>();
+		     map.put("status", sj.getStatus());
+		     if(sj.getOrder()!=null){
+		     map.put("nextid", sj.getOrder());
+		     }
+			return new ResponseEntity<Map<String, Object> >(map,HttpStatus.OK);
+		}
 }
