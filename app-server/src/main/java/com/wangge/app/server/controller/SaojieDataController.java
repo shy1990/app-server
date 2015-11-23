@@ -127,7 +127,8 @@ public class SaojieDataController {
 			String path = UploadUtil.saveImg(file, realpathdir, filename);
 			if (path != null && !"".equals(path)) {
 				json.setMsg("上传成功！");
-				json.setObj(path);
+				//json.setObj(path);
+				json.setObj("http://"+request.getLocalAddr()+":"+request.getLocalPort()+request.getContextPath()+"/"+pathdir+filename);
 				return new ResponseEntity<Json>(json, HttpStatus.OK);
 			} else {
 				json.setMsg("上传失败！");
