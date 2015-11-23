@@ -125,7 +125,8 @@ public class SaojieDataController {
 
 		String filename = UUID.randomUUID().toString() + ".jpg";// 构建文件名称
 		try {
-			String path = UploadUtil.saveImg(file, realpathdir, filename);
+		//	String path = UploadUtil.saveImg(file, realpathdir, filename);
+			String path = UploadUtil.saveFile(realpathdir, filename,file);
 			if (path != null && !"".equals(path)) {
 				json.setMsg("上传成功！");
 				//json.setObj(path);
@@ -141,7 +142,7 @@ public class SaojieDataController {
 			json.setMsg("图片上传异常！");
 			return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
 		}
-
+		
 	}
 	
 	/**
