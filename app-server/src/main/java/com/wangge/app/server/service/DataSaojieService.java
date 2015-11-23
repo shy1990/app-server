@@ -60,7 +60,7 @@ public class DataSaojieService {
 		return null;
 	}
 	
-	public int getDtaCountBySaojieId(int long1) {
+	public int getDtaCountBySaojieId(Long long1) {
 		List<SaojieData>  datasaojie = dataSaojieRepository.findBySaojieId(long1);
 		if(datasaojie != null && datasaojie.size() > 0){
 			return datasaojie.size();

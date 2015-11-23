@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.Salesman;
@@ -89,7 +90,7 @@ public class SaojieDataController {
 		//for(Saojie s : saojie.getChildren()){
 			//if(SaojieStatus.PENDING.equals(saojie.getStatus())){
 				taskValue = saojie.getMinValue();
-			    dataSaojieNum = dataSaojieService.getDtaCountBySaojieId(Integer.parseInt(String.valueOf(saojie.getId())));
+			    dataSaojieNum = dataSaojieService.getDtaCountBySaojieId(saojie.getId());
 				if(taskValue == dataSaojieNum){
 					saojie.setStatus(SaojieStatus.COMMIT);
 					Saojie sj2 =  dataSaojieService.findByOrder(saojie.getOrder());
@@ -113,7 +114,7 @@ public class SaojieDataController {
 	}
 
 	@RequestMapping(value = "/images/upload", method = RequestMethod.POST)
-	public ResponseEntity<Json> upload(@RequestParam("file") File file,
+	public ResponseEntity<Json> upload(@RequestParam("file") MultipartFile file,
 			@RequestParam("id") String id, HttpServletRequest request) {
 		Json json = new Json();
 		SimpleDateFormat dateformat = new SimpleDateFormat("yyyy/MM/dd/HH/");

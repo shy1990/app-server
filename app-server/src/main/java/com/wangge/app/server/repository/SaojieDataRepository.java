@@ -14,7 +14,7 @@ public interface SaojieDataRepository extends JpaRepository<SaojieData, Long>{
 	List<SaojieData> findByRegionId(String regionId);
 	
 	@Query("select d.name,d.description,d.imageUrl  from SaojieData d  left join d.saojie ts  where ts.id = ? ")
-	List<SaojieData> findBySaojieId(int taskId);
+	List<SaojieData> findBySaojieId(Long taskId);
 
 
 }
