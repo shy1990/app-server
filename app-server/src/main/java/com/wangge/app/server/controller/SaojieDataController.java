@@ -2,6 +2,7 @@ package com.wangge.app.server.controller;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -18,10 +19,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.Saojie;
+import com.wangge.app.server.entity.Saojie.SaojieStatus;
 import com.wangge.app.server.entity.SaojieData;
 import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.service.DataSaojieService;
@@ -37,6 +40,10 @@ public class SaojieDataController {
 			.getLogger(SaojieDataController.class);
 	@Resource
 	private DataSaojieService dataSaojieService;
+	
+	
+	private static String url="http:/192.168.2.247/uploadfile/";
+	
 
 	/**
 	 * 获取指定业务扫街数据
@@ -58,6 +65,9 @@ public class SaojieDataController {
 	public ResponseEntity<SaojieData> add(
 			@PathVariable("userId") Salesman salesman,
 			@RequestBody JSONObject json) {
+		int taskValue = 0;
+		int dataSaojieNum = 0;
+		List<Saojie> child = new ArrayList<Saojie>();
 		String name = json.getString("name");
 		String description = json.getString("description");
 		String coordinate = json.getString("coordinate");
@@ -73,32 +83,61 @@ public class SaojieDataController {
 		data.setSaojie(saojie);
 		//data.setId(UUID.randomUUID().toString().replaceAll("-", ""));
 		SaojieData saojiedata = dataSaojieService.addDataSaojie(data);
+		
 		SaojieData sj = new SaojieData();
 		sj.setId(saojiedata.getId());
 		sj.setCoordinate(saojiedata.getCoordinate());
 		sj.setDescription(saojiedata.getDescription());
 		sj.setImageUrl(saojiedata.getImageUrl());
 		
+		// taskValue = (int)saojie.getChildren();
+		//for(Saojie s : saojie.getChildren()){
+			//if(SaojieStatus.PENDING.equals(saojie.getStatus())){
+				taskValue = saojie.getMinValue();
+			    dataSaojieNum = dataSaojieService.getDtaCountBySaojieId(saojie.getId());
+				if(taskValue == dataSaojieNum){
+					saojie.setStatus(SaojieStatus.COMMIT);
+					Saojie sj2 =  dataSaojieService.findByOrder(saojie.getOrder());
+					sj2.setStatus(SaojieStatus.AGREE);
+					child.add(saojie);
+					child.add(sj2);
+					//task.getNext().setStatus(TaskStatus.PENDING);
+					//taskSaojieService.save((TaskSaojie)task);
+					saojie.setChildren(child);
+					dataSaojieService.updateSaojie(saojie);
+				
+				}
+		//	}
+			
+		//}
+		
+		
+		
+		
 		return new ResponseEntity<SaojieData>(sj, HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/images/upload", method = RequestMethod.POST)
-	public ResponseEntity<Json> upload(@RequestParam("file") File file,
+	public ResponseEntity<Json> upload(@RequestParam("file") MultipartFile file,
 			@RequestParam("id") String id, HttpServletRequest request) {
 		Json json = new Json();
 		SimpleDateFormat dateformat = new SimpleDateFormat("yyyy/MM/dd/HH/");
-		String pathdir = "/images/uploadfile/" + dateformat.format(new Date());// 构件文件保存目录
+		//String pathdir = "/images/uploadfile/" + dateformat.format(new Date());// 构件文件保存目录
+		String pathdir = "/var/sanji/images/";// 构件文件保存目录
 		// 得到图片保存目录的真实路径
-		String realpathdir = request.getSession().getServletContext()
-				.getRealPath(pathdir);
-
+//		String realpathdir = request.getSession().getServletContext()
+//				.getRealPath(pathdir);
+//		System.out.println(realpathdir+"pathpath*******");
 		String filename = UUID.randomUUID().toString() + ".jpg";// 构建文件名称
+//		System.out.println("http://"+request.getLocalAddr()+":"+request.getLocalPort()+request.getContextPath()+"/"+pathdir+filename+"imageimage*******");
 		try {
-			String path = UploadUtil.saveImg(file, realpathdir, filename);
+		//	String path = UploadUtil.saveImg(file, realpathdir, filename);
+			String path = UploadUtil.saveFile(pathdir, filename,file);
 			if (path != null && !"".equals(path)) {
 				json.setMsg("上传成功！");
 				//json.setObj(path);
-				json.setObj("http://"+request.getLocalAddr()+":"+request.getLocalPort()+request.getContextPath()+"/"+pathdir+filename);
+				//json.setObj("http://"+request.getLocalAddr()+":"+request.getLocalPort()+request.getContextPath()+"/"+pathdir+filename);
+				json.setObj(url + dateformat.format(new Date())+filename);
 				return new ResponseEntity<Json>(json, HttpStatus.OK);
 			} else {
 				json.setMsg("上传失败！");
@@ -110,6 +149,7 @@ public class SaojieDataController {
 			json.setMsg("图片上传异常！");
 			return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
 		}
+
 
 	}
 	
@@ -145,7 +185,6 @@ public class SaojieDataController {
 			json.setMsg("修改失败！");
 			return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
 		}
-		
 		
 	}
 }

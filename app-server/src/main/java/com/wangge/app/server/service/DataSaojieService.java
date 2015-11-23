@@ -59,5 +59,23 @@ public class DataSaojieService {
 	    }
 		return null;
 	}
+	
+	public int getDtaCountBySaojieId(Long long1) {
+		List<SaojieData>  datasaojie = dataSaojieRepository.findBySaojieId(long1);
+		if(datasaojie != null && datasaojie.size() > 0){
+			return datasaojie.size();
+		}else{
+			return 0;
+		}
+	}
 
+	public void updateSaojie(Saojie saojie) {
+		taskSaojieRepository.save(saojie);
+		
+	}
+
+	public Saojie findByOrder(Integer id) {
+		
+		return taskSaojieRepository.findOne(Long.parseLong(String.valueOf(id)));
+	}
 }

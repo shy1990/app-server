@@ -12,6 +12,9 @@ import com.wangge.common.entity.Region;
 public interface SaojieDataRepository extends JpaRepository<SaojieData, Long>{
 	@Query("select sjd.id,sjd.imageUrl,sjd.name,sjd.description,sjd.coordinate from SaojieData sjd left join sjd.region r where r.id = ?")
 	List<SaojieData> findByRegionId(String regionId);
+	
+	@Query("select d.name,d.description,d.imageUrl  from SaojieData d  left join d.saojie ts  where ts.id = ? ")
+	List<SaojieData> findBySaojieId(Long taskId);
 
 
 }

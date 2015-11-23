@@ -6,29 +6,29 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class UploadUtil {
 	
 	
-	 public  static String saveImg(File file , String filePath,String fileName) throws Exception{
-		 
-		 InputStream is = new FileInputStream(file);  
-         File filedir = new File(filePath);    
+	public static String saveFile(String filePath,String fileName, MultipartFile filedata) {
+        /* 构建文件目录 */
+        File filedir = new File(filePath);    
          if (!filedir.exists())    
              filedir.mkdirs();
-         
-         OutputStream os = new FileOutputStream(new File(filedir,fileName));  
-         byte[] byteStr = new byte[1024];    
-         int len = 0;    
-         while ((len = is.read(byteStr)) > 0) {    
-             os.write(byteStr,0,len);    
-         }    
-         is.close();    
-             
-         os.flush();    
-         os.close();    
-		 
-		return filePath+fileName;
- 	
- }
+ 
+        try {
+            FileOutputStream out = new FileOutputStream(filePath + fileName);
+            // 写入文件
+            out.write(filedata.getBytes());
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+		return filePath  + fileName;
+ 
+    }
+
 	 
 }

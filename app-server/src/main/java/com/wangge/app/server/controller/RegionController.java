@@ -108,7 +108,10 @@ public class RegionController {
 		List<Region> listRegion=regionService.findRegionSort(parentid);
 		int id;
 		if(listRegion.size()>0){
-			id=Integer.parseInt(listRegion.get(0).getId().toString())+1 ;
+			Region region=new Region();
+			region.setId(parentid);
+			
+			id=Integer.parseInt(regionService.findMaxIdByParent(region).toString())+1 ;
 		}else{
 			id=Integer.parseInt(parentid+"00")+1;
 		}
