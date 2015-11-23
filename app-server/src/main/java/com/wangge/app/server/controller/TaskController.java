@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.collect.Lists;
+import com.wangge.app.server.entity.Saojie;
 import com.wangge.app.server.service.RegionService;
 import com.wangge.app.server.service.SalesmanManagerService;
 import com.wangge.app.server.service.SalesmanService;
@@ -101,28 +102,28 @@ public class TaskController {
 	}
 		
 		
-		@RequestMapping(value = "/findAllTask", method = RequestMethod.POST)
-		public ResponseEntity<List<TaskSaojie>> findAllTask(String userName){
-			List<TaskSaojie> listTaskSaojie=tss.findBycreateBy(sms.findByUsername(userName));
-			
-			return new ResponseEntity<List<TaskSaojie>>(listTaskSaojie,HttpStatus.OK);
-		}
-		
-		@RequestMapping(value = "/upstatus", method = RequestMethod.POST)
-		public ResponseEntity<Map<String, Object> > upstatus(String taskid,String userid){
-
-			Task task = tss.findByTaskId(taskid);
-			task.setStatus(task.getStatus().MANUAL_AGREE);
-		     tss.saveTask(task);
-		     if(task.getNext()!=null){
-		    	 task.getNext().setStatus(task.getStatus().PENDING);
-		    	 tss.saveTask(task.getNext());
-		     }
-		     Map<String, Object>  map=new HashMap<String, Object>();
-		     map.put("status", task.getStatus());
-		     if(task.getNext()!=null){
-		     map.put("nextid", task.getNext().getId());
-		     }
-			return new ResponseEntity<Map<String, Object> >(map,HttpStatus.OK);
-		}
+//		@RequestMapping(value = "/findAllTask", method = RequestMethod.POST)
+//		public ResponseEntity<List<Saojie>> findAllTask(String userName){
+//			List<Saojie> listTaskSaojie=tss.findBycreateBy(sms.findByUsername(userName));
+//			
+//			return new ResponseEntity<List<Saojie>>(listTaskSaojie,HttpStatus.OK);
+//		}
+//		
+//		@RequestMapping(value = "/upstatus", method = RequestMethod.POST)
+//		public ResponseEntity<Map<String, Object> > upstatus(String taskid,String userid){
+//
+//			Saojie sj = tss.findByTaskId(taskid);
+//			sj.setStatus(sj.getStatus().MANUAL_AGREE);
+//		     tss.saveTask(sj);
+//		     if(sj.getNext()!=null){
+//		    	 sj.getNext().setStatus(sj.getStatus().PENDING);
+//		    	 tss.saveTask(sj.getNext());
+//		     }
+//		     Map<String, Object>  map=new HashMap<String, Object>();
+//		     map.put("status", sj.getStatus());
+//		     if(sj.getNext()!=null){
+//		     map.put("nextid", sj.getOrder());
+//		     }
+//			return new ResponseEntity<Map<String, Object> >(map,HttpStatus.OK);
+//		}
 }

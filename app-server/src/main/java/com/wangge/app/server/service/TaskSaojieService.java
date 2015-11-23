@@ -7,6 +7,8 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.wangge.app.server.entity.Salesman;
+import com.wangge.app.server.entity.Saojie;
+import com.wangge.app.server.repository.TaskRepository;
 
 /**
  * 
@@ -18,12 +20,10 @@ public class TaskSaojieService {
 
 
 	@Resource
-	private TaskSaojieRepository taskSaojieRepository;
-	@Resource
 	private TaskRepository taskRepository;
 
-	public void addSaojieTask(TaskSaojie taskSaojie) {
-		taskSaojieRepository.save(taskSaojie);
+	public void addSaojieTask(Saojie saojie) {
+		taskRepository.save(saojie);
 	}
 //
 //
@@ -52,5 +52,5 @@ public class TaskSaojieService {
 //		Task task = taskRepository.findOne(taskid);
 //		
 //		return task;
-//	}
+	}
 
