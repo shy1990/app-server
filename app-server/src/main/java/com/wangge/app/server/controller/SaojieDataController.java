@@ -122,8 +122,10 @@ public class SaojieDataController {
 		// 得到图片保存目录的真实路径
 		String realpathdir = request.getSession().getServletContext()
 				.getRealPath(pathdir);
-
+		System.out.println(realpathdir+"pathpath*******");
 		String filename = UUID.randomUUID().toString() + ".jpg";// 构建文件名称
+		System.out.println("http://"+request.getLocalAddr()+":"+request.getLocalPort()+request.getContextPath()+"/"+pathdir+filename+"imageimage*******");
+		
 		try {
 		//	String path = UploadUtil.saveImg(file, realpathdir, filename);
 			String path = UploadUtil.saveFile(realpathdir, filename,file);
@@ -142,7 +144,8 @@ public class SaojieDataController {
 			json.setMsg("图片上传异常！");
 			return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
 		}
-		
+
+
 	}
 	
 	/**
@@ -177,7 +180,6 @@ public class SaojieDataController {
 			json.setMsg("修改失败！");
 			return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
 		}
-		
 		
 	}
 }
