@@ -102,7 +102,7 @@ public class RegionController {
 	 * 日期：  2015年11月20日下午4:07:03
 	 *
 	 */
-	/*@RequestMapping(value="/saveRegions",method=RequestMethod.POST)
+	@RequestMapping(value="/saveRegions",method=RequestMethod.POST)
 	public ResponseEntity<String> addPoints(String parentid,String pointStr,String name){
 		logger.debug("parentid"+parentid+"pointStr"+pointStr);
 		List<Region> listRegion=regionService.findRegionSort(parentid);
@@ -120,7 +120,9 @@ public class RegionController {
 		
 		
 		return new ResponseEntity<String>("SUCCESS",HttpStatus.OK);
-	}*/
+	}
+	
+	
 	
 	
 	@RequestMapping(value="/findTaskRegion",method=RequestMethod.POST)

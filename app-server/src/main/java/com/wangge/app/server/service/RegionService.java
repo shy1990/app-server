@@ -44,13 +44,14 @@ public class RegionService {
 		for (Saojie taskSaojie : saojieTasks) {
 			if (SaojieStatus.PENDING.equals(taskSaojie.getStatus())) {
 				for(Saojie Saojie : taskSaojie.getChildren()){
-					can.add(Saojie.getRegion());
+					if(SaojieStatus.PENDING.equals(Saojie.getStatus())){
+						can.add(Saojie.getRegion());
+					}else{
+						cant.add(Saojie.getRegion());
+					}
+					
 				}
 				
-			} else {
-				for(Saojie Saojie : taskSaojie.getChildren()){
-					can.add(Saojie.getRegion());
-				}
 			}
 		}
 		result.put("open", can);
