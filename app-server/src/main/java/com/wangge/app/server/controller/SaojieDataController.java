@@ -1,6 +1,5 @@
 package com.wangge.app.server.controller;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,13 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
-import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.Saojie;
 import com.wangge.app.server.entity.Saojie.SaojieStatus;
 import com.wangge.app.server.entity.SaojieData;
 import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.service.DataSaojieService;
-import com.wangge.app.server.service.SalesmanService;
 import com.wangge.app.server.util.UploadUtil;
 import com.wangge.common.entity.Region;
 
@@ -41,9 +38,8 @@ public class SaojieDataController {
 	@Resource
 	private DataSaojieService dataSaojieService;
 	
-	
-	private static String url="http:/192.168.2.247/uploadfile/";
-	
+	//private static String url="http://192.168.2.247/uploadfile/";
+	private static String url="http://imagetest.3j168.cn/uploadfile/";
 
 	/**
 	 * 获取指定业务扫街数据
@@ -57,64 +53,72 @@ public class SaojieDataController {
 
 		List<SaojieData> Data = dataSaojieService
 				.getSaojieDataByregion(regionId);
-
-		return new ResponseEntity<List<SaojieData>>(Data, HttpStatus.OK);
+		List<SaojieData> listsj=new ArrayList<SaojieData>();
+ 		for(SaojieData sj:Data){
+ 			//select sjd.id,sjd.imageUrl,sjd.name,sjd.description,sjd.coordinate from SaojieData sjd left join sjd.region r where r.id = ?")
+ 			SaojieData sjdata=new SaojieData();
+ 			sjdata.setId(sj.getId());
+ 			sjdata.setImageUrl(sj.getImageUrl());
+ 			sjdata.setName(sj.getName());
+ 			sjdata.setCoordinate(sj.getCoordinate());
+ 			sjdata.setDescription(sj.getDescription()==null?"":sj.getDescription());
+ 			//sjdata.setRegion(sj.getRegion());
+ 			listsj.add(sjdata);
+ 		}
+		return new ResponseEntity<List<SaojieData>>(listsj, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/{userId}/saojie_data", method = RequestMethod.POST)
-	public ResponseEntity<SaojieData> add(
-			@PathVariable("userId") Salesman salesman,
-			@RequestBody JSONObject json) {
+	@RequestMapping(value = "/{regionId}/saojie_data", method = RequestMethod.POST)
+	public ResponseEntity<Json> add(
+			@PathVariable("regionId") Region region,
+			@RequestBody JSONObject jsons) {
+		Json json = new Json();
 		int taskValue = 0;
 		int dataSaojieNum = 0;
 		List<Saojie> child = new ArrayList<Saojie>();
-		String name = json.getString("name");
-		String description = json.getString("description");
-		String coordinate = json.getString("coordinate");
+		String name = jsons.getString("name");
+		String description = jsons.getString("description");
+		String coordinate = jsons.getString("coordinate");
 		String imageUrl = null;
-		if (json.containsKey("imageUrl")) {
-			imageUrl = json.getString("imageUrl");
+		if (jsons.containsKey("imageUrl")) {
+			imageUrl = jsons.getString("imageUrl");
 		}
-		Saojie saojie  = dataSaojieService.findBySalesman(salesman);
-		SaojieData data = new SaojieData(name, coordinate);
-		data.setDescription(description);
-		data.setImageUrl(imageUrl);
-		data.setRegion(saojie.getRegion());
-		data.setSaojie(saojie);
-		//data.setId(UUID.randomUUID().toString().replaceAll("-", ""));
-		SaojieData saojiedata = dataSaojieService.addDataSaojie(data);
-		
-		SaojieData sj = new SaojieData();
-		sj.setId(saojiedata.getId());
-		sj.setCoordinate(saojiedata.getCoordinate());
-		sj.setDescription(saojiedata.getDescription());
-		sj.setImageUrl(saojiedata.getImageUrl());
-		
-		// taskValue = (int)saojie.getChildren();
-		//for(Saojie s : saojie.getChildren()){
-			//if(SaojieStatus.PENDING.equals(saojie.getStatus())){
-				taskValue = saojie.getMinValue();
-			    dataSaojieNum = dataSaojieService.getDtaCountBySaojieId(saojie.getId());
-				if(taskValue == dataSaojieNum){
-					saojie.setStatus(SaojieStatus.COMMIT);
-					Saojie sj2 =  dataSaojieService.findByOrder(saojie.getOrder());
-					sj2.setStatus(SaojieStatus.AGREE);
-					child.add(saojie);
-					child.add(sj2);
-					//task.getNext().setStatus(TaskStatus.PENDING);
-					//taskSaojieService.save((TaskSaojie)task);
-					saojie.setChildren(child);
-					dataSaojieService.updateSaojie(saojie);
-				
-				}
-		//	}
+		Saojie saojie  = dataSaojieService.findByRegion(region);
+	//	Saojie saojie  = dataSaojieService.findBySalesman(salesman);
+		if(saojie != null && !"".equals(saojie)){
+			SaojieData data = new SaojieData(name, coordinate);
+			data.setDescription(description);
+			data.setImageUrl(imageUrl);
+			data.setRegion(saojie.getRegion());
+			data.setSaojie(saojie);
+			SaojieData saojiedata = dataSaojieService.addDataSaojie(data);
 			
-		//}
+			SaojieData sj = new SaojieData();
+			sj.setId(saojiedata.getId());
+			sj.setName(saojiedata.getName());
+			sj.setCoordinate(saojiedata.getCoordinate());
+			sj.setDescription(saojiedata.getDescription());
+			sj.setImageUrl(saojiedata.getImageUrl());
+			taskValue = saojie.getMinValue();
+		    dataSaojieNum = dataSaojieService.getDtaCountBySaojieId(saojie.getId());
+			if(taskValue == dataSaojieNum){
+				saojie.setStatus(SaojieStatus.AGREE);
+				Saojie sj2 =  dataSaojieService.findByOrder(saojie.getOrder());
+				sj2.setStatus(SaojieStatus.PENDING);
+				child.add(saojie);
+				child.add(sj2);
+				saojie.setChildren(child);
+				dataSaojieService.updateSaojie(saojie);
+			}
+			json.setMsg("保存成功！");
+			json.setObj(sj);
+		}else{
+			json.setMsg("保存失败！");
+		}
 		
 		
 		
-		
-		return new ResponseEntity<SaojieData>(sj, HttpStatus.CREATED);
+		return new ResponseEntity<Json>(json, HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/images/upload", method = RequestMethod.POST)
@@ -123,7 +127,7 @@ public class SaojieDataController {
 		Json json = new Json();
 		SimpleDateFormat dateformat = new SimpleDateFormat("yyyy/MM/dd/HH/");
 		//String pathdir = "/images/uploadfile/" + dateformat.format(new Date());// 构件文件保存目录
-		String pathdir = "/var/sanji/images/";// 构件文件保存目录
+		String pathdir = "/var/sanji/images/uploadfile/" + dateformat.format(new Date());// 构件文件保存目录
 		// 得到图片保存目录的真实路径
 //		String realpathdir = request.getSession().getServletContext()
 //				.getRealPath(pathdir);

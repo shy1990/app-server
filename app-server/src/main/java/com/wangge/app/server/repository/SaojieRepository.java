@@ -7,11 +7,12 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.Saojie;
+import com.wangge.common.entity.Region;
 
 public interface SaojieRepository extends JpaRepository<Saojie, Long> {
 	List<Saojie> findBySalesman(Salesman salesman);
 	Saojie findByParentIsNull();
-	@Query("select s.id,s.name,s.description,s.expiredTime,s.salesman.user.nickname,s.status,s.minValue from Saojie s")
+	@Query("select s.id,s.name,s.description,s.expiredTime,s.salesman.user.nickname,s.status,s.minValue from Saojie s where s.parent.id is not null")
 	List<Saojie> findAllSaojie();
-	
+	Saojie findByRegion(Region region);
 }

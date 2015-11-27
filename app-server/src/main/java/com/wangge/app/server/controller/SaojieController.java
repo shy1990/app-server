@@ -49,10 +49,12 @@ public class SaojieController {
 			if(listSaojie.size()>0){
 				entity.setOrder(listSaojie.size()-1);
 				entity.setParent(listSaojie.get(0));
+				if(listSaojie.size()==1){
+					entity.setStatus(SaojieStatus.PENDING);
+				}
 			}else{
 				entity.setOrder(0);
 			}
-			entity.setStatus(SaojieStatus.PENDING);
 			saojieService.saveSaojie(entity);
 		return new ResponseEntity<String>("SUCCESS",HttpStatus.OK);
 	}

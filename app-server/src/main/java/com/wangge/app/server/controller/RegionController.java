@@ -19,6 +19,7 @@ import com.wangge.app.server.entity.Saojie;
 import com.wangge.app.server.service.RegionService;
 import com.wangge.app.server.service.SalesmanService;
 import com.wangge.app.server.service.SaojieService;
+import com.wangge.app.server.vo.RegionVo;
 import com.wangge.app.server.vo.TreeVo;
 import com.wangge.common.entity.Region;
 
@@ -45,12 +46,12 @@ public class RegionController {
 	 * @return
 	 */
 	@RequestMapping(value="/{id}/regions",method=RequestMethod.GET)
-	public ResponseEntity<Map<String,List<Region>>> salesmanRegions(@PathVariable("id") Salesman salesman){
+	public ResponseEntity<Map<String,List<RegionVo>>> salesmanRegions(@PathVariable("id") Salesman salesman){
 		logger.debug("username:"+salesman);
 		
-	     Map<String, List<Region>>   regionMap = regionService.getSaojie(salesman);
+	     Map<String, List<RegionVo>>   regionMap = regionService.getSaojie(salesman);
 	   
-		return new ResponseEntity<Map<String,List<Region>>>(regionMap,HttpStatus.OK);
+		return new ResponseEntity<Map<String,List<RegionVo>>>(regionMap,HttpStatus.OK);
 	}
 	
 	/**
@@ -140,6 +141,8 @@ public class RegionController {
 				for(int j=0;j<listSaojie.size();j++){
 					if(listRegion.get(i).getName().equals(listSaojie.get(j).getRegion().getName())){
 						listRegion.remove(i);
+						i=i-1;
+						break;
 					}
 				}
 			}

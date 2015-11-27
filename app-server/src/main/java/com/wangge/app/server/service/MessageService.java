@@ -26,8 +26,8 @@ public class MessageService {
 	 * @author changjun
 	 * @date 2015年11月20日
 	 */
-	public Page<Message> findMessageByReceiver(String receiver,MessageType type,Pageable pageRequest){
-		return mr.findMessage(receiver, type, pageRequest);
+	public Page<Message> findMessageByReceiver(String receiver,Pageable pageRequest){
+		return mr.findMessage(receiver, pageRequest);
 	}
 	/**
 	 * 
@@ -63,6 +63,9 @@ public class MessageService {
 	
 	public void save(Message mes) {
 		mr.save(mes);
+	}
+	public Message findOne(Long long1) {
+		return mr.findOne(long1);
 	}
 	
 }

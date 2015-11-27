@@ -14,8 +14,8 @@ import com.wangge.app.server.entity.Message.SendChannel;
 public interface MessageRepository extends PagingAndSortingRepository<Message, Long>, JpaSpecificationExecutor<Message>{
 	
 	
-	@Query("select a from Message a where a.receiver=?1 or a.receiver='all'  and MESSAGE_TYPE=?2  and Channel=2") 
-	Page<Message> findMessage(String receiver,MessageType type,Pageable pageRequest);
+	@Query("select a from Message a where (a.receiver=?1 or a.receiver='all')  and MESSAGE_TYPE=1  and Channel=2") 
+	Page<Message> findMessage(String receiver,Pageable pageRequest);
 	
 	
 	Page<Message> findByChannelAndTypeAndReceiverContaining(SendChannel Channel,MessageType type,String receiver,Pageable pageRequest);

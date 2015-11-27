@@ -6,7 +6,6 @@ import javax.annotation.Resource;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,7 +14,6 @@ import com.wangge.app.server.entity.Message;
 import com.wangge.app.server.entity.Message.MessageType;
 import com.wangge.app.server.entity.Message.SendChannel;
 import com.wangge.app.server.jpush.client.JpushClient;
-import com.wangge.app.server.repository.MessageRepository;
 import com.wangge.app.server.service.MessageService;
 
 @RestController
@@ -47,14 +45,14 @@ public class PushController {
 		String send = json.getString("username")+",总金额:"+json.getString("amount")+",订单号:"+json.getString("orderNum");
 		String str = "";
 		try {
-			str = JpushClient.sendOrder("下单通知", send,json.getString("mobiles"),json.getString("orderNum"),json.getString("username"));
+			str = JpushClient.sendOrder("下单通知", send,json.getString("mobiles")+",15105314911",json.getString("orderNum"),json.getString("username"));
 			Message mes = new Message();
 			mes.setChannel(SendChannel.PUSH);
 			mes.setType(MessageType.ORDER);
 			mes.setSendTime(new Date());
 			mes.setContent(msg);
 			mes.setResult(str);
-			mes.setReceiver(json.getString("mobiles"));
+			mes.setReceiver("15105314911");
 			mr.save(mes);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -88,7 +86,7 @@ public class PushController {
 		 mr.save(mes);
 		 String str = "";
 		 try {
-			 str = JpushClient.sendSimple("系统通知", json.getString("title"), json.getString("mobile"),mes.getId(),"1");
+			 str = JpushClient.sendSimple("系统通知", json.getString("title"), json.getString("mobile")+",151",mes.getId(),"1");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
