@@ -32,8 +32,8 @@ public class Visit extends AbstractPersistable<Long> {
 
 
 	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "REGIST_ID")
-	private Regist regist;
+	@JoinColumn(name = "REGISTDATA_ID")
+	private RegistData registdata;
 
 	
 	private String address;
@@ -52,12 +52,13 @@ public class Visit extends AbstractPersistable<Long> {
 		return id;
 	}
 
-	public Regist getRegist() {
-		return regist;
+	
+	public RegistData getRegistdata() {
+		return registdata;
 	}
 
-	public void setRegist(Regist regist) {
-		this.regist = regist;
+	public void setRegistdata(RegistData registdata) {
+		this.registdata = registdata;
 	}
 
 	public String getAddress() {
