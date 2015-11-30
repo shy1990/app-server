@@ -1,6 +1,8 @@
 package com.wangge.app.server.controller;
 
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +21,7 @@ import com.wangge.app.server.entity.Message.SendChannel;
 import com.wangge.app.server.entity.Order;
 import com.wangge.app.server.repository.MessageRepository;
 import com.wangge.app.server.repository.OrderRepository;
+import com.wangge.app.server.service.MessageService;
 import com.wangge.app.server.util.SortUtil;
 import com.wangge.app.server.vo.OrderPub;
 
@@ -28,9 +31,9 @@ public class RemindController {
 	
 //	private static final Logger logger = LoggerFactory.getLogger(RemindController.class);
 	
-	@Autowired
-	private MessageRepository mr ;
-	@Autowired
+	@Resource
+	private MessageService mr ;
+	@Resource
 	private OrderRepository or;
 	/**
 	 * 
@@ -95,7 +98,7 @@ public class RemindController {
 	public ResponseEntity<Page<Message>> newsRemindList(@RequestBody  JSONObject json){
 		String receiver = json.getString("mobile"); 
 		PageRequest pageRequest = SortUtil.buildPageRequest(json.getInteger("pageNumber"), json.getInteger("pageSize"), "push");
-		Page<Message> list = mr.findMessage(receiver,MessageType.SYSTEM, pageRequest);
+		Page<Message> list = mr.findMessageByReceiver(receiver, pageRequest);
 		return new ResponseEntity<Page<Message>>(list, HttpStatus.OK);
 	}
 	/**
@@ -108,6 +111,7 @@ public class RemindController {
 	 * @author changjun
 	 * @date 2015年10月29日
 	 */
+	
 	@RequestMapping(value = "/newsDetail",method = RequestMethod.POST)
 	public ResponseEntity<Message> newsDetail(@RequestBody  JSONObject json){
 //		String newsId  = json.getString("id");

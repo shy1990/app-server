@@ -34,8 +34,8 @@ public class RegionServiceTest {
 	@Test
 	public void testGetSaojie() {
 		
-		Map<String, List<Region>> saojie = rs.getSaojie(sr.findOne("10001"));
-		System.out.println(saojie);
+//		Map<String, List<Region>> saojie = rs.getSaojie(sr.findOne("10001"));
+//		System.out.println(saojie);
 	}
 	
 	@Test

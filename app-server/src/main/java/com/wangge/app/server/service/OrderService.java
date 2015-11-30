@@ -32,9 +32,10 @@ public class OrderService {
 		Page<Order> pOrder=or.findByRegion(region, page);
 		int totalPage = (pOrder.getTotalPages()+pOrder.getSize()-1)/pOrder.getSize();
 		List<OrderPub> list = new ArrayList<OrderPub>();
-		OrderPub order = new OrderPub();
+		OrderPub order;//20151105180158329
 		if(pOrder!=null && pOrder.getTotalPages()>0){
 			for(Order o:pOrder){
+				order = new OrderPub();
 				order.setTotalPage(totalPage);
 				order.setCreateTime(o.getCreateTime());
 				order.setOrderNum(o.getId());

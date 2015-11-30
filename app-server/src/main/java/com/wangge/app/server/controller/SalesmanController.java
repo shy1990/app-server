@@ -100,7 +100,7 @@ public class SalesmanController {
 					json.setMsg("修改成功！");
 					return new ResponseEntity<Json>(json, HttpStatus.OK);
 				} else {
-					json.setMsg("修改失败！");
+					json.setMsg("旧密码不正确！");
 					return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
 				}
 	}

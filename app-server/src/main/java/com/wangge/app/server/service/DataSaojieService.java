@@ -78,4 +78,9 @@ public class DataSaojieService {
 		
 		return taskSaojieRepository.findOne(Long.parseLong(String.valueOf(id)));
 	}
+	
+	public Saojie findByRegion(Region region) {
+			
+			return taskSaojieRepository.findByRegion(region);
+		}
 }

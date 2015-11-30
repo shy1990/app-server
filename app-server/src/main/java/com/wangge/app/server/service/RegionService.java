@@ -16,6 +16,7 @@ import com.wangge.app.server.entity.Saojie;
 import com.wangge.app.server.entity.Saojie.SaojieStatus;
 import com.wangge.app.server.repository.SalesmanRepository;
 import com.wangge.app.server.repository.SaojieRepository;
+import com.wangge.app.server.vo.RegionVo;
 import com.wangge.app.server.vo.TreeVo;
 import com.wangge.common.entity.Region;
 import com.wangge.common.repository.RegionRepository;
@@ -35,29 +36,40 @@ public class RegionService {
 	 * @param salesman
 	 * @return Map<String, List<Region>> ,其中 key 为 can,cant.
 	 */
-	public Map<String, List<Region>> getSaojie(Salesman salesman) {
-		Map<String, List<Region>> result = Maps.newHashMap();
-		List<Region> can = Lists.newArrayList();
-		List<Region> cant = Lists.newArrayList();
+	public Map<String, List<RegionVo>> getSaojie(Salesman salesman) {
+		Map<String, List<RegionVo>> result = Maps.newHashMap();
+		List<RegionVo> can = Lists.newArrayList();
+		List<RegionVo> cant = Lists.newArrayList();
 		List<Saojie> saojieTasks = taskSaojieRepository.findBySalesman(salesman);
 		// TODO 可用java8 stream过滤
 		for (Saojie taskSaojie : saojieTasks) {
-			if (SaojieStatus.PENDING.equals(taskSaojie.getStatus())) {
+		//	if (SaojieStatus.PENDING.equals(taskSaojie.getStatus())) {
 				for(Saojie Saojie : taskSaojie.getChildren()){
-					if(SaojieStatus.PENDING.equals(Saojie.getStatus())){
-						can.add(Saojie.getRegion());
+					if(SaojieStatus.PENDING.equals(Saojie.getStatus()) || SaojieStatus.AGREE.equals(Saojie.getStatus())){
+						RegionVo r = new RegionVo();
+						r.setId(Saojie.getRegion().getId());
+						r.setName(Saojie.getRegion().getName());
+						r.setCoordinates(Saojie.getRegion().getCoordinates());
+						r.setMinValue(Saojie.getMinValue());
+						can.add(r);
 					}else{
-						cant.add(Saojie.getRegion());
+						RegionVo r = new RegionVo();
+						r.setId(Saojie.getRegion().getId());
+						r.setName(Saojie.getRegion().getName());
+						r.setCoordinates(Saojie.getRegion().getCoordinates());
+						r.setMinValue(Saojie.getMinValue());
+						cant.add(r);
 					}
 					
 				}
 				
-			}
+		//	}
 		}
 		result.put("open", can);
 		result.put("nopen", cant);
 		return result;
 	}
+
 
 	/**
 	 * 
@@ -127,7 +139,7 @@ public class RegionService {
 	
 	public String findMaxIdByParent(Region region){
 		
-		return ((RegionService) regionRepository).findMaxIdByParent(region);
+		return  regionRepository.findMaxIdByParent(region);
 	}
 	/**
 	 * 

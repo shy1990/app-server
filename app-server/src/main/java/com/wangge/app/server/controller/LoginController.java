@@ -38,22 +38,23 @@ public class LoginController {
 		Salesman salesman =salesmanService.login(username,password,phone);
 		
 		if(salesman !=null && !"".equals(salesman)){
-			if (!password.equals(salesman.getUser().getPassword()) || !username.equals(salesman.getUser().getUsername())) {
-				json.setMsg("用戶名或密码错误！");
-				return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
-			}else if(!phone.equals(salesman.getUser().getPhone())){
-				json.setMsg("手机号错误！");
-				return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
-			}else{
+//			if (!password.equals(salesman.getUser().getPassword()) || !username.equals(salesman.getUser().getUsername())) {
+//				json.setMsg("用戶名或密码错误！");
+//				return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
+//			}else if(!phone.equals(salesman.getUser().getPhone())){
+//				json.setMsg("手机号错误！");
+//				return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
+//			}else{
+//			}else{
 				//json.setObj(salesman);
 				json.setPhone(salesman.getUser().getPhone());
 				json.setRegionId(salesman.getRegion().getId());
 				json.setId(salesman.getId());
 				json.setMsg("登陆成功！");
 				return new ResponseEntity<Json>(json, HttpStatus.OK);
-			}
+		//	}
 		}else{
-			    json.setMsg("用户名密码不存在！");
+			    json.setMsg("用戶名或密码错误！");
 			return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
 		}
 	}
