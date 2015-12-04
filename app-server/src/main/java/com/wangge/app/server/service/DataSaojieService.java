@@ -1,5 +1,6 @@
 package com.wangge.app.server.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -28,8 +29,25 @@ public class DataSaojieService {
 	private RegionRepository regionRepository;
 
 	public SaojieData addDataSaojie(SaojieData dataSaojie) {
-
+		int taskValue = 0;
+		int dataSaojieNum = 0;
+		List<Saojie> child = new ArrayList<Saojie>();
 		SaojieData data =  dataSaojieRepository.save(dataSaojie);
+		taskValue = dataSaojie.getSaojie().getMinValue();
+	    dataSaojieNum = getDtaCountBySaojieId(dataSaojie.getSaojie().getId());
+		if(taskValue == dataSaojieNum){
+			dataSaojie.getSaojie().setStatus(SaojieStatus.AGREE);
+			Saojie sj2 =  taskSaojieRepository.findByOrderAndSalesman(dataSaojie.getSaojie().getOrder()+1,dataSaojie.getSaojie().getSalesman());
+			if(sj2 != null && !"".equals(sj2)){
+				sj2.setStatus(SaojieStatus.PENDING);
+				
+				child.add(sj2);
+				
+			}
+			child.add(dataSaojie.getSaojie());
+			dataSaojie.getSaojie().setChildren(child);
+			taskSaojieRepository.save(dataSaojie.getSaojie());
+		}
 		
 		return data;
 	}
@@ -74,9 +92,11 @@ public class DataSaojieService {
 		
 	}
 
-	public Saojie findByOrder(Integer id) {
+	public Saojie findByOrderAndSalesman(Integer id, Salesman salesman) {
 		
-		return taskSaojieRepository.findOne(Long.parseLong(String.valueOf(id)));
+	//	return taskSaojieRepository.findOne(Long.parseLong(String.valueOf(id)));
+		
+		return taskSaojieRepository.findByOrderAndSalesman(id,salesman);
 	}
 	
 	public Saojie findByRegion(Region region) {

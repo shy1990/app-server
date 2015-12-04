@@ -43,9 +43,9 @@ public class SaojieData extends AbstractPersistable<Long> {
 	private String description;
 	private String imageUrl;
 	private String coordinate;
-	@ManyToOne(fetch = FetchType.EAGER)
+/*	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "REGIST_ID")
-	private Regist regist;
+	private Regist regist;*/
 	public SaojieData() {
 		super();
 	}
@@ -112,12 +112,12 @@ public class SaojieData extends AbstractPersistable<Long> {
 		this.region = region;
 	}
 
-	public Regist getRegist() {
+	/*public Regist getRegist() {
 		return regist;
 	}
 
 	public void setRegist(Regist regist) {
 		this.regist = regist;
-	}
+	}*/
 	
 }
