@@ -50,7 +50,6 @@ public class RegionController {
 		logger.debug("username:"+salesman);
 		
 	     Map<String, List<RegionVo>>   regionMap = regionService.getSaojie(salesman);
-	   
 		return new ResponseEntity<Map<String,List<RegionVo>>>(regionMap,HttpStatus.OK);
 	}
 	
