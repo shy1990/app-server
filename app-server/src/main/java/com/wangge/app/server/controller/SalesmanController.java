@@ -51,6 +51,32 @@ public class SalesmanController {
 }
 
 	
+	@RequestMapping(value = "/findRegionBySale", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> findByUserId(String userid) {
+		Salesman salesman=salesmanService.findSalesmanbyId(userid.trim());
+		String regionId = salesman.getRegion().getId();
+		String regionName = salesman.getRegion().getName();
+		 Map<String, Object>  map=new HashMap<String, Object>();
+		   map.put("regionId", regionId);
+		   map.put("regionName", regionName);
+		
+	 return new ResponseEntity<Map<String, Object>>(map,HttpStatus.OK);
+	
+}
+	
+	@RequestMapping(value = "/findRegBySale", method = RequestMethod.POST)
+	public ResponseEntity<String> findById(String userid) {
+		Salesman salesman=salesmanService.findSalesmanbyId(userid.trim());
+//		String regionId = salesman.getRegion().getId();
+		String regionName = salesman.getRegion().getName();
+//		 Map<String, Object>  map=new HashMap<String, Object>();
+//		   map.put("regionId", regionId);
+//		   map.put("regionName", regionName);
+		
+	 return new ResponseEntity<String>(regionName,HttpStatus.OK);
+	
+}
+	
 	
 	/**
 	 * 业务员申请

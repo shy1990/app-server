@@ -49,6 +49,8 @@ public class TaskController {
 	private SaojieDataService sds;
 	@Resource
 	private SaojieService sjs;
+	
+	
 		
 		/**
 		 * 
@@ -120,9 +122,9 @@ public class TaskController {
 		}
 		
 		@RequestMapping(value = "/findTaskByUserId", method = RequestMethod.POST)
-		public ResponseEntity<Json> findTaskByUserId(String userid){
+		public ResponseEntity<List<Map<String,Object>>> findTaskByUserId(String userid){
 		 Salesman man=sms.findSalesmanbyId(userid.trim());
-		 Json json = new Json();
+//		 Json json = new Json();
 			Collection<Saojie> listSjid=sjs.findBySalesman(man);
 			List<SaojieData> sdList = sds.findsjidById(listSjid);
 			List<Map<String,Object>> sdmap = new ArrayList<Map<String,Object>>();
@@ -139,13 +141,14 @@ public class TaskController {
 				 map.put("description", sj.getDescription());
 				 map.put("id", sj.getId());
 				 map.put("imageUrl", sj.getImageUrl());
-				 map.put("name", sj.getName());
+				 map.put("taskname", sj.getName());
+				 map.put("regionname", sj.getRegion().getName());
 				 sdmap.add(map);
 			}
-			json.setObj(sdmap);
+//			json.setObj(sdmap);
 //			String json = JSONObject.fromObject(sdmap).toString();
 //			sjbuf.append("]}");
-			return new ResponseEntity<Json>(json,HttpStatus.OK);
+			return new ResponseEntity<List<Map<String,Object>>>(sdmap,HttpStatus.OK);
 		}
 		
 		@RequestMapping(value = "/upstatus", method = RequestMethod.POST)
@@ -165,4 +168,7 @@ public class TaskController {
 		     }
 			return new ResponseEntity<Map<String, Object> >(map,HttpStatus.OK);
 		}
+		
+		
+		
 }
