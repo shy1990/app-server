@@ -30,6 +30,7 @@ import com.wangge.app.server.service.SalesmanService;
 import com.wangge.app.server.service.SaojieDataService;
 import com.wangge.app.server.service.SaojieService;
 import com.wangge.app.server.service.TaskSaojieService;
+import com.wangge.app.server.util.JWtoAdrssUtil;
 import com.wangge.common.entity.Region;
 
 @RestController
@@ -128,8 +129,6 @@ public class TaskController {
 			Collection<Saojie> listSjid=sjs.findBySalesman(man);
 			List<SaojieData> sdList = sds.findsjidById(listSjid);
 			List<Map<String,Object>> sdmap = new ArrayList<Map<String,Object>>();
-//			StringBuffer sjbuf=new StringBuffer();
-//			sjbuf.append("{").append("\"").append("data").append("\"").append(":").append("[");
 			for(SaojieData sj:sdList){
 				Map<String,Object> map = new HashMap<String,Object>();
 //				sjbuf.append("{").append("\"").append("coordinate").append("\"").append(":").append("\"").append(sj.getCoordinate()).append("\",")
@@ -137,13 +136,21 @@ public class TaskController {
 //				.append("\"").append("id").append("\"").append(":").append("\"").append(sj.getId()).append("\",")
 //				.append("\"").append("name").append("\"").append(":").append("\"").append(sj.getName()).append("\",")
 //				.append("\"").append("imgurl").append("\"").append(":").append("\"").append(sj.getImageUrl()).append("\"}");
-			     map.put("coordinate", sj.getCoordinate());
-				 map.put("description", sj.getDescription());
-				 map.put("id", sj.getId());
-				 map.put("imageUrl", sj.getImageUrl());
-				 map.put("taskname", sj.getName());
-				 map.put("regionname", sj.getRegion().getName());
-				 sdmap.add(map);
+				String pointStr = sj.getCoordinate(); 
+				String lat=pointStr.split("-")[0];
+ 		  		String lag=pointStr.split("-")[1];
+ 		  		String url="http://api.map.baidu.com/geocoder/v2/?ak=702632E1add3d4953d0f105f27c294b9&callback=renderReverse&location="+lag+","+lat+"&output=json&pois=1";
+ 		  		String jsonString = JWtoAdrssUtil.getdata(url);
+ 		  	    String jsonstr=jsonString.substring(0,jsonString.length()-1);
+ 		  	    String address = jsonstr.substring(jsonstr.indexOf("formatted_address")+20,jsonstr.indexOf("business")-3);
+ 		  		map.put("coordinate", sj.getCoordinate());
+				map.put("description", sj.getDescription());
+				map.put("id", sj.getId());
+				map.put("imageUrl", sj.getImageUrl());
+				map.put("taskname", sj.getName());
+				map.put("regionname", sj.getRegion().getName());
+				map.put("address", address);
+				sdmap.add(map);
 			}
 //			json.setObj(sdmap);
 //			String json = JSONObject.fromObject(sdmap).toString();
@@ -156,10 +163,13 @@ public class TaskController {
 			Saojie sj = sjs.findSapjiebyId(Long.valueOf(taskid.trim()).longValue());
 			sj.setStatus(sj.getStatus().AGREE);
 			sjs.saveSaojie(sj);
-		     if(sj.getOrder()!=null&&sj.getOrder()!=0){
-		    	 Saojie saojie = sjs.findSapjiebyId(Long.valueOf(sj.getOrder()).longValue());
-		    	 saojie.setStatus(sj.getStatus().PENDING);
-		    	 sjs.saveSaojie(saojie);
+		     if(sj.getOrder()!=null){
+		    	 Integer norder = sj.getOrder()+1;
+		    	 Saojie saojie = sjs.findNextSapjiebyId(sj.getSalesman().getId(), norder);
+		    	 if(saojie!=null){
+		    		 saojie.setStatus(sj.getStatus().PENDING);
+			    	 sjs.saveSaojie(saojie); 
+		    	 }
 		     }
 		     Map<String, Object>  map=new HashMap<String, Object>();
 		     map.put("status", sj.getStatus());
