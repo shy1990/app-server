@@ -73,9 +73,6 @@ public class SaojieDataController {
 			@PathVariable("regionId") Region region,
 			@RequestBody JSONObject jsons) {
 		Json json = new Json();
-		/*int taskValue = 0;
-		int dataSaojieNum = 0;
-		List<Saojie> child = new ArrayList<Saojie>();*/
 		String name = jsons.getString("name");
 		String description = jsons.getString("description");
 		String coordinate = jsons.getString("coordinate");
@@ -84,7 +81,6 @@ public class SaojieDataController {
 			imageUrl = jsons.getString("imageUrl");
 		}
 		Saojie saojie  = dataSaojieService.findByRegion(region);
-	//	Saojie saojie  = dataSaojieService.findBySalesman(salesman);
 		if(saojie != null && !"".equals(saojie)){
 			SaojieData data = new SaojieData(name, coordinate);
 			data.setDescription(description);
@@ -101,17 +97,6 @@ public class SaojieDataController {
 			sj.setCoordinate(saojiedata.getCoordinate());
 			sj.setDescription(saojiedata.getDescription());
 			sj.setImageUrl(saojiedata.getImageUrl());
-			/*taskValue = saojie.getMinValue();
-		    dataSaojieNum = dataSaojieService.getDtaCountBySaojieId(saojie.getId());
-			if(taskValue == dataSaojieNum){
-				saojie.setStatus(SaojieStatus.AGREE);
-				Saojie sj2 =  dataSaojieService.findByOrderAndSalesman(saojie.getOrder()+1,saojie.getSalesman());
-				sj2.setStatus(SaojieStatus.PENDING);
-				child.add(saojie);
-				child.add(sj2);
-				saojie.setChildren(child);
-				dataSaojieService.updateSaojie(saojie);
-			}*/
 			json.setMsg("保存成功！");
 			json.setObj(sj);
 		}else{

@@ -87,17 +87,15 @@ public class DataSaojieService {
 		}
 	}
 
-	public void updateSaojie(Saojie saojie) {
+/*	public void updateSaojie(Saojie saojie) {
 		taskSaojieRepository.save(saojie);
 		
-	}
+	}*/
 
-	public Saojie findByOrderAndSalesman(Integer id, Salesman salesman) {
-		
-	//	return taskSaojieRepository.findOne(Long.parseLong(String.valueOf(id)));
+	/*public Saojie findByOrderAndSalesman(Integer id, Salesman salesman) {
 		
 		return taskSaojieRepository.findByOrderAndSalesman(id,salesman);
-	}
+	}*/
 	
 	public Saojie findByRegion(Region region) {
 			
