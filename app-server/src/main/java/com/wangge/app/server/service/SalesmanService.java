@@ -53,7 +53,7 @@ public class SalesmanService {
 	public List<Salesman> findAll(){
 		return salesmanRepository.findAll();
 	}
-	public Salesman login(String username, String password, String phone) {
+	public Salesman login(String username, String password) {
 		
 		return  salesmanRepository.findByUserUsernameAndUserPassword(username, password);
 	}
