@@ -33,30 +33,49 @@ public class LoginController {
 	public ResponseEntity<Json> login(@RequestBody JSONObject jsons){
 		String username=jsons.getString("username");
 		String password=jsons.getString("password");
-		String phone=jsons.getString("phone");
+		String simId=jsons.getString("simId");
 		Json json = new Json();
-		Salesman salesman =salesmanService.login(username,password,phone);
+		Salesman salesman =salesmanService.login(username,password);
 		
-		if(salesman !=null && !"".equals(salesman)){
-//			if (!password.equals(salesman.getUser().getPassword()) || !username.equals(salesman.getUser().getUsername())) {
-//				json.setMsg("用戶名或密码错误！");
-//				return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
-//			}else if(!phone.equals(salesman.getUser().getPhone())){
-//				json.setMsg("手机号错误！");
-//				return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
-//			}else{
-//			}else{
-				//json.setObj(salesman);
+		/*if(salesman !=null && !"".equals(salesman)){
 				json.setPhone(salesman.getUser().getPhone());
 				json.setRegionId(salesman.getRegion().getId());
 				json.setId(salesman.getId());
 				json.setMsg("登陆成功！");
 				return new ResponseEntity<Json>(json, HttpStatus.OK);
-		//	}
 		}else{
 			    json.setMsg("用戶名或密码错误！");
 			return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
+		}*/
+		
+		if(salesman !=null && !"".equals(salesman)){
+			
+			if((salesman.getSimId() == null || "".equals(salesman.getSimId()))){
+				salesman.setSimId(simId);
+				salesmanService.save(salesman);
+			}else if(salesman.getSimId() != null && !"".equals(salesman.getSimId()) && simId.equals(salesman.getSimId())){
+				return returnLogSucMsg(json, salesman);
+		
+			}else{
+				  return returnLogFallMsg(json);
+			}
+			
+				return returnLogSucMsg(json, salesman);
+	
+		}else {
+			    return returnLogFallMsg(json);
 		}
+	}
+	private ResponseEntity<Json> returnLogFallMsg(Json json) {
+		json.setMsg("用戶名或密码错误！");
+		return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
+	}
+	private ResponseEntity<Json> returnLogSucMsg(Json json, Salesman salesman) {
+		json.setPhone(salesman.getUser().getPhone());
+		json.setRegionId(salesman.getRegion().getId());
+		json.setId(salesman.getId());
+		json.setMsg("登陆成功！");
+		return new ResponseEntity<Json>(json, HttpStatus.OK);
 	}
 	
 }
