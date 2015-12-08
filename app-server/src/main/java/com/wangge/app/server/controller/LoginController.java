@@ -46,18 +46,16 @@ public class LoginController {
 				return returnLogSucMsg(json, salesman);
 		
 			}else{
-				  return returnLogFallMsg(json);
+				json.setMsg("手机卡信息异常！");
+				return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
 			}
 			
 				return returnLogSucMsg(json, salesman);
 	
 		}else {
-			    return returnLogFallMsg(json);
+			json.setMsg("用戶名或密码错误！");
+			return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
 		}
-	}
-	private ResponseEntity<Json> returnLogFallMsg(Json json) {
-		json.setMsg("用戶名或密码错误！");
-		return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
 	}
 	private ResponseEntity<Json> returnLogSucMsg(Json json, Salesman salesman) {
 		json.setPhone(salesman.getUser().getPhone());
