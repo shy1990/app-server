@@ -37,17 +37,6 @@ public class LoginController {
 		Json json = new Json();
 		Salesman salesman =salesmanService.login(username,password);
 		
-		/*if(salesman !=null && !"".equals(salesman)){
-				json.setPhone(salesman.getUser().getPhone());
-				json.setRegionId(salesman.getRegion().getId());
-				json.setId(salesman.getId());
-				json.setMsg("登陆成功！");
-				return new ResponseEntity<Json>(json, HttpStatus.OK);
-		}else{
-			    json.setMsg("用戶名或密码错误！");
-			return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
-		}*/
-		
 		if(salesman !=null && !"".equals(salesman)){
 			
 			if((salesman.getSimId() == null || "".equals(salesman.getSimId()))){
