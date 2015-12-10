@@ -65,7 +65,7 @@ public class RegistDataController {
 		List<SaojieData> listsj=new ArrayList<SaojieData>();
 		List<SaojieData> listrg=new ArrayList<SaojieData>();
  		for(SaojieData sj:Data){
- 			if(sj.getRegist() != null && !"".equals(sj.getRegist())){
+ 			if(sj.getRegistData() != null && !"".equals(sj.getRegistData())){
  				SaojieData sjdata=new SaojieData();
  	 			sjdata.setId(sj.getId());
  	 			sjdata.setImageUrl(sj.getImageUrl());
@@ -125,10 +125,10 @@ public class RegistDataController {
 			data.setRegion(regist.getRegion());
 			data.setSalesman(salesman);
 			data.setCreatetime(new Date());
-			RegistData registdata = registDataService.addRegistData(data);
+			RegistData registData = registDataService.addRegistData(data);
 			//更新扫街
 			SaojieData sjData =  dataSaojieService.findBySaojieData(saojieId);
-			sjData.setRegist(regist);
+			sjData.setRegistData(registData);
 			dataSaojieService.addDataSaojie(sjData);
 			//注册任务达标改状态
 			taskValue = regist.getMinValue();
@@ -138,7 +138,7 @@ public class RegistDataController {
 				registDataService.updateRegist(regist);
 			}
 			json.setMsg("保存成功！");
-			json.setObj(registdata);
+			json.setObj(registData);
 		}else{
 			json.setMsg("保存失败！");
 		}
