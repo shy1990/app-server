@@ -100,5 +100,10 @@ public class DataSaojieService {
 	public Saojie findByRegion(Region region) {
 			
 			return taskSaojieRepository.findByRegion(region);
-		}
+	}
+	
+	public SaojieData findBySaojieData(Long id) {
+		return dataSaojieRepository.findOne(id);
+	}
+	
 }

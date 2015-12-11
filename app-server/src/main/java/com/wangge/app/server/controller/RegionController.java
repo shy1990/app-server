@@ -112,7 +112,7 @@ public class RegionController {
 			Region region=new Region();
 			region.setId(parentid);
 			
-			id=Integer.parseInt(regionService.findMaxIdByParent(region).toString())+1 ;
+			id=Integer.parseInt(regionService.findMaxIdByParent(region).toString())+1;
 		}else{
 			id=Integer.parseInt(parentid+"00")+1;
 		}
