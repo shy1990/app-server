@@ -1,19 +1,24 @@
 package com.wangge.app.server.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.Visit;
+import com.wangge.app.server.entity.Visit.VisitStatus;
 import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.repository.VisitRepository;
 import com.wangge.app.server.service.TaskVisitService;
@@ -21,6 +26,8 @@ import com.wangge.app.server.service.TaskVisitService;
 @RestController
 @RequestMapping(value = "/v1")
 public class VisitTaskController {
+	private static final Logger logger = Logger.getLogger(VisitTaskController.class);
+	
 	@Autowired
 	private TaskVisitService taskVisitService;
 	@Resource
@@ -29,52 +36,75 @@ public class VisitTaskController {
 	Json json = new Json();
 	
 	/**
-	 * 查看该业务当前的拜访任务列表
-	 * @param username 业务员
-	 * @return 店铺名，图片链接，坐标，备注，摆放时间,状态(待定)
+	 * 
+	 * @Description: 获取拜访任务列表
+	 * @param @param salesman
+	 * @param @return
+	 * @return ResponseEntity<List<Visit>>
+	 * @author peter
+	 * @date 2015年12月11日
+	 * @version V2.0
 	 */
 	@RequestMapping(value = "/task/{userId}/visitList",method = RequestMethod.GET)
 	public ResponseEntity<List<Visit>> visitList(@PathVariable("userId")Salesman salesman) {
 		List<Visit> tv = taskVisitService.findBySalesman(salesman);
-		for(int i=0; i<tv.size(); i++){
-			System.out.println(tv.get(i));
-		}
-		return new ResponseEntity<List<Visit>>(tv, HttpStatus.OK);
+			return new ResponseEntity<List<Visit>>(tv, HttpStatus.OK);
 	}
 	
 	/**
-	 * 根据用户选择的拜访或已拜访进行处理
-	 * @param 状态，任务id,
-	 * @return 
+	 * 
+	 * @Description: 拉取一条拜访记录
+	 * @param @param visitId
+	 * @param @return
+	 * @return ResponseEntity<Json>
+	 * @author Peter
+	 * @date 2015年12月11日
+	 * @version V2.0
 	 */
-	/*@RequestMapping(value = "/task/{taskId}/visitInfo")
-	public ResponseEntity<Json> visitInfo(@PathVariable("taskId") String taskId) {
-		Json json = new Json();
-		Task task = vr.findOne(taskId);
-		if(task != null && !"".equals(task)){
-			if(TaskStatus.FINISHED.equals(task.getStatus())){
-				json.setObj(task);
+	@RequestMapping(value = "/task/{visitId}/visitInfo",method = RequestMethod.GET)
+	public ResponseEntity<Visit> visitInfo(@PathVariable("visitId") String visitId) {
+		Visit taskVisit = taskVisitService.findByVisitId(Long.parseLong(visitId));
+		if(taskVisit != null && !"".equals(taskVisit)){
+			if(VisitStatus.FINISHED.equals(taskVisit.getStatus())){
+				return new ResponseEntity<Visit>(taskVisit, HttpStatus.OK);
 			}
 		}
-		return new ResponseEntity<Json>(json, HttpStatus.OK);
-	}*/
+		return null;
+	}
 	
 	/**
-	 * 保存业务提交的客户拜访信息
-	 * @param TaskVisit
-	 * @return ok
+	 * 
+	 * @Description: 保存提交的拜访记录
+	 * @param @param jsons
+	 * @param @return
+	 * @return ResponseEntity<Json>
+	 * @author peter
+	 * @date 2015年12月11日
+	 * @version V2.0
 	 */
-	/*@RequestMapping(value = "/task/addVisit",method = RequestMethod.POST)
+	@RequestMapping(value = "/task/addVisit",method = RequestMethod.POST)
 	public ResponseEntity<Json> addVisit(@RequestBody JSONObject jsons) {
 		try {
-			TaskVisit tv = visitService.findById(jsons.getString("id"));
-			if(tv != null && !"".equals(tv)){
-				tv.setDescription(jsons.getString("description"));
-				tv.setStatus(TaskStatus.FINISHED);
-				SimpleDateFormat dFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-				String tmp = dFormat.format(new Date());
-				tv.setEndTime(DateUtil.strToDate(tmp));
-				visitService.save(tv);
+			String visitId=jsons.getString("visitId");
+			Visit taskVisit = taskVisitService.findByVisitId(Long.parseLong(visitId));
+			if(taskVisit != null && !"".equals(taskVisit)){
+				taskVisit.setAddress(jsons.getString("address"));
+				taskVisit.setStatus(VisitStatus.FINISHED);
+				taskVisit.setExpiredTime(new Date());
+				taskVisit.setSummary(jsons.getString("summary"));
+				if(jsons.containsKey("imageurl1")){
+					String imageurl1=jsons.getString("imageurl1");
+					taskVisit.setImageurl1(imageurl1);
+				}
+				if(jsons.containsKey("imageurl2")){
+					String imageurl2 = jsons.getString("imageurl2");
+					taskVisit.setImageurl2(imageurl2);
+				}
+				if(jsons.containsKey("imageurl3")){
+					String imageurl3 = jsons.getString("imageurl3");
+					taskVisit.setImageurl3(imageurl3);
+				}
+				taskVisitService.save(taskVisit);
 				json.setMsg("保存成功!");
 				return new ResponseEntity<Json>(json, HttpStatus.CREATED);
 			}else{
@@ -83,10 +113,11 @@ public class VisitTaskController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error("addVisit() occur error...");
 			json.setMsg("保存异常!");
 			return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
 		}
 		
-	}*/
+	}
 	
 }

@@ -21,6 +21,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.wangge.app.server.entity.Regist.RegistStatus;
 import com.wangge.core.entity.AbstractPersistable;
 
@@ -57,7 +58,7 @@ public class Visit extends AbstractPersistable<Long> {
 
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "REGISTDATA_ID")
-	private RegistData registdata;
+	private RegistData registData;
 
 	
 	private String address;
@@ -93,13 +94,12 @@ public class Visit extends AbstractPersistable<Long> {
 		return id;
 	}
 
-	
-	public RegistData getRegistdata() {
-		return registdata;
+	public RegistData getRegistData() {
+		return registData;
 	}
 
-	public void setRegistdata(RegistData registdata) {
-		this.registdata = registdata;
+	public void setRegistData(RegistData registData) {
+		this.registData = registData;
 	}
 
 	public String getAddress() {

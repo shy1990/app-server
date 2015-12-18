@@ -23,4 +23,13 @@ public class TaskVisitService {
 		List<Visit> list = visitRepository.findBySalesman(salesman);
 		return list;
 	}
+	
+	public Visit findByVisitId(Long visitId) {
+		
+		return visitRepository.findOne(visitId);
+	}
+	
+	public void save(Visit visit) {
+		visitRepository.save(visit);
+	}
 }

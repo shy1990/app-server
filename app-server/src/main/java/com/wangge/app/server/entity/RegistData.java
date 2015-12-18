@@ -26,6 +26,7 @@ import com.wangge.core.entity.AbstractPersistable;
  */
 @Entity
 @Table(name = "BIZ_REGISTDATA")
+@JsonIgnoreProperties(value={"hibernateLazyInitializer","handler","fieldHandler"}) 
 public class RegistData extends AbstractPersistable<Long> {
 
 	private static final long serialVersionUID = 1L;
@@ -36,7 +37,7 @@ public class RegistData extends AbstractPersistable<Long> {
 	@Column(name = "REGISTDATA_ID")
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "REGIST_ID")
 	private Regist regist;
 	@ManyToOne(fetch = FetchType.EAGER)
