@@ -32,7 +32,7 @@ public class RemindController {
 //	private static final Logger logger = LoggerFactory.getLogger(RemindController.class);
 	
 	@Resource
-	private MessageService mr ;
+	private MessageService mr;
 	@Resource
 	private OrderRepository or;
 	/**
