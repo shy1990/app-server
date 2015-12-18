@@ -43,6 +43,8 @@ public class DataSaojieService {
 				
 				child.add(sj2);
 				
+			}else{
+				data.getSaojie().getSalesman().setStatus(Integer.parseInt("2"));
 			}
 			child.add(dataSaojie.getSaojie());
 			dataSaojie.getSaojie().setChildren(child);

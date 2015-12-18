@@ -17,6 +17,7 @@ public class Json implements Serializable{
 	private String id;
 	private String phone;
 	private String regionId;
+	private Integer status; 
 	
 	
 	public Boolean getSuccess() {
@@ -54,6 +55,12 @@ public class Json implements Serializable{
 	}
 	public void setRegionId(String regionId) {
 		this.regionId = regionId;
+	}
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 	
 }

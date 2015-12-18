@@ -61,6 +61,7 @@ public class LoginController {
 		json.setPhone(salesman.getUser().getPhone());
 		json.setRegionId(salesman.getRegion().getId());
 		json.setId(salesman.getId());
+		json.setStatus(salesman.getStatus());
 		json.setMsg("登陆成功！");
 		return new ResponseEntity<Json>(json, HttpStatus.OK);
 	}
