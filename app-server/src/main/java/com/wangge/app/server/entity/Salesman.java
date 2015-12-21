@@ -35,13 +35,14 @@ public class Salesman extends AbstractPersistable<String> {
 	
 	private String simId;
 	
-	private Integer status;
+	private SalesmanStatus status = SalesmanStatus.saojie;
 	
-	public Integer getStatus() {
+
+	public SalesmanStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(Integer status) {
+	public void setStatus(SalesmanStatus status) {
 		this.status = status;
 	}
 
