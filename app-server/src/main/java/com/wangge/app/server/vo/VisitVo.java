@@ -12,6 +12,7 @@ public class VisitVo {
 	private String imageurl1;//业务拜访图片1
 	private String imageurl2;//拜访图片2
 	private String imageurl3;//拜访图片3
+	private Integer totalPage;
 	
 	public String getId() {
 		return id;
@@ -68,6 +69,12 @@ public class VisitVo {
 	}
 	public void setImageurl3(String imageurl3) {
 		this.imageurl3 = imageurl3;
+	}
+	public Integer getTotalPage() {
+		return totalPage;
+	}
+	public void setTotalPage(Integer totalPage) {
+		this.totalPage = totalPage;
 	}
 	
 }

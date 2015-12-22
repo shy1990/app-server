@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +26,7 @@ import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.repository.VisitRepository;
 import com.wangge.app.server.service.RegistDataService;
 import com.wangge.app.server.service.TaskVisitService;
+import com.wangge.app.server.util.SortUtil;
 import com.wangge.app.server.vo.VisitVo;
 
 @RestController
@@ -51,19 +53,12 @@ public class VisitTaskController {
 	 * @date 2015年12月11日
 	 * @version V2.0
 	 */
-	@RequestMapping(value = "/task/{userId}/visitList",method = RequestMethod.GET)
-	public ResponseEntity<List<VisitVo>> visitList(@PathVariable("userId")Salesman salesman) {
-		List<VisitVo> result = Lists.newArrayList();
-		List<Visit> tv = taskVisitService.findBySalesman(salesman);
-		for(Visit visit : tv){
-			VisitVo visitVo = new VisitVo();
-			visitVo.setId(String.valueOf(visit.getId()));
-			visitVo.setShopName(visit.getRegistData().getShopName());
-			visitVo.setAddress(visit.getRegistData().getReceivingAddress());
-			visitVo.setImageurl(visit.getRegistData().getImage_Url());
-			visitVo.setStatus(visit.getStatus());
-			result.add(visitVo);
-		}
+	@RequestMapping(value = "/task/{userId}/visitList",method = RequestMethod.POST)
+	public ResponseEntity<List<VisitVo>> visitList(@PathVariable("userId")Salesman salesman,@RequestBody JSONObject jsons) {
+		
+		PageRequest pageRequest = SortUtil.buildPageRequest(jsons.getInteger("pageNumber"), jsons.getInteger("pageSize"),"visitVo");
+		List<VisitVo> result = taskVisitService.findBySalesman(salesman,pageRequest);
+		
 		return new ResponseEntity<List<VisitVo>>(result, HttpStatus.OK);
 	}
 	
@@ -139,6 +134,7 @@ public class VisitTaskController {
 						taskVisit.setImageurl3(imageurl3);
 					}
 					taskVisitService.save(taskVisit);
+					json.setSuccess(true);
 					json.setMsg("保存成功!");
 					return new ResponseEntity<Json>(json, HttpStatus.CREATED);
 				}else{
@@ -167,6 +163,7 @@ public class VisitTaskController {
 					taskVisit.setImageurl3(imageurl3);
 				}
 				taskVisitService.save(taskVisit);
+				json.setSuccess(true);
 				json.setMsg("保存成功!");
 				return new ResponseEntity<Json>(json, HttpStatus.CREATED);
 			}

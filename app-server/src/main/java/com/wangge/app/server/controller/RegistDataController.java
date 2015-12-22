@@ -104,7 +104,7 @@ public class RegistDataController {
 	@RequestMapping(value = "/{regionId}/{saojieId}/regist_data", method = RequestMethod.POST)
 	public ResponseEntity<Json> add(
 			@PathVariable("regionId") Region region,
-			@PathVariable("saojieId") Long saojieId,
+			@PathVariable("saojieId") String saojieId,
 			@RequestBody JSONObject jsons) {
 		Json json = new Json();
 		int taskValue = 0;
@@ -129,7 +129,7 @@ public class RegistDataController {
 			data.setImage_Url(imageUrl);
 			RegistData registData = registDataService.addRegistData(data);
 			//更新扫街
-			SaojieData sjData =  dataSaojieService.findBySaojieData(saojieId);
+			SaojieData sjData =  dataSaojieService.findBySaojieData(Long.parseLong(saojieId));
 			sjData.setRegistData(registData);
 			dataSaojieService.addDataSaojie(sjData);
 			//注册任务达标改状态
@@ -139,8 +139,8 @@ public class RegistDataController {
 				regist.setStatus(RegistStatus.AGREE);
 				registDataService.updateRegist(regist);
 			}
+			json.setSuccess(true);
 			json.setMsg("保存成功！");
-			json.setObj(registData);
 		}else{
 			json.setMsg("保存失败！");
 		}
@@ -179,6 +179,7 @@ public class RegistDataController {
 			
 			try {
 				registDataService.addRegistData(dataRegist);
+				json.setSuccess(true);
 				json.setMsg("修改成功！");
 				return new ResponseEntity<Json>(json, HttpStatus.OK);
 			} catch (Exception e) {
