@@ -26,7 +26,7 @@ public class Order implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public enum ShipStatus {
-		NO_SEND("未发货"), SENDED("已发货"), SALESMAN_RESIVED("业务签收"), MEMBER_RESIVED("客户签收");
+		NO_SEND("未发货"), SENDED("已发货"), SALESMAN_RESIVED("业务签收"), MEMBER_RESIVED("客户签收"),MEMBER_REFUSE("客户拒收");
 		private String name;
 
 		private ShipStatus(String name) {
@@ -55,6 +55,16 @@ public class Order implements Serializable {
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "region_id")
 	private Region region;
+	@Column(name="mobile")
+	private String mobile;//客户手机号
+	
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
 
 	public String getId() {
 		return id;

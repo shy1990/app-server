@@ -75,10 +75,11 @@ public class OrderImpl {
 	 * @date 2015年11月12日
 	 */
 	public boolean checkByOrderNum(String ordernum){
-		String sql = "select  o.id  from SJZAIXIAN.SJ_TB_ORDER o  where o.order_num="+ordernum+" and o.YEWU_SIGNFOR_TIME is null";
+		String sql = "select  o.id  from SJZAIXIAN.SJ_TB_ORDER o  where o.order_num="+ordernum+" and (o.YEWU_SIGNFOR_TIME is null or o.ship_status='2')";
 		Query query =  em.createNativeQuery(sql);
 		return query.getResultList().size()>0?true:false;
 	}
+	
 	
 	
 	/**
@@ -130,11 +131,34 @@ public class OrderImpl {
 	 * @date 2015年11月12日
 	 */
 	@Transactional
-	public String updateOrderShipStateByOrderNum(String ordernum,String status){
+	public String updateOrderShipStateByOrderNum(String ordernum,String status,Integer type){
 //		if("已送达".equals(status)){
 //			status="2";
 //		}
-		String sql = "update SJZAIXIAN.SJ_TB_ORDER set ship_status="+status+" ,yewu_signfor_time=sysdate where order_num="+ordernum+"";
+		String sql  = "";
+		if(1==type){
+			 sql = "update SJZAIXIAN.SJ_TB_ORDER set ship_status="+status+" ,yewu_signfor_time=sysdate where order_num="+ordernum+"";
+		}else{
+			 sql = "update SJZAIXIAN.SJ_TB_ORDER set ship_status="+status+" ,custom_signfor_time=sysdate where order_num="+ordernum+"";
+		}
+		
+		Query query =  em.createNativeQuery(sql);
+		return query.executeUpdate()>0?"suc":"false";
+	}
+	/**
+	 * 
+	 * @Description: 客户拒收原因保存
+	 * @param @param ordernum
+	 * @param @param reason
+	 * @param @return   
+	 * @return String  
+	 * @throws
+	 * @author changjun
+	 * @date 2015年12月1日
+	 */
+	@Transactional
+	public String saveRefuseReason(String ordernum,String reason){
+		String sql = "update SJZAIXIAN.SJ_TB_ORDER set refuse_reason='"+reason+"' ,yewu_signfor_time=sysdate where order_num="+ordernum+"";
 		Query query =  em.createNativeQuery(sql);
 		return query.executeUpdate()>0?"suc":"false";
 	}

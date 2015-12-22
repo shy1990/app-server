@@ -24,5 +24,6 @@ public interface MessageRepository extends PagingAndSortingRepository<Message, L
 	@Query("update Message m set m.result=?1 where m.id=?2")
 	public void updateMessageResult(String result,Long id);
 	
+	Page<Message> findMessageByType(MessageType type,Pageable pageRequest);
 	
 }

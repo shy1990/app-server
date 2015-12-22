@@ -1,20 +1,13 @@
 package com.wangge.app.server.controller;
 
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.json.JSONArray;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,13 +17,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wangge.app.server.entity.ApplyPrice;
 import com.wangge.app.server.entity.Order;
 import com.wangge.app.server.entity.OrderItem;
-import com.wangge.app.server.repository.MessageRepository;
-import com.wangge.app.server.repository.OrderRepository;
+import com.wangge.app.server.repositoryimpl.ExamImpl;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
+import com.wangge.app.server.service.ApplyPriceService;
 import com.wangge.app.server.service.MessageService;
 import com.wangge.app.server.service.OrderService;
+import com.wangge.app.server.util.HttpUtil;
 import com.wangge.app.server.util.SortUtil;
 import com.wangge.app.server.vo.Apply;
 import com.wangge.app.server.vo.Exam;
@@ -41,18 +36,22 @@ import com.wangge.common.repository.RegionRepository;
 @RequestMapping(value = "/v1/mine")
 public class MineController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(MineController.class);
+//	private static final Logger logger = LoggerFactory.getLogger(MineController.class);
 	
-	@Autowired
+	@Resource
 	private OrderImpl opl ;
 	@Resource
 	private MessageService mr;
-	
+	@Resource
+	private ExamImpl epl;
 	
 	@Resource
 	private OrderService or;
-	@Autowired
+	@Resource
 	private RegionRepository rr;
+	
+	@Resource
+	private ApplyPriceService aps;
 	/**
 	 * 
 	 * @Description: 根据业务手机号订单号判断该订单是否属于该业务员并返回订单详情
@@ -84,6 +83,7 @@ public class MineController {
 					jo.put("orderNum", order.getId());
 					jo.put("shipStatus", order.getStatus().getName());
 					jo.put("amount", order.getAmount());
+					jo.put("mobile", order.getMobile());
 					jo.put("goods", sb);
 					jo.put("state", "正常订单");
 					return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
@@ -133,11 +133,107 @@ public class MineController {
 	 */
 	@RequestMapping(value = "/updateOrderStatus",method = RequestMethod.POST)
 	public ResponseEntity<JSONObject> updateOrderStatus(@RequestBody  JSONObject json){
-		String status =  opl.updateOrderShipStateByOrderNum(json.getString("ordernum"), json.getString("status"));
+		String status =  opl.updateOrderShipStateByOrderNum(json.getString("ordernum"), "2",1);
 		JSONObject jo = new JSONObject();
 		jo.put("state", status);
 		return new ResponseEntity<JSONObject>( jo, HttpStatus.OK);
 	}
+	
+	///////////////////   	V2
+	/**
+	 * 
+	 * @Description: 客户拒签
+	 * @param @param json
+	 * @param @return   
+	 * @return ResponseEntity<JSONObject>  
+	 * @throws
+	 * @author changjun
+	 * @date 2015年12月1日
+	 */
+	@RequestMapping(value = "/custNotSignFor",method = RequestMethod.POST)
+	public ResponseEntity<JSONObject> custNotSignFor(@RequestBody  JSONObject json){
+		String orderNum = json.getString("orderNum");
+		String reason = json.getString("reason");
+		JSONObject jo = new JSONObject();
+		String state = opl.saveRefuseReason(orderNum, reason);
+		jo.put("state", state);
+		return new ResponseEntity<JSONObject>( jo, HttpStatus.OK);
+	}
+	/**
+	 * 
+	 * @Description: 客户签收
+	 * @param @param json
+	 * @param @return   
+	 * @return ResponseEntity<JSONObject>  
+	 * @throws
+	 * @author changjun
+	 * @date 2015年12月1日
+	 */
+	@RequestMapping(value = "/custSignFor",method = RequestMethod.POST)
+	public ResponseEntity<JSONObject> custSignFor(@RequestBody  JSONObject json){
+		String mobile = json.getString("mobile");
+		String code = json.getString("code");
+		String str = this.validateCode(mobile,code);
+		JSONObject jo = new JSONObject();
+		if("suc".equals(str)){
+			String status =  opl.updateOrderShipStateByOrderNum(json.getString("ordernum"), "3",1);
+			jo.put("state", status);
+			jo.put("validate", str);
+			return new ResponseEntity<JSONObject>( jo, HttpStatus.OK);
+		}else{
+			jo.put("state", "false");
+			jo.put("validate", str);
+			return new ResponseEntity<JSONObject>( jo, HttpStatus.OK);
+		}
+	}
+	/**
+	 * 
+	 * @Description: 发送验证码
+	 * @param @param json
+	 * @param @return   
+	 * @return ResponseEntity<JSONObject>  
+	 * @throws
+	 * @author changjun
+	 * @date 2015年12月1日
+	 */
+	@RequestMapping(value = "/sendCode",method = RequestMethod.POST)
+	public ResponseEntity<JSONObject> sendCode(@RequestBody  JSONObject json){
+		String mobile = json.getString("mobile");
+		//192.168.2.252:80
+		String msg = HttpUtil.sendPost("http://115.28.92.73:28501/member/getValidateCode/"+mobile+".html","");
+		System.out.println("msg==="+msg);
+		JSONObject jo = new JSONObject();
+		if(msg!=null && msg.contains("true")){
+			jo.put("state", true);
+			return new ResponseEntity<JSONObject>( jo, HttpStatus.OK);
+		}
+		jo.put("state", false);
+		return new ResponseEntity<JSONObject>( jo, HttpStatus.OK);
+	}
+	/**
+	 * 
+	 * @Description: 验证码验证
+	 * @param @param mobile
+	 * @param @param code
+	 * @param @return   
+	 * @return String  
+	 * @throws
+	 * @author changjun
+	 * @date 2015年12月19日
+	 */
+	public String validateCode(String mobile,String code){
+		String msg = HttpUtil.sendPost("http://115.28.92.73:28501/member/existMobileCode/"+mobile+"_"+code+".html","");
+		if(msg!=null && msg.contains("true")){
+			return "suc";
+		}else{
+			if(msg.contains("手机验证码超时")){
+				return "手机验证码超时";
+			}else{
+				return "手机验证码不正确";
+			}
+		}
+	}
+	
 	
 	/**
 	 * 
@@ -151,24 +247,29 @@ public class MineController {
 	 */
 	@RequestMapping(value = "/examStatus",method = RequestMethod.POST)
 	public ResponseEntity<Exam> examStatus(@RequestBody	JSONObject json){
-		String username = json.getString("username");
-		Exam ex = new Exam();
-		ex.setStage("第一阶段");
-		ex.setBeginDate(new Date());
-		ex.setDoneNum("7");
-		ex.setEndDate(new Date());
-		ex.setKpiNum("10");
-		double rate = 7D / 10D;
-		DecimalFormat df = new DecimalFormat("0.00%");   
-		ex.setRate(df.format(rate));
-		ex.setRemark("考核审核标准：二次提货客户达到10家即为达标");
-		Map<String,Integer> map = new HashMap<String, Integer>();
-		map.put("郭屯镇", 5);
-		map.put("随官屯", 2);
-		ex.setMap(map);
-		
+		String saleId = json.getString("salesmanId");
+		Exam  ex = epl.ExamSalesman(saleId);
 		return new ResponseEntity<Exam>(ex, HttpStatus.OK);
 	}
+	/**
+	 * 
+	 * @Description: 根据区域名查看该区域二次提货商家详情
+	 * @param @param json
+	 * @param @return   
+	 * @return ResponseEntity<Exam>  
+	 * @throws
+	 * @author changjun
+	 * @date 2015年12月7日
+	 */
+	@RequestMapping(value = "/examDetail",method = RequestMethod.POST)
+	public ResponseEntity<Map> examDetail(@RequestBody	JSONObject json){
+		String saleId = json.getString("salesmanId");
+		String areaName = json.getString("areaName");
+		Map map  = epl.examDetail(saleId, areaName);
+		return new ResponseEntity<Map>(map, HttpStatus.OK);
+	}
+	
+	
 	/**
 	 * 
 	 * @Description: 我的收益
@@ -242,72 +343,56 @@ public class MineController {
 	 * @author changjun
 	 * @date 2015年10月21日
 	 */
-	@RequestMapping(value = "/applyUpdatePrice",method = RequestMethod.POST)
-	public ResponseEntity<Void> applyUpdatePrice(@RequestBody  JSONObject json){
-		String username = json.getString("username");
-		String area = json.getString("area");
-		String goodsname = json.getString("goodsname");
-		String amount = json.getString("amount");
-		String reason = json.getString("reason");
-		//保存
-		return new ResponseEntity<Void>( HttpStatus.OK);
+	//{"salesmanId":"C37010511230","regionId":"370105","applyReason":"增加竞争力","range":"-100","skuName":"红米2A"}
+	 
+	@RequestMapping(value = "/applyChangePrice",method = RequestMethod.POST)
+	public ResponseEntity<JSONObject> applyChangePrice(@RequestBody  JSONObject json){
+		String regionId = json.getString("regionId");
+		String salesmanId = json.getString("salesmanId");
+		ApplyPrice ap = new ApplyPrice();
+		ap.setApplyReason(json.getString("applyReason"));
+		ap.setApplyTime(new Date());
+		ap.setPriceRange(json.getDouble("range"));
+		ap.setProductName(json.getString("skuName"));
+		ap.setStatus("0");
+		String str = aps.saveApply(ap,salesmanId,regionId);
+		JSONObject jo = new JSONObject();
+		jo.put("state", str);
+		return new ResponseEntity<JSONObject>( jo,HttpStatus.OK);
 	}
 	/**
 	 * 
-	 * @Description: 申请调价列表状态
-	 * @param @param username
+	 * @Description: 申请调价列表
+	 * @param @param salesmanId
 	 * @param @return   
 	 * @return ResponseEntity<JSONObject>  
 	 * @throws
 	 * @author changjun
 	 * @date 2015年10月21日
 	 */
-	@RequestMapping(value = "/applyPriceState",method = RequestMethod.POST)
-	public ResponseEntity<List<Apply>> applyPriceState(@RequestBody  JSONObject json){
-		String username = json.getString("username");
-		List<Apply> list = new ArrayList<Apply>();
-		Apply apply = new Apply();
-		List<String> ls = new ArrayList<String>();
-		ls.add("随官屯");
-		ls.add("丁官屯");
-		apply.setArea(ls);
-		apply.setAmount(10D);
-		apply.setApplyDate(new Date());
-		apply.setGoodsName("小米2A");
-		apply.setReason("同行竞争");
-		apply.setApplyName(username);
-		list.add(apply);
+	//{"salesmanId":"C37010511230","pageNumber":"1","pageSize":"10"}
+	@RequestMapping(value = "/applyPriceList",method = RequestMethod.POST)
+	public ResponseEntity<List<Apply>> applyPriceList(@RequestBody  JSONObject json){
+		String sid = json.getString("salesmanId");
+		PageRequest pageRequest = SortUtil.buildPageRequest(json.getInteger("pageNumber"), json.getInteger("pageSize"),"apply");
+		List<Apply> list = aps.getList(sid, pageRequest);
 		return new ResponseEntity<List<Apply>>(list, HttpStatus.OK);
 	}
 	/**
 	 * 
-	 * @Description: 我的足记
-	 * @param @param username
-	 * @param @param potints
-	 * @param @param beginDate
-	 * @param @param endDate
+	 * @Description: 根据id查看申请详情
+	 * @param @param json
 	 * @param @return   
-	 * @return ResponseEntity<JSONObject>  
+	 * @return ResponseEntity<ApplyPrice>  
 	 * @throws
 	 * @author changjun
-	 * @date 2015年10月21日
+	 * @date 2015年12月3日
 	 */
-	@RequestMapping(value = "/saveMoveMark",method = RequestMethod.POST)
-	public ResponseEntity<Object> saveMoveMark(String username,String[] potints,Date beginDate,Date endDate){
-		return new ResponseEntity<Object>(null, HttpStatus.OK);
-	}
-	/**
-	 * 
-	 * @Description:查看我的足迹列表
-	 * @param @param username
-	 * @param @return   
-	 * @return ResponseEntity<JSONObject>  
-	 * @throws
-	 * @author changjun
-	 * @date 2015年10月21日
-	 */
-	@RequestMapping(value = "/selMoveMarkList",method = RequestMethod.POST)
-	public ResponseEntity<Object> selMoveMarkList(String username){
-		return new ResponseEntity<Object>(null, HttpStatus.OK);
+	//{"id":"6"}
+	@RequestMapping(value = "/findApplyById",method = RequestMethod.POST)
+	public ResponseEntity<ApplyPrice> findApplyById(@RequestBody  JSONObject json){
+		Long id = json.getLong("id");
+		ApplyPrice ap = aps.selApplyById(id);
+		return new ResponseEntity<ApplyPrice>(ap, HttpStatus.OK);
 	}
 }

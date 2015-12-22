@@ -1,7 +1,9 @@
 package com.wangge.app.server.controller;
 
 
+
 import javax.annotation.Resource;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,11 +21,9 @@ import com.wangge.app.server.entity.OrderItem;
 import com.wangge.app.server.entity.Message.MessageType;
 import com.wangge.app.server.entity.Message.SendChannel;
 import com.wangge.app.server.entity.Order;
-import com.wangge.app.server.repository.MessageRepository;
 import com.wangge.app.server.repository.OrderRepository;
 import com.wangge.app.server.service.MessageService;
 import com.wangge.app.server.util.SortUtil;
-import com.wangge.app.server.vo.OrderPub;
 
 @RestController
 @RequestMapping({"/v1/remind"})
@@ -78,6 +78,8 @@ public class RemindController {
 			jo.put("orderNum", order.getId());
 			jo.put("shipStatus", order.getStatus().getName());
 			jo.put("goods", sb);
+			
+			jo.put("customMobile", order.getMobile());
 			jo.put("state", "正常订单");
 			return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
 		}
@@ -127,14 +129,13 @@ public class RemindController {
 	 * @author changjun
 	 * @date 2015年10月21日
 	 */
-//	@RequestMapping(value = "/activiRemind",method = RequestMethod.GET)
-//	public ResponseEntity<Message> activiRemind(){
-//		//查询正在进行中的活动  不区分已读未读 活动 type=2
-//		Message msg = new Message();
-////		msg.setContent("双11店庆");
-////		msg.setCreateTime(new Date());
-//		return new ResponseEntity<Message>(, HttpStatus.OK);
-//	}
+	@RequestMapping(value = "/activiList",method = RequestMethod.POST)
+	public ResponseEntity<Page<Message>> activiRemind(@RequestBody  JSONObject json){
+		//查询正在进行中的活动  不区分已读未读 活动 type=2
+		PageRequest pageRequest = SortUtil.buildPageRequest(json.getInteger("pageNumber"), json.getInteger("pageSize"), "push");
+		Page<Message> list = mr.findMessageByType(MessageType.ACTIVE, pageRequest);
+		return new ResponseEntity<Page<Message>>(list, HttpStatus.OK);
+	}
 	/**
 	 * 
 	 * @Description: 活动详情

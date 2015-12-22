@@ -67,5 +67,19 @@ public class MessageService {
 	public Message findOne(Long long1) {
 		return mr.findOne(long1);
 	}
+	/**
+	 * 
+	 * @Description: 根据消息类型获取消息列表
+	 * @param @param type
+	 * @param @param pageRequest
+	 * @param @return   
+	 * @return Page<Message>  
+	 * @throws
+	 * @author changjun
+	 * @date 2015年11月30日
+	 */
+	public Page<Message> findMessageByType(MessageType type,Pageable pageRequest){
+		return mr.findMessageByType(type, pageRequest);
+	}
 	
 }

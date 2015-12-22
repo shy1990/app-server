@@ -9,6 +9,4 @@ import com.wangge.common.entity.Region;
 
 public interface OrderRepository extends JpaRepository<Order, String> {
 	Page<Order> findByRegion(Region region,Pageable page);
-	
-	
 }

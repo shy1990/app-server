@@ -15,7 +15,9 @@ public class SortUtil {
             sort = new Sort(Direction.DESC, "sendTime");
         }else if ("order".equals(sortType)) {
             sort = new Sort(Direction.DESC, "createTime");
-        } 
+        } else if("apply".equals(sortType)){
+        	 sort = new Sort(Direction.DESC, "applyTime");
+        }
         return new PageRequest(pageNumber - 1, pagzSize, sort);
     }
 }
