@@ -16,12 +16,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
+import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.Visit;
 import com.wangge.app.server.entity.Visit.VisitStatus;
 import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.repository.VisitRepository;
+import com.wangge.app.server.service.RegistDataService;
 import com.wangge.app.server.service.TaskVisitService;
+import com.wangge.app.server.vo.VisitVo;
 
 @RestController
 @RequestMapping(value = "/v1")
@@ -32,6 +36,8 @@ public class VisitTaskController {
 	private TaskVisitService taskVisitService;
 	@Resource
 	private VisitRepository vr;
+	@Resource
+	private RegistDataService registDataService;
 	
 	Json json = new Json();
 	
@@ -46,9 +52,19 @@ public class VisitTaskController {
 	 * @version V2.0
 	 */
 	@RequestMapping(value = "/task/{userId}/visitList",method = RequestMethod.GET)
-	public ResponseEntity<List<Visit>> visitList(@PathVariable("userId")Salesman salesman) {
+	public ResponseEntity<List<VisitVo>> visitList(@PathVariable("userId")Salesman salesman) {
+		List<VisitVo> result = Lists.newArrayList();
 		List<Visit> tv = taskVisitService.findBySalesman(salesman);
-			return new ResponseEntity<List<Visit>>(tv, HttpStatus.OK);
+		for(Visit visit : tv){
+			VisitVo visitVo = new VisitVo();
+			visitVo.setId(String.valueOf(visit.getId()));
+			visitVo.setShopName(visit.getRegistData().getShopName());
+			visitVo.setAddress(visit.getRegistData().getReceivingAddress());
+			visitVo.setImageurl(visit.getRegistData().getImage_Url());
+			visitVo.setStatus(visit.getStatus());
+			result.add(visitVo);
+		}
+		return new ResponseEntity<List<VisitVo>>(result, HttpStatus.OK);
 	}
 	
 	/**
@@ -61,12 +77,29 @@ public class VisitTaskController {
 	 * @date 2015年12月11日
 	 * @version V2.0
 	 */
-	@RequestMapping(value = "/task/{visitId}/visitInfo",method = RequestMethod.GET)
-	public ResponseEntity<Visit> visitInfo(@PathVariable("visitId") String visitId) {
+	@RequestMapping(value = "/task/{visitId}/infoVisit",method = RequestMethod.GET)
+	public ResponseEntity<VisitVo> visitInfo(@PathVariable("visitId") String visitId) {
 		Visit taskVisit = taskVisitService.findByVisitId(Long.parseLong(visitId));
+		VisitVo visitVo = new VisitVo();
 		if(taskVisit != null && !"".equals(taskVisit)){
 			if(VisitStatus.FINISHED.equals(taskVisit.getStatus())){
-				return new ResponseEntity<Visit>(taskVisit, HttpStatus.OK);
+				visitVo.setShopName(taskVisit.getRegistData().getShopName());
+				visitVo.setAddress(taskVisit.getAddress());
+				visitVo.setSummary(taskVisit.getSummary());
+				visitVo.setStatus(taskVisit.getStatus());
+				String imageurl1=taskVisit.getImageurl1();
+				String imageurl2=taskVisit.getImageurl2();
+				String imageurl3=taskVisit.getImageurl3();
+				if(imageurl1 != null && !"".equals(imageurl1)){
+					visitVo.setImageurl1(imageurl1);
+				}
+				if(imageurl2 != null && !"".equals(imageurl2)){
+					visitVo.setImageurl2(imageurl2);
+				}
+				if(imageurl3 != null && !"".equals(imageurl3)){
+					visitVo.setImageurl3(imageurl3);
+				}
+				return new ResponseEntity<VisitVo>(visitVo, HttpStatus.OK);
 			}
 		}
 		return null;
@@ -85,9 +118,38 @@ public class VisitTaskController {
 	@RequestMapping(value = "/task/addVisit",method = RequestMethod.POST)
 	public ResponseEntity<Json> addVisit(@RequestBody JSONObject jsons) {
 		try {
-			String visitId=jsons.getString("visitId");
-			Visit taskVisit = taskVisitService.findByVisitId(Long.parseLong(visitId));
-			if(taskVisit != null && !"".equals(taskVisit)){
+			if(jsons.containsKey("visitId")){
+				String visitId=jsons.getString("visitId");
+				Visit taskVisit = taskVisitService.findByVisitId(Long.parseLong(visitId));
+				if(taskVisit != null && !"".equals(taskVisit)){
+					taskVisit.setAddress(jsons.getString("address"));
+					taskVisit.setStatus(VisitStatus.FINISHED);
+					taskVisit.setExpiredTime(new Date());
+					taskVisit.setSummary(jsons.getString("summary"));
+					if(jsons.containsKey("imageurl1")){
+						String imageurl1=jsons.getString("imageurl1");
+						taskVisit.setImageurl1(imageurl1);
+					}
+					if(jsons.containsKey("imageurl2")){
+						String imageurl2 = jsons.getString("imageurl2");
+						taskVisit.setImageurl2(imageurl2);
+					}
+					if(jsons.containsKey("imageurl3")){
+						String imageurl3 = jsons.getString("imageurl3");
+						taskVisit.setImageurl3(imageurl3);
+					}
+					taskVisitService.save(taskVisit);
+					json.setMsg("保存成功!");
+					return new ResponseEntity<Json>(json, HttpStatus.CREATED);
+				}else{
+					json.setMsg("保存失败!");
+					return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
+				}
+			}else{
+				Visit taskVisit = new Visit();
+				RegistData rd = registDataService.findRegistDataById(Long.parseLong(jsons.getString("registId")));
+				taskVisit.setRegistData(rd);
+				taskVisit.setSalesman(rd.getSalesman());
 				taskVisit.setAddress(jsons.getString("address"));
 				taskVisit.setStatus(VisitStatus.FINISHED);
 				taskVisit.setExpiredTime(new Date());
@@ -107,9 +169,6 @@ public class VisitTaskController {
 				taskVisitService.save(taskVisit);
 				json.setMsg("保存成功!");
 				return new ResponseEntity<Json>(json, HttpStatus.CREATED);
-			}else{
-				json.setMsg("保存失败!");
-				return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

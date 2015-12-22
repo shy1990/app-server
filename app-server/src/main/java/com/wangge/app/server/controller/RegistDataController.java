@@ -117,6 +117,7 @@ public class RegistDataController {
 		String counterNumber=jsons.getString("counterNumber");
 		String loginAccount=jsons.getString("loginAccount");
 		String phoneNum=jsons.getString("phoneNum");
+		String imageUrl=jsons.getString("imageUrl");
 		Regist regist  = registDataService.findByRegion(region);
 		Salesman salesman = salesmanService.findSalesmanbyId(userId);
 		if(regist != null && !"".equals(regist)){
@@ -125,6 +126,7 @@ public class RegistDataController {
 			data.setRegion(regist.getRegion());
 			data.setSalesman(salesman);
 			data.setCreatetime(new Date());
+			data.setImage_Url(imageUrl);
 			RegistData registData = registDataService.addRegistData(data);
 			//更新扫街
 			SaojieData sjData =  dataSaojieService.findBySaojieData(saojieId);

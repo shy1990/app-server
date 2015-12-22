@@ -56,6 +56,8 @@ public class RegistData extends AbstractPersistable<Long> {
 	private String loginAccount;
 	private Date createtime;
 	private String phoneNum;
+	@Column(name="IMAGE_URL")
+	private String image_Url;
 	
 	public RegistData() {
 		super();
@@ -158,6 +160,14 @@ public class RegistData extends AbstractPersistable<Long> {
 	public void setPhoneNum(String phoneNum) {
 		this.phoneNum = phoneNum;
 	}
-	
+
+	public String getImage_Url() {
+		return image_Url;
+	}
+
+	public void setImage_Url(String image_Url) {
+		this.image_Url = image_Url;
+	}
+
 	
 }
