@@ -144,7 +144,6 @@ public class SaojieDataController {
 			return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
 		}
 
-
 	}
 	
 	/**
