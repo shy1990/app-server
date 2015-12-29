@@ -35,7 +35,7 @@ public class TaskVisitService {
 				visitVo.setId(String.valueOf(visit.getId()));
 				visitVo.setShopName(visit.getRegistData().getShopName());
 				visitVo.setAddress(visit.getRegistData().getReceivingAddress());
-				visitVo.setImageurl(visit.getRegistData().getImage_Url());
+				visitVo.setImageurl(visit.getRegistData().getImageUrl());
 				visitVo.setStatus(visit.getStatus());
 				result.add(visitVo);
 			}

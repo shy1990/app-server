@@ -72,7 +72,7 @@ public class RegistDataController {
  	 			sjdata.setName(sj.getName());
  	 			sjdata.setCoordinate(sj.getCoordinate());
  	 			sjdata.setDescription(sj.getDescription()==null?"":sj.getDescription());
- 	 			//sjdata.setRegion(sj.getRegion());
+// 	 			sjdata.setRegion(sj.getRegion());
  	 			listsj.add(sjdata);
  			}else{
  				SaojieData sjdata=new SaojieData();
@@ -81,7 +81,7 @@ public class RegistDataController {
  	 			sjdata.setName(sj.getName());
  	 			sjdata.setCoordinate(sj.getCoordinate());
  	 			sjdata.setDescription(sj.getDescription()==null?"":sj.getDescription());
- 	 			//sjdata.setRegion(sj.getRegion());
+// 	 			sjdata.setRegion(sj.getRegion());
  	 			listrg.add(sjdata);
  			}
  		}
@@ -110,42 +110,61 @@ public class RegistDataController {
 		int taskValue = 0;
 		int dataRegistNum = 0;
 		List<Regist> child = new ArrayList<Regist>();
-		String userId = jsons.getString("userId");
-		String name = jsons.getString("shopname");
-		String consignee = jsons.getString("consignee");
-		String receivingAddress=jsons.getString("receivingAddress");
-		String counterNumber=jsons.getString("counterNumber");
-		String loginAccount=jsons.getString("loginAccount");
-		String phoneNum=jsons.getString("phoneNum");
-		String imageUrl=jsons.getString("imageUrl");
-		Regist regist  = registDataService.findByRegion(region);
-		Salesman salesman = salesmanService.findSalesmanbyId(userId);
-		if(regist != null && !"".equals(regist)){
-			RegistData data = new RegistData(name,consignee,receivingAddress,counterNumber,loginAccount,phoneNum);
-			data.setRegist(regist);
-			data.setRegion(regist.getRegion());
-			data.setSalesman(salesman);
-			data.setCreatetime(new Date());
-			data.setImage_Url(imageUrl);
-			RegistData registData = registDataService.addRegistData(data);
-			//更新扫街
-			SaojieData sjData =  dataSaojieService.findBySaojieData(Long.parseLong(saojieId));
-			sjData.setRegistData(registData);
-			dataSaojieService.addDataSaojie(sjData);
-			//注册任务达标改状态
-			taskValue = regist.getMinValue();
-			dataRegistNum = registDataService.getDataCountByRegistId(regist.getId());
-			if(taskValue == dataRegistNum){
-				regist.setStatus(RegistStatus.AGREE);
-				registDataService.updateRegist(regist);
+		try {
+			String userId = jsons.getString("userId");
+			String counterNumber=jsons.getString("counterNumber");//柜台数
+			String loginAccount=jsons.getString("loginAccount");
+			String clerk=jsons.getString("clerk");//营业人数
+			String length=jsons.getString("length");
+			String width= jsons.getString("width");
+			String imageUrl=jsons.getString("imageurl");
+			String imageUrl1=jsons.getString("imageurl1");
+			String imageUrl2=jsons.getString("imageurl2");
+			String imageUrl3=jsons.getString("imageurl3");
+			String description=jsons.getString("description");
+			Regist regist  = registDataService.findByRegion(region);
+			Salesman salesman = salesmanService.findSalesmanbyId(userId);
+			if(regist != null && !"".equals(regist)){
+				RegistData data = new RegistData(loginAccount, imageUrl,length, width, imageUrl1, imageUrl2, imageUrl3);
+				data.setRegist(regist);
+				data.setRegion(regist.getRegion());
+				data.setSalesman(salesman);
+				data.setCreatetime(new Date());
+				data.setCounterNumber(counterNumber);
+				data.setClerk(clerk);
+				data.setDescription(description);
+				Map<String,String> member = registDataService.findMemberInfo(loginAccount);
+				if(member != null && !"".equals(member)){
+					data.setConsignee(member.get("CONSIGNEE"));
+					data.setReceivingAddress(member.get("ADDRESS"));
+					data.setPhoneNum(member.get("MOBILE"));
+					data.setShopName(member.get("SHOPNAME"));
+				}
+				RegistData registData = registDataService.addRegistData(data);
+				
+				//更新扫街
+				SaojieData sjData =  dataSaojieService.findBySaojieData(Long.parseLong(saojieId));
+				sjData.setRegistData(registData);
+				dataSaojieService.addDataSaojie(sjData);
+				//注册任务达标改状态
+				taskValue = regist.getMinValue();
+				dataRegistNum = registDataService.getDataCountByRegistId(regist.getId());
+				if(taskValue == dataRegistNum){
+					regist.setStatus(RegistStatus.AGREE);
+					registDataService.updateRegist(regist);
+				}
+				json.setSuccess(true);
+				json.setMsg("保存成功！");
+			}else{
+				json.setMsg("保存失败！");
 			}
-			json.setSuccess(true);
-			json.setMsg("保存成功！");
-		}else{
-			json.setMsg("保存失败！");
+			
+			return new ResponseEntity<Json>(json, HttpStatus.CREATED);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			json.setMsg("保存异常!");
+			return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
 		}
-		
-		return new ResponseEntity<Json>(json, HttpStatus.CREATED);
 	}
 	
 	/**
@@ -161,22 +180,35 @@ public class RegistDataController {
 	@RequestMapping(value = "/update_registData",method = RequestMethod.POST)
 	public ResponseEntity<Json> updateDataSaojie(@RequestBody JSONObject jsons){
 		String registDataId = jsons.getString("id");
-		String name = jsons.getString("shopname");
-		String consignee = jsons.getString("consignee");
-		String receivingAddress=jsons.getString("receivingAddress");
-		String counterNumber=jsons.getString("counterNumber");
+		String counterNumber=jsons.getString("counterNumber");//柜台数
 		String loginAccount=jsons.getString("loginAccount");
-		String phoneNum=jsons.getString("phoneNum");
+		String clerk=jsons.getString("clerk");//营业人数
+		String length=jsons.getString("length");
+		String width= jsons.getString("width");
+		String imageUrl1=jsons.getString("imageurl1");
+		String imageUrl2=jsons.getString("imageurl2");
+		String imageUrl3=jsons.getString("imageurl3");
+		String description=jsons.getString("description");
 		Json json = new Json();
 		RegistData dataRegist = registDataService.findRegistDataById(Long.parseLong(registDataId));
 		if(dataRegist != null && !"".equals(dataRegist)){
-			dataRegist.setShopName(name);
-			dataRegist.setConsignee(consignee);
-			dataRegist.setReceivingAddress(receivingAddress);
 			dataRegist.setCounterNumber(counterNumber);
 			dataRegist.setLoginAccount(loginAccount);
-			dataRegist.setPhoneNum(phoneNum);
-			
+			dataRegist.setClerk(clerk);
+			dataRegist.setStore_length(length);
+			dataRegist.setStore_width(width);
+			dataRegist.setImageUrl(imageUrl3);
+			dataRegist.setImageUrl1(imageUrl1);
+			dataRegist.setImageUrl2(imageUrl2);
+			dataRegist.setImageUrl3(imageUrl3);
+			dataRegist.setDescription(description);
+			Map<String,String> member = registDataService.findMemberInfo(loginAccount);
+			if(member != null && !"".equals(member)){
+				dataRegist.setConsignee(member.get("CONSIGNEE"));
+				dataRegist.setReceivingAddress(member.get("ADDRESS"));
+				dataRegist.setPhoneNum(member.get("MOBILE"));
+				dataRegist.setShopName(member.get("SHOPNAME"));
+			}
 			try {
 				registDataService.addRegistData(dataRegist);
 				json.setSuccess(true);

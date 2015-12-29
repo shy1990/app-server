@@ -1,6 +1,7 @@
 package com.wangge.app.server.service;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -9,10 +10,9 @@ import org.springframework.stereotype.Service;
 
 import com.wangge.app.server.entity.Regist;
 import com.wangge.app.server.entity.RegistData;
-import com.wangge.app.server.entity.Saojie;
-import com.wangge.app.server.entity.SaojieData;
 import com.wangge.app.server.repository.RegistDataRepository;
 import com.wangge.app.server.repository.RegistRepository;
+import com.wangge.app.server.repositoryimpl.MemberImpl;
 import com.wangge.common.entity.Region;
 
 @Service
@@ -22,6 +22,8 @@ public class RegistDataService {
 	private RegistDataRepository registDataRepository;
 	@Autowired
 	private RegistRepository registRepository;
+	@Autowired
+	private MemberImpl memberImpl;
 	
 	public Regist findByRegion(Region region) {
 		
@@ -56,6 +58,10 @@ public class RegistDataService {
 	public RegistData findRegistDataById(Long registDataId) {
 		
 		return registDataRepository.findOne(registDataId);
+	}
+	
+	public Map<String,String> findMemberInfo(String loginAccount){
+		return memberImpl.findMemberInfo(loginAccount);
 	}
 
 }

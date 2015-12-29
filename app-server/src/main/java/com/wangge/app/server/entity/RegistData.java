@@ -57,18 +57,42 @@ public class RegistData extends AbstractPersistable<Long> {
 	private Date createtime;
 	private String phoneNum;
 	@Column(name="IMAGE_URL")
-	private String image_Url;
+	private String imageUrl;
+	@Column(name = "CLERK")
+	private String clerk;
+	@Column(name = "STORE_LENGTH")
+	private String store_length;
+	@Column(name = "STORE_WIDTH")
+	private String store_width;
+	@Column(name = "IMAGE_URL1")
+	private String imageUrl1;
+	@Column(name = "IMAGE_URL2")
+	private String imageUrl2;
+	@Column(name = "IMAGE_URL3")
+	private String imageUrl3;
+	private String description;
 	
 	public RegistData() {
 		super();
 	}
 
-	public RegistData(String name, String consignee,String receivingAddress,String counterNumber,String loginAccount,String phoneNum) {
+	public RegistData(String loginAccount,String imageUrl,String store_length,
+			String store_width, String imageUrl1, String imageUrl2,
+			String imageUrl3) {
+		super();
+		this.loginAccount = loginAccount;
+		this.imageUrl = imageUrl;
+		this.store_length = store_length;
+		this.store_width = store_width;
+		this.imageUrl1 = imageUrl1;
+		this.imageUrl2 = imageUrl2;
+		this.imageUrl3 = imageUrl3;
+	}
+
+	public RegistData(String name, String consignee,String receivingAddress,String phoneNum) {
 		this.shopName = name;
 		this.consignee = consignee;
 		this.receivingAddress = receivingAddress;
-		this.counterNumber = counterNumber;
-		this.loginAccount = loginAccount;
 		this.phoneNum = phoneNum;
 	}
 
@@ -161,13 +185,68 @@ public class RegistData extends AbstractPersistable<Long> {
 		this.phoneNum = phoneNum;
 	}
 
-	public String getImage_Url() {
-		return image_Url;
+	public String getImageUrl() {
+		return imageUrl;
 	}
 
-	public void setImage_Url(String image_Url) {
-		this.image_Url = image_Url;
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 
+	public String getClerk() {
+		return clerk;
+	}
+
+	public void setClerk(String clerk) {
+		this.clerk = clerk;
+	}
+
+	public String getStore_length() {
+		return store_length;
+	}
+
+	public void setStore_length(String store_length) {
+		this.store_length = store_length;
+	}
+
+	public String getStore_width() {
+		return store_width;
+	}
+
+	public void setStore_width(String store_width) {
+		this.store_width = store_width;
+	}
+
+	public String getImageUrl1() {
+		return imageUrl1;
+	}
+
+	public void setImageUrl1(String imageUrl1) {
+		this.imageUrl1 = imageUrl1;
+	}
+
+	public String getImageUrl2() {
+		return imageUrl2;
+	}
+
+	public void setImageUrl2(String imageUrl2) {
+		this.imageUrl2 = imageUrl2;
+	}
+
+	public String getImageUrl3() {
+		return imageUrl3;
+	}
+
+	public void setImageUrl3(String imageUrl3) {
+		this.imageUrl3 = imageUrl3;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 	
 }
