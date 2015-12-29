@@ -73,6 +73,7 @@ public class RegistDataController {
  	 			sjdata.setCoordinate(sj.getCoordinate());
  	 			sjdata.setDescription(sj.getDescription()==null?"":sj.getDescription());
 // 	 			sjdata.setRegion(sj.getRegion());
+ 	 			sjdata.setRegistId(sj.getRegistData().getId());
  	 			listsj.add(sjdata);
  			}else{
  				SaojieData sjdata=new SaojieData();
@@ -225,5 +226,34 @@ public class RegistDataController {
 			json.setMsg("修改失败！");
 			return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
 		}
+	}
+	
+	/**
+	 * 
+	* @Title: registDataInfo 
+	* @Description: TODO(获取一条注册店铺信息) 
+	* @param @param registDataId
+	* @param @return    设定文件 
+	* @return ResponseEntity<RegistData>    返回类型 
+	* @throws
+	 */
+	@RequestMapping(value = "/{registDataId}/infoRegist", method = RequestMethod.GET)
+	public ResponseEntity<RegistData> registDataInfo(@PathVariable("registDataId") String registDataId) {
+		RegistData dataRegist = registDataService.findRegistDataById(Long.parseLong(registDataId));
+		RegistData rd = null;
+		if(dataRegist != null && !"".equals(dataRegist)){
+			rd = new RegistData();
+			rd.setId(dataRegist.getId());
+			rd.setClerk(dataRegist.getClerk());
+			rd.setCounterNumber(dataRegist.getCounterNumber());
+			rd.setDescription(dataRegist.getDescription());
+			rd.setLoginAccount(dataRegist.getLoginAccount());
+			rd.setStore_length(dataRegist.getStore_length());
+			rd.setStore_width(dataRegist.getStore_width());
+			rd.setImageUrl1(dataRegist.getImageUrl1());
+			rd.setImageUrl2(dataRegist.getImageUrl2());
+			rd.setImageUrl3(dataRegist.getImageUrl3());
+		}
+		return new ResponseEntity<RegistData>(rd, HttpStatus.OK);
 	}
 }

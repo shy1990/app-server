@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -46,6 +47,9 @@ public class SaojieData extends AbstractPersistable<Long> {
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "REGISTDATA_ID")
 	private RegistData registData;
+	@Transient
+	private Long registId;
+	
 	public SaojieData() {
 		super();
 	}
@@ -118,6 +122,14 @@ public class SaojieData extends AbstractPersistable<Long> {
 
 	public void setRegistData(RegistData registData) {
 		this.registData = registData;
+	}
+
+	public Long getRegistId() {
+		return registId;
+	}
+
+	public void setRegistId(Long registId) {
+		this.registId = registId;
 	}
 
 	
