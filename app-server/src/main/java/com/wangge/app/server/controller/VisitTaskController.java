@@ -55,9 +55,9 @@ public class VisitTaskController {
 	 */
 	@RequestMapping(value = "/task/{userId}/visitList",method = RequestMethod.POST)
 	public ResponseEntity<List<VisitVo>> visitList(@PathVariable("userId")Salesman salesman,@RequestBody JSONObject jsons) {
-		
+		int flag = jsons.getIntValue("flag");
 		PageRequest pageRequest = SortUtil.buildPageRequest(jsons.getInteger("pageNumber"), jsons.getInteger("pageSize"),"visitVo");
-		List<VisitVo> result = taskVisitService.findBySalesman(salesman,pageRequest);
+		List<VisitVo> result = taskVisitService.findBySalesman(salesman,pageRequest,flag);
 		
 		return new ResponseEntity<List<VisitVo>>(result, HttpStatus.OK);
 	}
@@ -110,8 +110,8 @@ public class VisitTaskController {
 	 * @date 2015年12月11日
 	 * @version V2.0
 	 */
-	@RequestMapping(value = "/task/addVisit",method = RequestMethod.POST)
-	public ResponseEntity<Json> addVisit(@RequestBody JSONObject jsons) {
+	@RequestMapping(value = "/task/{userId}/addVisit",method = RequestMethod.POST)
+	public ResponseEntity<Json> addVisit(@PathVariable("userId")Salesman salesman,@RequestBody JSONObject jsons) {
 		try {
 			if(jsons.containsKey("visitId")){
 				String visitId=jsons.getString("visitId");
@@ -133,6 +133,7 @@ public class VisitTaskController {
 						String imageurl3 = jsons.getString("imageurl3");
 						taskVisit.setImageurl3(imageurl3);
 					}
+					taskVisit.setSalesman(salesman);
 					taskVisitService.save(taskVisit);
 					json.setSuccess(true);
 					json.setMsg("保存成功!");
@@ -162,6 +163,7 @@ public class VisitTaskController {
 					String imageurl3 = jsons.getString("imageurl3");
 					taskVisit.setImageurl3(imageurl3);
 				}
+				taskVisit.setSalesman(salesman);
 				taskVisitService.save(taskVisit);
 				json.setSuccess(true);
 				json.setMsg("保存成功!");
