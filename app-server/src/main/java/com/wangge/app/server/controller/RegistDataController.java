@@ -154,6 +154,7 @@ public class RegistDataController {
 					regist.setStatus(RegistStatus.AGREE);
 					registDataService.updateRegist(regist);
 				}
+				json.setId(String.valueOf(registData.getId()));
 				json.setSuccess(true);
 				json.setMsg("保存成功！");
 			}else{
@@ -253,6 +254,8 @@ public class RegistDataController {
 			rd.setImageUrl1(dataRegist.getImageUrl1());
 			rd.setImageUrl2(dataRegist.getImageUrl2());
 			rd.setImageUrl3(dataRegist.getImageUrl3());
+			rd.setShopName(dataRegist.getShopName());
+			rd.setPhoneNum(dataRegist.getPhoneNum());
 		}
 		return new ResponseEntity<RegistData>(rd, HttpStatus.OK);
 	}
