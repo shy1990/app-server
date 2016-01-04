@@ -11,6 +11,7 @@ import com.google.common.collect.Lists;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.Visit;
 import com.wangge.app.server.entity.Visit.VisitStatus;
+import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.repository.VisitRepository;
 import com.wangge.app.server.vo.VisitVo;
 
@@ -24,7 +25,8 @@ public class TaskVisitService {
 	@Autowired
 	private VisitRepository visitRepository;
 	
-	public List<VisitVo> findBySalesman(Salesman salesman,Pageable page,int flag){
+	public Json findBySalesman(Salesman salesman,Pageable page,int flag){
+	  Json json = new Json();
 		List<VisitVo> result = Lists.newArrayList();
 		Page<Visit> pVisit = visitRepository.findBySalesman(salesman,page);
 		int totalPage = (pVisit.getTotalPages()+pVisit.getSize()-1)/pVisit.getSize();
@@ -33,7 +35,6 @@ public class TaskVisitService {
 			for(Visit visit : pVisit){
 				if(flag ==0){
 					visitVo = new VisitVo();
-					visitVo.setTotalPage(totalPage);
 					visitVo.setId(String.valueOf(visit.getId()));
 					visitVo.setShopName(visit.getRegistData().getShopName());
 					visitVo.setAddress(visit.getRegistData().getReceivingAddress());
@@ -43,7 +44,6 @@ public class TaskVisitService {
 				}else{
 					if(VisitStatus.FINISHED.equals(visit.getStatus())){
 						visitVo = new VisitVo();
-						visitVo.setTotalPage(totalPage);
 						visitVo.setId(String.valueOf(visit.getId()));
 						visitVo.setShopName(visit.getRegistData().getShopName());
 						visitVo.setAddress(visit.getRegistData().getReceivingAddress());
@@ -53,8 +53,11 @@ public class TaskVisitService {
 					}
 				}
 			}
+			json.setSuccess(true);
+			json.setObj(result);
+			json.setTotalPage(totalPage);
 		}
-		return result;
+		return json;
 	}
 	
 	public Visit findByVisitId(Long visitId) {

@@ -12,7 +12,6 @@ public class VisitVo {
 	private String imageurl1;//业务拜访图片1
 	private String imageurl2;//拜访图片2
 	private String imageurl3;//拜访图片3
-	private Integer totalPage;
 	
 	public String getId() {
 		return id;
@@ -27,7 +26,7 @@ public class VisitVo {
 		this.shopName = shopName;
 	}
 	public String getAddress() {
-		return address;
+		return address == null ? "" : address;
 	}
 	public void setAddress(String address) {
 		this.address = address;
@@ -41,40 +40,34 @@ public class VisitVo {
 	}
 	
 	public String getImageurl() {
-		return imageurl;
+		return imageurl == null ? "" : imageurl;
 	}
 	public void setImageurl(String imageurl) {
-		this.imageurl = imageurl;
+		this.imageurl = imageurl == null ? "" : imageurl;
 	}
 	public String getSummary() {
-		return summary;
+		return summary == null ? "" : summary;
 	}
 	public void setSummary(String summary) {
-		this.summary = summary;
+		this.summary = summary == null ? "" : summary.trim();
 	}
 	public String getImageurl1() {
-		return imageurl1;
+		return imageurl1 == null ? "" : imageurl1;
 	}
 	public void setImageurl1(String imageurl1) {
-		this.imageurl1 = imageurl1;
+		this.imageurl1 = imageurl1 == null ? "" : imageurl1;
 	}
 	public String getImageurl2() {
-		return imageurl2;
+		return imageurl2 == null ? "" : imageurl2;
 	}
 	public void setImageurl2(String imageurl2) {
-		this.imageurl2 = imageurl2;
+		this.imageurl2 = imageurl2 == null ? "" : imageurl2;
 	}
 	public String getImageurl3() {
-		return imageurl3;
+		return imageurl3 == null ? "" : imageurl3;
 	}
 	public void setImageurl3(String imageurl3) {
-		this.imageurl3 = imageurl3;
-	}
-	public Integer getTotalPage() {
-		return totalPage;
-	}
-	public void setTotalPage(Integer totalPage) {
-		this.totalPage = totalPage;
+		this.imageurl3 = imageurl3 == null ? "" : imageurl3;
 	}
 	
 }

@@ -54,12 +54,11 @@ public class VisitTaskController {
 	 * @version V2.0
 	 */
 	@RequestMapping(value = "/task/{userId}/visitList",method = RequestMethod.POST)
-	public ResponseEntity<List<VisitVo>> visitList(@PathVariable("userId")Salesman salesman,@RequestBody JSONObject jsons) {
+	public ResponseEntity<Json> visitList(@PathVariable("userId")Salesman salesman,@RequestBody JSONObject jsons) {
 		int flag = jsons.getIntValue("flag");
 		PageRequest pageRequest = SortUtil.buildPageRequest(jsons.getInteger("pageNumber"), jsons.getInteger("pageSize"),"visitVo");
-		List<VisitVo> result = taskVisitService.findBySalesman(salesman,pageRequest,flag);
-		
-		return new ResponseEntity<List<VisitVo>>(result, HttpStatus.OK);
+		Json result = taskVisitService.findBySalesman(salesman,pageRequest,flag);
+		return new ResponseEntity<Json>(result, HttpStatus.OK);
 	}
 	
 	/**
