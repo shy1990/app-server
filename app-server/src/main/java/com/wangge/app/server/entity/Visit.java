@@ -74,10 +74,10 @@ public class Visit extends AbstractPersistable<Long> {
 	@Column(name = "VISIT_STATUS")
 	private VisitStatus status;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	private Date beginTime;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	private Date expiredTime;
 	
 	@JsonIgnore

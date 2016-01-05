@@ -1,5 +1,10 @@
 package com.wangge.app.server.vo;
 
+import java.util.Date;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wangge.app.server.entity.Visit.VisitStatus;
 
 public class VisitVo {
@@ -12,6 +17,12 @@ public class VisitVo {
 	private String imageurl1;//业务拜访图片1
 	private String imageurl2;//拜访图片2
 	private String imageurl3;//拜访图片3
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date beginTime;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date expiredTime;
+	private int timing = -1;//倒计时
+	private String coordinate;
 	
 	public String getId() {
 		return id;
@@ -69,5 +80,29 @@ public class VisitVo {
 	public void setImageurl3(String imageurl3) {
 		this.imageurl3 = imageurl3 == null ? "" : imageurl3;
 	}
+  public Date getBeginTime() {
+    return beginTime;
+  }
+  public void setBeginTime(Date beginTime) {
+    this.beginTime = beginTime;
+  }
+  public Date getExpiredTime() {
+    return expiredTime;
+  }
+  public void setExpiredTime(Date expiredTime) {
+    this.expiredTime = expiredTime;
+  }
+  public int getTiming() {
+    return timing;
+  }
+  public void setTiming(int timing) {
+    this.timing = timing;
+  }
+  public String getCoordinate() {
+    return coordinate;
+  }
+  public void setCoordinate(String coordinate) {
+    this.coordinate = coordinate;
+  }
 	
 }

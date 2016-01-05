@@ -1,6 +1,9 @@
 package com.wangge.app.server.service;
 
+import java.util.Calendar;
 import java.util.List;
+
+import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -9,9 +12,11 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Lists;
 import com.wangge.app.server.entity.Salesman;
+import com.wangge.app.server.entity.SaojieData;
 import com.wangge.app.server.entity.Visit;
 import com.wangge.app.server.entity.Visit.VisitStatus;
 import com.wangge.app.server.pojo.Json;
+import com.wangge.app.server.repository.SaojieDataRepository;
 import com.wangge.app.server.repository.VisitRepository;
 import com.wangge.app.server.vo.VisitVo;
 
@@ -24,6 +29,8 @@ import com.wangge.app.server.vo.VisitVo;
 public class TaskVisitService {
 	@Autowired
 	private VisitRepository visitRepository;
+	@Resource
+  private SaojieDataRepository dataSaojieRepository;
 	
 	public Json findBySalesman(Salesman salesman,Pageable page,int flag){
 	  Json json = new Json();
@@ -33,6 +40,7 @@ public class TaskVisitService {
 		VisitVo visitVo;
 		if(pVisit != null && pVisit.getTotalPages() > 0){
 			for(Visit visit : pVisit){
+			  SaojieData saojie = dataSaojieRepository.findOne(visit.getId());
 				if(flag ==0){
 					visitVo = new VisitVo();
 					visitVo.setId(String.valueOf(visit.getId()));
@@ -40,6 +48,19 @@ public class TaskVisitService {
 					visitVo.setAddress(visit.getRegistData().getReceivingAddress());
 					visitVo.setImageurl(visit.getRegistData().getImageUrl());
 					visitVo.setStatus(visit.getStatus());
+					visitVo.setCoordinate(saojie.getCoordinate());
+					if(VisitStatus.FINISHED.equals(visit.getStatus())){
+					  visitVo.setExpiredTime(visit.getExpiredTime());
+					}
+					if(VisitStatus.PENDING.equals(visit.getStatus())){
+					  Calendar cal = Calendar.getInstance();
+		        cal.setTime(visit.getBeginTime());
+		        long time1 = cal.getTimeInMillis();
+		        cal.setTime(visit.getExpiredTime());
+		        long time2 = cal.getTimeInMillis();
+		        long timing=(time2-time1)/(1000*3600*24);
+		        visitVo.setTiming(Integer.parseInt(String.valueOf(timing)));
+					}
 					result.add(visitVo);
 				}else{
 					if(VisitStatus.FINISHED.equals(visit.getStatus())){
@@ -49,6 +70,7 @@ public class TaskVisitService {
 						visitVo.setAddress(visit.getRegistData().getReceivingAddress());
 						visitVo.setImageurl(visit.getRegistData().getImageUrl());
 						visitVo.setStatus(visit.getStatus());
+						visitVo.setExpiredTime(visit.getExpiredTime());
 						result.add(visitVo);
 					}
 				}
