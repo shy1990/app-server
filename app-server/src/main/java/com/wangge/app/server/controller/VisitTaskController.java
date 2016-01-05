@@ -56,9 +56,18 @@ public class VisitTaskController {
 	@RequestMapping(value = "/task/{userId}/visitList",method = RequestMethod.POST)
 	public ResponseEntity<Json> visitList(@PathVariable("userId")Salesman salesman,@RequestBody JSONObject jsons) {
 		int flag = jsons.getIntValue("flag");
-		PageRequest pageRequest = SortUtil.buildPageRequest(jsons.getInteger("pageNumber"), jsons.getInteger("pageSize"),"visitVo");
-		Json result = taskVisitService.findBySalesman(salesman,pageRequest,flag);
-		return new ResponseEntity<Json>(result, HttpStatus.OK);
+		Json result = null;
+    try {
+      PageRequest pageRequest = SortUtil.buildPageRequest(jsons.getInteger("pageNumber"), jsons.getInteger("pageSize"),"visitVo");
+      result = taskVisitService.findBySalesman(salesman,pageRequest,flag);
+      return new ResponseEntity<Json>(result, HttpStatus.OK);
+    } catch (Exception e) {
+      e.printStackTrace();
+      result.setSuccess(false);
+      return new ResponseEntity<Json>(result, HttpStatus.UNAUTHORIZED);
+      
+    }
+		
 	}
 	
 	/**

@@ -40,7 +40,7 @@ public class TaskVisitService {
 		VisitVo visitVo;
 		if(pVisit != null && pVisit.getTotalPages() > 0){
 			for(Visit visit : pVisit){
-			  SaojieData saojie = dataSaojieRepository.findOne(visit.getId());
+			  SaojieData saojie = dataSaojieRepository.findOne(visit.getRegistData().getId());
 				if(flag ==0){
 					visitVo = new VisitVo();
 					visitVo.setId(String.valueOf(visit.getId()));
@@ -48,7 +48,9 @@ public class TaskVisitService {
 					visitVo.setAddress(visit.getRegistData().getReceivingAddress());
 					visitVo.setImageurl(visit.getRegistData().getImageUrl());
 					visitVo.setStatus(visit.getStatus());
-					visitVo.setCoordinate(saojie.getCoordinate());
+					if(saojie != null && !"".equals(saojie)){
+					  visitVo.setCoordinate(saojie.getCoordinate());
+					}
 					if(VisitStatus.FINISHED.equals(visit.getStatus())){
 					  visitVo.setExpiredTime(visit.getExpiredTime());
 					}
