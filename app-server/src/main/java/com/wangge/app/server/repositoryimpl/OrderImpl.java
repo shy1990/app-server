@@ -3,8 +3,11 @@ package com.wangge.app.server.repositoryimpl;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.wangge.app.server.entity.Message.MessageType;
 @Repository
 public class OrderImpl {
 	@PersistenceContext  
@@ -159,6 +162,24 @@ public class OrderImpl {
 	@Transactional
 	public String saveRefuseReason(String ordernum,String reason){
 		String sql = "update SJZAIXIAN.SJ_TB_ORDER set refuse_reason='"+reason+"' ,yewu_signfor_time=sysdate where order_num="+ordernum+"";
+		Query query =  em.createNativeQuery(sql);
+		return query.executeUpdate()>0?"suc":"false";
+	}
+	
+	/**
+	 * 
+	 * @Description: 客户取消订单修改信息表类型
+	 * @param @param MessageType mt
+	 * @param @param String orderNum
+	 * @param @return   
+	 * @return String  
+	 * @throws
+	 * @author changjun
+	 * @date 2015年12月1日
+	 */
+	@Transactional
+	public String updateMessageType(String state,String orderNum){
+		String sql = "update SJ_YEWU.sys_message set message_type= "+state+" where content like '%"+orderNum+"%'";
 		Query query =  em.createNativeQuery(sql);
 		return query.executeUpdate()>0?"suc":"false";
 	}

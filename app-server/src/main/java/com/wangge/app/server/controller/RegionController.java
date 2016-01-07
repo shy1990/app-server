@@ -67,7 +67,6 @@ public class RegionController {
 		logger.debug("id:"+id);
 	     List<TreeVo> listTreeVo =new ArrayList<TreeVo>();
 	     listTreeVo=regionService.findTreeRegion(id);
-	     System.out.println(new ResponseEntity<List<TreeVo>>(listTreeVo,HttpStatus.OK));
 		return new ResponseEntity<List<TreeVo>>(listTreeVo,HttpStatus.OK);
 	}
 	

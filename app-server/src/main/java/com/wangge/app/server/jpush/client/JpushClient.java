@@ -68,6 +68,7 @@ public class JpushClient {
 			//jpush.setEnableSSL(true);
 
 			//测试发送消息或者通知
+			sendOrder("下单通知","会员下单通知:【222222222222222】山东省济南市历下区天桥店下单成功，订单商品","15105314911","20151111111111","天桥魅族手机","0");
 //			sendOrder("下单通知","会员下单通知:【222222222222222】山东省济南市历下区天桥店下单成功，订单商品","18764157959","20151111111111","天桥魅族手机");
 //			msg={\"title\":\"天桥区扫街任务\",\"content\":\"天桥区可以开始扫啦啦啦啦!!!\",\"mobile\":\"18764157959\"}	;
 	
@@ -86,13 +87,13 @@ public class JpushClient {
 		 * @author changjun
 		 * @date 2015年11月13日
 		 */
-		public static String sendOrder(String title,String msg,String alias,String ordernum,String username) {
+		public static String sendOrder(String title,String msg,String alias,String ordernum,String username,String type) {
 		    // 在实际业务中，建议 sendNo 是一个你自己的业务可以处理的一个自增数字。
 		    String sendNo=getRandomSendNo()+"";
 			Map<String, Object> extra = new HashMap<String, Object>();
 			extra.put("ordernum", ordernum);
 			extra.put("username", username);
-			extra.put("type", "0");
+			extra.put("type", type);
 			jpush = new JPushClient(masterSecret, appKey, timeToLive, DeviceEnum.Android);
 //			jpush.setEnableSSL(true);
 			MessageResult msgResult = null;
