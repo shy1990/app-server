@@ -34,6 +34,17 @@ public class Salesman extends AbstractPersistable<String> {
 	private String id;
 	
 	private String simId;
+	
+	private SalesmanStatus status = SalesmanStatus.saojie;
+	
+
+	public SalesmanStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(SalesmanStatus status) {
+		this.status = status;
+	}
 
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "region_id")

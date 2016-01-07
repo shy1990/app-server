@@ -1,7 +1,6 @@
 package com.wangge.app.server.service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayList;import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -9,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wangge.app.server.entity.Salesman;
+import com.wangge.app.server.entity.SalesmanStatus;
 import com.wangge.app.server.entity.Saojie;
 import com.wangge.app.server.entity.SaojieData;
 import com.wangge.app.server.entity.Saojie.SaojieStatus;
@@ -43,6 +43,8 @@ public class DataSaojieService {
 				
 				child.add(sj2);
 				
+			}else{
+				data.getSaojie().getSalesman().setStatus(SalesmanStatus.kaifa);
 			}
 			child.add(dataSaojie.getSaojie());
 			dataSaojie.getSaojie().setChildren(child);
