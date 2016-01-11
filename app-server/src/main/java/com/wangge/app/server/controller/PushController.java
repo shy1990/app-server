@@ -4,8 +4,6 @@ import java.util.Date;
 import javax.annotation.Resource;
 
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -54,7 +52,11 @@ public class PushController {
 		 */
 		
 		JSONObject json = new JSONObject(msg);
-		String send = json.getString("username")+",数量:"+json.getString("count")+",金额:"+json.getString("amount")+",订单号:"+json.getString("orderNum");
+		String ss = json.getString("username");
+		if(ss.contains("市")){
+			ss = ss.substring(ss.indexOf("市")+1,ss.length());
+		}
+		String send = ss+",数量:"+json.getString("count")+",金额:"+json.getString("amount")+",订单号:"+json.getString("orderNum");
 	
 		Message mes = new Message();
 		mes.setChannel(SendChannel.PUSH);
@@ -65,6 +67,7 @@ public class PushController {
 		mr.save(mes);
 		String str = "";
 		try {
+			
 //			str = JpushClient.sendOrder("下单通知", send,json.getString("mobiles")+",15105314911",json.getString("orderNum"),json.getString("username"),"0");
 			str = JpushClient.sendOrder("下单通知", send,mobile,json.getString("orderNum"),json.getString("username"),"0");
 		} catch (Exception e) {

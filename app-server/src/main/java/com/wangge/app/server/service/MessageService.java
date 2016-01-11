@@ -42,8 +42,8 @@ public class MessageService {
 	 * @author changjun
 	 * @date 2015年11月20日
 	 */
-	public Page<Message> findByChannelAndTypeAndReceiverContaining(SendChannel Channel,MessageType type,String receiver,Pageable pageRequest){
-		return  mr.findByChannelAndTypeAndReceiverContaining(Channel, type, receiver, pageRequest);
+	public Page<Message> findByChannelAndTypeAndReceiverContaining(SendChannel Channel,MessageType type0,MessageType type,String receiver,Pageable pageRequest){
+		return  mr.findByChannelAndTypeOrTypeAndReceiverContaining(Channel, type0,type, receiver, pageRequest);
 	}
 	/**
 	 * 

@@ -49,7 +49,7 @@ public class RemindController {
 	public ResponseEntity<Page<Message>> orderList(@RequestBody  JSONObject json){
 		String receiver = json.getString("mobile");
 		PageRequest pageRequest = SortUtil.buildPageRequest(json.getInteger("pageNumber"), json.getInteger("pageSize"), "push");
-		Page<Message> list = mr.findByChannelAndTypeAndReceiverContaining(SendChannel.PUSH, MessageType.ORDER, receiver, pageRequest);
+		Page<Message> list = mr.findByChannelAndTypeAndReceiverContaining(SendChannel.PUSH, MessageType.CANCELORDER, MessageType.ORDER, receiver, pageRequest);
 		return new ResponseEntity<Page<Message>>(list, HttpStatus.OK);
 	}
 	/**
@@ -69,8 +69,12 @@ public class RemindController {
 		JSONObject jo = new JSONObject();
 		if(order!=null && !"".equals(order.getId())){
 			StringBuffer sb = new StringBuffer();
+			int skuNum = 0;
 			for (OrderItem item : order.getItems()) {
 				sb.append(item.getName()+" ");
+				if("sku".equals(item.getType())){
+				  skuNum+=1;
+				}
 			}
 			jo.put("username", order.getShopName());
 			jo.put("amount", order.getAmount());
@@ -78,7 +82,8 @@ public class RemindController {
 			jo.put("orderNum", order.getId());
 			jo.put("shipStatus", order.getStatus().getName());
 			jo.put("goods", sb);
-			
+			jo.put("skuNum", skuNum);
+			jo.put("itemOtherNum", order.getItems().size()-skuNum);
 			jo.put("customMobile", order.getMobile());
 			jo.put("state", "正常订单");
 			return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);

@@ -37,7 +37,20 @@ public class Order implements Serializable {
 			return name;
 		}
 	}
+	
+	public enum PayMent{
+	  PAY_ONLINE("线上支付"),PAY_OFFLINE("货到付款"),POS("POS支付");
+	  private String name;
 
+    private PayMent(String name) {
+      this.name = name;
+    }
+
+    public String getName() {
+      return name;
+    }
+	}
+	
 	@Id
 	@Column(name = "ORDER_NUM")
 	private String id;
@@ -48,7 +61,9 @@ public class Order implements Serializable {
 	@Enumerated(EnumType.ORDINAL)
 	@Column(name="SHIP_STATUS")
 	private ShipStatus status;
-
+	
+	@Column(name="pay_ment")
+	private PayMent payMent; //支付方式
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
 	private Collection<OrderItem> items;
 	
@@ -66,7 +81,15 @@ public class Order implements Serializable {
 		this.mobile = mobile;
 	}
 
-	public String getId() {
+	public PayMent getPayMent() {
+    return payMent;
+  }
+
+  public void setPayMent(PayMent payMent) {
+    this.payMent = payMent;
+  }
+
+  public String getId() {
 		return id;
 	}
 
