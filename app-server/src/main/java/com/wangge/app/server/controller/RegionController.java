@@ -151,5 +151,16 @@ public class RegionController {
 	}
 	
 	
+	
+	@RequestMapping(value="/findRegistRegion",method=RequestMethod.POST)
+  public ResponseEntity<List<Region>> findRegistRegion(String salesmanid){
+    logger.debug("salesmanid"+salesmanid);
+    List<Region>  listRegion=new ArrayList<Region>();
+    Salesman man=salesmanService.findSalesmanbyId(salesmanid);
+    listRegion= regionService.findRegiondbyParentid(man.getRegion().getId());
+    return new ResponseEntity<List<Region>>(listRegion,HttpStatus.OK);
+  }
+	
+	
 }
 
