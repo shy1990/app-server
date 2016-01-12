@@ -23,6 +23,7 @@ public class VisitVo {
 	private Date expiredTime;
 	private int timing = -1;//倒计时
 	private String coordinate;
+	private String visitAddress;
 	
 	public String getId() {
 		return id;
@@ -103,6 +104,12 @@ public class VisitVo {
   }
   public void setCoordinate(String coordinate) {
     this.coordinate = coordinate;
+  }
+  public String getVisitAddress() {
+    return visitAddress;
+  }
+  public void setVisitAddress(String visitAddress) {
+    this.visitAddress = visitAddress;
   }
 	
 }

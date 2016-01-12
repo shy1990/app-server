@@ -53,6 +53,11 @@ public class TaskVisitService {
 					}
 					if(VisitStatus.FINISHED.equals(visit.getStatus())){
 					  visitVo.setExpiredTime(visit.getExpiredTime());
+					  visitVo.setSummary(visit.getSummary());
+					  visitVo.setImageurl1(visit.getImageurl1());
+					  visitVo.setImageurl2(visit.getImageurl2());
+					  visitVo.setImageurl3(visit.getImageurl3());
+					  visitVo.setVisitAddress(visit.getAddress());
 					}
 					if(VisitStatus.PENDING.equals(visit.getStatus())){
 					  Calendar cal = Calendar.getInstance();
@@ -73,6 +78,11 @@ public class TaskVisitService {
 						visitVo.setImageurl(visit.getRegistData().getImageUrl());
 						visitVo.setStatus(visit.getStatus());
 						visitVo.setExpiredTime(visit.getExpiredTime());
+						visitVo.setSummary(visit.getSummary());
+            visitVo.setImageurl1(visit.getImageurl1());
+            visitVo.setImageurl2(visit.getImageurl2());
+            visitVo.setImageurl3(visit.getImageurl3());
+            visitVo.setVisitAddress(visit.getAddress());
 						result.add(visitVo);
 					}
 				}
