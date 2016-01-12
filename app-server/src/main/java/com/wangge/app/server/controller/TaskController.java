@@ -1,7 +1,5 @@
 package com.wangge.app.server.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -10,28 +8,19 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import net.sf.json.JSONObject;
-
-import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.common.collect.Lists;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.Saojie;
 import com.wangge.app.server.entity.SaojieData;
-import com.wangge.app.server.pojo.Json;
-import com.wangge.app.server.service.RegionService;
-import com.wangge.app.server.service.SalesmanManagerService;
 import com.wangge.app.server.service.SalesmanService;
 import com.wangge.app.server.service.SaojieDataService;
 import com.wangge.app.server.service.SaojieService;
-import com.wangge.app.server.service.TaskSaojieService;
 import com.wangge.app.server.util.JWtoAdrssUtil;
-import com.wangge.common.entity.Region;
 
 @RestController
 @RequestMapping(value = "/v1/task/")

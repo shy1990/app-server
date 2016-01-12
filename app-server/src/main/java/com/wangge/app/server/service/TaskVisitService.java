@@ -23,4 +23,9 @@ public class TaskVisitService {
 		List<Visit> list = visitRepository.findBySalesman(salesman);
 		return list;
 	}
+	
+	public void addVisit(Visit visit){
+		
+		visitRepository.save(visit);
+	}
 }

@@ -1,5 +1,7 @@
 package com.wangge.app.server.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -12,19 +14,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.Visit;
+import com.wangge.app.server.entity.Visit.VisitStatus;
 import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.repository.VisitRepository;
+import com.wangge.app.server.service.RegistDataService;
+import com.wangge.app.server.service.SalesmanService;
 import com.wangge.app.server.service.TaskVisitService;
 
 @RestController
 @RequestMapping(value = "/v1")
 public class VisitTaskController {
+	SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
 	@Autowired
 	private TaskVisitService taskVisitService;
+	@Autowired
+	private RegistDataService rds;
 	@Resource
 	private VisitRepository vr;
+	@Autowired
+	private SalesmanService salesmanService;
 	
 	Json json = new Json();
 	
@@ -41,6 +52,31 @@ public class VisitTaskController {
 		}
 		return new ResponseEntity<List<Visit>>(tv, HttpStatus.OK);
 	}
+	
+	/**
+	 * 添加拜访任务
+	 * @param S
+	 * @return 店铺名，图片链接，坐标，备注，摆放时间,状态(待定)
+	 */
+	@RequestMapping(value = "/task/addVisit",method = RequestMethod.POST)
+	public ResponseEntity<String> addVisit(String taskStart,String taskEnd,String rdid,String userid){
+		
+		Visit visit = new Visit();
+		RegistData rData = rds.findRegistDataById(Long.parseLong(rdid));
+		Salesman salesman = salesmanService.findSalesmanbyId(userid);
+		visit.setSalesman(salesman);
+		visit.setRegistdata(rData);
+		try {
+			visit.setBeginTime(sdf.parse(taskStart));
+			visit.setExpiredTime(sdf.parse(taskEnd));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		  visit.setStatus(VisitStatus.PENDING);
+		taskVisitService.addVisit(visit);
+		return new ResponseEntity<String>("OK", HttpStatus.OK);
+	}
+	
 	
 	/**
 	 * 根据用户选择的拜访或已拜访进行处理

@@ -28,6 +28,11 @@ public class RegistDataService {
 		return registRepository.findByRegion(region);
 	}
 	
+	public List<RegistData> findAll(){
+		
+		return registDataRepository.findAll();
+	}
+	
 	public RegistData addRegistData(RegistData registData) {
 
 		RegistData data =  registDataRepository.save(registData);
