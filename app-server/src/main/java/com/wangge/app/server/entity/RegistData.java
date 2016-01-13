@@ -1,5 +1,7 @@
 package com.wangge.app.server.entity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +13,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wangge.common.entity.Region;
 import com.wangge.core.entity.AbstractPersistable;
 
@@ -32,28 +35,37 @@ public class RegistData extends AbstractPersistable<Long> {
 	@Column(name = "REGISTDATA_ID")
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "REGIST_ID")
 	private Regist regist;
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "REGION_ID")
 	private Region region;
-	private String name;
+	
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "USER_ID")
+	private Salesman salesman;
+	
+	private String shopName;
 	private String consignee;
 	private String receivingAddress;
 	private String counterNumber;
 	private String loginAccount;
+	private Date createtime;
+	private String phoneNum;
 	
 	public RegistData() {
 		super();
 	}
 
-	public RegistData(String name, String consignee,String receivingAddress,String counterNumber,String loginAccount) {
-		this.name = name;
+	public RegistData(String name, String consignee,String receivingAddress,String counterNumber,String loginAccount,String phoneNum) {
+		this.shopName = name;
 		this.consignee = consignee;
 		this.receivingAddress = receivingAddress;
 		this.counterNumber = counterNumber;
 		this.loginAccount = loginAccount;
+		this.phoneNum = phoneNum;
 	}
 
 	@Override
@@ -65,14 +77,13 @@ public class RegistData extends AbstractPersistable<Long> {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getShopName() {
+		return shopName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setShopName(String shopName) {
+		this.shopName = shopName;
 	}
-
 
 	public Region getRegion() {
 		return region;
@@ -80,6 +91,14 @@ public class RegistData extends AbstractPersistable<Long> {
 
 	public void setRegion(Region region) {
 		this.region = region;
+	}
+
+	public Salesman getSalesman() {
+		return salesman;
+	}
+
+	public void setSalesman(Salesman salesman) {
+		this.salesman = salesman;
 	}
 
 	public Regist getRegist() {
@@ -120,6 +139,22 @@ public class RegistData extends AbstractPersistable<Long> {
 
 	public void setLoginAccount(String loginAccount) {
 		this.loginAccount = loginAccount;
+	}
+
+	public Date getCreatetime() {
+		return createtime;
+	}
+
+	public void setCreatetime(Date createtime) {
+		this.createtime = createtime;
+	}
+
+	public String getPhoneNum() {
+		return phoneNum;
+	}
+
+	public void setPhoneNum(String phoneNum) {
+		this.phoneNum = phoneNum;
 	}
 	
 	
