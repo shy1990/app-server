@@ -32,4 +32,10 @@ public class AssessService {
 		
 		return list;
 	}
+	
+	public String addAssesses(Assess assess){
+		
+		ars.save(assess);
+		return "OK";
+	}
 }

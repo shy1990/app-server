@@ -65,7 +65,7 @@ public class Assess extends AbstractPersistable<Long> {
   private String assessCycle;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
   @Temporal(TemporalType.TIMESTAMP)
-  private Date accessTime;
+  private Date assessTime;
 	@Enumerated(EnumType.ORDINAL)
   @Column(name = "ASSESS_STATUS")
   private AssessStatus status;
@@ -114,10 +114,10 @@ public class Assess extends AbstractPersistable<Long> {
   public void setAssessCycle(String assessCycle) {
     this.assessCycle = assessCycle;
   }
-  public Date getAccessTime() {
-    return accessTime;
+  public Date getAssessTime() {
+    return assessTime;
   }
-  public void setAccessTime(Date accessTime) {
-    this.accessTime = accessTime;
+  public void setAssessTime(Date assessTime) {
+    this.assessTime = assessTime;
   }
 }
