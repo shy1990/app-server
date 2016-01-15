@@ -20,7 +20,7 @@ import com.wangge.common.entity.Region;
 import com.wangge.core.entity.AbstractPersistable;
 import com.wangge.security.entity.User;
 @Entity
-@Table(name = "BIZ_CHANGEPRICE")
+//@Table(name = "BIZ_CHANGEPRICE")
 public class ApplyPrice extends AbstractPersistable<Long>{
 	
 	private static final long serialVersionUID = 1L;
