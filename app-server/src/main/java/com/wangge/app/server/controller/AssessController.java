@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wangge.app.server.entity.Assess;
+import com.wangge.app.server.entity.Assess.AssessStatus;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.service.AssessService;
+import com.wangge.app.server.service.RegionService;
 import com.wangge.app.server.service.SalesmanService;
 
 @RestController
@@ -25,6 +27,8 @@ public class AssessController {
 	private SalesmanService saleService;
 	@Resource
 	private AssessService assessService;
+	@Resource
+	private RegionService regionService;
 	private static final Logger logger = Logger.getLogger(AssessController.class);
 	
 	@RequestMapping(value = "/findAllAssess", method = RequestMethod.POST)
@@ -36,8 +40,9 @@ public class AssessController {
 	}
 	
 	@RequestMapping(value = "/addAssess", method = RequestMethod.POST)
-	public ResponseEntity<String> addAssess(String salesmanid,String assessStage,String assessActivenum,String assessOrdernum,String assessCycle,String accessTime){
+	public ResponseEntity<String> addAssess(String salesmanid,String assessStage,String assessActivenum,String assessOrdernum,String assessCycle,String accessTime,String regionid){
 		Assess assess = new Assess();
+		assess.setStatus(AssessStatus.PENDING);
 		assess.setAssessActivenum(assessActivenum);
 		assess.setAssessCycle(assessCycle);
 		assess.setAssessOrdernum(assessOrdernum);
@@ -46,6 +51,7 @@ public class AssessController {
 		if(salesman!=null){
 			assess.setSalesman(salesman);
 		}
+		assess.setAssessArea(regionid);
 		try {
 			assess.setAssessTime(sdf.parse(accessTime));
 		} catch (Exception e) {
