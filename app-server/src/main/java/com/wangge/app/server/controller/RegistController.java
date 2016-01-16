@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wangge.app.server.entity.Salesman;
+import com.wangge.app.server.service.AssessService;
 import com.wangge.app.server.service.RegistService;
 import com.wangge.app.server.service.SalesmanService;
 import com.wangge.app.server.vo.RegionVo;
@@ -28,6 +29,8 @@ public class RegistController {
 	private SalesmanService salesmanService;
 	@Resource
 	private RegistService registService;
+	@Resource
+  private AssessService assessService;
 	/**
 	 * 
 	 * @Description: 业务人员注册区域
@@ -39,9 +42,9 @@ public class RegistController {
 	 */
 	@RequestMapping(value="/{id}/regist",method=RequestMethod.GET)
 	public ResponseEntity<Map<String,List<RegionVo>>> salesmanRegions(@PathVariable("id") Salesman salesman){
-		logger.debug("username:"+salesman);
+		   logger.debug("username:"+salesman);
 		
-	     Map<String, List<RegionVo>>   regionMap = registService.getRegistRegion(salesman);
+	     Map<String, List<RegionVo>>   regionMap = assessService.getRegistRegion(salesman);
 	   
 		return new ResponseEntity<Map<String,List<RegionVo>>>(regionMap,HttpStatus.OK);
 	}

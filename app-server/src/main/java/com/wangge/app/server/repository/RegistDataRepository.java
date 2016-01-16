@@ -12,8 +12,8 @@ import com.wangge.app.server.entity.Salesman;
 
 public interface RegistDataRepository extends JpaRepository<RegistData, Long>{
 	
-	@Query("select r.id,r.shopName,r.phoneNum,r.consignee  from RegistData r  left join r.regist  rs  where rs.id = ?")
-	List<RegistData> findByRegistId(Long registId);
+	/*@Query("select r.id,r.shopName,r.phoneNum,r.consignee  from RegistData r  left join r.regist  rs  where rs.id = ?")
+	List<RegistData> findByRegistId(Long registId);*/
 	
 	@Query("select count(*) from RegistData r where r.salesman=?1")
 	public int findNumById(Salesman salesman);

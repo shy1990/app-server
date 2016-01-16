@@ -37,14 +37,14 @@ public class RegistDataService {
 		return data;
 	}
 	
-	public int getDataCountByRegistId(Long registId) {
+	/*public int getDataCountByRegistId(Long registId) {
 		List<RegistData>  dataregist = registDataRepository.findByRegistId(registId);
 		if(dataregist != null && dataregist.size() > 0){
 			return dataregist.size();
 		}else{
 			return 0;
 		}
-	}
+	}*/
 	
 	public Regist findByOrder(Integer id) {
 		

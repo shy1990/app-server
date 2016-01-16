@@ -18,12 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
+import com.wangge.app.server.entity.Assess;
 import com.wangge.app.server.entity.Regist;
 import com.wangge.app.server.entity.Regist.RegistStatus;
 import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.SaojieData;
 import com.wangge.app.server.pojo.Json;
+import com.wangge.app.server.service.AssessService;
 import com.wangge.app.server.service.DataSaojieService;
 import com.wangge.app.server.service.RegistDataService;
 import com.wangge.app.server.service.RegistService;
@@ -44,6 +46,8 @@ public class RegistDataController {
 	private DataSaojieService dataSaojieService;
 	@Resource
 	private RegistDataService registDataService;
+	@Resource
+  private AssessService assessService;
 	
 	/**
 	 * 
@@ -93,7 +97,7 @@ public class RegistDataController {
 	
 	/**
 	 * 
-	 * @Description: 添加和获取注册店铺数据
+	 * @Description: 添加注册店铺数据
 	 * @param @param region
 	 * @param @param jsons
 	 * @param @return
@@ -108,9 +112,6 @@ public class RegistDataController {
 			@PathVariable("saojieId") String saojieId,
 			@RequestBody JSONObject jsons) {
 		Json json = new Json();
-		int taskValue = 0;
-		int dataRegistNum = 0;
-		List<Regist> child = new ArrayList<Regist>();
 		try {
 			String userId = jsons.getString("userId");
 			String counterNumber=jsons.getString("counterNumber");//柜台数
@@ -123,12 +124,10 @@ public class RegistDataController {
 			String imageUrl2=jsons.getString("imageurl2");
 			String imageUrl3=jsons.getString("imageurl3");
 			String description=jsons.getString("description");
-			Regist regist  = registDataService.findByRegion(region);
+//			Assess assess  = assessService.findBySalesman(userId);
 			Salesman salesman = salesmanService.findSalesmanbyId(userId);
-			if(regist != null && !"".equals(regist)){
 				RegistData data = new RegistData(loginAccount, imageUrl,length, width, imageUrl1, imageUrl2, imageUrl3);
-				data.setRegist(regist);
-				data.setRegion(regist.getRegion());
+				data.setRegion(region);
 				data.setSalesman(salesman);
 				data.setCreatetime(new Date());
 				data.setCounterNumber(counterNumber);
@@ -147,20 +146,9 @@ public class RegistDataController {
 				SaojieData sjData =  dataSaojieService.findBySaojieData(Long.parseLong(saojieId));
 				sjData.setRegistData(registData);
 				dataSaojieService.addDataSaojie(sjData);
-				//注册任务达标改状态
-				taskValue = regist.getMinValue();
-				dataRegistNum = registDataService.getDataCountByRegistId(regist.getId());
-				if(taskValue == dataRegistNum){
-					regist.setStatus(RegistStatus.AGREE);
-					registDataService.updateRegist(regist);
-				}
 				json.setId(String.valueOf(registData.getId()));
 				json.setSuccess(true);
 				json.setMsg("保存成功！");
-			}else{
-				json.setMsg("保存失败！");
-			}
-			
 			return new ResponseEntity<Json>(json, HttpStatus.CREATED);
 		} catch (NumberFormatException e) {
 			e.printStackTrace();

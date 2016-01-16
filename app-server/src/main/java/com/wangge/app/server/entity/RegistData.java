@@ -38,8 +38,8 @@ public class RegistData extends AbstractPersistable<Long> {
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "REGIST_ID")
-	private Regist regist;
+	@JoinColumn(name = "ASSESS_ID")
+	private Assess assess;
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "REGION_ID")
 	private Region region;
@@ -129,15 +129,15 @@ public class RegistData extends AbstractPersistable<Long> {
 		this.salesman = salesman;
 	}
 
-	public Regist getRegist() {
-		return regist;
-	}
+	public Assess getAssess() {
+    return assess;
+  }
 
-	public void setRegist(Regist regist) {
-		this.regist = regist;
-	}
+  public void setAssess(Assess assess) {
+    this.assess = assess;
+  }
 
-	public String getConsignee() {
+  public String getConsignee() {
 		return consignee;
 	}
 
