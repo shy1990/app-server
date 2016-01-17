@@ -39,7 +39,8 @@ public class SaojieDataController {
 	private DataSaojieService dataSaojieService;
 	
 	//private static String url="http://192.168.2.247/uploadfile/";
-	private static String url="http://imagetest.3j168.cn/uploadfile/";
+//	private static String url="http://imagetest.3j168.cn/uploadfile/";
+	  private static String url="http://image.3j1688.com/uploadfile/";
 
 	/**
 	 * 获取指定业务扫街数据
@@ -73,9 +74,6 @@ public class SaojieDataController {
 			@PathVariable("regionId") Region region,
 			@RequestBody JSONObject jsons) {
 		Json json = new Json();
-		int taskValue = 0;
-		int dataSaojieNum = 0;
-		List<Saojie> child = new ArrayList<Saojie>();
 		String name = jsons.getString("name");
 		String description = jsons.getString("description");
 		String coordinate = jsons.getString("coordinate");
@@ -84,7 +82,6 @@ public class SaojieDataController {
 			imageUrl = jsons.getString("imageUrl");
 		}
 		Saojie saojie  = dataSaojieService.findByRegion(region);
-	//	Saojie saojie  = dataSaojieService.findBySalesman(salesman);
 		if(saojie != null && !"".equals(saojie)){
 			SaojieData data = new SaojieData(name, coordinate);
 			data.setDescription(description);
@@ -93,27 +90,21 @@ public class SaojieDataController {
 			data.setSaojie(saojie);
 			SaojieData saojiedata = dataSaojieService.addDataSaojie(data);
 			
+			if(saojiedata != null && !"".equals(saojiedata)){
+			
 			SaojieData sj = new SaojieData();
 			sj.setId(saojiedata.getId());
 			sj.setName(saojiedata.getName());
 			sj.setCoordinate(saojiedata.getCoordinate());
 			sj.setDescription(saojiedata.getDescription());
 			sj.setImageUrl(saojiedata.getImageUrl());
-			taskValue = saojie.getMinValue();
-		    dataSaojieNum = dataSaojieService.getDtaCountBySaojieId(saojie.getId());
-			if(taskValue == dataSaojieNum){
-				saojie.setStatus(SaojieStatus.AGREE);
-				Saojie sj2 =  dataSaojieService.findByOrder(saojie.getOrder());
-				sj2.setStatus(SaojieStatus.PENDING);
-				child.add(saojie);
-				child.add(sj2);
-				saojie.setChildren(child);
-				dataSaojieService.updateSaojie(saojie);
-			}
 			json.setMsg("保存成功！");
 			json.setObj(sj);
 		}else{
 			json.setMsg("保存失败！");
+		}
+		}else{
+			json.setMsg("任务不存在！");
 		}
 		
 		
@@ -153,7 +144,6 @@ public class SaojieDataController {
 			json.setMsg("图片上传异常！");
 			return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
 		}
-
 
 	}
 	

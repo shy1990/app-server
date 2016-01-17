@@ -117,14 +117,14 @@ public class SaojieData extends AbstractPersistable<Long> {
 	}
 
 	public RegistData getRegistData() {
-		return registData;
-	}
+    return registData;
+  }
 
-	public void setRegistData(RegistData registData) {
-		this.registData = registData;
-	}
+  public void setRegistData(RegistData registData) {
+    this.registData = registData;
+  }
 
-	public Long getRegistId() {
+  public Long getRegistId() {
 		return registId;
 	}
 

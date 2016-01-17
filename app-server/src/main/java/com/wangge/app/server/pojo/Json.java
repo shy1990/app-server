@@ -18,6 +18,7 @@ public class Json implements Serializable{
 	private String phone;
 	private String regionId;
 	private Integer totalPage;
+	private Integer status; 
 	
 	
 	public Boolean getSuccess() {
@@ -62,5 +63,11 @@ public class Json implements Serializable{
   public void setTotalPage(Integer totalPage) {
     this.totalPage = totalPage;
   }
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
 	
 }

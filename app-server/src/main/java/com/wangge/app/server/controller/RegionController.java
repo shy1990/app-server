@@ -50,7 +50,6 @@ public class RegionController {
 		logger.debug("username:"+salesman);
 		
 	     Map<String, List<RegionVo>>   regionMap = regionService.getSaojie(salesman);
-	   
 		return new ResponseEntity<Map<String,List<RegionVo>>>(regionMap,HttpStatus.OK);
 	}
 	
@@ -68,7 +67,6 @@ public class RegionController {
 		logger.debug("id:"+id);
 	     List<TreeVo> listTreeVo =new ArrayList<TreeVo>();
 	     listTreeVo=regionService.findTreeRegion(id);
-	     System.out.println(new ResponseEntity<List<TreeVo>>(listTreeVo,HttpStatus.OK));
 		return new ResponseEntity<List<TreeVo>>(listTreeVo,HttpStatus.OK);
 	}
 	
@@ -151,6 +149,17 @@ public class RegionController {
 		}
 		return new ResponseEntity<List<Region>>(listRegion,HttpStatus.OK);
 	}
+	
+	
+	
+	@RequestMapping(value="/findRegistRegion",method=RequestMethod.POST)
+  public ResponseEntity<List<Region>> findRegistRegion(String salesmanid){
+    logger.debug("salesmanid"+salesmanid);
+    List<Region>  listRegion=new ArrayList<Region>();
+    Salesman man=salesmanService.findSalesmanbyId(salesmanid);
+    listRegion= regionService.findRegiondbyParentid(man.getRegion().getId());
+    return new ResponseEntity<List<Region>>(listRegion,HttpStatus.OK);
+  }
 	
 	
 }

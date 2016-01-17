@@ -2,6 +2,7 @@ package com.wangge.app.server.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.wangge.app.server.entity.Assess;
@@ -33,11 +33,12 @@ import com.wangge.app.server.service.SalesmanService;
 import com.wangge.common.entity.Region;
 
 @RestController
-@RequestMapping(value = "/v1")
+@RequestMapping(value = "/v1/rd")
 public class RegistDataController {
-	
-	private static final Logger logger = Logger.getLogger(RegistDataController.class);
-	
+
+	private static final Logger logger = Logger
+			.getLogger(RegistDataController.class);
+
 	@Resource
 	private SalesmanService salesmanService;
 	@Resource
@@ -95,6 +96,7 @@ public class RegistDataController {
 		return new ResponseEntity<Map<String,List<SaojieData>>>(result, HttpStatus.OK);
 	}
 	
+
 	/**
 	 * 
 	 * @Description: 添加注册店铺数据
@@ -156,7 +158,7 @@ public class RegistDataController {
 			return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @Description: 修改店铺录入信息
@@ -167,8 +169,8 @@ public class RegistDataController {
 	 * @date 2015年12月5日
 	 * @version V2.0
 	 */
-	@RequestMapping(value = "/update_registData",method = RequestMethod.POST)
-	public ResponseEntity<Json> updateDataSaojie(@RequestBody JSONObject jsons){
+	@RequestMapping(value = "/update_registData", method = RequestMethod.POST)
+	public ResponseEntity<Json> updateDataSaojie(@RequestBody JSONObject jsons) {
 		String registDataId = jsons.getString("id");
 		String counterNumber=jsons.getString("counterNumber");//柜台数
 		String loginAccount=jsons.getString("loginAccount");
@@ -209,9 +211,9 @@ public class RegistDataController {
 				e.printStackTrace();
 				json.setMsg("修改异常！");
 				return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
-				
+
 			}
-		}else{
+		} else {
 			json.setMsg("修改失败！");
 			return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
 		}

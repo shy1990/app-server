@@ -1,13 +1,21 @@
 package com.wangge.app.server.service;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.Order;
 import com.wangge.app.server.repository.OrderRepository;
 import com.wangge.app.server.vo.OrderPub;
@@ -30,13 +38,12 @@ public class OrderService {
 	 */
 	public List<OrderPub> findByRegion(Region region,Pageable page){
 		Page<Order> pOrder=or.findByRegion(region, page);
-		int totalPage = (pOrder.getTotalPages()+pOrder.getSize()-1)/pOrder.getSize();
 		List<OrderPub> list = new ArrayList<OrderPub>();
 		OrderPub order;//20151105180158329
 		if(pOrder!=null && pOrder.getTotalPages()>0){
 			for(Order o:pOrder){
 				order = new OrderPub();
-				order.setTotalPage(totalPage);
+				order.setTotalPage(pOrder.getTotalPages());
 				order.setCreateTime(o.getCreateTime());
 				order.setOrderNum(o.getId());
 				order.setStatus(o.getStatus().getName());
@@ -51,5 +58,34 @@ public class OrderService {
 	public Order findOne(String ordernum) {
 		return or.findOne(ordernum);
 	}
-	
+	/**
+	 * 
+	 * @Description: 回掉钱包接口
+	 * @param @param jo
+	 * * @param @param walletNo 钱包流水号
+	 * @param @throws Exception   
+	 * @return void  
+	 * @throws
+	 * @author changjun
+	 * @date 2016年1月7日
+	 */
+	public static String invokWallet(JSONObject jo,String walletNo) throws Exception {
+//	  String url = "http://localhost:8080/api/v1/test";
+	  String url = "http://192.168.1.54:8082/v1/"+walletNo+"/status";
+	  HttpClient client = HttpClientBuilder.create().build();
+	  HttpPut put = new HttpPut(url);
+	  put.setHeader("Content-type", "application/json");
+	  StringEntity params =new StringEntity(jo.toString());
+	  put.setEntity(params);
+	  HttpResponse response = client.execute(put);
+	  System.out.println("Response Code:"+response.getStatusLine().getStatusCode());
+	  BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+	  StringBuffer result = new StringBuffer();
+	  String line = "";
+	  while ((line = rd.readLine()) != null) {
+	        result.append(line);
+	      }
+	  return result.toString();
+	}
+	  
 }

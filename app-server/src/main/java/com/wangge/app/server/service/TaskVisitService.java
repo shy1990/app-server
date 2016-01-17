@@ -102,4 +102,9 @@ public class TaskVisitService {
 	public void save(Visit visit) {
 		visitRepository.save(visit);
 	}
+	
+	public void addVisit(Visit visit){
+		
+		visitRepository.save(visit);
+	}
 }

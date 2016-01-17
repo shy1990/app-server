@@ -1,7 +1,5 @@
 package com.wangge.app.server.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -10,27 +8,19 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import net.sf.json.JSONObject;
-
-import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.common.collect.Lists;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.Saojie;
 import com.wangge.app.server.entity.SaojieData;
-import com.wangge.app.server.pojo.Json;
-import com.wangge.app.server.service.RegionService;
-import com.wangge.app.server.service.SalesmanManagerService;
 import com.wangge.app.server.service.SalesmanService;
 import com.wangge.app.server.service.SaojieDataService;
 import com.wangge.app.server.service.SaojieService;
-import com.wangge.app.server.service.TaskSaojieService;
-import com.wangge.common.entity.Region;
+import com.wangge.app.server.util.JWtoAdrssUtil;
 
 @RestController
 @RequestMapping(value = "/v1/task/")
@@ -49,6 +39,8 @@ public class TaskController {
 	private SaojieDataService sds;
 	@Resource
 	private SaojieService sjs;
+	
+	
 		
 		/**
 		 * 
@@ -120,14 +112,12 @@ public class TaskController {
 		}
 		
 		@RequestMapping(value = "/findTaskByUserId", method = RequestMethod.POST)
-		public ResponseEntity<Json> findTaskByUserId(String userid){
+		public ResponseEntity<List<Map<String,Object>>> findTaskByUserId(String userid){
 		 Salesman man=sms.findSalesmanbyId(userid.trim());
-		 Json json = new Json();
+//		 Json json = new Json();
 			Collection<Saojie> listSjid=sjs.findBySalesman(man);
 			List<SaojieData> sdList = sds.findsjidById(listSjid);
 			List<Map<String,Object>> sdmap = new ArrayList<Map<String,Object>>();
-//			StringBuffer sjbuf=new StringBuffer();
-//			sjbuf.append("{").append("\"").append("data").append("\"").append(":").append("[");
 			for(SaojieData sj:sdList){
 				Map<String,Object> map = new HashMap<String,Object>();
 //				sjbuf.append("{").append("\"").append("coordinate").append("\"").append(":").append("\"").append(sj.getCoordinate()).append("\",")
@@ -135,17 +125,26 @@ public class TaskController {
 //				.append("\"").append("id").append("\"").append(":").append("\"").append(sj.getId()).append("\",")
 //				.append("\"").append("name").append("\"").append(":").append("\"").append(sj.getName()).append("\",")
 //				.append("\"").append("imgurl").append("\"").append(":").append("\"").append(sj.getImageUrl()).append("\"}");
-			     map.put("coordinate", sj.getCoordinate());
-				 map.put("description", sj.getDescription());
-				 map.put("id", sj.getId());
-				 map.put("imageUrl", sj.getImageUrl());
-				 map.put("name", sj.getName());
-				 sdmap.add(map);
+				String pointStr = sj.getCoordinate(); 
+				String lat=pointStr.split("-")[0];
+ 		  		String lag=pointStr.split("-")[1];
+ 		  		String url="http://api.map.baidu.com/geocoder/v2/?ak=702632E1add3d4953d0f105f27c294b9&callback=renderReverse&location="+lag+","+lat+"&output=json&pois=1";
+ 		  		String jsonString = JWtoAdrssUtil.getdata(url);
+ 		  	    String jsonstr=jsonString.substring(0,jsonString.length()-1);
+ 		  	    String address = jsonstr.substring(jsonstr.indexOf("formatted_address")+20,jsonstr.indexOf("business")-3);
+ 		  		map.put("coordinate", sj.getCoordinate());
+				map.put("description", sj.getDescription());
+				map.put("id", sj.getId());
+				map.put("imageUrl", sj.getImageUrl());
+				map.put("taskname", sj.getName());
+				map.put("regionname", sj.getRegion().getName());
+				map.put("address", address);
+				sdmap.add(map);
 			}
-			json.setObj(sdmap);
+//			json.setObj(sdmap);
 //			String json = JSONObject.fromObject(sdmap).toString();
 //			sjbuf.append("]}");
-			return new ResponseEntity<Json>(json,HttpStatus.OK);
+			return new ResponseEntity<List<Map<String,Object>>>(sdmap,HttpStatus.OK);
 		}
 		
 		@RequestMapping(value = "/upstatus", method = RequestMethod.POST)
@@ -153,10 +152,13 @@ public class TaskController {
 			Saojie sj = sjs.findSapjiebyId(Long.valueOf(taskid.trim()).longValue());
 			sj.setStatus(sj.getStatus().AGREE);
 			sjs.saveSaojie(sj);
-		     if(sj.getOrder()!=null&&sj.getOrder()!=0){
-		    	 Saojie saojie = sjs.findSapjiebyId(Long.valueOf(sj.getOrder()).longValue());
-		    	 saojie.setStatus(sj.getStatus().PENDING);
-		    	 sjs.saveSaojie(saojie);
+		     if(sj.getOrder()!=null){
+		    	 Integer norder = sj.getOrder()+1;
+		    	 Saojie saojie = sjs.findNextSapjiebyId(sj.getSalesman().getId(), norder);
+		    	 if(saojie!=null){
+		    		 saojie.setStatus(sj.getStatus().PENDING);
+			    	 sjs.saveSaojie(saojie); 
+		    	 }
 		     }
 		     Map<String, Object>  map=new HashMap<String, Object>();
 		     map.put("status", sj.getStatus());
@@ -165,4 +167,7 @@ public class TaskController {
 		     }
 			return new ResponseEntity<Map<String, Object> >(map,HttpStatus.OK);
 		}
+		
+		
+		
 }

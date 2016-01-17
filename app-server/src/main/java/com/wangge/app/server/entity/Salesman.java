@@ -32,6 +32,19 @@ public class Salesman extends AbstractPersistable<String> {
 			@Parameter(name = "property", value = "user") })
 	@Column(name = "user_id")
 	private String id;
+	
+	private String simId;
+	
+	private SalesmanStatus status = SalesmanStatus.saojie;
+	
+
+	public SalesmanStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(SalesmanStatus status) {
+		this.status = status;
+	}
 
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "region_id")
@@ -69,5 +82,14 @@ public class Salesman extends AbstractPersistable<String> {
 	public void setUser(User user) {
 		this.user = user;
 	}
+
+	public String getSimId() {
+		return simId;
+	}
+
+	public void setSimId(String simId) {
+		this.simId = simId;
+	}
+	
 
 }

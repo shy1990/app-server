@@ -18,11 +18,16 @@ public interface MessageRepository extends PagingAndSortingRepository<Message, L
 	Page<Message> findMessage(String receiver,Pageable pageRequest);
 	
 	
-	Page<Message> findByChannelAndTypeAndReceiverContaining(SendChannel Channel,MessageType type,String receiver,Pageable pageRequest);
+	Page<Message> findByChannelAndTypeOrTypeAndReceiverContaining(SendChannel Channel,MessageType type0,MessageType type,String receiver,Pageable pageRequest);
 	
 	@Modifying
 	@Query("update Message m set m.result=?1 where m.id=?2")
 	public void updateMessageResult(String result,Long id);
 	
+//	@Modifying  
+//	@Query("update Message m set m.type=?1 where m.content like '%?2%'")
+//	public void updateMessageTypeByContentLike(MessageType mt,String orderNum);
+	
+	Page<Message> findMessageByType(MessageType type,Pageable pageRequest);
 	
 }

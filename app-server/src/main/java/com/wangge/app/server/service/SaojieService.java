@@ -52,4 +52,9 @@ public class SaojieService {
 		return saojieRepository.findOne(id);
 
 	}
+	
+	public Saojie findNextSapjiebyId(String id,Integer order) {
+		return saojieRepository.fingSaojie(id,order);
+
+	}
 }

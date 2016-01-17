@@ -109,4 +109,29 @@ public class AssessService {
     result.put("deved", deved);
     return result;
   }
+  
+  /**
+   * 
+   * @Description: 客户开发列表
+   * @param @param 
+   * @param @param 
+   * @param @return   
+   * @return  
+   * @throws
+   * @author
+   * @date 
+   */
+  public List<Assess> getAllList(){
+    List<Assess> list =(List<Assess>) assessRepository.findAll();
+    
+    return list;
+  }
+  
+  public String addAssesses(Assess assess){
+    
+    assessRepository.save(assess);
+    return "OK";
+  }
 }
+	
+	

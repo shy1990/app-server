@@ -1,10 +1,7 @@
 package com.wangge.app.server.controller;
 
 import java.util.Date;
-import java.util.List;
-
 import javax.annotation.Resource;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -17,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.Lists;
 import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.Visit;
@@ -25,6 +21,7 @@ import com.wangge.app.server.entity.Visit.VisitStatus;
 import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.repository.VisitRepository;
 import com.wangge.app.server.service.RegistDataService;
+import com.wangge.app.server.service.SalesmanService;
 import com.wangge.app.server.service.TaskVisitService;
 import com.wangge.app.server.util.SortUtil;
 import com.wangge.app.server.vo.VisitVo;
@@ -36,10 +33,14 @@ public class VisitTaskController {
 	
 	@Autowired
 	private TaskVisitService taskVisitService;
+	@Autowired
+	private RegistDataService rds;
 	@Resource
 	private VisitRepository vr;
 	@Resource
 	private RegistDataService registDataService;
+	@Autowired
+	private SalesmanService salesmanService;
 	
 	Json json = new Json();
 	
@@ -79,6 +80,34 @@ public class VisitTaskController {
 	 * @author Peter
 	 * @date 2015年12月11日
 	 * @version V2.0
+	 * 添加拜访任务
+	 * @param S
+	 * @return 店铺名，图片链接，坐标，备注，摆放时间,状态(待定)
+	 */
+	/*@RequestMapping(value = "/task/addVisit",method = RequestMethod.POST)
+	public ResponseEntity<String> addVisit(String taskStart,String taskEnd,String rdid,String userid){
+		
+		Visit visit = new Visit();
+		RegistData rData = rds.findRegistDataById(Long.parseLong(rdid));
+		Salesman salesman = salesmanService.findSalesmanbyId(userid);
+		visit.setSalesman(salesman);
+		visit.setRegistdata(rData);
+		try {
+			visit.setBeginTime(sdf.parse(taskStart));
+			visit.setExpiredTime(sdf.parse(taskEnd));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		  visit.setStatus(VisitStatus.PENDING);
+		taskVisitService.addVisit(visit);
+		return new ResponseEntity<String>("OK", HttpStatus.OK);
+	}*/
+	
+	
+	/**
+	 * 根据用户选择的拜访或已拜访进行处理
+	 * @param 状态，任务id,
+	 * @return 
 	 */
 	@RequestMapping(value = "/task/{visitId}/infoVisit",method = RequestMethod.GET)
 	public ResponseEntity<VisitVo> visitInfo(@PathVariable("visitId") String visitId) {

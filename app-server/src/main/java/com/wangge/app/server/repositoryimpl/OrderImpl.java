@@ -1,10 +1,17 @@
 package com.wangge.app.server.repositoryimpl;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
 @Repository
 public class OrderImpl {
 	@PersistenceContext  
@@ -75,10 +82,11 @@ public class OrderImpl {
 	 * @date 2015年11月12日
 	 */
 	public boolean checkByOrderNum(String ordernum){
-		String sql = "select  o.id  from SJZAIXIAN.SJ_TB_ORDER o  where o.order_num="+ordernum+" and o.YEWU_SIGNFOR_TIME is null";
+		String sql = "select  o.id  from SJZAIXIAN.SJ_TB_ORDER o  where o.order_num="+ordernum+" and (o.YEWU_SIGNFOR_TIME is null or o.ship_status='2')";
 		Query query =  em.createNativeQuery(sql);
 		return query.getResultList().size()>0?true:false;
 	}
+	
 	
 	
 	/**
@@ -130,12 +138,72 @@ public class OrderImpl {
 	 * @date 2015年11月12日
 	 */
 	@Transactional
-	public String updateOrderShipStateByOrderNum(String ordernum,String status){
+	public String updateOrderShipStateByOrderNum(String ordernum,String paytype,String point,String status,Integer type){
 //		if("已送达".equals(status)){
 //			status="2";
 //		}
-		String sql = "update SJZAIXIAN.SJ_TB_ORDER set ship_status="+status+" ,yewu_signfor_time=sysdate where order_num="+ordernum+"";
+		String sql  = "";
+		if(1==type){
+		   sql = "update SJZAIXIAN.SJ_TB_ORDER set ship_status="+status+" ,yewu_signfor_time=sysdate where order_num="+ordernum+"";
+		}else{
+			 sql = "update SJZAIXIAN.SJ_TB_ORDER set PAY_MENT="+paytype+",CUSTOM_SIGNFOR_ADDRESS='"+point+"',ship_status="+status+" ,custom_signfor_time=sysdate where order_num="+ordernum+"";
+		}
+		
 		Query query =  em.createNativeQuery(sql);
 		return query.executeUpdate()>0?"suc":"false";
+	}
+	/**
+	 * 
+	 * @Description: 客户拒收原因保存
+	 * @param @param ordernum
+	 * @param @param reason
+	 * @param @return   
+	 * @return String  
+	 * @throws
+	 * @author changjun
+	 * @date 2015年12月1日
+	 */
+	@Transactional
+	public void saveRefuseReason(String ordernum,String reason){
+		String sql = "update SJZAIXIAN.SJ_TB_ORDER set ship_status=4,refuse_reason='"+reason+"' where order_num="+ordernum+"";
+		Query query =  em.createNativeQuery(sql);
+		 query.executeUpdate();
+	}
+	
+	/**
+	 * 
+	 * @Description: 客户取消订单修改信息表类型
+	 * @param @param MessageType mt
+	 * @param @param String orderNum
+	 * @param @return   
+	 * @return String  
+	 * @throws
+	 * @author changjun
+	 * @date 2015年12月1日
+	 */
+	@Transactional
+	public String updateMessageType(String state,String orderNum){
+		String sql = "update SJ_YEWU.sys_message set message_type= "+state+" where content like '%"+orderNum+"%'";
+		Query query =  em.createNativeQuery(sql);
+		return query.executeUpdate()>0?"suc":"false";
+	}
+	
+	public Map checkMoneyBack(String orderNum){
+	  String sql = "select PAY_MENT,TOTAL_COST,WALLET_PAY_NO,WALLET_NUM from SJZAIXIAN.sj_tb_order where ORDER_NUM="+orderNum+"";
+	  Query query =  em.createNativeQuery(sql);
+	  Map<String, String> map = new HashMap<String, String>();
+	  List obj = query.getResultList();
+	  if(obj!=null &&  obj.size()>0){
+	    Iterator it = obj.iterator(); 
+	    while(it.hasNext()){
+	      Object[] o = (Object[])it.next(); 
+	      map.put("payMent", o[0]+"");
+	      map.put("totalCost", o[1]+"");
+	      map.put("payNo", o[2]+"");
+	      map.put("walletNum",o[3]+"");
+	    }
+	  }
+	  return map;
+	  
 	}
 }

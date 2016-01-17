@@ -13,40 +13,48 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "BIZ_ORDER_ITEM")
 public class OrderItem implements Serializable {
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	@Id
-	@Column(name = "ORDER_ITEM_ID")
-	private String id;
-	private String name;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ORDER_NUM")
-	private Order order;
+  @Id
+  @Column(name = "ORDER_ITEM_ID")
+  private String id;
+  private String name;
 
-	public String getId() {
-		return id;
-	}
+  private String type;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "ORDER_NUM")
+  private Order order;
 
-	public void setId(String id) {
-		this.id = id;
-	}
+  public String getId() {
+    return id;
+  }
 
-	public String getName() {
-		return name;
-	}
+  public String getType() {
+    return type;
+  }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  public void setType(String type) {
+    this.type = type;
+  }
 
-	public Order getOrder() {
-		return order;
-	}
+  public void setId(String id) {
+    this.id = id;
+  }
 
-	public void setOrder(Order order) {
-		this.order = order;
-	}
-	
-	
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public Order getOrder() {
+    return order;
+  }
+
+  public void setOrder(Order order) {
+    this.order = order;
+  }
+
 }

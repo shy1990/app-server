@@ -26,7 +26,7 @@ public class Order implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public enum ShipStatus {
-		NO_SEND("未发货"), SENDED("已发货"), SALESMAN_RESIVED("业务签收"), MEMBER_RESIVED("客户签收");
+		NO_SEND("未发货"), SENDED("已发货"), SALESMAN_RESIVED("业务签收"), MEMBER_RESIVED("客户签收"),MEMBER_REFUSE("客户拒收");
 		private String name;
 
 		private ShipStatus(String name) {
@@ -37,7 +37,20 @@ public class Order implements Serializable {
 			return name;
 		}
 	}
+	
+	public enum PayMent{
+	  PAY_ONLINE("线上支付"),PAY_OFFLINE("货到付款"),POS("POS支付");
+	  private String name;
 
+    private PayMent(String name) {
+      this.name = name;
+    }
+
+    public String getName() {
+      return name;
+    }
+	}
+	
 	@Id
 	@Column(name = "ORDER_NUM")
 	private String id;
@@ -48,15 +61,35 @@ public class Order implements Serializable {
 	@Enumerated(EnumType.ORDINAL)
 	@Column(name="SHIP_STATUS")
 	private ShipStatus status;
-
+	
+	@Column(name="pay_ment")
+	private PayMent payMent; //支付方式
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
 	private Collection<OrderItem> items;
 	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "region_id")
 	private Region region;
+	@Column(name="mobile")
+	private String mobile;//客户手机号
+	
+	public String getMobile() {
+		return mobile;
+	}
 
-	public String getId() {
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public PayMent getPayMent() {
+    return payMent;
+  }
+
+  public void setPayMent(PayMent payMent) {
+    this.payMent = payMent;
+  }
+
+  public String getId() {
 		return id;
 	}
 
