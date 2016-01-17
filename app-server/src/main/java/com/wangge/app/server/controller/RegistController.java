@@ -69,7 +69,6 @@ public class RegistController {
    */
   @RequestMapping(value="/{id}/registNum",method=RequestMethod.GET)
   public ResponseEntity<Map<String,Integer>> registNum(@PathVariable("id") Salesman salesman){
-    logger.debug("username:"+salesman);
     
        Map<String, Integer>   regionMap = registService.getRegistNum(salesman);
      

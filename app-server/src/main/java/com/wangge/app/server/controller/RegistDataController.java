@@ -33,7 +33,7 @@ import com.wangge.app.server.service.SalesmanService;
 import com.wangge.common.entity.Region;
 
 @RestController
-@RequestMapping(value = "/v1/rd")
+@RequestMapping(value = "/v1")
 public class RegistDataController {
 
 	private static final Logger logger = Logger

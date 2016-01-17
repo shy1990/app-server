@@ -53,6 +53,9 @@ public class Salesman extends AbstractPersistable<String> {
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_id")
 	private User user;
+	
+	@Column(name = "ASSESS_STAGE")
+  private String assessStage;
 
 	public Salesman() {
 		super();
@@ -90,6 +93,13 @@ public class Salesman extends AbstractPersistable<String> {
 	public void setSimId(String simId) {
 		this.simId = simId;
 	}
-	
+
+  public String getAssessStage() {
+    return assessStage;
+  }
+
+  public void setAssessStage(String assessStage) {
+    this.assessStage = assessStage;
+  }
 
 }

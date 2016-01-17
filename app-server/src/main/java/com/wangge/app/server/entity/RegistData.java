@@ -44,7 +44,6 @@ public class RegistData extends AbstractPersistable<Long> {
 	@JoinColumn(name = "REGION_ID")
 	private Region region;
 	
-	@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "USER_ID")
 	private Salesman salesman;

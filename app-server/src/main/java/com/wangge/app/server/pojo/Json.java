@@ -20,6 +20,8 @@ public class Json implements Serializable{
 	private Integer totalPage;
 	private Integer status; 
 	
+	//辅助字段
+	private String stage;//第几阶段
 	
 	public Boolean getSuccess() {
 		return success;
@@ -69,5 +71,11 @@ public class Json implements Serializable{
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
+  public String getStage() {
+    return stage;
+  }
+  public void setStage(String stage) {
+    this.stage = stage;
+  }
 	
 }
