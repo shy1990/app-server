@@ -28,7 +28,7 @@ import com.wangge.app.server.service.SalesmanService;
 import com.wangge.app.server.vo.RegionVo;
 
 @RestController
-@RequestMapping(value = "/v1/regist/")
+@RequestMapping(value = "/v1")
 public class RegistController {
 
 	SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");//
