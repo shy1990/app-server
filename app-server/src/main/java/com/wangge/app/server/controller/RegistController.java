@@ -56,6 +56,26 @@ public class RegistController {
 	   
 		return new ResponseEntity<Map<String,List<RegionVo>>>(regionMap,HttpStatus.OK);
 	}
+	
+	/**
+   * 
+   * @Description: 查询开发数量
+   * @param @param salesman
+   * @param @return
+   * @return ResponseEntity<Map<String,Integer>>
+   * @author peter
+   * @date 2015年12月2日
+   * @version V2.0
+   */
+  @RequestMapping(value="/{id}/registNum",method=RequestMethod.GET)
+  public ResponseEntity<Map<String,Integer>> registNum(@PathVariable("id") Salesman salesman){
+    logger.debug("username:"+salesman);
+    
+       Map<String, Integer>   regionMap = registService.getRegistNum(salesman);
+     
+    return new ResponseEntity<Map<String,Integer>>(regionMap,HttpStatus.OK);
+  }
+	
 		/**
 		 * 
 		 * 功能: 添加注册任务
