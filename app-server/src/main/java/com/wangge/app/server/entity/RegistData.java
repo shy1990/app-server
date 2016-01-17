@@ -72,7 +72,7 @@ public class RegistData extends AbstractPersistable<Long> {
 	private String imageUrl3;
 	private String description;
 	
-	public RegistData() {
+  public RegistData() {
 		super();
 	}
 

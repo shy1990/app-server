@@ -95,20 +95,20 @@ public class RegistController {
 	}
 		
 		
-		@RequestMapping(value = "/findAllRegist", method = RequestMethod.POST)
+		/*@RequestMapping(value = "/findAllRegist", method = RequestMethod.POST)
 		public ResponseEntity<List<Regist>> findAllTask(){
 			List<Regist> listRegist=registService.findAllRegist();
 			
 			return new ResponseEntity<List<Regist>>(listRegist,HttpStatus.OK);
-		}
+		}*/
 		
-		@RequestMapping(value = "/findAllRd", method = RequestMethod.POST)
+		/*@RequestMapping(value = "/findAllRd", method = RequestMethod.POST)
 		public ResponseEntity<List<RegistData>> findAllRd(String registid){
 			List<RegistData> listRd=registService.findAllRd(registid);
 			
 			return new ResponseEntity<List<RegistData>>(listRd,HttpStatus.OK);
-		}
-		
+		}*/
+	/*	
 		@RequestMapping(value = "/findRegistByUserId", method = RequestMethod.POST)
 		public ResponseEntity<List<Map<String,Object>>> findTaskByUserId(String userid){
 		 Salesman man=registService.findSalesmanbyId(userid.trim());
@@ -128,7 +128,7 @@ public class RegistController {
 				sdmap.add(map);
 			}
 			return new ResponseEntity<List<Map<String,Object>>>(sdmap,HttpStatus.OK);
-		}
+		}*/
 		
 //		@RequestMapping(value = "/upstatus", method = RequestMethod.POST)
 //		public ResponseEntity<Map<String, Object> > upstatus(String taskid){

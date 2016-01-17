@@ -34,14 +34,14 @@ public class RegistService {
 		registRepository.save(regist);
 	}
 	
-	public List<RegistData> findAllRd(String registid) {
+	/*public List<RegistData> findAllRd(String registid) {
 		return registDataReposity.findByRegist(registRepository.findOne(Long.parseLong(registid.trim())));
-	}
+	}*/
 	
-	public List<Regist> findAllRegist() {
+	/*public List<Regist> findAllRegist() {
 
 		return registRepository.findAllRegist();
-	}
+	}*/
 	
 	public Salesman findSalesmanbyId(String id){
 		return salesmanRepository.findOne(id);
@@ -55,10 +55,10 @@ public class RegistService {
 	 *  日期： 2015年12月10
 	 *
 	 */
-public List<RegistData> findreidById (Collection<Regist> listSjid) {
+/*public List<RegistData> findreidById (Collection<Regist> listSjid) {
 		
 		return registDataReposity.findByRegistIn(listSjid);
-	}
+	}*/
 	/**
 	 * 
 	 * 功能: 保存 
