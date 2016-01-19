@@ -189,7 +189,6 @@ public class RegistDataController {
 			dataRegist.setClerk(clerk);
 			dataRegist.setStore_length(length);
 			dataRegist.setStore_width(width);
-			dataRegist.setImageUrl(imageUrl3);
 			dataRegist.setImageUrl1(imageUrl1);
 			dataRegist.setImageUrl2(imageUrl2);
 			dataRegist.setImageUrl3(imageUrl3);
