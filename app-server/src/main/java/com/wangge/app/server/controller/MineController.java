@@ -1,6 +1,7 @@
 package com.wangge.app.server.controller;
 
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -279,12 +280,13 @@ public class MineController {
 	 * @param @param username
 	 * @param @return   
 	 * @return ResponseEntity<JSONObject>  
+	 * @throws ParseException 
 	 * @throws
 	 * @author changjun
 	 * @date 2015年10月21日
 	 */
 	@RequestMapping(value = "/examStatus",method = RequestMethod.POST)
-	public ResponseEntity<Exam> examStatus(@RequestBody	JSONObject json){
+	public ResponseEntity<Exam> examStatus(@RequestBody	JSONObject json) throws ParseException{
 		String saleId = json.getString("salesmanId");
 		Exam  ex = epl.ExamSalesman(saleId);
 		return new ResponseEntity<Exam>(ex, HttpStatus.OK);
