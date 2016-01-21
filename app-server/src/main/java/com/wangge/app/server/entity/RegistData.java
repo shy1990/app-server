@@ -36,7 +36,7 @@ public class RegistData extends AbstractPersistable<Long> {
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "REGIST_ID")
+	@JoinColumn(name = "ASSESS_ID")
 	private Regist regist;
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "REGION_ID")
