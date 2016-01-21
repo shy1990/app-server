@@ -10,7 +10,7 @@ import com.wangge.app.server.entity.Salesman;
 
 public interface SalesmanRepository extends JpaRepository<Salesman, String>  {
 	public Salesman findByUserUsername(String username);
-	@Query("select id,user.username,user.nickname from Salesman ") 
+	@Query("select id,user.username,user.nickname,region.id from Salesman ") 
 	public List<Salesman> findUserName();
 	
 	@Query("select count(*) from Salesman r where r.region.id=?")

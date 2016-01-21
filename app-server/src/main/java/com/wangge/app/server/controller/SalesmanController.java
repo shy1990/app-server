@@ -64,6 +64,16 @@ public class SalesmanController {
 	
 }
 	
+	
+	@RequestMapping(value = "/findRegionIdBySale", method = RequestMethod.POST)
+	public ResponseEntity<String> findRegionIdBySaleId(String salesmanid) {
+		Salesman salesman=salesmanService.findSalesmanbyId(salesmanid.trim());
+		String regionId = salesman.getRegion().getId();
+		
+	 return new ResponseEntity<String>(regionId,HttpStatus.OK);
+	
+}
+	
 	@RequestMapping(value = "/findRegBySale", method = RequestMethod.POST)
 	public ResponseEntity<String> findById(String userid) {
 		Salesman salesman=salesmanService.findSalesmanbyId(userid.trim());

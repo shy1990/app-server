@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.wangge.app.server.entity.Assess;
 import com.wangge.app.server.entity.Assess.AssessStatus;
 import com.wangge.app.server.entity.Salesman;
+import com.wangge.app.server.entity.SalesmanStatus;
 import com.wangge.app.server.service.AssessService;
 import com.wangge.app.server.service.RegionService;
 import com.wangge.app.server.service.SalesmanService;
@@ -40,7 +41,7 @@ public class AssessController {
 	}
 	
 	@RequestMapping(value = "/addAssess", method = RequestMethod.POST)
-	public ResponseEntity<String> addAssess(String salesmanid,String assessStage,String assessActivenum,String assessOrdernum,String assessCycle,String accessTime,String regionid){
+	public ResponseEntity<String> addAssess(String salesmanid,String assessStage,String assessActivenum,String assessOrdernum,String assessCycle,String accessTime,String regionid,String regionzh){
 		Assess assess = new Assess();
 		assess.setStatus(AssessStatus.PENDING);
 		assess.setAssessActivenum(assessActivenum);
@@ -48,6 +49,9 @@ public class AssessController {
 		assess.setAssessOrdernum(assessOrdernum);
 		assess.setAssessStage(assessStage);
 		Salesman salesman = saleService.findSalesmanbyId(salesmanid);
+		
+		  salesman.setStatus(SalesmanStatus.kaifa);
+		
 		if(salesman!=null){
 			assess.setSalesman(salesman);
 		}
@@ -57,9 +61,12 @@ public class AssessController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		assess.setAssesszh(regionzh);
 		assessService.addAssesses(assess);
 		return new ResponseEntity<String>("OK",HttpStatus.OK);
 	}
+	
+	
 	
 	
 }
