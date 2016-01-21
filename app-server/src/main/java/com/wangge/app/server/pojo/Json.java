@@ -17,8 +17,11 @@ public class Json implements Serializable{
 	private String id;
 	private String phone;
 	private String regionId;
+	private Integer totalPage;
 	private Integer status; 
 	
+	//辅助字段
+	private String stage;//第几阶段
 	
 	public Boolean getSuccess() {
 		return success;
@@ -56,11 +59,23 @@ public class Json implements Serializable{
 	public void setRegionId(String regionId) {
 		this.regionId = regionId;
 	}
+  public Integer getTotalPage() {
+    return totalPage;
+  }
+  public void setTotalPage(Integer totalPage) {
+    this.totalPage = totalPage;
+  }
 	public Integer getStatus() {
 		return status;
 	}
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
+  public String getStage() {
+    return stage;
+  }
+  public void setStage(String stage) {
+    this.stage = stage;
+  }
 	
 }

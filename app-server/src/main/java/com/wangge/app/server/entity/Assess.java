@@ -34,7 +34,7 @@ public class Assess extends AbstractPersistable<Long> {
 	private static final long serialVersionUID = 1L;
 
 	public enum AssessStatus {
-		PENDING("进行中"), COMMIT("提交审核"), AGREE("通过");
+		PENDING("进行中"), AGREE("通过");
 		private String name;
 
 		private AssessStatus(String name) {
