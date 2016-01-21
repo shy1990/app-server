@@ -1,7 +1,10 @@
 package com.wangge.app.server.controller;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
+
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,8 +70,6 @@ public class PushController {
 		mr.save(mes);
 		String str = "";
 		try {
-			
-//			str = JpushClient.sendOrder("下单通知", send,json.getString("mobiles")+",15105314911",json.getString("orderNum"),json.getString("username"),"0");
 			str = JpushClient.sendOrder("下单通知", send,mobile,json.getString("orderNum"),json.getString("username"),"0");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -156,25 +157,43 @@ public class PushController {
 	 * @author changjun
 	 * @date 2015年11月5日
 	 */
-	@RequestMapping(value={"/pushActivi" },method = RequestMethod.POST)
-	public boolean pushActivi(String msg) {
-		 Message sm = new Message();
-		 sm.setType(MessageType.ACTIVE);
-		 sm.setChannel(SendChannel.PUSH);
-		 sm.setContent(msg);
-		 sm.setSendTime(new Date());
-		 sm.setReceiver("all");
-		 mr.save(sm);
-		 String str = "";
-		 try {
-			  str = JpushClient.sendSimple("活动通知", msg, "all",sm.getId(),"2");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		 if(str.contains("发送失败")){
-			 mr.updateMessageResult(str, sm.getId());
-			 return false;
-		 }
+	@RequestMapping(value={"/pushActivi" },method = RequestMethod.POST)    
+	public boolean pushActivi(String msg,String mobiles) {
+	   JSONObject json = new JSONObject(msg);
+	   List<Message> list = new ArrayList<Message>(); 
+     if(mobiles!=null && mobiles.contains(",")){
+       String[] ss = mobiles.split(",");
+       for(String s:ss){
+         Message mg = new Message();
+         mg.setType(MessageType.ACTIVE);
+         mg.setChannel(SendChannel.PUSH);
+         mg.setSendTime(new Date());
+         mg.setContent(json.getString("content"));
+         mg.setReceiver(s);   
+         list.add(mg);
+       }
+	     }else{
+	       Message mg = new Message();
+         mg.setType(MessageType.ACTIVE);
+         mg.setChannel(SendChannel.PUSH);
+         mg.setSendTime(new Date());
+         mg.setContent(msg);
+         mg.setReceiver(mobiles);
+         list.add(mg);
+	     }
+	   Long id = null;
+	   if(list!=null && list.size()>0){
+	    id =  op.addActivityMsg(list);
+	   }
+	   if(id!=0){
+	     try {
+	        JpushClient.sendSimple("活动通知", json.getString("title"), mobiles,id,"2");
+	    } catch (Exception e) {
+	      e.printStackTrace();
+	    }
+	     
+	   }
+	
 			 return true;
 	}
 	/**

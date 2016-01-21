@@ -129,13 +129,13 @@ public class HttpUtil {
     
     
     public static void main(String[] args) {
-        //发送 GET 请求
+        //发送 GET 请求 115.28.87.182:28503
     	//http://192.168.2.146:8080/push/pushNewOrder?str=%E5%B8%B8%E4%BF%8A
 //    	String s=HttpUtil.sendPost("http://192.168.2.146:8082/v1/push/pushNews", "msg={\"title\":\"看电影\",\"content\":\"缤纷五洲电影院约起来~~~~~~~~~~~~~~~~\",\"mobile\":\"all\"}");
-//    	String s=HttpUtil.sendPost("http://192.168.2.146:8082/v1/push/pushNewOrder", "msg={\"orderNum\":\"20151104165535244\",\"mobiles\":\"111\",\"amount\":\"100.0\",\"username\":\"天桥魅族店\"}");
+    	String s=HttpUtil.sendPost("http://192.168.2.146:8082/v1/push/pushNewOrder", "msg={\"orderNum\":\"20151104165535244\",\"mobiles\":\"111\",\"amount\":\"100.0\",\"username\":\"天桥魅族店\",\"count\":\"3\"}");
 //    	String s=HttpUtil.sendPost("http://115.28.92.73:28501/member/getValidateCode/18764157959.html",null);
-      JSONObject jo = new JSONObject();
-      jo.put("status", "success");
+//      JSONObject jo = new JSONObject();
+//      jo.put("status", "success");
 //      String s = "";;
 //      try {
 //        s = OrderService.invokWallet(jo, "JY17515589");
@@ -143,7 +143,7 @@ public class HttpUtil {
 //        // TODO Auto-generated catch block
 //        e.printStackTrace();
 //      }
-//    	System.out.println(s);
+    	System.out.println(s);
         //http://192.168.1.54:8082/v1/JY17515589/status
         //发送 POST 请求
 //        String sr=TestHttp.sendPost("http://localhost:6144/Home/RequestPostString", "key=123&v=456");
