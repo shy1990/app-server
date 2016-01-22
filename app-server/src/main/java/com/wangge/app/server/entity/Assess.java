@@ -55,6 +55,8 @@ public class Assess extends AbstractPersistable<Long> {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "USER_ID")
 	private Salesman salesman;
+	@Column(name = "ASSESS_DEFINE_AREA")
+	private String assessDefineArea;
 	@Column(name = "ASSESS_AREA")
 	private String assessArea;
 	@Column(name = "ASSESS_STAGE")
@@ -156,5 +158,14 @@ public class Assess extends AbstractPersistable<Long> {
 	public void setAssesszh(String assesszh) {
 		this.assesszh = assesszh;
 	}
+
+	public String getAssessDefineArea() {
+		return assessDefineArea;
+	}
+
+	public void setAssessDefineArea(String assessDefineArea) {
+		this.assessDefineArea = assessDefineArea;
+	}
+	
 
 }

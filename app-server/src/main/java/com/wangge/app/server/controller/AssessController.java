@@ -41,7 +41,7 @@ public class AssessController {
 	}
 	
 	@RequestMapping(value = "/addAssess", method = RequestMethod.POST)
-	public ResponseEntity<String> addAssess(String salesmanid,String assessStage,String assessActivenum,String assessOrdernum,String assessCycle,String accessTime,String regionid,String regionzh){
+	public ResponseEntity<String> addAssess(String salesmanid,String assessStage,String assessActivenum,String assessOrdernum,String assessCycle,String accessTime,String regionid,String regionzh,String taskid){
 		Assess assess = new Assess();
 		assess.setStatus(AssessStatus.PENDING);
 		assess.setAssessActivenum(assessActivenum);
@@ -55,7 +55,8 @@ public class AssessController {
 		if(salesman!=null){
 			assess.setSalesman(salesman);
 		}
-		assess.setAssessArea(regionid);
+		assess.setAssessDefineArea(regionid);
+		assess.setAssessArea(taskid);
 		try {
 			assess.setAssessTime(sdf.parse(accessTime));
 		} catch (Exception e) {
