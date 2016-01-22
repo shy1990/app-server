@@ -40,6 +40,7 @@ public class RegistData extends AbstractPersistable<Long> {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "ASSESS_ID")
 	private Assess assess;
+	private Regist regist;
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "REGION_ID")
 	private Region region;
