@@ -71,6 +71,8 @@ public class Assess extends AbstractPersistable<Long> {
 	@Enumerated(EnumType.ORDINAL)
 	@Column(name = "ASSESS_STATUS")
 	private AssessStatus status;
+	@Column(name="ASSESS_DEFINE_AREA")
+	private String defineArea;
 
 	public Assess() {
 		super();
@@ -147,5 +149,13 @@ public class Assess extends AbstractPersistable<Long> {
 	public void setStatus(AssessStatus status) {
 		this.status = status;
 	}
+
+  public String getDefineArea() {
+    return defineArea;
+  }
+
+  public void setDefineArea(String defineArea) {
+    this.defineArea = defineArea;
+  }
 
 }

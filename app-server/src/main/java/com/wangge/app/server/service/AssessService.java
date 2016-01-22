@@ -59,7 +59,8 @@ public class AssessService {
       // if (SaojieStatus.PENDING.equals(taskSaojie.getStatus())) {
       if (AssessStatus.PENDING.equals(assess.getStatus()) || AssessStatus.AGREE.equals(assess.getStatus())) {
         if (AssessStatus.PENDING.equals(assess.getStatus())) {
-          String assArea = assess.getAssessArea();
+          String assArea = assess.getDefineArea();
+          if(assArea != null && !"".equals(assArea)){
             String[] strRegion = assArea.split(",");
             for (int i = 0; i < strRegion.length; i++) {
               Region region = regionService.findRegion(strRegion[i].trim());
@@ -71,8 +72,28 @@ public class AssessService {
                 dev.add(r);
               }
             }
+          }
         } else {
-          String assArea = assess.getAssessArea();
+          String assArea = assess.getDefineArea();
+          if(assArea != null && !"".equals(assArea)){
+            if (assArea != null && !"".equals(assArea)) {
+              String[] strRegion = assArea.split(",");
+              for (int i = 0; i < strRegion.length; i++) {
+                Region region = regionService.findRegion(strRegion[i].trim());
+                if(region != null && !"".equals(region)){
+                  RegionVo r = new RegionVo();
+                  r.setId(region.getId());
+                  r.setName(region.getName());
+                  r.setCoordinates(region.getCoordinates());
+                  deved.add(r);
+                }
+              }
+            }
+          }
+          }
+      }else{
+        String assArea = assess.getDefineArea();
+        if(assArea != null && !"".equals(assArea)){
           if (assArea != null && !"".equals(assArea)) {
             String[] strRegion = assArea.split(",");
             for (int i = 0; i < strRegion.length; i++) {
@@ -84,21 +105,6 @@ public class AssessService {
                 r.setCoordinates(region.getCoordinates());
                 deved.add(r);
               }
-            }
-          }
-        }
-      }else{
-        String assArea = assess.getAssessArea();
-        if (assArea != null && !"".equals(assArea)) {
-          String[] strRegion = assArea.split(",");
-          for (int i = 0; i < strRegion.length; i++) {
-            Region region = regionService.findRegion(strRegion[i].trim());
-            if(region != null && !"".equals(region)){
-              RegionVo r = new RegionVo();
-              r.setId(region.getId());
-              r.setName(region.getName());
-              r.setCoordinates(region.getCoordinates());
-              deved.add(r);
             }
           }
         }
