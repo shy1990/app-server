@@ -1,7 +1,6 @@
 package com.wangge.app.server.repositoryimpl;
 
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -60,9 +59,9 @@ public class ExamImpl {
 		String sql = "select a.rname as areaName , count(a.rid) as shopNum,sum(a.count) as count from sj_yewu.BIZ_EXAMINE a where   a.USERNAME=(select USERNAME from SJ_DB.SYS_USER where USER_ID='"+salesId+"' )  and a.rname in("+areas+")  AND a.otype='sku'  group by (a.RID,a.rname)";
 		Query query =  em.createNativeQuery(sql);
 		List obj = query.getResultList();
+	  int shopNum=0; //商家数
+    int phoneNum = 0; //手机数
 		if(obj!=null && obj.size()>0){
-			int shopNum=0; //商家数
-			int phoneNum = 0; //手机数
 			Iterator it = obj.iterator();
 			Set<Town> set = new HashSet<Town>();
 			while(it.hasNext()){
@@ -76,16 +75,14 @@ public class ExamImpl {
 				set.add(town);
 			}
 			exam.setTown(set);
-			exam.setDoneShopNum(shopNum);
-			exam.setDonePhoneNum(phoneNum);
-			
-		  float pnum= (float)phoneNum/exam.getGoalPhoneNum();  
-		  float snum= (float)shopNum/exam.getGoalShopNum(); 
-		  DecimalFormat df = new DecimalFormat("0.00");
-			exam.setPhoneRate( df.format(pnum));
-			exam.setShopRate(df.format(snum));
-		
 		}
+    exam.setDoneShopNum(shopNum);
+    exam.setDonePhoneNum(phoneNum);
+    float pnum= (float)phoneNum/exam.getGoalPhoneNum();  
+    float snum= (float)shopNum/exam.getGoalShopNum(); 
+    DecimalFormat df = new DecimalFormat("0.00");
+    exam.setPhoneRate( df.format(pnum));
+    exam.setShopRate(df.format(snum));
 		return exam;
 	}
 	
