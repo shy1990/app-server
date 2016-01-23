@@ -245,6 +245,7 @@ public class RegistDataController {
 			rd.setImageUrl3(dataRegist.getImageUrl3());
 			rd.setShopName(dataRegist.getShopName());
 			rd.setPhoneNum(dataRegist.getPhoneNum());
+			rd.setImageUrl(dataRegist.getImageUrl());
 		}
 		return new ResponseEntity<RegistData>(rd, HttpStatus.OK);
 	}
