@@ -13,7 +13,6 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.wangge.common.entity.Region;
 import com.wangge.core.entity.AbstractPersistable;
@@ -40,7 +39,6 @@ public class RegistData extends AbstractPersistable<Long> {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "ASSESS_ID")
 	private Assess assess;
-	private Regist regist;
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "REGION_ID")
 	private Region region;

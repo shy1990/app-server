@@ -75,8 +75,8 @@ public class Assess extends AbstractPersistable<Long> {
 	private AssessStatus status;
 	@Column(name = "ASSESS_AREA_ZH")
 	private String assesszh;
-	@Column(name="ASSESS_DEFINE_AREA")
-	private String defineArea;
+//	@Column(name="ASSESS_DEFINE_AREA")
+//	private String defineArea;
 
 	public Assess() {
 		super();
@@ -170,12 +170,5 @@ public class Assess extends AbstractPersistable<Long> {
 		this.assessDefineArea = assessDefineArea;
 	}
 	
-  public String getDefineArea() {
-    return defineArea;
-  }
-
-  public void setDefineArea(String defineArea) {
-    this.defineArea = defineArea;
-  }
 
 }

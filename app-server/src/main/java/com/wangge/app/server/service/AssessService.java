@@ -59,7 +59,7 @@ public class AssessService {
       // if (SaojieStatus.PENDING.equals(taskSaojie.getStatus())) {
       if (AssessStatus.PENDING.equals(assess.getStatus()) || AssessStatus.AGREE.equals(assess.getStatus())) {
         if (AssessStatus.PENDING.equals(assess.getStatus())) {
-          String assArea = assess.getDefineArea();
+          String assArea = assess.getAssessDefineArea();
           if(assArea != null && !"".equals(assArea)){
             String[] strRegion = assArea.split(",");
             for (int i = 0; i < strRegion.length; i++) {
@@ -74,7 +74,7 @@ public class AssessService {
             }
           }
         } else {
-          String assArea = assess.getDefineArea();
+          String assArea = assess.getAssessDefineArea();
           if(assArea != null && !"".equals(assArea)){
             if (assArea != null && !"".equals(assArea)) {
               String[] strRegion = assArea.split(",");
@@ -92,7 +92,7 @@ public class AssessService {
           }
           }
       }else{
-        String assArea = assess.getDefineArea();
+        String assArea = assess.getAssessDefineArea();
         if(assArea != null && !"".equals(assArea)){
           if (assArea != null && !"".equals(assArea)) {
             String[] strRegion = assArea.split(",");
