@@ -147,6 +147,7 @@ public class RegistDataController {
 				//更新扫街
 				SaojieData sjData =  dataSaojieService.findBySaojieData(Long.parseLong(saojieId));
 				sjData.setRegistData(registData);
+				sjData.setDescription(description);
 				dataSaojieService.addDataSaojie(sjData);
 				json.setId(String.valueOf(registData.getId()));
 				json.setSuccess(true);
