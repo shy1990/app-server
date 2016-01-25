@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.entity.Saojie;
 import com.wangge.app.server.entity.SaojieData;
 
@@ -18,4 +19,6 @@ public interface SaojieDataRepository extends JpaRepository<SaojieData, Long>{
 	List<SaojieData> findBySaojieId(Long taskId);
 
 	List<SaojieData> findBySaojieIn(Collection<Saojie> listSjid);
+	
+	SaojieData findByRegistData(RegistData id);
 }

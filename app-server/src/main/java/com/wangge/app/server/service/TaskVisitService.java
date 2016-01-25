@@ -30,7 +30,7 @@ public class TaskVisitService {
 	@Autowired
 	private VisitRepository visitRepository;
 	@Resource
-  private SaojieDataRepository dataSaojieRepository;
+  private DataSaojieService dataSaojieService;
 	
 	public Json findBySalesman(Salesman salesman,Pageable page,int flag){
 	  Json json = new Json();
@@ -40,7 +40,7 @@ public class TaskVisitService {
 		VisitVo visitVo;
 		if(pVisit != null && pVisit.getTotalPages() > 0){
 			for(Visit visit : pVisit){
-			  SaojieData saojie = dataSaojieRepository.findOne(visit.getRegistData().getId());
+			  SaojieData saojie = dataSaojieService.findByRegistData(visit.getRegistData());
 				if(flag ==0){
 					visitVo = new VisitVo();
 					visitVo.setId(String.valueOf(visit.getId()));
