@@ -48,9 +48,6 @@ public class TaskVisitService {
 					visitVo.setAddress(visit.getRegistData().getReceivingAddress());
 					visitVo.setImageurl(visit.getRegistData().getImageUrl());
 					visitVo.setStatus(visit.getStatus());
-					if(saojie != null && !"".equals(saojie)){
-					  visitVo.setCoordinate(saojie.getCoordinate());
-					}
 					if(VisitStatus.FINISHED.equals(visit.getStatus())){
 					  visitVo.setExpiredTime(visit.getExpiredTime());
 					  visitVo.setSummary(visit.getSummary());
@@ -67,6 +64,9 @@ public class TaskVisitService {
 		        long time2 = cal.getTimeInMillis();
 		        long timing=(time2-time1)/(1000*3600*24);
 		        visitVo.setTiming(Integer.parseInt(String.valueOf(timing)));
+		        if(saojie != null && !"".equals(saojie)){
+	            visitVo.setCoordinate(saojie.getCoordinate());
+	          }
 					}
 					result.add(visitVo);
 				}else{
