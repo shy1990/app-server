@@ -1,10 +1,14 @@
 package com.wangge.app.server.repository;
+import java.util.List;
 
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import com.wangge.app.server.entity.Assess;
+import com.wangge.app.server.entity.Salesman;
 
-public interface AssessRepository extends PagingAndSortingRepository<Assess, Long>, JpaSpecificationExecutor<Assess>{
-
+public interface AssessRepository extends JpaRepository<Assess, Long> {
+	
+	List<Assess> findBySalesman(Salesman salesman);
+	
 }

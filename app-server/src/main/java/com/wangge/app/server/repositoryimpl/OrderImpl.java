@@ -9,11 +9,18 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.spi.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.wangge.app.server.entity.Message;
+
+
 @Repository
-public class OrderImpl {
+public class OrderImpl {  
+  
+  private static final Logger LOG = Logger.getLogger(OrderImpl.class);
 	@PersistenceContext  
     private EntityManager em; 
 	/**
@@ -187,10 +194,21 @@ public class OrderImpl {
 		Query query =  em.createNativeQuery(sql);
 		return query.executeUpdate()>0?"suc":"false";
 	}
-	
+	/**
+	 * 
+	 * @Description: 退款
+	 * @param @param orderNum
+	 * @param @return   
+	 * @return Map  
+	 * @throws
+	 * @author changjun
+	 * @date 2016年1月18日
+	 */
 	public Map checkMoneyBack(String orderNum){
 	  String sql = "select PAY_MENT,TOTAL_COST,WALLET_PAY_NO,WALLET_NUM from SJZAIXIAN.sj_tb_order where ORDER_NUM="+orderNum+"";
 	  Query query =  em.createNativeQuery(sql);
+	  em.getTransaction().begin();
+	  em.getTransaction().commit();
 	  Map<String, String> map = new HashMap<String, String>();
 	  List obj = query.getResultList();
 	  if(obj!=null &&  obj.size()>0){
@@ -201,9 +219,40 @@ public class OrderImpl {
 	      map.put("totalCost", o[1]+"");
 	      map.put("payNo", o[2]+"");
 	      map.put("walletNum",o[3]+"");
+	      
+	      
+	      
 	    }
 	  }
 	  return map;
-	  
+	}
+	/**
+	 * 
+	 * @Description: 保存活动通知记录
+	 * @param @param list
+	 * @param @return   
+	 * @return boolean  
+	 * @throws
+	 * @author changjun
+	 * @date 2016年1月19日
+	 */
+	 @Transactional
+	public Long addActivityMsg(List<Message> list){
+	   try {
+	      Long id = null ;
+	      for(int i = 0; i < list.size(); i++) {
+	        em.persist(list.get(i));
+          if (i % 20 == 0){
+               em.flush();
+               em.clear();
+          }
+           id = list.get(list.size()-1).getId();
+	       }
+	       return id;
+      } catch (Exception e) {
+        LOG.error(e);
+        e.printStackTrace();
+        return 0l;
+      }
 	}
 }

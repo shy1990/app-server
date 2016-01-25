@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.pojo.Json;
+import com.wangge.app.server.service.AssessService;
 import com.wangge.app.server.service.SalesmanService;
 import com.wangge.security.entity.User;
 
@@ -24,6 +25,8 @@ public class LoginController {
 	
 	@Resource
 	private SalesmanService salesmanService;
+	@Resource
+  private AssessService assessService;
 	/**
 	 * 登录 
 	 * @param json
@@ -63,6 +66,7 @@ public class LoginController {
 		json.setId(salesman.getId());
 		json.setStatus(salesman.getStatus().getNum());
 		json.setMsg("登陆成功！");
+		json.setStage(salesman.getAssessStage());
 		return new ResponseEntity<Json>(json, HttpStatus.OK);
 	}
 	
