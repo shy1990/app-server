@@ -135,15 +135,15 @@ public class RegionController {
 		List<Saojie> listSaojie=saojieService.findBySalesman(man);
 		if(listSaojie.size()>0){
 			listRegion= regionService.findRegiondbyParentid(man.getRegion().getId());
-			for(int i=0;i<listRegion.size();i++){
-				for(int j=0;j<listSaojie.size();j++){
-					if(listRegion.get(i).getName().equals(listSaojie.get(j).getRegion().getName())){
-						listRegion.remove(i);
-						i=i-1;
-						break;
-					}
-				}
-			}
+//			for(int i=0;i<listRegion.size();i++){
+//				for(int j=0;j<listSaojie.size();j++){
+//					if(listRegion.get(i).getName().equals(listSaojie.get(j).getRegion().getName())){
+//						listRegion.remove(i);
+//						i=i-1;
+//						break;
+//					}
+//				}
+//			}
 		}else{
 			listRegion.add(man.getRegion());
 		}
