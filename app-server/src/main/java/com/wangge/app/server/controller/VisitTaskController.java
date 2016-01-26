@@ -1,10 +1,14 @@
 package com.wangge.app.server.controller;
 
 import java.util.Date;
+
 import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,7 +64,7 @@ public class VisitTaskController {
 		Json result = null;
     try {
       PageRequest pageRequest = SortUtil.buildPageRequest(jsons.getInteger("pageNumber"), jsons.getInteger("pageSize"),"visitVo");
-      result = taskVisitService.findBySalesman(salesman,pageRequest,flag);
+      result = taskVisitService.findBySalesman(salesman.getId(),pageRequest,flag);
       return new ResponseEntity<Json>(result, HttpStatus.OK);
     } catch (Exception e) {
       e.printStackTrace();

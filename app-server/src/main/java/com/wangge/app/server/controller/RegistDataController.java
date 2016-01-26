@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.wangge.app.server.entity.Assess;
@@ -25,6 +26,7 @@ import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.SaojieData;
 import com.wangge.app.server.pojo.Json;
+import com.wangge.app.server.repository.SaojieDataRepository;
 import com.wangge.app.server.service.AssessService;
 import com.wangge.app.server.service.DataSaojieService;
 import com.wangge.app.server.service.RegistDataService;
@@ -49,7 +51,8 @@ public class RegistDataController {
 	private RegistDataService registDataService;
 	@Resource
   private AssessService assessService;
-	
+	@Resource
+  private SaojieDataRepository dataSaojieRepository;
 	/**
 	 * 
 	 * @Description: 获取已注册和未注册店铺
@@ -142,17 +145,23 @@ public class RegistDataController {
 					data.setPhoneNum(member.get("MOBILE"));
 					data.setShopName(member.get("SHOPNAME"));
 				}
-				RegistData registData = registDataService.addRegistData(data);
-				
-				//更新扫街
-				SaojieData sjData =  dataSaojieService.findBySaojieData(Long.parseLong(saojieId));
-				sjData.setRegistData(registData);
-				sjData.setDescription(description);
-				dataSaojieService.addDataSaojie(sjData);
-				json.setId(String.valueOf(registData.getId()));
-				json.setSuccess(true);
-				json.setMsg("保存成功！");
-			return new ResponseEntity<Json>(json, HttpStatus.CREATED);
+				if(loginAccount.equals(member.get("MOBILE"))){
+				  RegistData registData = registDataService.addRegistData(data);
+	        
+	        //更新扫街
+	        SaojieData sjData =  dataSaojieService.findBySaojieData(Long.parseLong(saojieId));
+	        sjData.setRegistData(registData);
+	        sjData.setDescription(description);
+	        dataSaojieService.addDataSaojie(sjData);
+	        json.setId(String.valueOf(registData.getId()));
+	        json.setSuccess(true);
+	        json.setMsg("保存成功！");
+	        return new ResponseEntity<Json>(json, HttpStatus.CREATED);
+				}else{
+				  json.setMsg("与商城登录帐号不匹配,请重新输入!");
+				  json.setSuccess(false);
+				  return new ResponseEntity<Json>(json, HttpStatus.CREATED);
+				}
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 			json.setMsg("保存异常!");
@@ -203,6 +212,9 @@ public class RegistDataController {
 			}
 			try {
 				registDataService.addRegistData(dataRegist);
+				SaojieData sjData = dataSaojieService.findByRegistData(dataRegist);
+				sjData.setDescription(description);
+				dataSaojieRepository.save(sjData);
 				json.setSuccess(true);
 				json.setMsg("修改成功！");
 				return new ResponseEntity<Json>(json, HttpStatus.OK);
