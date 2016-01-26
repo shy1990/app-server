@@ -11,6 +11,6 @@ import com.wangge.app.server.entity.Visit;
 
 public interface VisitRepository extends JpaRepository<Visit, Long> {
 	
-  @Query("select v from Visit v where v.salesman.id=?1 order by v.status,v.beginTime desc,v.expiredTime desc")
+  @Query("select v from Visit v where v.salesman.id=?1 order by v.status,v.beginTime desc,v.expiredTime desc,v.id asc")
 	Page<Visit> findBySalesmanId(String salesmanId,Pageable page);
 }
