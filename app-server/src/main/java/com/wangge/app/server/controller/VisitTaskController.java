@@ -1,7 +1,11 @@
 package com.wangge.app.server.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -30,7 +34,7 @@ import com.wangge.app.server.vo.VisitVo;
 @RequestMapping(value = "/v1")
 public class VisitTaskController {
 	private static final Logger logger = Logger.getLogger(VisitTaskController.class);
-	
+	SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
 	@Autowired
 	private TaskVisitService taskVisitService;
 	@Autowired
@@ -84,14 +88,14 @@ public class VisitTaskController {
 	 * @param S
 	 * @return 店铺名，图片链接，坐标，备注，摆放时间,状态(待定)
 	 */
-	/*@RequestMapping(value = "/task/addVisit",method = RequestMethod.POST)
+	@RequestMapping(value = "/task/addVisit",method = RequestMethod.POST)
 	public ResponseEntity<String> addVisit(String taskStart,String taskEnd,String rdid,String userid){
 		
 		Visit visit = new Visit();
 		RegistData rData = rds.findRegistDataById(Long.parseLong(rdid));
 		Salesman salesman = salesmanService.findSalesmanbyId(userid);
 		visit.setSalesman(salesman);
-		visit.setRegistdata(rData);
+		visit.setRegistData(rData);
 		try {
 			visit.setBeginTime(sdf.parse(taskStart));
 			visit.setExpiredTime(sdf.parse(taskEnd));
@@ -101,7 +105,7 @@ public class VisitTaskController {
 		  visit.setStatus(VisitStatus.PENDING);
 		taskVisitService.addVisit(visit);
 		return new ResponseEntity<String>("OK", HttpStatus.OK);
-	}*/
+	}
 	
 	
 	/**
