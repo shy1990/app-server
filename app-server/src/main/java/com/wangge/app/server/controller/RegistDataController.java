@@ -250,4 +250,32 @@ public class RegistDataController {
 		}
 		return new ResponseEntity<RegistData>(rd, HttpStatus.OK);
 	}
+	
+	
+	@RequestMapping(value = "/rd/registData", method = RequestMethod.POST)
+  public ResponseEntity<List<Map<String, Object>>> list() {
+
+    List<RegistData> registList = registDataService.findAll();
+
+    List<Map<String, Object>> clist = new ArrayList<Map<String, Object>>();
+    if (registList != null && registList.size() > 0) {
+      for (RegistData rd : registList) {
+        Map<String, Object> m = new HashMap<String, Object>();
+        m.put("id", rd.getId());
+        m.put("shopname", rd.getShopName());
+        m.put("phone", rd.getPhoneNum());
+        m.put("consignee", rd.getConsignee());
+        m.put("address", rd.getReceivingAddress());
+        if (rd.getSalesman() != null) {
+          m.put("userid", rd.getSalesman().getId());
+        }else{
+          m.put("userid", null);
+        }
+        clist.add(m);
+      }
+    }
+
+    return new ResponseEntity<List<Map<String, Object>>>(clist,
+        HttpStatus.OK);
+  }
 }
