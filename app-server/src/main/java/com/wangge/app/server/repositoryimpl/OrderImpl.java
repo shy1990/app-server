@@ -207,8 +207,6 @@ public class OrderImpl {
 	public Map checkMoneyBack(String orderNum){
 	  String sql = "select PAY_MENT,TOTAL_COST,WALLET_PAY_NO,WALLET_NUM from SJZAIXIAN.sj_tb_order where ORDER_NUM="+orderNum+"";
 	  Query query =  em.createNativeQuery(sql);
-	  em.getTransaction().begin();
-	  em.getTransaction().commit();
 	  Map<String, String> map = new HashMap<String, String>();
 	  List obj = query.getResultList();
 	  if(obj!=null &&  obj.size()>0){
@@ -219,9 +217,6 @@ public class OrderImpl {
 	      map.put("totalCost", o[1]+"");
 	      map.put("payNo", o[2]+"");
 	      map.put("walletNum",o[3]+"");
-	      
-	      
-	      
 	    }
 	  }
 	  return map;

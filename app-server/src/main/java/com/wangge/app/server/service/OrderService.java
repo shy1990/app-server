@@ -70,8 +70,8 @@ public class OrderService {
 	 * @date 2016年1月7日
 	 */
 	public static String invokWallet(JSONObject jo,String walletNo) throws Exception {
-//	  String url = "http://localhost:8080/api/v1/test";
-	  String url = "http://192.168.1.54:8082/v1/"+walletNo+"/status";
+//	  String url = "http://115.28.87.182:58081/v1/"; 线上
+	  String url = "http://115.28.92.73:58080/v1/"+walletNo+"/status";
 	  HttpClient client = HttpClientBuilder.create().build();
 	  HttpPut put = new HttpPut(url);
 	  put.setHeader("Content-type", "application/json");
