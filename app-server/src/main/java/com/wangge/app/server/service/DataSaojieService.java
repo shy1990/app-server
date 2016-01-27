@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.SalesmanStatus;
 import com.wangge.app.server.entity.Saojie;
@@ -106,6 +107,10 @@ public class DataSaojieService {
 	
 	public SaojieData findBySaojieData(Long id) {
 		return dataSaojieRepository.findOne(id);
+	}
+	
+	public SaojieData findByRegistData(RegistData id){
+	  return dataSaojieRepository.findByRegistData(id);
 	}
 	
 }

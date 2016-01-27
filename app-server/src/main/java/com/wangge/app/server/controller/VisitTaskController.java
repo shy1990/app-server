@@ -64,7 +64,7 @@ public class VisitTaskController {
 		Json result = null;
     try {
       PageRequest pageRequest = SortUtil.buildPageRequest(jsons.getInteger("pageNumber"), jsons.getInteger("pageSize"),"visitVo");
-      result = taskVisitService.findBySalesman(salesman,pageRequest,flag);
+      result = taskVisitService.findBySalesman(salesman.getId(),pageRequest,flag);
       return new ResponseEntity<Json>(result, HttpStatus.OK);
     } catch (Exception e) {
       e.printStackTrace();
@@ -220,3 +220,4 @@ public class VisitTaskController {
 	}
 	
 }
+

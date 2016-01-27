@@ -11,12 +11,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Lists;
-import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.SaojieData;
 import com.wangge.app.server.entity.Visit;
 import com.wangge.app.server.entity.Visit.VisitStatus;
 import com.wangge.app.server.pojo.Json;
-import com.wangge.app.server.repository.SaojieDataRepository;
 import com.wangge.app.server.repository.VisitRepository;
 import com.wangge.app.server.vo.VisitVo;
 
@@ -30,17 +28,17 @@ public class TaskVisitService {
 	@Autowired
 	private VisitRepository visitRepository;
 	@Resource
-  private SaojieDataRepository dataSaojieRepository;
+  private DataSaojieService dataSaojieService;
 	
-	public Json findBySalesman(Salesman salesman,Pageable page,int flag){
+	public Json findBySalesman(String salesmanId,Pageable page,int flag){
 	  Json json = new Json();
 		List<VisitVo> result = Lists.newArrayList();
-		Page<Visit> pVisit = visitRepository.findBySalesman(salesman,page);
-		int totalPage = (pVisit.getTotalPages()+pVisit.getSize()-1)/pVisit.getSize();
+		List<VisitVo> finishList = Lists.newArrayList();
+		Page<Visit> pVisit = visitRepository.findBySalesmanId(salesmanId,page);
 		VisitVo visitVo;
 		if(pVisit != null && pVisit.getTotalPages() > 0){
 			for(Visit visit : pVisit){
-			  SaojieData saojie = dataSaojieRepository.findOne(visit.getRegistData().getId());
+			  SaojieData saojie = dataSaojieService.findByRegistData(visit.getRegistData());
 				if(flag ==0){
 					visitVo = new VisitVo();
 					visitVo.setId(String.valueOf(visit.getId()));
@@ -48,9 +46,6 @@ public class TaskVisitService {
 					visitVo.setAddress(visit.getRegistData().getReceivingAddress());
 					visitVo.setImageurl(visit.getRegistData().getImageUrl());
 					visitVo.setStatus(visit.getStatus());
-					if(saojie != null && !"".equals(saojie)){
-					  visitVo.setCoordinate(saojie.getCoordinate());
-					}
 					if(VisitStatus.FINISHED.equals(visit.getStatus())){
 					  visitVo.setExpiredTime(visit.getExpiredTime());
 					  visitVo.setSummary(visit.getSummary());
@@ -58,6 +53,8 @@ public class TaskVisitService {
 					  visitVo.setImageurl2(visit.getImageurl2());
 					  visitVo.setImageurl3(visit.getImageurl3());
 					  visitVo.setVisitAddress(visit.getAddress());
+					  finishList.add(visitVo);
+					  
 					}
 					if(VisitStatus.PENDING.equals(visit.getStatus())){
 					  Calendar cal = Calendar.getInstance();
@@ -67,8 +64,13 @@ public class TaskVisitService {
 		        long time2 = cal.getTimeInMillis();
 		        long timing=(time2-time1)/(1000*3600*24);
 		        visitVo.setTiming(Integer.parseInt(String.valueOf(timing)));
+		        if(saojie != null && !"".equals(saojie)){
+	            visitVo.setCoordinate(saojie.getCoordinate());
+	          }
+		        visitVo.setBeginTime(visit.getBeginTime());
+		        result.add(visitVo);
 					}
-					result.add(visitVo);
+					
 				}else{
 					if(VisitStatus.FINISHED.equals(visit.getStatus())){
 						visitVo = new VisitVo();
@@ -87,9 +89,10 @@ public class TaskVisitService {
 					}
 				}
 			}
+			result.addAll(finishList);
 			json.setSuccess(true);
 			json.setObj(result);
-			json.setTotalPage(totalPage);
+			json.setTotalPage(pVisit.getTotalPages());
 		}
 		return json;
 	}
