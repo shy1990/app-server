@@ -68,7 +68,7 @@ public class RegistData extends AbstractPersistable<Long> {
 	private String imageUrl2;
 	@Column(name = "IMAGE_URL3")
 	private String imageUrl3;
-	private String description;
+	private String description = "";
 	
   public RegistData() {
 		super();
@@ -240,7 +240,7 @@ public class RegistData extends AbstractPersistable<Long> {
 	}
 
 	public String getDescription() {
-		return description;
+		return description == null ? "" : description;
 	}
 
 	public void setDescription(String description) {

@@ -45,7 +45,7 @@ public class PushController {
 			return true;
 		}
 //		StringBuffer mobiles  = new StringBuffer();
-		String mobile = "15105314911,15165009133,15865261462,13455106332,15069046916";
+		String mobile = "15688443859";
 		
 		
 		/**
@@ -66,7 +66,7 @@ public class PushController {
 		mes.setType(MessageType.ORDER);
 		mes.setSendTime(new Date());
 		mes.setContent(msg);
-		mes.setReceiver("15105314911");
+		mes.setReceiver("15688443859");
 		mr.save(mes);
 		String str = "";
 		try {

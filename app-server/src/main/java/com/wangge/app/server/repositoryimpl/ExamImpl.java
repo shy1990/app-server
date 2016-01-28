@@ -56,7 +56,7 @@ public class ExamImpl {
         }
       }
 	    //指标信息    a.USERNAME=(select USERNAME from SJ_DB.SYS_USER where USER_ID='"+salesId+"' ) 
-		String sql = "select a.rname as areaName , count(a.rid) as shopNum,sum(a.count) as count from sj_yewu.BIZ_EXAMINE a where   a.USERNAME=(select USERNAME from SJ_DB.SYS_USER where USER_ID='"+salesId+"' )  and a.rname in("+areas+")  AND a.otype='sku'  group by (a.RID,a.rname)";
+		String sql = "select a.rname as areaName , count(a.rid) as shopNum,sum(a.acount) as count from sj_yewu.BIZ_EXAMINE a where   a.USERNAME=(select USERNAME from SJ_DB.SYS_USER where USER_ID='"+salesId+"' )  and a.rname in("+areas+")  AND a.otype='sku'  group by (a.RID,a.rname)";
 		Query query =  em.createNativeQuery(sql);
 		List obj = query.getResultList();
 	  int shopNum=0; //商家数

@@ -17,7 +17,9 @@ public class SortUtil {
             sort = new Sort(Direction.DESC, "createTime");
         } else if("apply".equals(sortType)){
         	 sort = new Sort(Direction.DESC, "applyTime");
-        }
+        }/*else if("visitVo".equals(sortType)){
+          sort = new Sort(Direction.DESC,"expiredTime");
+        }*/
         return new PageRequest(pageNumber - 1, pagzSize, sort);
     }
 }
