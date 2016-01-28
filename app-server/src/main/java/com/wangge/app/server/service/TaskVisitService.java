@@ -34,13 +34,14 @@ public class TaskVisitService {
 	  Json json = new Json();
 		List<VisitVo> result = Lists.newArrayList();
 		List<VisitVo> finishList = Lists.newArrayList();
-		VisitStatus status = null;
-		if(flag == 0){
-		  status = VisitStatus.PENDING;
-		}else{
-		  status = VisitStatus.FINISHED;
+		Page<Visit> pVisit = null;
+		if(flag == 1){
+		  VisitStatus status = VisitStatus.FINISHED;
+		  pVisit = visitRepository.findBySalesmanId(salesmanId,status,page);
 		}
-		Page<Visit> pVisit = visitRepository.findBySalesmanId(salesmanId,status,page);
+		if(flag == 0){
+		  pVisit = visitRepository.findBySalesmanId(salesmanId,page);
+		}
 		VisitVo visitVo;
 		if(pVisit != null && pVisit.getTotalPages() > 0){
 			for(Visit visit : pVisit){
