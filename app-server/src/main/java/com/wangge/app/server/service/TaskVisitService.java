@@ -34,7 +34,13 @@ public class TaskVisitService {
 	  Json json = new Json();
 		List<VisitVo> result = Lists.newArrayList();
 		List<VisitVo> finishList = Lists.newArrayList();
-		Page<Visit> pVisit = visitRepository.findBySalesmanId(salesmanId,page);
+		VisitStatus status = null;
+		if(flag == 0){
+		  status = VisitStatus.PENDING;
+		}else{
+		  status = VisitStatus.FINISHED;
+		}
+		Page<Visit> pVisit = visitRepository.findBySalesmanId(salesmanId,status,page);
 		VisitVo visitVo;
 		if(pVisit != null && pVisit.getTotalPages() > 0){
 			for(Visit visit : pVisit){
