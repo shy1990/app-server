@@ -1,7 +1,10 @@
 package com.wangge.app.server.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -16,9 +19,11 @@ import com.wangge.app.server.entity.Assess;
 import com.wangge.app.server.entity.Assess.AssessStatus;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.SalesmanStatus;
+import com.wangge.app.server.entity.SaojieData;
 import com.wangge.app.server.service.AssessService;
 import com.wangge.app.server.service.RegionService;
 import com.wangge.app.server.service.SalesmanService;
+import com.wangge.app.server.util.JWtoAdrssUtil;
 
 @RestController
 @RequestMapping(value = "/v1/assess")
@@ -33,11 +38,22 @@ public class AssessController {
 	private static final Logger logger = Logger.getLogger(AssessController.class);
 	
 	@RequestMapping(value = "/findAllAssess", method = RequestMethod.POST)
-	public ResponseEntity<List<Assess>> findAllTask(String userid){
+	public ResponseEntity<List<Map<String,Object>>> findAllTask(String userid){
 		
 		List<Assess> listAssess=assessService.getAllList();
 		
-		return new ResponseEntity<List<Assess>>(listAssess,HttpStatus.OK);
+		List<Map<String,Object>> sdmap = new ArrayList<Map<String,Object>>();
+		for(Assess assess:listAssess){
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("assessActivenum", assess.getAssessActivenum());
+			map.put("assessStage", assess.getAssessStage());
+			map.put("assessOrdernum", assess.getAssessOrdernum());
+			map.put("salesId", assess.getSalesman().getId());
+			map.put("assessCycle", assess.getAssessCycle());
+			sdmap.add(map);
+		}
+		
+		return new ResponseEntity<List<Map<String,Object>>>(sdmap,HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/addAssess", method = RequestMethod.POST)
