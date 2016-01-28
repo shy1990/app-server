@@ -89,7 +89,7 @@ public class Saojie extends AbstractPersistable<Long> {
 	@Lob
 	@Basic(fetch = FetchType.LAZY)
 	@Column(columnDefinition = "CLOB")
-	private String description;
+	private String description = "";
 
 	@Column(name = "SAOJIE_ORDER")
 	private Integer order;
@@ -172,7 +172,7 @@ public class Saojie extends AbstractPersistable<Long> {
 	}
 
 	public String getDescription() {
-		return description;
+		return description != null ? description : " ";
 	}
 
 	public void setDescription(String description) {

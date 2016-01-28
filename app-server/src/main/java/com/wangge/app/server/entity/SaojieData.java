@@ -41,7 +41,7 @@ public class SaojieData extends AbstractPersistable<Long> {
 	@JoinColumn(name = "REGION_ID")
 	private Region region;
 	private String name;
-	private String description;
+	private String description = "";
 	private String imageUrl;
 	private String coordinate;
 	@OneToOne(fetch = FetchType.EAGER)
@@ -85,7 +85,7 @@ public class SaojieData extends AbstractPersistable<Long> {
 	}
 
 	public String getDescription() {
-		return description;
+		return description == null ? "" : description;
 	}
 
 	public void setDescription(String description) {

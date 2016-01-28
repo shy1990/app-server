@@ -38,8 +38,7 @@ import com.wangge.common.entity.Region;
 @RequestMapping(value = "/v1")
 public class RegistDataController {
 
-	private static final Logger logger = Logger
-			.getLogger(RegistDataController.class);
+	private static final Logger logger = Logger.getLogger(RegistDataController.class);
 
 	@Resource
 	private SalesmanService salesmanService;
@@ -50,13 +49,15 @@ public class RegistDataController {
 	@Resource
 	private RegistDataService registDataService;
 	@Resource
-  private AssessService assessService;
+	private AssessService assessService;
 	@Resource
-  private SaojieDataRepository dataSaojieRepository;
+	private SaojieDataRepository dataSaojieRepository;
+
 	/**
 	 * 
 	 * @Description: 获取已注册和未注册店铺
-	 * @param @param regionId
+	 * @param @param
+	 *            regionId
 	 * @param @return
 	 * @return ResponseEntity<Map<String,List<SaojieData>>>
 	 * @author peter
@@ -64,47 +65,46 @@ public class RegistDataController {
 	 * @version V2.0
 	 */
 	@RequestMapping(value = "/{regionId}/regist_data", method = RequestMethod.GET)
-	public ResponseEntity<Map<String,List<SaojieData>>> list(
-			@PathVariable("regionId") String regionId) {
+	public ResponseEntity<Map<String, List<SaojieData>>> list(@PathVariable("regionId") String regionId) {
 
-		List<SaojieData> Data = dataSaojieService
-				.getSaojieDataByregion(regionId);
+		List<SaojieData> Data = dataSaojieService.getSaojieDataByregion(regionId);
 		Map<String, List<SaojieData>> result = Maps.newHashMap();
-		List<SaojieData> listsj=new ArrayList<SaojieData>();
-		List<SaojieData> listrg=new ArrayList<SaojieData>();
- 		for(SaojieData sj:Data){
- 			if(sj.getRegistData() != null && !"".equals(sj.getRegistData())){
- 				SaojieData sjdata=new SaojieData();
- 	 			sjdata.setId(sj.getId());
- 	 			sjdata.setImageUrl(sj.getImageUrl());
- 	 			sjdata.setName(sj.getName());
- 	 			sjdata.setCoordinate(sj.getCoordinate());
- 	 			sjdata.setDescription(sj.getDescription()==null?"":sj.getDescription());
-// 	 			sjdata.setRegion(sj.getRegion());
- 	 			sjdata.setRegistId(sj.getRegistData().getId());
- 	 			listsj.add(sjdata);
- 			}else{
- 				SaojieData sjdata=new SaojieData();
- 	 			sjdata.setId(sj.getId());
- 	 			sjdata.setImageUrl(sj.getImageUrl());
- 	 			sjdata.setName(sj.getName());
- 	 			sjdata.setCoordinate(sj.getCoordinate());
- 	 			sjdata.setDescription(sj.getDescription()==null?"":sj.getDescription());
-// 	 			sjdata.setRegion(sj.getRegion());
- 	 			listrg.add(sjdata);
- 			}
- 		}
- 		result.put("regShop", listsj);
- 		result.put("unregShop", listrg);
-		return new ResponseEntity<Map<String,List<SaojieData>>>(result, HttpStatus.OK);
+		List<SaojieData> listsj = new ArrayList<SaojieData>();
+		List<SaojieData> listrg = new ArrayList<SaojieData>();
+		for (SaojieData sj : Data) {
+			if (sj.getRegistData() != null && !"".equals(sj.getRegistData())) {
+				SaojieData sjdata = new SaojieData();
+				sjdata.setId(sj.getId());
+				sjdata.setImageUrl(sj.getImageUrl());
+				sjdata.setName(sj.getName());
+				sjdata.setCoordinate(sj.getCoordinate());
+				sjdata.setDescription(sj.getDescription());
+				// sjdata.setRegion(sj.getRegion());
+				sjdata.setRegistId(sj.getRegistData().getId());
+				listsj.add(sjdata);
+			} else {
+				SaojieData sjdata = new SaojieData();
+				sjdata.setId(sj.getId());
+				sjdata.setImageUrl(sj.getImageUrl());
+				sjdata.setName(sj.getName());
+				sjdata.setCoordinate(sj.getCoordinate());
+				sjdata.setDescription(sj.getDescription());
+				// sjdata.setRegion(sj.getRegion());
+				listrg.add(sjdata);
+			}
+		}
+		result.put("regShop", listsj);
+		result.put("unregShop", listrg);
+		return new ResponseEntity<Map<String, List<SaojieData>>>(result, HttpStatus.OK);
 	}
-	
 
 	/**
 	 * 
 	 * @Description: 添加注册店铺数据
-	 * @param @param region
-	 * @param @param jsons
+	 * @param @param
+	 *            region
+	 * @param @param
+	 *            jsons
 	 * @param @return
 	 * @return ResponseEntity<Json>
 	 * @author peter
@@ -112,56 +112,52 @@ public class RegistDataController {
 	 * @version V2.0
 	 */
 	@RequestMapping(value = "/{regionId}/{saojieId}/regist_data", method = RequestMethod.POST)
-	public ResponseEntity<Json> add(
-			@PathVariable("regionId") Region region,
-			@PathVariable("saojieId") String saojieId,
+	public ResponseEntity<Json> add(@PathVariable("regionId") Region region, @PathVariable("saojieId") String saojieId,
 			@RequestBody JSONObject jsons) {
 		Json json = new Json();
 		try {
 			String userId = jsons.getString("userId");
-			String counterNumber=jsons.getString("counterNumber");//柜台数
-			String loginAccount=jsons.getString("loginAccount");
-			String clerk=jsons.getString("clerk");//营业人数
-			String length=jsons.getString("length");
-			String width= jsons.getString("width");
-			String imageUrl=jsons.getString("imageurl");
-			String imageUrl1=jsons.getString("imageurl1");
-			String imageUrl2=jsons.getString("imageurl2");
-			String imageUrl3=jsons.getString("imageurl3");
-			String description=jsons.getString("description");
-//			Assess assess  = assessService.findBySalesman(userId);
+			String counterNumber = jsons.getString("counterNumber");// 柜台数
+			String loginAccount = jsons.getString("loginAccount");
+			String clerk = jsons.getString("clerk");// 营业人数
+			String length = jsons.getString("length");
+			String width = jsons.getString("width");
+			String imageUrl = jsons.getString("imageurl");
+			String imageUrl1 = jsons.getString("imageurl1");
+			String imageUrl2 = jsons.getString("imageurl2");
+			String imageUrl3 = jsons.getString("imageurl3");
+			String description = jsons.getString("description");
+			// Assess assess = assessService.findBySalesman(userId);
 			Salesman salesman = salesmanService.findSalesmanbyId(userId);
-				RegistData data = new RegistData(loginAccount, imageUrl,length, width, imageUrl1, imageUrl2, imageUrl3);
-				data.setRegion(region);
-				data.setSalesman(salesman);
-				data.setCreatetime(new Date());
-				data.setCounterNumber(counterNumber);
-				data.setClerk(clerk);
-				data.setDescription(description);
-				Map<String,String> member = registDataService.findMemberInfo(loginAccount);
-				if(member != null && !"".equals(member)){
-					data.setConsignee(member.get("CONSIGNEE"));
-					data.setReceivingAddress(member.get("ADDRESS"));
-					data.setPhoneNum(member.get("MOBILE"));
-					data.setShopName(member.get("SHOPNAME"));
-				}
-				if(loginAccount.equals(member.get("MOBILE"))){
-				  RegistData registData = registDataService.addRegistData(data);
-	        
-	        //更新扫街
-	        SaojieData sjData =  dataSaojieService.findBySaojieData(Long.parseLong(saojieId));
-	        sjData.setRegistData(registData);
-	        sjData.setDescription(description);
-	        dataSaojieService.addDataSaojie(sjData);
-	        json.setId(String.valueOf(registData.getId()));
-	        json.setSuccess(true);
-	        json.setMsg("保存成功！");
-	        return new ResponseEntity<Json>(json, HttpStatus.CREATED);
-				}else{
-				  json.setMsg("与商城登录帐号不匹配,请重新输入!");
-				  json.setSuccess(false);
-				  return new ResponseEntity<Json>(json, HttpStatus.CREATED);
-				}
+			RegistData data = new RegistData(loginAccount, imageUrl, length, width, imageUrl1, imageUrl2, imageUrl3);
+			data.setRegion(region);
+			data.setSalesman(salesman);
+			data.setCreatetime(new Date());
+			data.setCounterNumber(counterNumber);
+			data.setClerk(clerk);
+			data.setDescription(description);
+			Map<String, String> member = registDataService.findMemberInfo(loginAccount);
+			if (member != null && !"".equals(member)) {
+				data.setConsignee(member.get("CONSIGNEE"));
+				data.setReceivingAddress(member.get("ADDRESS"));
+				data.setPhoneNum(member.get("MOBILE"));
+				data.setShopName(member.get("SHOPNAME"));
+				RegistData registData = registDataService.addRegistData(data);
+				
+				// 更新扫街
+				SaojieData sjData = dataSaojieService.findBySaojieData(Long.parseLong(saojieId));
+				sjData.setRegistData(registData);
+				sjData.setDescription(description);
+				dataSaojieService.addDataSaojie(sjData);
+				json.setId(String.valueOf(registData.getId()));
+				json.setSuccess(true);
+				json.setMsg("保存成功！");
+				return new ResponseEntity<Json>(json, HttpStatus.CREATED);
+			}else{
+				json.setMsg("与商城登录帐号不匹配,请重新输入!");
+				json.setSuccess(false);
+				return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
+			}
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 			json.setMsg("保存异常!");
@@ -172,7 +168,8 @@ public class RegistDataController {
 	/**
 	 * 
 	 * @Description: 修改店铺录入信息
-	 * @param @param jsons
+	 * @param @param
+	 *            jsons
 	 * @param @return
 	 * @return ResponseEntity<Json>
 	 * @author peter
@@ -182,18 +179,18 @@ public class RegistDataController {
 	@RequestMapping(value = "/update_registData", method = RequestMethod.POST)
 	public ResponseEntity<Json> updateDataSaojie(@RequestBody JSONObject jsons) {
 		String registDataId = jsons.getString("id");
-		String counterNumber=jsons.getString("counterNumber");//柜台数
-		String loginAccount=jsons.getString("loginAccount");
-		String clerk=jsons.getString("clerk");//营业人数
-		String length=jsons.getString("length");
-		String width= jsons.getString("width");
-		String imageUrl1=jsons.getString("imageurl1");
-		String imageUrl2=jsons.getString("imageurl2");
-		String imageUrl3=jsons.getString("imageurl3");
-		String description=jsons.getString("description");
+		String counterNumber = jsons.getString("counterNumber");// 柜台数
+		String loginAccount = jsons.getString("loginAccount");
+		String clerk = jsons.getString("clerk");// 营业人数
+		String length = jsons.getString("length");
+		String width = jsons.getString("width");
+		String imageUrl1 = jsons.getString("imageurl1");
+		String imageUrl2 = jsons.getString("imageurl2");
+		String imageUrl3 = jsons.getString("imageurl3");
+		String description = jsons.getString("description");
 		Json json = new Json();
 		RegistData dataRegist = registDataService.findRegistDataById(Long.parseLong(registDataId));
-		if(dataRegist != null && !"".equals(dataRegist)){
+		if (dataRegist != null && !"".equals(dataRegist)) {
 			dataRegist.setCounterNumber(counterNumber);
 			dataRegist.setLoginAccount(loginAccount);
 			dataRegist.setClerk(clerk);
@@ -203,8 +200,8 @@ public class RegistDataController {
 			dataRegist.setImageUrl2(imageUrl2);
 			dataRegist.setImageUrl3(imageUrl3);
 			dataRegist.setDescription(description);
-			Map<String,String> member = registDataService.findMemberInfo(loginAccount);
-			if(member != null && !"".equals(member)){
+			Map<String, String> member = registDataService.findMemberInfo(loginAccount);
+			if (member != null && !"".equals(member)) {
 				dataRegist.setConsignee(member.get("CONSIGNEE"));
 				dataRegist.setReceivingAddress(member.get("ADDRESS"));
 				dataRegist.setPhoneNum(member.get("MOBILE"));
@@ -230,21 +227,18 @@ public class RegistDataController {
 			return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
 		}
 	}
-	
+
 	/**
 	 * 
-	* @Title: registDataInfo 
-	* @Description: TODO(获取一条注册店铺信息) 
-	* @param @param registDataId
-	* @param @return    设定文件 
-	* @return ResponseEntity<RegistData>    返回类型 
-	* @throws
+	 * @Title: registDataInfo @Description: TODO(获取一条注册店铺信息) @param @param
+	 * registDataId @param @return 设定文件 @return ResponseEntity<RegistData>
+	 * 返回类型 @throws
 	 */
 	@RequestMapping(value = "/{registDataId}/infoRegist", method = RequestMethod.GET)
 	public ResponseEntity<RegistData> registDataInfo(@PathVariable("registDataId") String registDataId) {
 		RegistData dataRegist = registDataService.findRegistDataById(Long.parseLong(registDataId));
 		RegistData rd = null;
-		if(dataRegist != null && !"".equals(dataRegist)){
+		if (dataRegist != null && !"".equals(dataRegist)) {
 			rd = new RegistData();
 			rd.setId(dataRegist.getId());
 			rd.setClerk(dataRegist.getClerk());
@@ -262,8 +256,7 @@ public class RegistDataController {
 		}
 		return new ResponseEntity<RegistData>(rd, HttpStatus.OK);
 	}
-	
-	
+
 	@RequestMapping(value = "/rd/registData", method = RequestMethod.POST)
 	public ResponseEntity<List<Map<String, Object>>> list() {
 
@@ -280,14 +273,13 @@ public class RegistDataController {
 				m.put("address", rd.getReceivingAddress());
 				if (rd.getSalesman() != null) {
 					m.put("userid", rd.getSalesman().getId());
-				}else{
+				} else {
 					m.put("userid", null);
 				}
 				clist.add(m);
 			}
 		}
 
-		return new ResponseEntity<List<Map<String, Object>>>(clist,
-				HttpStatus.OK);
+		return new ResponseEntity<List<Map<String, Object>>>(clist, HttpStatus.OK);
 	}
 }
