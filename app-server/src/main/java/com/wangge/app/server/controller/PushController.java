@@ -41,9 +41,9 @@ public class PushController {
 	 */
 	@RequestMapping(value = { "/pushNewOrder"},method = RequestMethod.POST)
 	public boolean pushNewOrder(String msg){
-		if(Math.random()*100>80){
-			return true;
-		}
+//		if(Math.random()*100>80){
+//			return true;
+//		}
 //		StringBuffer mobiles  = new StringBuffer();
 		String mobile = "15688443859";
 		
