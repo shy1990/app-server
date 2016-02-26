@@ -21,6 +21,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.ApplyPrice;
 import com.wangge.app.server.entity.Order;
 import com.wangge.app.server.entity.OrderItem;
+import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.repository.RegistDataRepository;
 import com.wangge.app.server.repositoryimpl.ExamImpl;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
@@ -68,13 +69,15 @@ public class MineController {
 	 * @date 2015年11月12日
 	 */
 	@RequestMapping(value = "/checkByOrderNum",method = RequestMethod.POST)
-	public ResponseEntity<JSONObject> checkByOrderNum(@RequestBody  JSONObject json){
+	public ResponseEntity<JSONObject> checkByOrderNum(@RequestBody  JSONObject json) throws Exception{
 //		String mobile = json.getString("mobile");
 		String ordernum = json.getString("ordernum");
 		String regionId = json.getString("regionId");
 		
 		JSONObject jo = new JSONObject();
 		Order order = or.findOne(ordernum);
+		
+		 
 		
 		if(order!=null){
 		  StringBuffer sb = new StringBuffer();
@@ -95,8 +98,14 @@ public class MineController {
       jo.put("itemOtherNum", order.getItems().size()-skuNum);
       jo.put("goods", sb);
       jo.put("payType", order.getPayMent().getName());
-      String Coordinate = rds.findByMemberId(order.getMemberId()).getSaojieData().getCoordinate();
-      jo.put("point",Coordinate!= null ? Coordinate : "");
+      RegistData rd = rds.findByMemberId(order.getMemberId());
+      if(rd != null){
+        String Coordinate =rd.getSaojieData().getCoordinate();
+        jo.put("point",Coordinate);
+      }else{
+        jo.put("point","");
+      }
+     
 			if(regionId.equals(order.getRegion().getId())){
 				if(opl.checkByOrderNum(ordernum)){
 				  jo.put("state", "正常订单");
@@ -106,87 +115,90 @@ public class MineController {
 					return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
 				}
 			}else{
-        jo.put("state", "该订单不属于此地区,请核实");
-				return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
-			}
-		}
-		jo.put("state", "未查询相关信息,请重试");
-		return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
 
-	}
-	
-	
-	/**
-	 * 
-	 * @Description: 根据业务手机号查询所属订单的派送状态
-	 * @param @param json
-	 * @param @return   
-	 * @return ResponseEntity<List<OrderPub>>  
-	 * @throws
-	 * @author changjun
-	 * @date 2015年11月11日
-	 */
-	@RequestMapping(value = "/orderStatusList",method = RequestMethod.POST)
-	public ResponseEntity<List<OrderPub>> orderStatusList(@RequestBody  JSONObject json){
-		String regionId = json.getString("regionId");
-		PageRequest pageRequest = SortUtil.buildPageRequest(json.getInteger("pageNumber"), json.getInteger("pageSize"),"order");
-		List<OrderPub> list = or.findByRegion(rr.findById(regionId), pageRequest);
-		return new ResponseEntity<List<OrderPub>>(list , HttpStatus.OK);
-	}
-	
-	
-	/**
-	 * 
-	 * @Description: 业务签收后更新订单状态
-	 * @param @param json
-	 * @param @return   
-	 * @return ResponseEntity<JSONObject>  
-	 * @throws
-	 * @author changjun
-	 * @date 2015年11月21日
-	 */
-	@RequestMapping(value = "/updateOrderStatus",method = RequestMethod.POST)
-	public ResponseEntity<JSONObject> updateOrderStatus(@RequestBody  JSONObject json){
-		String status =  opl.updateOrderShipStateByOrderNum(json.getString("ordernum"), null,null,"2",1);
-		JSONObject jo = new JSONObject();
-		jo.put("state", status);
-		return new ResponseEntity<JSONObject>( jo, HttpStatus.OK);
-	}
-	
-	///////////////////   	V2
-	/**
-	 * 
-	 * @Description: 客户拒签
-	 * @param @param json
-	 * @param @return   
-	 * @return ResponseEntity<JSONObject>  
-	 * @throws
-	 * @author changjun
-	 * @date 2015年12月1日
-	 */
-	@RequestMapping(value = "/custNotSignFor",method = RequestMethod.POST)
-	public ResponseEntity<JSONObject> custNotSignFor(@RequestBody  JSONObject json){
-		String orderNum = json.getString("ordernum");
-		String reason = json.getString("reason");
-		JSONObject jo = new JSONObject();
-		
-		opl.saveRefuseReason(orderNum, reason);//保存拒签原因
-		
-		Map map = opl.checkMoneyBack(orderNum);
-		boolean flag = false;
-		if(map!=null){
-		  //判断钱包流水号是否为空,若是则不调用退款接口
-    		  if(map.get("payNo")!=null && !"".equals(map.get("payNo"))){
-    		    if("0".equals(map.get("payMent")) ){
-    		      if(map.get("totalCost").equals(map.get("walletNum"))){
-    		         flag = true;
-    		      }
-    		    }else{
-    		        flag = true;
-    		    }
-    		  }
-		}
-  		if(flag){
+        jo.put("state", "该订单不属于此地区,请核实");
+        return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
+      }
+    }
+    jo.put("state", "未查询相关信息,请重试");
+    return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
+
+  }
+  
+  
+  /**
+   * 
+   * @Description: 根据业务手机号查询所属订单的派送状态
+   * @param @param json
+   * @param @return   
+   * @return ResponseEntity<List<OrderPub>>  
+   * @throws
+   * @author changjun
+   * @date 2015年11月11日
+   */
+  @RequestMapping(value = "/orderStatusList",method = RequestMethod.POST)
+  public ResponseEntity<List<OrderPub>> orderStatusList(@RequestBody  JSONObject json){
+//    String regionId = json.getString("regionId");
+    String username = json.getString("username");
+    PageRequest pageRequest = SortUtil.buildPageRequest(json.getInteger("pageNumber"), json.getInteger("pageSize"),"order");
+//    List<OrderPub> list = or.findByRegion(rr.findById(regionId), pageRequest);
+    List<OrderPub> list =opl.selOrderSignforStatus(username, json.getInteger("pageNumber"),pageRequest);
+    return new ResponseEntity<List<OrderPub>>(list , HttpStatus.OK);
+  }
+  
+  
+  /**
+   * 
+   * @Description: 业务签收后更新订单状态
+   * @param @param json
+   * @param @return   
+   * @return ResponseEntity<JSONObject>  
+   * @throws
+   * @author changjun
+   * @date 2015年11月21日
+   */
+  @RequestMapping(value = "/updateOrderStatus",method = RequestMethod.POST)
+  public ResponseEntity<JSONObject> updateOrderStatus(@RequestBody  JSONObject json){
+    String status =  opl.updateOrderShipStateByOrderNum(json.getString("ordernum"), null,null,"2",1);
+    JSONObject jo = new JSONObject();
+    jo.put("state", status);
+    return new ResponseEntity<JSONObject>( jo, HttpStatus.OK);
+  }
+  
+  ///////////////////     V2
+  /**
+   * 
+   * @Description: 客户拒签
+   * @param @param json
+   * @param @return   
+   * @return ResponseEntity<JSONObject>  
+   * @throws
+   * @author changjun
+   * @date 2015年12月1日
+   */
+  @RequestMapping(value = "/custNotSignFor",method = RequestMethod.POST)
+  public ResponseEntity<JSONObject> custNotSignFor(@RequestBody  JSONObject json){
+    String orderNum = json.getString("ordernum");
+    String reason = json.getString("reason");
+    JSONObject jo = new JSONObject();
+    
+    opl.saveRefuseReason(orderNum, reason);//保存拒签原因
+    
+    Map map = opl.checkMoneyBack(orderNum);
+    boolean flag = false;
+    if(map!=null){
+      //判断钱包流水号是否为空,若是则不调用退款接口
+          if(map.get("payNo")!=null && !"".equals(map.get("payNo"))){
+            if("0".equals(map.get("payMent")) ){
+              if(map.get("totalCost").equals(map.get("walletNum"))){
+                 flag = true;
+              }
+            }else{
+                flag = true;
+            }
+          }
+    }
+      if(flag){
          try {
            jo.put("state", "success");//调用接口传参
            String str = or.invokWallet(jo, map.get("payNo").toString());

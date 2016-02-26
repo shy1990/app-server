@@ -78,36 +78,8 @@ public class RegistDataController {
 	public ResponseEntity<List<SaojieData>> list(@PathVariable("regionId") String regionId) {
 
 		List<SaojieData> Data = dataSaojieService.getSaojieDataByregion(regionId);
-	//	Map<String, List<SaojieData>> result = Maps.newHashMap();
-	//	List<SaojieData> listsj = new ArrayList<SaojieData>();
-	//	List<SaojieData> listrg = new ArrayList<SaojieData>();
 	  List<SaojieData> list = new ArrayList<SaojieData>();
 		
-		/*for (SaojieData sj : Data) {
-			if (sj.getRegistData() != null && !"".equals(sj.getRegistData())) {
-				SaojieData sjdata = new SaojieData();
-				sjdata.setId(sj.getId());
-				sjdata.setImageUrl(sj.getImageUrl());
-				sjdata.setName(sj.getName());
-				sjdata.setCoordinate(sj.getCoordinate());
-				sjdata.setDescription(sj.getDescription());
-				// sjdata.setRegion(sj.getRegion());
-				sjdata.setRegistId(sj.getRegistData().getId());
-				listsj.add(sjdata);
-			} else {
-				SaojieData sjdata = new SaojieData();
-				sjdata.setId(sj.getId());
-				sjdata.setImageUrl(sj.getImageUrl());
-				sjdata.setName(sj.getName());
-				sjdata.setCoordinate(sj.getCoordinate());
-				sjdata.setDescription(sj.getDescription());
-				// sjdata.setRegion(sj.getRegion());
-				listrg.add(sjdata);
-			}
-		}
-		result.put("regShop", listsj);
-		result.put("unregShop", listrg);*/
-	  
 	  for(SaojieData sj : Data){
 	      SaojieData sjdata = new SaojieData();
         sjdata.setId(sj.getId());
@@ -145,10 +117,6 @@ public class RegistDataController {
 	 */
 	 private Color getPercent(String memberId){
 	    Double a =  apl.examTwiceShop(memberId);
-	   /* Double b = assessService.countByAssessDefineArea(area);
-	    if(b <= 0){
-	      return Color.black;
-	    }*/
 	    if(a > 0){
 	      return Color.green;
 	    }else {

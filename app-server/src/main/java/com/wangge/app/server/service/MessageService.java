@@ -12,74 +12,74 @@ import com.wangge.app.server.entity.Message.SendChannel;
 import com.wangge.app.server.repository.MessageRepository;
 @Service
 public class MessageService {
-	@Autowired
-	private MessageRepository mr;
-	/**
-	 * 
-	 * @Description: 查询一个业务收到的所有信息
-	 * @param @param receiver
-	 * @param @param type
-	 * @param @param pageRequest
-	 * @param @return   
-	 * @return Page<Message>  
-	 * @throws
-	 * @author changjun
-	 * @date 2015年11月20日
-	 */
-	public Page<Message> findMessageByReceiver(String receiver,Pageable pageRequest){
-		return mr.findMessage(receiver, pageRequest);
-	}
-	/**
-	 * 
-	 * @Description: 根据渠道类型包含的接收者查询
-	 * @param @param Channel
-	 * @param @param type
-	 * @param @param receiver
-	 * @param @param pageRequest
-	 * @param @return   
-	 * @return Page<Message>  
-	 * @throws
-	 * @author changjun
-	 * @date 2015年11月20日
-	 */
-	public Page<Message> findByChannelAndTypeAndReceiverContaining(SendChannel Channel,MessageType type0,MessageType type,String receiver,Pageable pageRequest){
-		return  mr.findByChannelAndTypeOrTypeAndReceiverContaining(Channel, type0,type, receiver, pageRequest);
-	}
-	/**
-	 * 
-	 * @Description: 推送返回失败  把错误信息保存
-	 * @param @param result
-	 * @param @param id
-	 * @param @return   
-	 * @return boolean  
-	 * @throws
-	 * @author changjun
-	 * @date 2015年11月20日
-	 */
-	@Transactional
-	public void updateMessageResult(String result,Long id){
-		 mr.updateMessageResult(result, id);
-	}
-	
-	public void save(Message mes) {
-		mr.save(mes);
-	}
-	public Message findOne(Long long1) {
-		return mr.findOne(long1);
-	}
-	/**
-	 * 
-	 * @Description: 根据消息类型获取消息列表
-	 * @param @param type
-	 * @param @param pageRequest
-	 * @param @return   
-	 * @return Page<Message>  
-	 * @throws
-	 * @author changjun
-	 * @date 2015年11月30日
-	 */
-	public Page<Message> findMessageByType(MessageType type,Pageable pageRequest){
-		return mr.findMessageByType(type, pageRequest);
-	}
-	
+  @Autowired
+  private MessageRepository mr;
+  /**
+   * 
+   * @Description: 查询一个业务收到的所有信息
+   * @param @param receiver
+   * @param @param type
+   * @param @param pageRequest
+   * @param @return   
+   * @return Page<Message>  
+   * @throws
+   * @author changjun
+   * @date 2015年11月20日
+   */
+  public Page<Message> findMessageByReceiver(String receiver,Pageable pageRequest){
+    return mr.findMessage(receiver, pageRequest);
+  }
+  /**
+   * 
+   * @Description: 根据渠道类型包含的接收者查询
+   * @param @param Channel
+   * @param @param type
+   * @param @param receiver
+   * @param @param pageRequest
+   * @param @return   
+   * @return Page<Message>  
+   * @throws
+   * @author changjun
+   * @date 2015年11月20日
+   */
+  public Page<Message> findByChannelAndTypeAndReceiverContaining(SendChannel Channel,String receiver,String content,Pageable pageRequest){
+    return  mr.findByChannelAndReceiverAndContentContaining(Channel,receiver,content,pageRequest);
+  }
+  /**
+   * 
+   * @Description: 推送返回失败  把错误信息保存
+   * @param @param result
+   * @param @param id
+   * @param @return   
+   * @return boolean  
+   * @throws
+   * @author changjun
+   * @date 2015年11月20日
+   */
+  @Transactional
+  public void updateMessageResult(String result,Long id){
+     mr.updateMessageResult(result, id);
+  }
+  
+  public void save(Message mes) {
+    mr.save(mes);
+  }
+  public Message findOne(Long long1) {
+    return mr.findOne(long1);
+  }
+  /**
+   * 
+   * @Description: 根据消息类型获取消息列表
+   * @param @param type
+   * @param @param pageRequest
+   * @param @return   
+   * @return Page<Message>  
+   * @throws
+   * @author changjun
+   * @date 2015年11月30日
+   */
+  public Page<Message> findMessageByType(MessageType type,Pageable pageRequest){
+    return mr.findMessageByType(type, pageRequest);
+  }
+  
 }
