@@ -21,11 +21,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.ApplyPrice;
 import com.wangge.app.server.entity.Order;
 import com.wangge.app.server.entity.OrderItem;
+import com.wangge.app.server.repository.RegistDataRepository;
 import com.wangge.app.server.repositoryimpl.ExamImpl;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.service.ApplyPriceService;
 import com.wangge.app.server.service.MessageService;
 import com.wangge.app.server.service.OrderService;
+import com.wangge.app.server.service.RegistDataService;
+import com.wangge.app.server.util.HttpUtil;
 import com.wangge.app.server.util.SortUtil;
 import com.wangge.app.server.vo.Apply;
 import com.wangge.app.server.vo.Exam;
@@ -52,6 +55,8 @@ public class MineController {
 	
 	@Resource
 	private ApplyPriceService aps;
+	@Resource
+	private RegistDataService rds;
 	/**
 	 * 
 	 * @Description: 根据业务手机号订单号判断该订单是否属于该业务员并返回订单详情
@@ -90,6 +95,8 @@ public class MineController {
       jo.put("itemOtherNum", order.getItems().size()-skuNum);
       jo.put("goods", sb);
       jo.put("payType", order.getPayMent().getName());
+      String Coordinate = rds.findByMemberId(order.getMemberId()).getSaojieData().getCoordinate();
+      jo.put("point",Coordinate!= null ? Coordinate : "");
 			if(regionId.equals(order.getRegion().getId())){
 				if(opl.checkByOrderNum(ordernum)){
 				  jo.put("state", "正常订单");
@@ -209,6 +216,7 @@ public class MineController {
 	 */
 	@RequestMapping(value = "/custSignFor",method = RequestMethod.POST)
 	public ResponseEntity<JSONObject> custSignFor(@RequestBody  JSONObject json){
+	  String status = "";
 	  //收款方式
 	    String paytype = json.getString("paytype");
 	  //纬度
@@ -217,11 +225,21 @@ public class MineController {
 //	  String longitude = json.getString("longitude");
 	  
 	    String point = json.getString("longitude") +"-"+  json.getString("latitude");
-//		String mobile = json.getString("mobile");
-//		String code = json.getString("code");
-//		String str = this.validateCode(mobile,code);
-	    JSONObject jo = new JSONObject();
-			String status =  opl.updateOrderShipStateByOrderNum(json.getString("ordernum"),paytype, point,"3",2);
+		  String mobile = json.getString("mobile");
+		  String code = json.getString("code");
+		  JSONObject jo = new JSONObject();
+		  if(code != null && !"".equals(code)){
+		    String str = this.validateCode(mobile,code);
+	     
+	      if("suc".equals(str)){
+	         status =  opl.updateOrderShipStateByOrderNum(json.getString("ordernum"),paytype, point,"3",2);
+	      }else{
+	        status = str;
+	      }
+		  }else{
+		    status =  opl.updateOrderShipStateByOrderNum(json.getString("ordernum"),paytype, point,"3",2);
+		  }
+			
 			jo.put("state", status);
 			return new ResponseEntity<JSONObject>( jo, HttpStatus.OK);
 	}
@@ -235,20 +253,20 @@ public class MineController {
 	 * @author changjun
 	 * @date 2015年12月1日
 	 */
-//	@RequestMapping(value = "/sendCode",method = RequestMethod.POST)
-//	public ResponseEntity<JSONObject> sendCode(@RequestBody  JSONObject json){
-//		String mobile = json.getString("mobile");
-//		//192.168.2.252:80
-//		String msg = HttpUtil.sendPost("http://115.28.92.73:28501/member/getValidateCode/"+mobile+".html","");
-//		System.out.println("msg==="+msg);
-//		JSONObject jo = new JSONObject();
-//		if(msg!=null && msg.contains("true")){
-//			jo.put("state", true);
-//			return new ResponseEntity<JSONObject>( jo, HttpStatus.OK);
-//		}
-//		jo.put("state", false);
-//		return new ResponseEntity<JSONObject>( jo, HttpStatus.OK);
-//	}
+	@RequestMapping(value = "/sendCode",method = RequestMethod.POST)
+	public ResponseEntity<JSONObject> sendCode(@RequestBody  JSONObject json){
+		String mobile = json.getString("mobile");
+		//192.168.2.252:80
+		String msg = HttpUtil.sendPost("http://www.3j1688.com/member/getValidateCode/"+mobile+".html","");
+		System.out.println("msg==="+msg);
+		JSONObject jo = new JSONObject();
+		if(msg!=null && msg.contains("true")){
+			jo.put("state", true);
+			return new ResponseEntity<JSONObject>( jo, HttpStatus.OK);
+		}
+		jo.put("state", false);
+		return new ResponseEntity<JSONObject>( jo, HttpStatus.OK);
+	}
 	/**
 	 * 
 	 * @Description: 验证码验证
@@ -260,18 +278,18 @@ public class MineController {
 	 * @author changjun
 	 * @date 2015年12月19日
 	 */
-//	public String validateCode(String mobile,String code){
-//		String msg = HttpUtil.sendPost("http://115.28.92.73:28501/member/existMobileCode/"+mobile+"_"+code+".html","");
-//		if(msg!=null && msg.contains("true")){
-//			return "suc";
-//		}else{
-//			if(msg.contains("手机验证码超时")){
-//				return "手机验证码超时";
-//			}else{
-//				return "手机验证码不正确";
-//			}
-//		}
-//	}
+	public String validateCode(String mobile,String code){
+		String msg = HttpUtil.sendPost("http://www.3j1688.com/member/existMobileCode/"+mobile+"_"+code+".html","");
+		if(msg!=null && msg.contains("true")){
+			return "suc";
+		}else{
+			if(msg.contains("手机验证码超时")){
+				return "手机验证码超时";
+			}else{
+				return "手机验证码不正确";
+			}
+		}
+	}
 	
 	
 	/**

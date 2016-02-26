@@ -1,5 +1,7 @@
 package com.wangge.app.server.service;
 
+import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -12,16 +14,14 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.wangge.app.server.entity.Assess;
 import com.wangge.app.server.entity.Assess.AssessStatus;
-import com.wangge.app.server.entity.Regist;
-import com.wangge.app.server.entity.Regist.RegistStatus;
 import com.wangge.app.server.entity.Salesman;
+import com.wangge.app.server.pojo.Color;
 import com.wangge.app.server.repository.AssessRepository;
-import com.wangge.app.server.repository.RegistDataRepository;
-import com.wangge.app.server.repository.RegistRepository;
 import com.wangge.app.server.repository.SalesmanRepository;
+import com.wangge.app.server.repositoryimpl.ActiveImpl;
 import com.wangge.app.server.vo.RegionVo;
+import com.wangge.app.server.vo.RegistAreaVo;
 import com.wangge.common.entity.Region;
-import com.wangge.common.repository.RegionRepository;
 
 /**
  * 
@@ -37,6 +37,8 @@ public class AssessService {
   private AssessRepository assessRepository;
   @Autowired
   private RegionService regionService;
+  @Resource
+  private ActiveImpl apl;
 
   /**
    * 
@@ -48,6 +50,57 @@ public class AssessService {
    * @date 2016年1月16日
    * @version V2.0
    */
+  
+  public List<RegistAreaVo>  getRegistRegions(Salesman salesman){
+    List<RegistAreaVo> vo = new ArrayList<RegistAreaVo>();
+    List<Assess> assTasks = assessRepository.findBySalesman(salesman);
+    for(Assess assess : assTasks){
+    //  if (AssessStatus.PENDING.equals(assess.getStatus()) || AssessStatus.AGREE.equals(assess.getStatus())) {
+    //    if (AssessStatus.PENDING.equals(assess.getStatus())) {
+          String assArea = assess.getAssessDefineArea();
+          if(assArea != null && !"".equals(assArea)){
+            String[] strRegion = assArea.split(",");
+            for (int i = 0; i < strRegion.length; i++) {
+              Region region = regionService.findRegion(strRegion[i].trim());
+              if(region != null && !"".equals(region)){
+                RegistAreaVo r = new RegistAreaVo();
+                r.setId(region.getId());
+                r.setName(region.getName());
+                r.setCoordinates(region.getCoordinates());
+                r.setColorStatus(getPercent(region.getId()).getNum());;
+                vo.add(r);
+              }
+            }
+          }
+        }
+  //    }
+   // }
+    return vo;
+  }
+  
+  private Color getPercent(String area){
+    Double a =  apl.examTwiceShopNum(area);
+    Double b = assessRepository.countByAssessDefineArea(area);
+    if(b <= 0){
+      return Color.black;
+    }
+    if(a/b > 0.4){
+      return Color.green;
+    }else {
+      Double c = apl.examOneceShopNum(area);
+      if(c/b > 0.5){
+        return Color.yellow;
+      }else{
+        return Color.black;
+      }
+
+    }
+    
+   
+  }
+  
+  
+  
   public Map<String, List<RegionVo>> getRegistRegion(Salesman salesman) {
     Map<String, List<RegionVo>> result = Maps.newHashMap();
     List<RegionVo> dev = Lists.newArrayList();
@@ -137,6 +190,11 @@ public class AssessService {
     
     assessRepository.save(assess);
     return "OK";
+  }
+
+  public Double countByAssessDefineArea(String area) {
+    
+    return assessRepository.countByAssessDefineArea(area);
   }
   
 }

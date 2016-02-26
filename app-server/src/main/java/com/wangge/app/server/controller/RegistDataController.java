@@ -25,8 +25,12 @@ import com.wangge.app.server.entity.Regist.RegistStatus;
 import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.SaojieData;
+import com.wangge.app.server.pojo.Color;
 import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.repository.SaojieDataRepository;
+import com.wangge.app.server.repositoryimpl.ActiveImpl;
+import com.wangge.app.server.repositoryimpl.DateInterval;
+import com.wangge.app.server.repositoryimpl.PickingImpl;
 import com.wangge.app.server.service.AssessService;
 import com.wangge.app.server.service.DataSaojieService;
 import com.wangge.app.server.service.RegistDataService;
@@ -52,6 +56,12 @@ public class RegistDataController {
 	private AssessService assessService;
 	@Resource
 	private SaojieDataRepository dataSaojieRepository;
+	@Resource
+	private ActiveImpl apl;
+	@Resource
+	private PickingImpl ppl;
+	@Resource
+	private DateInterval dateInterval;
 
 	/**
 	 * 
@@ -65,13 +75,15 @@ public class RegistDataController {
 	 * @version V2.0
 	 */
 	@RequestMapping(value = "/{regionId}/regist_data", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, List<SaojieData>>> list(@PathVariable("regionId") String regionId) {
+	public ResponseEntity<List<SaojieData>> list(@PathVariable("regionId") String regionId) {
 
 		List<SaojieData> Data = dataSaojieService.getSaojieDataByregion(regionId);
-		Map<String, List<SaojieData>> result = Maps.newHashMap();
-		List<SaojieData> listsj = new ArrayList<SaojieData>();
-		List<SaojieData> listrg = new ArrayList<SaojieData>();
-		for (SaojieData sj : Data) {
+	//	Map<String, List<SaojieData>> result = Maps.newHashMap();
+	//	List<SaojieData> listsj = new ArrayList<SaojieData>();
+	//	List<SaojieData> listrg = new ArrayList<SaojieData>();
+	  List<SaojieData> list = new ArrayList<SaojieData>();
+		
+		/*for (SaojieData sj : Data) {
 			if (sj.getRegistData() != null && !"".equals(sj.getRegistData())) {
 				SaojieData sjdata = new SaojieData();
 				sjdata.setId(sj.getId());
@@ -94,9 +106,75 @@ public class RegistDataController {
 			}
 		}
 		result.put("regShop", listsj);
-		result.put("unregShop", listrg);
-		return new ResponseEntity<Map<String, List<SaojieData>>>(result, HttpStatus.OK);
+		result.put("unregShop", listrg);*/
+	  
+	  for(SaojieData sj : Data){
+	      SaojieData sjdata = new SaojieData();
+        sjdata.setId(sj.getId());
+        sjdata.setImageUrl(sj.getImageUrl());
+        sjdata.setName(sj.getName());
+        sjdata.setCoordinate(sj.getCoordinate());
+        sjdata.setDescription(sj.getDescription());
+        // sjdata.setRegion(sj.getRegion());
+        if(sj.getRegistData() != null){
+         String memberId = sj.getRegistData().getMemberId();
+          sjdata.setRegistId(sj.getRegistData().getId());
+          sjdata.setDateInterval(dateInterval.examDateInterval(memberId));
+          sjdata.setColorStatus(getPercent(memberId).getNum());
+          sjdata.setIncSize(getPickingSize(memberId));
+        }else{
+          sjdata.setDateInterval(-1);
+          sjdata.setColorStatus(Color.gray.getNum());
+         // sjdata.setIncSize(1);
+        }
+        
+       
+        list.add(sjdata);
+	  }
+		return new ResponseEntity< List<SaojieData>>(list, HttpStatus.OK);
 	}
+	
+	/**
+	 * 
+	* @Title: getPercent 
+	* @Description: TODO(根据当前请求日期到月初所请求区域所有注册商家的二次提货量的商家总和返回请求区域的销售状态值(以颜色区分当前区域的销售情况)) 
+	* @param @param area
+	* @param @return    设定文件 
+	* @return Color    返回类型 
+	* @throws
+	 */
+	 private Color getPercent(String memberId){
+	    Double a =  apl.examTwiceShop(memberId);
+	   /* Double b = assessService.countByAssessDefineArea(area);
+	    if(b <= 0){
+	      return Color.black;
+	    }*/
+	    if(a > 0){
+	      return Color.green;
+	    }else {
+	      Double c = apl.examOneceShop(memberId);
+	      if(c > 0){
+	          return Color.yellow;
+	      }
+          return Color.black;
+	    }
+	 }
+	 /**
+	  * 
+	 * @Title: getPickingSize 
+	 * @Description: TODO(根据当前请求日期到月初请求区域的商家的提货量判断是否为大客户) 
+	 * @param @param area
+	 * @param @return    设定文件 
+	 * @return int    返回类型 
+	 * @throws
+	  */
+	 private int getPickingSize(String memberId){
+	   int totalItenNum = ppl.examPickingNum(memberId);
+	   if(totalItenNum > 20){
+	     return 2;
+	   }
+	   return 1;
+	 }
 
 	/**
 	 * 
@@ -142,6 +220,7 @@ public class RegistDataController {
 				data.setReceivingAddress(member.get("ADDRESS"));
 				data.setPhoneNum(member.get("MOBILE"));
 				data.setShopName(member.get("SHOPNAME"));
+				data.setMemberId(member.get("MEMBERID"));
 				RegistData registData = registDataService.addRegistData(data);
 				
 				// 更新扫街

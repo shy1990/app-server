@@ -69,4 +69,8 @@ public class RegistDataService {
 		return memberImpl.findMemberInfo(loginAccount);
 	}
 
+  public RegistData findByMemberId(String memberId) {
+    return registDataRepository.findByMemberId(memberId);
+  }
+
 }

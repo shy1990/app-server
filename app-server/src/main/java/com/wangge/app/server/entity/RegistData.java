@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -69,6 +70,10 @@ public class RegistData extends AbstractPersistable<Long> {
 	@Column(name = "IMAGE_URL3")
 	private String imageUrl3;
 	private String description = "";
+	@Column(name = "MEMBER_ID")
+	private String memberId;
+	@OneToOne(mappedBy = "registData")
+  private SaojieData saojieData;
 	
   public RegistData() {
 		super();
@@ -246,5 +251,21 @@ public class RegistData extends AbstractPersistable<Long> {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
+  public SaojieData getSaojieData() {
+    return saojieData;
+  }
+
+  public void setSaojieData(SaojieData saojieData) {
+    this.saojieData = saojieData;
+  }
+
+  public String getMemberId() {
+    return memberId;
+  }
+
+  public void setMemberId(String memberId) {
+    this.memberId = memberId;
+  }
+  
 }

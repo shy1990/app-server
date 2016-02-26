@@ -26,6 +26,7 @@ import com.wangge.app.server.service.RegionService;
 import com.wangge.app.server.service.RegistService;
 import com.wangge.app.server.service.SalesmanService;
 import com.wangge.app.server.vo.RegionVo;
+import com.wangge.app.server.vo.RegistAreaVo;
 
 @RestController
 @RequestMapping(value = "/v1")
@@ -50,11 +51,13 @@ public class RegistController {
 	 * @version V2.0
 	 */
 	@RequestMapping(value="/{id}/regist",method=RequestMethod.GET)
-	public ResponseEntity<Map<String,List<RegionVo>>> salesmanRegions(@PathVariable("id") Salesman salesman){
+	public ResponseEntity<List<RegistAreaVo>> salesmanRegions(@PathVariable("id") Salesman salesman){
 
-	     Map<String, List<RegionVo>>   regionMap = assessService.getRegistRegion(salesman);
+	   //  Map<String, List<RegionVo>>   regionMap = assessService.getRegistRegion(salesman);
+	     
+	     List<RegistAreaVo> voList = assessService.getRegistRegions(salesman);
 	   
-		return new ResponseEntity<Map<String,List<RegionVo>>>(regionMap,HttpStatus.OK);
+		return new ResponseEntity<List<RegistAreaVo>>(voList,HttpStatus.OK);
 	}
 	
 	/**

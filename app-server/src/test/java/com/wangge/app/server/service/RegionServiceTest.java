@@ -15,6 +15,8 @@ import com.wangge.AppServerApplication;
 import com.wangge.app.server.entity.SaojieData;
 import com.wangge.app.server.repository.SalesmanRepository;
 import com.wangge.app.server.repository.SaojieDataRepository;
+import com.wangge.app.server.repositoryimpl.ActiveImpl;
+import com.wangge.app.server.repositoryimpl.ExamImpl;
 import com.wangge.common.entity.Region;
 import com.wangge.common.repository.RegionRepository;
 
@@ -31,6 +33,9 @@ public class RegionServiceTest {
 	private RegionRepository rt;
 	@Resource
 	private SaojieDataRepository sdr;
+	
+	@Resource
+  private ActiveImpl apl;
 	@Test
 	public void testGetSaojie() {
 		
@@ -53,4 +58,14 @@ public class RegionServiceTest {
 		SaojieData sjd2 = sdr.findOne(id);
 		System.out.println("name=============="+sjd2.getName());
 	}
+	
+	@Test
+	public void test(){
+	   Double a = 10.0;
+	   Double b=15.0;
+	   if(a/b > 0.4){
+	   System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>===<<<<<<<<<<<<<<<<<<<<<<<<");
+	   }
+	}
+	
 }

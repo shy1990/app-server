@@ -13,6 +13,7 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.wangge.app.server.pojo.Color;
 import com.wangge.common.entity.Region;
 import com.wangge.core.entity.AbstractPersistable;
 
@@ -49,6 +50,12 @@ public class SaojieData extends AbstractPersistable<Long> {
 	private RegistData registData;
 	@Transient
 	private Long registId;
+	@Transient
+	private int colorStatus;
+	@Transient
+	private int incSize;
+	@Transient
+	private int dateInterval;
 	
 	public SaojieData() {
 		super();
@@ -132,5 +139,27 @@ public class SaojieData extends AbstractPersistable<Long> {
 		this.registId = registId;
 	}
 
-	
+	public int getColorStatus() {
+    return colorStatus;
+  }
+  public void setColorStatus(int colorStatus) {
+    this.colorStatus = colorStatus;
+  }
+
+  public int getIncSize() {
+    return incSize;
+  }
+
+  public void setIncSize(int incSize) {
+    this.incSize = incSize;
+  }
+
+  public int getDateInterval() {
+    return dateInterval;
+  }
+
+  public void setDateInterval(int dateInterval) {
+    this.dateInterval = dateInterval;
+  }
+  
 }

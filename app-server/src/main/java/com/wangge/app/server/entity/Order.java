@@ -72,6 +72,8 @@ public class Order implements Serializable {
 	private Region region;
 	@Column(name="mobile")
 	private String mobile;//客户手机号
+	@Column(name="member_id")
+	private String memberId;//b2b商城用户id
 	
 	public String getMobile() {
 		return mobile;
@@ -145,4 +147,12 @@ public class Order implements Serializable {
 		this.region = region;
 	}
 
+  public String getMemberId() {
+    return memberId;
+  }
+
+  public void setMemberId(String memberId) {
+    this.memberId = memberId;
+  }
+	
 }
