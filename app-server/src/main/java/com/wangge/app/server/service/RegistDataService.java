@@ -73,4 +73,9 @@ public class RegistDataService {
     return registDataRepository.findByMemberId(memberId);
   }
 
+  public Double countByRegionId(String area) {
+    // TODO Auto-generated method stub
+    return registDataRepository.countByRegionId(area);
+  }
+
 }
