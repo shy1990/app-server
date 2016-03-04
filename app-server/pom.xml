@@ -100,6 +100,11 @@
 		    <version>2.3.1</version>
 		</dependency>
 		<dependency>
+		  <groupId>com.qq.xg</groupId>
+		  <artifactId>XingeApp</artifactId>
+		  <version>1.17</version>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpcore</artifactId>
 			<version>4.4.3</version>

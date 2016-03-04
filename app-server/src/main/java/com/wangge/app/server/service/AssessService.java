@@ -39,6 +39,8 @@ public class AssessService {
   private RegionService regionService;
   @Resource
   private ActiveImpl apl;
+  @Resource
+  private RegistDataService registDataService;
 
   /**
    * 
@@ -80,7 +82,7 @@ public class AssessService {
   
   private Color getPercent(String area){
     Double a =  apl.examTwiceShopNum(area);
-    Double b = assessRepository.countByAssessDefineArea(area);
+    Double b = registDataService.countByRegionId(area);
     if(b <= 0){
       return Color.black;
     }

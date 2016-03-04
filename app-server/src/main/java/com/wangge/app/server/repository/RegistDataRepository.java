@@ -26,6 +26,8 @@ public interface RegistDataRepository extends JpaRepository<RegistData, Long>{
 	public int findDayNum(Salesman salesman);
 
   public RegistData findByMemberId(String memberId);
+
+  public Double countByRegionId(String area);
 	
 //	List<RegistData> findByRegist(Regist regist);
 }
