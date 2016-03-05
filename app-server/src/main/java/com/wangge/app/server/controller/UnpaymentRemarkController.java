@@ -23,7 +23,7 @@ import com.wangge.app.server.service.UnpaymentRemarkService;
 @RestController
 @RequestMapping("/v1/ur")
 public class UnpaymentRemarkController {
-  private static Logger logger = Logger.getLogger("UnpaymentRemarkController");
+  private static Logger logger = Logger.getLogger(UnpaymentRemarkController.class);
   @Resource
   private UnpaymentRemarkService urs;
   @Resource
