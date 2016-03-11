@@ -61,7 +61,11 @@ public class Salesman extends AbstractPersistable<String> {
 		super();
 	}
 
-	public Region getRegion() {
+	public Salesman(String salesmanId) {
+    this.id = salesmanId;
+  }
+
+  public Region getRegion() {
 		return region;
 	}
 
