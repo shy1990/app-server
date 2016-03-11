@@ -11,15 +11,15 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.wangge.app.server.entity.Region;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.Saojie;
 import com.wangge.app.server.entity.Saojie.SaojieStatus;
+import com.wangge.app.server.repository.RegionRepository;
 import com.wangge.app.server.repository.SalesmanRepository;
 import com.wangge.app.server.repository.SaojieRepository;
 import com.wangge.app.server.vo.RegionVo;
 import com.wangge.app.server.vo.TreeVo;
-import com.wangge.common.entity.Region;
-import com.wangge.common.repository.RegionRepository;
 
 @Service
 public class RegionService {
@@ -44,26 +44,21 @@ public class RegionService {
 		// TODO 可用java8 stream过滤
 		for (Saojie taskSaojie : saojieTasks) {
 		//	if (SaojieStatus.PENDING.equals(taskSaojie.getStatus())) {
-				for(Saojie Saojie : taskSaojie.getChildren()){
-					if(SaojieStatus.PENDING.equals(Saojie.getStatus()) || SaojieStatus.AGREE.equals(Saojie.getStatus())){
+					if(SaojieStatus.PENDING.equals(taskSaojie.getStatus()) || SaojieStatus.AGREE.equals(taskSaojie.getStatus())){
 						RegionVo r = new RegionVo();
-						r.setId(Saojie.getRegion().getId());
-						r.setName(Saojie.getRegion().getName());
-						r.setCoordinates(Saojie.getRegion().getCoordinates());
-						r.setMinValue(Saojie.getMinValue());
+						r.setId(taskSaojie.getRegion().getId());
+						r.setName(taskSaojie.getRegion().getName());
+						r.setCoordinates(taskSaojie.getRegion().getCoordinates());
+						r.setMinValue(taskSaojie.getMinValue());
 						can.add(r);
 					}else{
 						RegionVo r = new RegionVo();
-						r.setId(Saojie.getRegion().getId());
-						r.setName(Saojie.getRegion().getName());
-						r.setCoordinates(Saojie.getRegion().getCoordinates());
-						r.setMinValue(Saojie.getMinValue());
+						r.setId(taskSaojie.getRegion().getId());
+						r.setName(taskSaojie.getRegion().getName());
+						r.setCoordinates(taskSaojie.getRegion().getCoordinates());
+						r.setMinValue(taskSaojie.getMinValue());
 						cant.add(r);
 					}
-					
-				}
-				
-		//	}
 		}
 		result.put("open", can);
 		result.put("nopen", cant);

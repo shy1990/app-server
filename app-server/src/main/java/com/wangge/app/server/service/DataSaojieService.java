@@ -1,6 +1,7 @@
 package com.wangge.app.server.service;
 
-import java.util.ArrayList;import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -8,16 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.wangge.app.server.entity.Region;
 import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.SalesmanStatus;
 import com.wangge.app.server.entity.Saojie;
-import com.wangge.app.server.entity.SaojieData;
 import com.wangge.app.server.entity.Saojie.SaojieStatus;
+import com.wangge.app.server.entity.SaojieData;
+import com.wangge.app.server.repository.RegionRepository;
 import com.wangge.app.server.repository.SaojieDataRepository;
 import com.wangge.app.server.repository.SaojieRepository;
-import com.wangge.common.entity.Region;
-import com.wangge.common.repository.RegionRepository;
 
 @Service
 public class DataSaojieService {

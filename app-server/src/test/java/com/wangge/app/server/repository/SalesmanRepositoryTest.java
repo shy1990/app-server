@@ -8,10 +8,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.wangge.AppServerApplication;
 import com.wangge.app.server.entity.Salesman;
-import com.wangge.common.repository.RegionRepository;
-import com.wangge.security.entity.User;
-import com.wangge.security.entity.User.UserStatus;
-import com.wangge.security.repository.UserRepository;
+import com.wangge.app.server.entity.User;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = AppServerApplication.class)
@@ -32,10 +29,10 @@ public class SalesmanRepositoryTest {
 		user.setNickname("业务01");
 		user.setPassword("123456");
 		user.setPhone("18615696354");
-		user.setStatus(UserStatus.NORMAl);
+		user.setStatus(User.UserStatus.NORMAL);
 		user.setUsername("yewu01");
 		ur.save(user);
-		entity.setUser(user);
+	//	entity.setUser(user);
 		sr.save(entity);
 	}
 	@Test

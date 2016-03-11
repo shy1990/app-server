@@ -22,6 +22,7 @@ import com.wangge.app.server.entity.ApplyPrice;
 import com.wangge.app.server.entity.Order;
 import com.wangge.app.server.entity.OrderItem;
 import com.wangge.app.server.entity.RegistData;
+import com.wangge.app.server.repository.RegionRepository;
 import com.wangge.app.server.repositoryimpl.ExamImpl;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.service.ApplyPriceService;
@@ -33,7 +34,6 @@ import com.wangge.app.server.util.SortUtil;
 import com.wangge.app.server.vo.Apply;
 import com.wangge.app.server.vo.Exam;
 import com.wangge.app.server.vo.OrderPub;
-import com.wangge.common.repository.RegionRepository;
 
 @RestController
 @RequestMapping(value = "/v1/mine")

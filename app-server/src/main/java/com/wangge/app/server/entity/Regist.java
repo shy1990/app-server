@@ -1,5 +1,6 @@
 package com.wangge.app.server.entity;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -26,8 +27,6 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.wangge.common.entity.Region;
-import com.wangge.core.entity.AbstractPersistable;
 
 /**
  * 注册
@@ -37,7 +36,7 @@ import com.wangge.core.entity.AbstractPersistable;
  */
 @Entity
 @Table(name = "BIZ_REGIST")
-public class Regist extends AbstractPersistable<Long> {
+public class Regist implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public enum RegistStatus {
@@ -102,7 +101,6 @@ public class Regist extends AbstractPersistable<Long> {
 		super();
 	}
 
-	@Override
 	public Long getId() {
 		return id;
 	}

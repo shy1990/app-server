@@ -11,7 +11,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.wangge.AppServerApplication;
 import com.wangge.app.server.entity.Saojie;
 import com.wangge.app.server.entity.Saojie.SaojieStatus;
-import com.wangge.common.repository.RegionRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = AppServerApplication.class)

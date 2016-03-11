@@ -8,12 +8,12 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wangge.app.server.entity.Region;
 import com.wangge.app.server.entity.Regist;
 import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.repository.RegistDataRepository;
 import com.wangge.app.server.repository.RegistRepository;
 import com.wangge.app.server.repositoryimpl.MemberImpl;
-import com.wangge.common.entity.Region;
 
 @Service
 public class RegistDataService {

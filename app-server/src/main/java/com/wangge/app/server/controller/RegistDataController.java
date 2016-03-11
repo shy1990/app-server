@@ -18,10 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.Maps;
-import com.wangge.app.server.entity.Assess;
-import com.wangge.app.server.entity.Regist;
-import com.wangge.app.server.entity.Regist.RegistStatus;
+import com.wangge.app.server.entity.Region;
 import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.SaojieData;
@@ -36,7 +33,6 @@ import com.wangge.app.server.service.DataSaojieService;
 import com.wangge.app.server.service.RegistDataService;
 import com.wangge.app.server.service.RegistService;
 import com.wangge.app.server.service.SalesmanService;
-import com.wangge.common.entity.Region;
 
 @RestController
 @RequestMapping(value = "/v1")

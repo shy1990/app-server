@@ -21,13 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wangge.app.server.entity.Region;
 import com.wangge.app.server.entity.Saojie;
-import com.wangge.app.server.entity.Saojie.SaojieStatus;
 import com.wangge.app.server.entity.SaojieData;
 import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.service.DataSaojieService;
 import com.wangge.app.server.util.UploadUtil;
-import com.wangge.common.entity.Region;
 
 @RestController
 @RequestMapping(value = "/v1")
@@ -38,9 +37,9 @@ public class SaojieDataController {
 	private DataSaojieService dataSaojieService;
 
 	// private static String url="http://192.168.2.247/uploadfile/"; 内网测试
-	// private static String url="http://imagetest.3j168.cn/uploadfile/";
+	 private static String url="http://imagetest.3j168.cn/uploadfile/";
 	// //外网测试环境
-	private static String url = "http://image.3j1688.com/uploadfile/"; // 外网正式环境
+	//private static String url = "http://image.3j1688.com/uploadfile/"; // 外网正式环境
 
 	/**
 	 * 获取指定业务扫街数据
@@ -96,6 +95,7 @@ public class SaojieDataController {
 				sj.setCoordinate(saojiedata.getCoordinate());
 				sj.setDescription(saojiedata.getDescription());
 				sj.setImageUrl(saojiedata.getImageUrl());
+				sj.setSaojieDate(new Date());
 				json.setMsg("保存成功！");
 				json.setObj(sj);
 			} else {

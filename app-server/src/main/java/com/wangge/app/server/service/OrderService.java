@@ -1,17 +1,10 @@
 package com.wangge.app.server.service;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,9 +13,9 @@ import org.springframework.web.client.RestTemplate;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.Order;
+import com.wangge.app.server.entity.Region;
 import com.wangge.app.server.repository.OrderRepository;
 import com.wangge.app.server.vo.OrderPub;
-import com.wangge.common.entity.Region;
 @Service
 public class OrderService {
   @Autowired

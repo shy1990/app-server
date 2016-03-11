@@ -22,14 +22,14 @@
 		<start-class>com.wangge.AppServerApplication</start-class>
 	</properties>
 	<dependencies>
-		<dependency>
-			<groupId>com.wangge</groupId>
-			<artifactId>security</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.wangge</groupId>
-			<artifactId>common</artifactId>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.wangge</groupId> -->
+<!-- 			<artifactId>security</artifactId> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.wangge</groupId> -->
+<!-- 			<artifactId>common</artifactId> -->
+<!-- 		</dependency> -->
 		<!-- shiro -->
 		<dependency>
 			<groupId>org.apache.shiro</groupId>

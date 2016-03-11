@@ -15,7 +15,6 @@ import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.service.AssessService;
 import com.wangge.app.server.service.SalesmanService;
-import com.wangge.security.entity.User;
 
 @RestController
 @RequestMapping(value = "/v1")

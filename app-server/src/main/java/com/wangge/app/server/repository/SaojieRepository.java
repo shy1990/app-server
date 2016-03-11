@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import com.wangge.app.server.entity.Region;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.Saojie;
-import com.wangge.common.entity.Region;
 
 public interface SaojieRepository extends JpaRepository<Saojie, Long> {
 	List<Saojie> findBySalesman(Salesman salesman);

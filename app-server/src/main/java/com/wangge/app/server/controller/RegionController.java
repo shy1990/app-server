@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.wangge.app.server.entity.Region;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.Saojie;
 import com.wangge.app.server.service.RegionService;
@@ -21,7 +22,6 @@ import com.wangge.app.server.service.SalesmanService;
 import com.wangge.app.server.service.SaojieService;
 import com.wangge.app.server.vo.RegionVo;
 import com.wangge.app.server.vo.TreeVo;
-import com.wangge.common.entity.Region;
 
 /**
  * 
