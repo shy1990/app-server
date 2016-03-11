@@ -17,7 +17,7 @@ public class ScheduledTasks {
   
   private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
   //@Scheduled(cron = "*/6 * * * * *")
-  @Scheduled(cron = "*/10 * *  * * * ")
+  @Scheduled(cron = "*/10 * 7-20  * * * ")
   public void reportCurrentTime() {
     
     XingeApp xinge = new XingeApp(2100183465, "1bb83a34cdb8ca8b41dcd37b028139d2");
