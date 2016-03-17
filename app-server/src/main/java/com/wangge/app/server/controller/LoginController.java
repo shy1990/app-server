@@ -65,6 +65,7 @@ public class LoginController {
 		json.setRegionId(salesman.getRegion().getId());
 		json.setId(salesman.getId());
 		json.setStatus(salesman.getStatus().getNum());
+		json.setIsOldSalesman(salesman.getIsOldSalesman());
 		json.setMsg("登陆成功！");
 		json.setStage(salesman.getAssessStage());
 		return new ResponseEntity<Json>(json, HttpStatus.OK);

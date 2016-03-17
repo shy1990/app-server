@@ -2,6 +2,9 @@ package com.wangge.app.server.pojo;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 /**
  * 
 * @ClassName: Json
@@ -9,16 +12,21 @@ import java.io.Serializable;
 * @author ZhouZhangbao
 * @date 2014-9-4 下午8:03:25
  */
+@JsonInclude(Include.NON_EMPTY)
 public class Json implements Serializable{
 	private static final long serialVersionUID = 1L;
+	@JsonInclude(Include.NON_DEFAULT)
 	private Boolean success=false;//是否成功
 	private String msg;
 	private Object obj;
 	private String id;
 	private String phone;
 	private String regionId;
+	@JsonInclude(Include.NON_DEFAULT)
 	private Integer totalPage;
+	@JsonInclude(Include.NON_DEFAULT)
 	private Integer status; 
+	private int isOldSalesman;
 	
 	//辅助字段
 	private String stage;//第几阶段
@@ -77,5 +85,11 @@ public class Json implements Serializable{
   public void setStage(String stage) {
     this.stage = stage;
   }
-	
+  public int getIsOldSalesman() {
+    return isOldSalesman;
+  }
+  public void setIsOldSalesman(int isOldSalesman) {
+    this.isOldSalesman = isOldSalesman;
+  }
+  
 }
