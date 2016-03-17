@@ -57,6 +57,8 @@ public class OrderSignfor implements Serializable {
   @Transient
   @JsonInclude(Include.NON_DEFAULT)
   private int orderCount;//订单数
+  @Transient
+  private int status;
   
   public int getOrderCount() {
     return orderCount;
@@ -182,6 +184,14 @@ public class OrderSignfor implements Serializable {
 
   public void setPartsCount(int partsCount) {
     this.partsCount = partsCount;
+  }
+
+  public int getStatus() {
+    return status;
+  }
+
+  public void setStatus(int status) {
+    this.status = status;
   }
   
 

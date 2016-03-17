@@ -22,8 +22,8 @@ public class QueryResult<T> {
   public int getTotalPages() {
     return totalPages;
   }
-  public void setTotalPages(int totalPages) {
-    this.totalPages = totalPages;
+  public void setTotalPages(int totalPages,int pageSize) {
+    this.totalPages = totalPages % pageSize == 0 ? totalPages/ pageSize : totalPages/ pageSize + 1;
   }
 	
 }

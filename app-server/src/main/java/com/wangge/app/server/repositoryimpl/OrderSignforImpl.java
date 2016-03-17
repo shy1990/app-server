@@ -57,7 +57,7 @@ public class OrderSignforImpl {
     List<OrderSignfor> olist = createOrderList(query.getResultList());
     QueryResult<OrderSignfor> qr = new QueryResult();
     qr.setContent(olist);
-    qr.setTotalPages(olist.size());
+    qr.setTotalPages(olist.size(),pageSize);
     //Page<OrderSignfor> page = new PageImpl<OrderSignfor>(olist, new PageRequest(pageNo, pageSize), olist.size());
     return qr;
   }
@@ -74,16 +74,16 @@ public class OrderSignforImpl {
   * @throws
    */
   public QueryResult<OrderSignfor> getOrderSignforList(String userPhone, int pageNo, int pageSize) {
-     String sql = "select t.* from (select os.fastmail_no,os.order_status, os.creat_time,count(os.signid) as orderCount from biz_order_signfor os  where os.user_phone = '"+userPhone+"'  group by os.fastmail_no, os.order_status, os.creat_time  having count(os.signid) > 1 ) t order by t.creat_time";
+     String sql = "select t.* from (select os.fastmail_no,os.yewu_signfor_time, os.creat_time,count(os.signid) as orderCount from biz_order_signfor os  where os.user_phone = '"+userPhone+"'  group by os.fastmail_no, os.yewu_signfor_time, os.creat_time  having count(os.signid) > 1 ) t order by t.creat_time";
      Query query = em.createNativeQuery(sql);
      query.setFirstResult(pageNo);
      query.setMaxResults(pageSize);
      List<OrderSignfor> olist = createOrderSignforList(query.getResultList());
      QueryResult<OrderSignfor> qr = new QueryResult();
      qr.setContent(olist);
-     qr.setTotalPages(olist.size());
+     qr.setTotalPages(olist.size(),pageSize);
      
-   //  Page<OrderSignfor> page = new PageImpl<OrderSignfor>(olist, new PageRequest(pageNo, pageSize), olist.size());
+    // Page<OrderSignfor> page = new PageImpl<OrderSignfor>(olist, new PageRequest(pageNo, pageSize), olist.size());
      return qr;
   }
   
@@ -123,6 +123,7 @@ public class OrderSignforImpl {
      return  orderSignforList;
   }
   
+  @SuppressWarnings("unused")
   private List<OrderSignfor> createOrderSignforList(List olist){
     List<OrderSignfor> orderSignforList = new ArrayList<OrderSignfor>();
     SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss");
@@ -132,13 +133,21 @@ public class OrderSignforImpl {
         Object[] o = (Object[])it.next(); 
         OrderSignfor os = new OrderSignfor();
         os.setFastmailNo(String.valueOf(o[0]+""));
-        os.setOrderStatus(Integer.parseInt(o[1]+""));
         os.setOrderCount(Integer.parseInt(o[3]+""));
+       
         try {
+         
           os.setCreatTime( sdf.parse(o[2]+""));
+         
         } catch (ParseException e) {
           // TODO Auto-generated catch block
           e.printStackTrace();
+        }
+        
+        if(o[1]+"" != null){
+          os.setStatus(1);
+        }else{
+          os.setStatus(0);
         }
         orderSignforList.add(os);
       }
