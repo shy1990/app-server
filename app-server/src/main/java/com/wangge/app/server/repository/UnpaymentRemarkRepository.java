@@ -2,6 +2,9 @@ package com.wangge.app.server.repository;
 
 
 
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +23,9 @@ public interface UnpaymentRemarkRepository extends PagingAndSortingRepository<Un
 
   @Query("select ur from UnpaymentRemark ur where ur.salesmanId=?1")
   Page<UnpaymentRemark> findBySalesmanIdOrderByIdDesc(String salesmanId, Pageable pageRequest);
+  
+  @Query("select t from UnpaymentRemark t where t.createTime < ?1 and t.createTime > ( ?1-1)")
+  List<UnpaymentRemark> findByCreateTime(Date date);
   
 
 

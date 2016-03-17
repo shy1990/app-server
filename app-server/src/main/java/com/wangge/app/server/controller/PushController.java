@@ -5,8 +5,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-
 import org.json.JSONObject;
+import org.neo4j.cypher.internal.compiler.v2_1.docbuilders.internalDocBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.wangge.app.server.entity.Message;
 import com.wangge.app.server.entity.Message.MessageType;
 import com.wangge.app.server.entity.Message.SendChannel;
+import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.jpush.client.JpushClient;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.service.MessageService;
+import com.wangge.app.server.service.OrderSignforService;
 
 @RestController
 @RequestMapping({ "/v1/push"})
@@ -29,6 +31,8 @@ public class PushController {
   private MessageService mr;
   @Autowired
   private OrderImpl op;
+  @Resource
+  private OrderSignforService orderSignforService;
   /**
    * 
    * @Description: 新订单推送
@@ -55,18 +59,29 @@ public class PushController {
     String mobile = json.getString("mobiles");
     String accCount = json.getString("accNum");
     String ss = json.getString("username");
+    int skuNum = Integer.parseInt(json.getString("skuNum"));
+    Float amount = Float.parseFloat(json.getString("amount"));
+    String orderno = json.getString("orderNum");
     if(ss.contains("市")){
       ss = ss.substring(ss.indexOf("市")+1,ss.length());
     }
-    String send = ss+",数量:"+json.getString("skuNum")+",金额:"+json.getString("amount")+",订单号:"+json.getString("orderNum");
+    String send = ss+",数量:"+skuNum+",金额:"+amount+",订单号:"+orderno;
   
-    Message mes = new Message();
+   /* Message mes = new Message();
     mes.setChannel(SendChannel.PUSH);
     mes.setType(MessageType.ORDER);
     mes.setSendTime(new Date());
     mes.setContent(msg);
     mes.setReceiver(mobile);
-    mr.save(mes);
+    mr.save(mes);*/
+    OrderSignfor o = new OrderSignfor();
+    o.setOrderNo(orderno);
+    o.setCreatTime(new Date());
+    o.setOrderPrice(amount);
+    o.setPhoneCount(skuNum);
+    o.setPartsCount(Integer.parseInt(accCount));
+    o.setShopName(ss);
+    orderSignforService.saveOrderSignfor(o);
     String str = "";
     try {
       str = JpushClient.sendOrder("下单通知", send,mobile+",18769727652",json.getString("orderNum"),json.getString("skuNum"),json.getString("accNum"),"0");
@@ -74,7 +89,7 @@ public class PushController {
       e.printStackTrace();
     }
      if(str.contains("发送失败")){
-       mr.updateMessageResult(str, mes.getId());
+     //  mr.updateMessageResult(str, mes.getId());
        return false;
      }
        return true;
