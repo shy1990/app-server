@@ -43,22 +43,24 @@ public class OrderSignforImpl {
   * @throws
    */
   public QueryResult<OrderSignfor> getOrderList(String userPhone, String type, int pageNo, int pageSize){
-    String sql = ""; 
+    String sql = ""; String countSql = "";
     if("0".equals(type)){
        sql = "select  os.order_no,os.shop_name,os.creat_time,os.order_status,os.phone_count,os.order_price  from BIZ_ORDER_SIGNFOR os  where os.user_phone = '"+userPhone+"' order by os.signid";
+       countSql = "select count(os.signid)  from BIZ_ORDER_SIGNFOR os  where os.user_phone = '"+userPhone+"' order by os.signid";
     }else{
        sql = "select  os.order_no,os.shop_name,os.creat_time,os.order_status,os.phone_count,os.order_price  from BIZ_ORDER_SIGNFOR os  where os.user_phone = '"+userPhone+"' and os.order_status = 2 order by os.signid";
+       countSql = "select  count(os.signid)  from BIZ_ORDER_SIGNFOR os  where os.user_phone = '"+userPhone+"' and os.order_status = 2 order by os.signid";
     }
     
     Query query = em.createNativeQuery(sql);
-    query.setFirstResult(pageNo);
-    query.setMaxResults(pageSize);
+    if(pageNo !=-1 && pageSize != -1)query.setFirstResult(pageNo*pageSize).setMaxResults(pageSize);
+    BigDecimal a = (BigDecimal)  em.createNativeQuery(countSql).getSingleResult();
     
     List<OrderSignfor> olist = createOrderList(query.getResultList());
     QueryResult<OrderSignfor> qr = new QueryResult();
     qr.setContent(olist);
-    qr.setTotalPages(olist.size(),pageSize);
-    //Page<OrderSignfor> page = new PageImpl<OrderSignfor>(olist, new PageRequest(pageNo, pageSize), olist.size());
+    qr.setTotalPages(Long.parseLong(String.valueOf(a.intValue())),Long.parseLong(String.valueOf(pageSize)));
+   // Page<OrderSignfor> page = new PageImpl<OrderSignfor>(olist, new PageRequest(pageNo, pageSize), Long.parseLong(String.valueOf(a.intValue())));
     return qr;
   }
   /**
@@ -74,16 +76,18 @@ public class OrderSignforImpl {
   * @throws
    */
   public QueryResult<OrderSignfor> getOrderSignforList(String userPhone, int pageNo, int pageSize) {
+   
      String sql = "select t.* from (select os.fastmail_no,os.yewu_signfor_time, os.creat_time,count(os.signid) as orderCount from biz_order_signfor os  where os.user_phone = '"+userPhone+"'  group by os.fastmail_no, os.yewu_signfor_time, os.creat_time  having count(os.signid) > 1 ) t order by t.creat_time";
+     String countSql = "select count(t.fastmail_no) from (select os.fastmail_no,os.yewu_signfor_time, os.creat_time,count(os.signid) as orderCount from biz_order_signfor os  where os.user_phone = '"+userPhone+"'  group by os.fastmail_no, os.yewu_signfor_time, os.creat_time  having count(os.signid) > 1 ) t order by t.creat_time";
      Query query = em.createNativeQuery(sql);
-     query.setFirstResult(pageNo);
-     query.setMaxResults(pageSize);
+     if(pageNo!=-1 && pageSize != -1)query.setFirstResult(pageNo*pageSize).setMaxResults(pageSize);
+     BigDecimal a = (BigDecimal)  em.createNativeQuery(countSql).getSingleResult();
      List<OrderSignfor> olist = createOrderSignforList(query.getResultList());
      QueryResult<OrderSignfor> qr = new QueryResult();
      qr.setContent(olist);
-     qr.setTotalPages(olist.size(),pageSize);
+     qr.setTotalPages(Long.parseLong(String.valueOf(a.intValue())),Long.parseLong(String.valueOf(pageSize)));
      
-    // Page<OrderSignfor> page = new PageImpl<OrderSignfor>(olist, new PageRequest(pageNo, pageSize), olist.size());
+    //Page<OrderSignfor> page = new PageImpl<OrderSignfor>(olist, new PageRequest(pageNo, pageSize), Long.parseLong(String.valueOf(query.getSingleResult())));
      return qr;
   }
   

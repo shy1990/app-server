@@ -1,6 +1,7 @@
 package com.wangge.app.server.pojo;
 
 import java.util.List;
+
 /**
  * ��ѯ���
  * @author dell
@@ -11,7 +12,7 @@ public class QueryResult<T> {
     
 	private List<T> content;
 	
-	private  int totalPages;
+	private  Long totalPages;
 	
   public List<T> getContent() {
     return content;
@@ -19,11 +20,11 @@ public class QueryResult<T> {
   public void setContent(List<T> content) {
     this.content = content;
   }
-  public int getTotalPages() {
+  public Long getTotalPages() {
     return totalPages;
   }
-  public void setTotalPages(int totalPages,int pageSize) {
-    this.totalPages = totalPages % pageSize == 0 ? totalPages/ pageSize : totalPages/ pageSize + 1;
+  public void setTotalPages(Long totalrecord , Long pageSize) {
+    this.totalPages = totalrecord % pageSize == 0 ? totalrecord/ pageSize : totalrecord/ pageSize + 1;
   }
 	
 }
