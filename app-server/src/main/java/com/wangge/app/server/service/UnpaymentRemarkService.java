@@ -1,5 +1,8 @@
 package com.wangge.app.server.service;
 
+import java.util.Date;
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.data.domain.Page;
@@ -36,6 +39,17 @@ public class UnpaymentRemarkService {
    */
   public Page<UnpaymentRemark> findListBySalesmanId(String salesmanId,Pageable pageable) {
     return upr.findBySalesmanIdOrderByIdDesc(salesmanId,pageable);
+  }
+  /**
+   * 
+  * @Title: findByCreateTime 
+  * @Description: TODO(根据时间查询报备记录) 
+  * @param @return    设定文件 
+  * @return List<UnpaymentRemark>    返回类型 
+  * @throws
+   */
+  public List<UnpaymentRemark> findByCreateTime(Date date) {
+    return upr.findByCreateTime(date);
   }
 
 }

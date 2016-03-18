@@ -35,6 +35,8 @@ public class Salesman extends AbstractPersistable<String> {
 	
 	private String simId;
 	
+	private int isOldSalesman;
+	
 	private SalesmanStatus status = SalesmanStatus.saojie;
 	
 
@@ -106,4 +108,12 @@ public class Salesman extends AbstractPersistable<String> {
     this.assessStage = assessStage;
   }
 
+  public int getIsOldSalesman() {
+    return isOldSalesman;
+  }
+
+  public void setIsOldSalesman(int isOldSalesman) {
+    this.isOldSalesman = isOldSalesman;
+  }
+  
 }
