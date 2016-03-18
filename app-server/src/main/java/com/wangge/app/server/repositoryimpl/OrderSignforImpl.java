@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -12,18 +11,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import org.apache.activemq.filter.function.inListFunction;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Repository;
 
 import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.pojo.QueryResult;
-import com.wangge.app.server.vo.OrderPub;
+
 @Repository
 public class OrderSignforImpl {
   
@@ -113,17 +105,6 @@ public class OrderSignforImpl {
         orderSignforList.add(os);
       }
       }
-       /*for(int i = 0;i<olist.size();i++){
-         OrderSignfor o = new OrderSignfor();
-         System.out.println("============"+String.valueOf(olist.get(0)));
-         o.setOrderNo(String.valueOf(olist.get(0)));
-         o.setShopName(String.valueOf(olist.get(1)));
-         //o.setCreateTime(new Date(Long.parseLong(String.valueOf(olist.get(2))) * 1000));
-        // o.setOrderStatus(Integer.parseInt(String.valueOf(olist.get(3))));
-        // o.setPhoneCount(Integer.parseInt(String.valueOf(olist.get(4))));
-        // o.setOrderPrice((Float.valueOf(olist.get(5)+"")));
-         orderSignforList.add(o);
-       }*/
      return  orderSignforList;
   }
   
