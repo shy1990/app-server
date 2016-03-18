@@ -94,7 +94,7 @@ public class SalesmanController {
 	 * @return
 	 */
 	@RequestMapping(value = "/addYw",method = RequestMethod.POST)
-	public ResponseEntity<String> addYw(String username,String password,String userid,String phone,String regionid,String nickname){
+	public ResponseEntity<String> addYw(String username,String password,String userid,String phone,String regionid,String nickname,String isoldsale){
 		System.out.println("username:"+username);
 		Region region = reRepository.findById(regionid);
 		int num = smRepository.findSaleNum(regionid);
@@ -118,6 +118,7 @@ public class SalesmanController {
 		user.setNickname(nickname);
 		ur.save(user);
 		salesman.setUser(user);
+		salesman.setIsOldSalesman( Integer.valueOf(isoldsale.trim()).intValue());
 		salesman.setRegion(region);
 		smRepository.save(salesman);
 		return new ResponseEntity<String>("OK",HttpStatus.OK);
