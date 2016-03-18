@@ -23,10 +23,6 @@ public class OrderSignforService {
   }
 
 
- /* private List<OrderSignfor> findByFastmailNo(String fastMailNo) {
-    return  osr.findByFastmailNo(fastMailNo);
-  }*/
-
   public Date updateOrderSignforList(String fastMailNo,String userPhone,String signGeoPoint) {
     Date date = new Date();
     List<OrderSignfor> osList =   osr.findByFastmailNo(fastMailNo);
