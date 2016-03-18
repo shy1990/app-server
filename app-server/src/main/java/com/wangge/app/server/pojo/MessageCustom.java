@@ -15,14 +15,14 @@ public class MessageCustom extends message {
   
   private static final long serialVersionUID = 1L;
   @JsonFormat(pattern="MM.dd HH:mm",timezone = "GMT+8")
-  private Date creatTime;
+  private Date signTime;
   private String code;
   
-  public Date getCreatTime() {
-    return creatTime;
+  public Date getSignTime() {
+    return signTime;
   }
-  public void setCreatTime(Date creatTime) {
-    this.creatTime = creatTime;
+  public void setSignTime(Date signTime) {
+    this.signTime = signTime;
   }
   public String getCode() {
     return code;

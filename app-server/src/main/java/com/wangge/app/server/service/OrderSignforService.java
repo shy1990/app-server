@@ -23,20 +23,26 @@ public class OrderSignforService {
   }
 
 
-  private List<OrderSignfor> findByFastmailNo(String fastMailNo) {
+ /* private List<OrderSignfor> findByFastmailNo(String fastMailNo) {
     return  osr.findByFastmailNo(fastMailNo);
-  }
+  }*/
 
-  public void updateOrderSignforList(String fastMailNo,String userPhone) {
-    List<OrderSignfor> osList =  findByFastmailNo(fastMailNo);
-            if(osList != null && !"".equals(userPhone)){
+  public Date updateOrderSignforList(String fastMailNo,String userPhone,String signGeoPoint) {
+    Date date = new Date();
+    List<OrderSignfor> osList =   osr.findByFastmailNo(fastMailNo);
+            if(osList != null && osList.size() > 0){
               for(OrderSignfor os : osList){
-                os.setYewuSignforTime(new Date());
-                os.setUserPhone(userPhone);
-                os.setOrderStatus(2);
-                osr.save(os);
+                if((!"".equals(signGeoPoint) && signGeoPoint != null)&& (!"".equals(userPhone) && userPhone != null)){
+                  os.setYewuSignforTime(date);
+                  os.setYewuSignforGeopoint(signGeoPoint);
+                  os.setUserPhone(userPhone);
+                  os.setOrderStatus(2);
+                  osr.save(os);
+                  return date;
+                }
               }    
             }
+            return null;
   }
 
 

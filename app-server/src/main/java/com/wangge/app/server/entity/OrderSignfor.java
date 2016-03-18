@@ -45,7 +45,9 @@ public class OrderSignfor implements Serializable {
   private Integer phoneCount;
   @JsonFormat(pattern = "MM.dd HH:mm")
   private Date creatTime;
+  @JsonFormat(pattern = "MM.dd HH:mm")
   private Date yewuSignforTime; 
+  @JsonFormat(pattern = "MM.dd HH:mm")
   private Date customSignforTime;
   private Integer orderStatus;
   private Integer orderPayType;
@@ -59,6 +61,8 @@ public class OrderSignfor implements Serializable {
   private int orderCount;//订单数
   @Transient
   private int status;
+  @JsonFormat(pattern = "yyyy-MM-dd")
+  private Date fastmailTime;
   
   public int getOrderCount() {
     return orderCount;
@@ -193,6 +197,13 @@ public class OrderSignfor implements Serializable {
   public void setStatus(int status) {
     this.status = status;
   }
-  
 
+  public Date getFastmailTime() {
+    return fastmailTime;
+  }
+
+  public void setFastmailTime(Date fastmailTime) {
+    this.fastmailTime = fastmailTime;
+  }
+  
 }

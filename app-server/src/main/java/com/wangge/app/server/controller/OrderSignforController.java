@@ -66,13 +66,14 @@ public class OrderSignforController {
   public ResponseEntity<message> bussOrderSignFor(@RequestBody JSONObject jsons){
       String fastMailNo = jsons.getString("fastmailNo");
       String userPhone = jsons.getString("userPhone");
+      String signGeoPoint = jsons.getString("signGeoPoint");
       MessageCustom m = new MessageCustom();
      // List<OrderSignfor> os = orderSignforService.findByFastmailNo(fastMailNo);
       try {
-        orderSignforService.updateOrderSignforList(fastMailNo,userPhone);
+        Date signTime = orderSignforService.updateOrderSignforList(fastMailNo,userPhone,signGeoPoint);
         m.setMsg("success");
         m.setCode("0");
-        m.setCreatTime(new Date());
+        m.setSignTime(signTime);
       } catch (Exception e) {
         e.printStackTrace();
         m.setMsg("false");
