@@ -64,22 +64,30 @@ public class OrderSignforController {
    */
   @RequestMapping(value = "/bussOrderSignFor", method = RequestMethod.POST)
   @ResponseBody
-  public ResponseEntity<message> bussOrderSignFor(@RequestBody JSONObject jsons){
+  public ResponseEntity<MessageCustom> bussOrderSignFor(@RequestBody JSONObject jsons){
       String fastMailNo = jsons.getString("fastmailNo");
       String userPhone = jsons.getString("userPhone");
       String signGeoPoint = jsons.getString("signGeoPoint");
       MessageCustom m = new MessageCustom();
      // List<OrderSignfor> os = orderSignforService.findByFastmailNo(fastMailNo);
       try {
+        
         Date signTime = orderSignforService.updateOrderSignforList(fastMailNo,userPhone,signGeoPoint);
-        m.setMsg("success");
-        m.setCode("0");
-        m.setSignTime(signTime);
+        if(signTime != null){
+          m.setMsg("success");
+          m.setCode("0");
+          m.setSignTime(signTime);
+        }else{
+          m.setMsg("false");
+          m.setCode("1");
+        }
+        
       } catch (Exception e) {
         e.printStackTrace();
         m.setMsg("false");
+        m.setCode("1");
       }
-      return new ResponseEntity<message>(m,HttpStatus.OK);
+      return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
   }
   /**
    * @throws ParseException 
