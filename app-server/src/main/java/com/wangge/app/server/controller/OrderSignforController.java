@@ -46,11 +46,13 @@ public class OrderSignforController {
   @RequestMapping(value = "/getBussOrderList" ,method = RequestMethod.POST)
   @ResponseBody
   public ResponseEntity<QueryResult<OrderSignfor>> getOrderSignforList(@RequestBody JSONObject jsons){
-    String pageNo = jsons.getString("pageNumber");
-    String pageSize = jsons.getString("pageSize") ;
+//    String pageNo = jsons.getString("pageNumber");
+	  int pageNo = jsons.getIntValue("pageNumber");
+//    String pageSize = jsons.getString("pageSize") ;
+	  int pageSize = jsons.getIntValue("pageSize");
     String userPhone = jsons.getString("userPhone") ;
     
-    QueryResult<OrderSignfor> list = osi.getOrderSignforList(userPhone,pageNo != null ?Integer.parseInt(pageNo)-1:0,pageSize != null ? Integer.parseInt(pageSize) : 10);
+    QueryResult<OrderSignfor> list = osi.getOrderSignforList(userPhone,pageNo-1,pageSize != 0 ? pageSize : 10);
     return new ResponseEntity<QueryResult<OrderSignfor>>(list,HttpStatus.OK);
   }
   /**
@@ -96,9 +98,12 @@ public class OrderSignforController {
   public ResponseEntity<QueryResult<OrderSignfor>> getOrderList(@RequestBody JSONObject jsons){
                 String userPhone = jsons.getString("userPhone");
                 String type = jsons.getString("type");
-                String pageNo = jsons.getString("pageNumber");
-                String pageSize = jsons.getString("pageSize") ;
-                QueryResult<OrderSignfor> qr = osi.getOrderList(userPhone, type, pageNo != null ? Integer.parseInt(pageNo)-1 : 0,pageSize != null ? Integer.parseInt(pageSize) : 10);
+//                String pageNo = jsons.getString("pageNumber");
+                int pageNo = jsons.getIntValue("pageNumber");
+                int pageSize = jsons.getIntValue("pageSize");
+//                String pageSize = jsons.getString("pageSize") ;
+//                QueryResult<OrderSignfor> qr = osi.getOrderList(userPhone, type, pageNo != null ? Integer.parseInt(pageNo)-1 : 0,pageSize != null ? Integer.parseInt(pageSize) : 10);
+                QueryResult<OrderSignfor> qr = osi.getOrderList(userPhone, type, pageNo-1,pageSize != 0 ? pageSize: 10);
     return new ResponseEntity<QueryResult<OrderSignfor>>(qr,HttpStatus.OK);
   }
 
