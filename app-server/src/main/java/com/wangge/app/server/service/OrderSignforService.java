@@ -28,7 +28,6 @@ public class OrderSignforService {
     Date date = new Date();
     List<OrderSignfor> osList =   osr.findByFastmailNo(fastMailNo);
             if(osList != null && osList.size() > 0){
-              if((!"".equals(signGeoPoint) && signGeoPoint != null)&& (!"".equals(userPhone) && userPhone != null)){
                 for(OrderSignfor os : osList){
                     os.setYewuSignforTime(date);
                     os.setYewuSignforGeopoint(signGeoPoint);
@@ -37,10 +36,44 @@ public class OrderSignforService {
                     osr.save(os);
                   }
                 return date;
-              }   
             }
             return null;
   }
 
+
+
+  public void updateOrderSignfor(String orderNo, String userPhone,
+      String signGeoPoint, int payType, String smsCode) {
+      OrderSignfor orderSignFor =  findOrderSignFor(orderNo,userPhone);
+      
+         orderSignFor.setCustomSignforTime(new Date());
+         orderSignFor.setCustomSignforGeopoint(signGeoPoint);
+         orderSignFor.setOrderPayType(payType);
+         orderSignFor.setOrderStatus(3);
+         if(smsCode != null && !"".equals(smsCode)){
+           orderSignFor.setCustomSignforException(1);
+         }else{
+           orderSignFor.setCustomSignforException(0);
+         }
+         osr.save(orderSignFor);
+     
+  }
+
+
+
+  public void updateOrderSignfor(String orderNo, String userPhone, String remark,String signGeoPoint) {
+    OrderSignfor orderSignFor = findOrderSignFor(orderNo,userPhone);
+    
+      orderSignFor.setCustomUnSignRemark(remark);
+      orderSignFor.setCustomSignforTime(new Date());
+      orderSignFor.setCustomSignforGeopoint(signGeoPoint);
+      orderSignFor.setOrderStatus(4);
+      osr.save(orderSignFor);
+  }
+
+  
+  private OrderSignfor findOrderSignFor(String orderNo,String userPhone){
+     return osr.findByOrderNoAndUserPhone(orderNo,userPhone);  
+  }
 
 }

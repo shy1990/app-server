@@ -65,6 +65,8 @@ public class OrderSignfor implements Serializable {
   @JsonFormat(pattern = "yyyy-MM-dd")
   private Date fastmailTime;
   
+  private String customUnSignRemark;
+  
   public int getOrderCount() {
     return orderCount;
   }
@@ -205,6 +207,14 @@ public class OrderSignfor implements Serializable {
 
   public void setFastmailTime(Date fastmailTime) {
     this.fastmailTime = fastmailTime;
+  }
+
+  public String getCustomUnSignRemark() {
+    return customUnSignRemark;
+  }
+
+  public void setCustomUnSignRemark(String customUnSignRemark) {
+    this.customUnSignRemark = customUnSignRemark;
   }
   
 }
