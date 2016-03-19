@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.Saojie;
-import com.wangge.app.server.entity.Saojie.SaojieStatus;
 import com.wangge.app.server.entity.SaojieData;
 import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.service.DataSaojieService;
@@ -69,8 +69,8 @@ public class SaojieDataController {
 		return new ResponseEntity<List<SaojieData>>(listsj, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/{regionId}/saojie_data", method = RequestMethod.POST)
-	public ResponseEntity<Json> add(@PathVariable("regionId") Region region, @RequestBody JSONObject jsons) {
+	@RequestMapping(value = "/{regionId}/{userId}/saojie_data", method = RequestMethod.POST)
+	public ResponseEntity<Json> add(@PathVariable("regionId") Region region,@PathVariable("userId") Salesman salesman, @RequestBody JSONObject jsons) {
 		Json json = new Json();
 		String name = jsons.getString("name");
 		String description = jsons.getString("description");
@@ -79,7 +79,7 @@ public class SaojieDataController {
 		if (jsons.containsKey("imageUrl")) {
 			imageUrl = jsons.getString("imageUrl");
 		}
-		Saojie saojie = dataSaojieService.findByRegion(region);
+		Saojie saojie = dataSaojieService.findByRegionAndSalesman(region,salesman);
 		if (saojie != null && !"".equals(saojie)) {
 			SaojieData data = new SaojieData(name, coordinate);
 			data.setDescription(description);
