@@ -43,4 +43,35 @@ public class OrderSignforService {
   }
 
 
+
+  public void updateOrderSignfor(String orderNo, String userPhone,
+      String signGeoPoint, int payType, String smsCode) {
+      OrderSignfor orderSignFor =  findOrderSignFor(orderNo,userPhone);
+      
+         orderSignFor.setCustomSignforTime(new Date());
+         orderSignFor.setCustomSignforGeopoint(signGeoPoint);
+         orderSignFor.setOrderPayType(payType);
+         if(smsCode != null && !"".equals(smsCode)){
+           orderSignFor.setCustomSignforException(0);
+         }else{
+           orderSignFor.setCustomSignforException(1);
+         }
+         osr.save(orderSignFor);
+     
+  }
+
+
+
+  public void updateOrderSignfor(String orderNo, String userPhone, String remark) {
+    OrderSignfor orderSignFor = findOrderSignFor(orderNo,userPhone);
+    
+      orderSignFor.setCustomUnSignRemark(remark);
+      osr.save(orderSignFor);
+  }
+
+  
+  private OrderSignfor findOrderSignFor(String orderNo,String userPhone){
+     return osr.findByOrderNoAndUserPhone(orderNo,userPhone);  
+  }
+
 }
