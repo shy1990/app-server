@@ -14,12 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.pojo.MessageCustom;
 import com.wangge.app.server.pojo.QueryResult;
 import com.wangge.app.server.repositoryimpl.OrderSignforImpl;
 import com.wangge.app.server.service.OrderSignforService;
+import com.wangge.app.server.util.HttpUtil;
 
 @RestController
 @RequestMapping("/v1/remind")
@@ -129,15 +131,22 @@ public class OrderSignforController {
     String smsCode = jsons.getString("smsCode");
     int payType =  jsons.getIntValue("payType");
     String signGeoPoint = jsons.getString("signGeoPoint");
+    String storePhone = jsons.getString("storePhone");
     MessageCustom m = new MessageCustom();
     try {
-      if((signGeoPoint != null && !"".equals(signGeoPoint))&& payType >= 0){
+      if((smsCode != null && !"".equals(smsCode)) && storePhone != null && !"".equals(storePhone)){
+        String msg = HttpUtil.sendPost("http://www.3j1688.com/member/existMobileCode/"+storePhone+"_"+smsCode+".html","");
+        if(msg!=null && msg.contains("true")){
+            orderSignforService.updateOrderSignfor(orderNo, userPhone, signGeoPoint,payType,smsCode);
+            m.setMsg("success");
+            m.setCode("0");
+        }else{
+            m.setMsg("短信验证码不存在！");
+        }
+      }else{
         orderSignforService.updateOrderSignfor(orderNo, userPhone, signGeoPoint,payType,smsCode);
         m.setMsg("success");
         m.setCode("0");
-      }else{
-        m.setMsg("false");
-        m.setCode("1");
       }
       
     } catch (Exception e) {
@@ -165,17 +174,12 @@ public class OrderSignforController {
     String userPhone = jsons.getString("userPhone");
     String orderNo = jsons.getString("orderNo");
     String remark = jsons.getString("remark");
+    String signGeoPoint = jsons.getString("signGeoPoint");
     MessageCustom m = new MessageCustom();
     try {
-      if(remark!= null && !"".equals(remark)){
-        orderSignforService.updateOrderSignfor(orderNo, userPhone, remark);
+        orderSignforService.updateOrderSignfor(orderNo, userPhone, remark,signGeoPoint);
         m.setMsg("success");
         m.setCode("0");
-      }else{
-        m.setMsg("备注不能为空");
-        m.setCode("1");
-      }
-     
     } catch (Exception e) {
       m.setMsg("false");
       m.setCode("1");
