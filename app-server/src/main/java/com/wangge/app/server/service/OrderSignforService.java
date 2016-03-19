@@ -49,11 +49,11 @@ public class OrderSignforService {
          orderSignFor.setCustomSignforTime(new Date());
          orderSignFor.setCustomSignforGeopoint(signGeoPoint);
          orderSignFor.setOrderPayType(payType);
-         orderSignFor.setStatus(3);
+         orderSignFor.setOrderStatus(3);
          if(smsCode != null && !"".equals(smsCode)){
-           orderSignFor.setCustomSignforException(0);
-         }else{
            orderSignFor.setCustomSignforException(1);
+         }else{
+           orderSignFor.setCustomSignforException(0);
          }
          osr.save(orderSignFor);
      
@@ -67,7 +67,7 @@ public class OrderSignforService {
       orderSignFor.setCustomUnSignRemark(remark);
       orderSignFor.setCustomSignforTime(new Date());
       orderSignFor.setCustomSignforGeopoint(signGeoPoint);
-      orderSignFor.setStatus(4);
+      orderSignFor.setOrderStatus(4);
       osr.save(orderSignFor);
   }
 
