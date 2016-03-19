@@ -25,7 +25,7 @@ import com.wangge.app.server.service.OrderSignforService;
 @RequestMapping("/v1/remind")
 public class OrderSignforController {
   
-  private static final Logger logger = LoggerFactory.getLogger(OrderSignforController.class);
+  //private static final Logger logger = LoggerFactory.getLogger(OrderSignforController.class);
   @Resource
   private OrderSignforService orderSignforService;
   
@@ -179,7 +179,7 @@ public class OrderSignforController {
     } catch (Exception e) {
       m.setMsg("false");
       m.setCode("1");
-      logger.error("OrderSignforController customOrderUnSign() error :"+e);
+     /* logger.error("OrderSignforController customOrderUnSign() error :"+e);*/
     }
     return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
     
