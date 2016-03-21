@@ -84,10 +84,12 @@ public class PushController {
       o.setOrderPrice(amount);
       o.setPhoneCount(skuNum);
       o.setPartsCount(Integer.parseInt(accCount));
+      o.setOrderStatus(0);
       o.setShopName(ss);
+      o.setUserPhone(mobile);
       orderSignforService.saveOrderSignfor(o);
       
-      str = JpushClient.sendOrder("下单通知", send,mobile+",18769727652",json.getString("orderNum"),json.getString("skuNum"),json.getString("accNum"),"0");
+      str = JpushClient.sendOrder("下单通知", send,mobile,json.getString("orderNum"),json.getString("skuNum"),json.getString("accNum"),"0");
     } catch (Exception e) {
       e.printStackTrace();
       return false;
@@ -123,7 +125,7 @@ public class PushController {
     String str = "";
     System.out.println(json.getString("mobiles"));
     try {
-      str = JpushClient.sendOrder("取消订单通知", send,json.getString("mobiles")+",18769727652",json.getString("orderNum"),json.getString("skuNum"),json.getString("accNum"),"0");
+      str = JpushClient.sendOrder("取消订单通知", send,json.getString("mobiles"),json.getString("orderNum"),json.getString("skuNum"),json.getString("accNum"),"0");
     } catch (Exception e) {
       e.printStackTrace();
     }
