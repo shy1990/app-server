@@ -59,6 +59,9 @@ public class Salesman extends AbstractPersistable<String> {
 	@Column(name = "ASSESS_STAGE")
   private String assessStage;
 
+	@Column(name = "OLD_ID")
+  private String oldid;
+	
 	public Salesman() {
 		super();
 	}
@@ -115,5 +118,15 @@ public class Salesman extends AbstractPersistable<String> {
   public void setIsOldSalesman(int isOldSalesman) {
     this.isOldSalesman = isOldSalesman;
   }
+
+  public String getOldid() {
+    return oldid;
+  }
+
+  public void setOldid(String oldid) {
+    this.oldid = oldid;
+  }
+  
+  
   
 }

@@ -2,10 +2,16 @@ package com.wangge.app.server.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import net.sf.json.JSONObject;
 
@@ -22,6 +28,7 @@ import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.repository.SalesmanRepository;
 import com.wangge.app.server.service.SalesmanService;
+import com.wangge.app.server.vo.Exam.Town;
 import com.wangge.common.entity.Region;
 import com.wangge.common.repository.RegionRepository;
 import com.wangge.security.entity.User;
@@ -31,7 +38,8 @@ import com.wangge.security.repository.UserRepository;
 @RestController
 @RequestMapping(value = "/v1/saleman")
 public class SalesmanController {
-
+  @PersistenceContext  
+  private EntityManager em; 
 	@Resource
 	private SalesmanService salesmanService;
 	@Autowired
@@ -117,10 +125,11 @@ public class SalesmanController {
 		user.setUsername(username);
 		user.setNickname(nickname);
 		ur.save(user);
-		salesman.setUser(user);
 		salesman.setIsOldSalesman( Integer.valueOf(isoldsale.trim()).intValue());
 		salesman.setRegion(region);
-		smRepository.save(salesman);
+		salesman.setOldid(getOldId(phone));
+		salesman.setUser(user);
+		salesmanService.save(salesman);
 		return new ResponseEntity<String>("OK",HttpStatus.OK);
 	}
 			
@@ -184,5 +193,28 @@ public class SalesmanController {
 	jsbuf.append("]}");*/
 		
 	}
+	
+	public String getOldId(String phone){
+	  String oldId=null;
+	  
+	   //指标信息    a.USERNAME=(select USERNAME from SJ_DB.SYS_USER where USER_ID='"+salesId+"' ) 
+    String sql = "select * from  SJZAIXIAN.SJ_TB_ADMIN t where t.mobilephone="+phone;
+    Query query =  em.createNativeQuery(sql);
+    List obj = query.getResultList();
+    int phoneNum = 0; //手机数   
+    if(obj!=null && obj.size()>0){
+      Iterator it = obj.iterator();
+      Set<Town> set = new HashSet<Town>();
+      while(it.hasNext()){
+        Object[] o = (Object[])it.next();
+        System.out.println(o[0]);
+        oldId=o[0].toString();
+        
+      }
+    }
+	  
+	  return  oldId;
+	}
+	
 	
 }
