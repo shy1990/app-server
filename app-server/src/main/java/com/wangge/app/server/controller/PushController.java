@@ -67,26 +67,30 @@ public class PushController {
     }
     String send = ss+",数量:"+skuNum+",金额:"+amount+",订单号:"+orderno;
   
-   /* Message mes = new Message();
-    mes.setChannel(SendChannel.PUSH);
-    mes.setType(MessageType.ORDER);
-    mes.setSendTime(new Date());
-    mes.setContent(msg);
-    mes.setReceiver(mobile);
-    mr.save(mes);*/
-    OrderSignfor o = new OrderSignfor();
-    o.setOrderNo(orderno);
-    o.setCreatTime(new Date());
-    o.setOrderPrice(amount);
-    o.setPhoneCount(skuNum);
-    o.setPartsCount(Integer.parseInt(accCount));
-    o.setShopName(ss);
-    orderSignforService.saveOrderSignfor(o);
+   
     String str = "";
     try {
+      
+      Message mes = new Message();
+      mes.setChannel(SendChannel.PUSH);
+      mes.setType(MessageType.ORDER);
+      mes.setSendTime(new Date());
+      mes.setContent(msg);
+      mes.setReceiver(mobile);
+      mr.save(mes);
+      OrderSignfor o = new OrderSignfor();
+      o.setOrderNo(orderno);
+      o.setCreatTime(new Date());
+      o.setOrderPrice(amount);
+      o.setPhoneCount(skuNum);
+      o.setPartsCount(Integer.parseInt(accCount));
+      o.setShopName(ss);
+      orderSignforService.saveOrderSignfor(o);
+      
       str = JpushClient.sendOrder("下单通知", send,mobile+",18769727652",json.getString("orderNum"),json.getString("skuNum"),json.getString("accNum"),"0");
     } catch (Exception e) {
       e.printStackTrace();
+      return false;
     }
      if(str.contains("发送失败")){
      //  mr.updateMessageResult(str, mes.getId());
