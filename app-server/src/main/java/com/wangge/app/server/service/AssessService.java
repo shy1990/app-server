@@ -55,28 +55,38 @@ public class AssessService {
   
   public List<RegistAreaVo>  getRegistRegions(Salesman salesman){
     List<RegistAreaVo> vo = new ArrayList<RegistAreaVo>();
-    List<Assess> assTasks = assessRepository.findBySalesman(salesman);
-    for(Assess assess : assTasks){
-    //  if (AssessStatus.PENDING.equals(assess.getStatus()) || AssessStatus.AGREE.equals(assess.getStatus())) {
-    //    if (AssessStatus.PENDING.equals(assess.getStatus())) {
-          String assArea = assess.getAssessDefineArea();
-          if(assArea != null && !"".equals(assArea)){
-            String[] strRegion = assArea.split(",");
-            for (int i = 0; i < strRegion.length; i++) {
-              Region region = regionService.findRegion(strRegion[i].trim());
-              if(region != null && !"".equals(region)){
-                RegistAreaVo r = new RegistAreaVo();
-                r.setId(region.getId());
-                r.setName(region.getName());
-                r.setCoordinates(region.getCoordinates());
-                r.setColorStatus(getPercent(region.getId()).getNum());;
-                vo.add(r);
+    if(salesman.getIsOldSalesman()==1){
+      for(Region reg:regionService.findRegiondbyParentid(salesman.getRegion().getId())){
+          RegistAreaVo r = new RegistAreaVo();
+          r.setId(reg.getId());
+          r.setName(reg.getName());
+          r.setCoordinates(reg.getCoordinates());
+          r.setColorStatus(getPercent(reg.getId()).getNum());;
+          vo.add(r);
+      }
+      
+    }else{
+      List<Assess> assTasks = assessRepository.findBySalesman(salesman);
+      for(Assess assess : assTasks){
+      //  if (AssessStatus.PENDING.equals(assess.getStatus()) || AssessStatus.AGREE.equals(assess.getStatus())) {
+      //    if (AssessStatus.PENDING.equals(assess.getStatus())) {
+            String assArea = assess.getAssessDefineArea();
+            if(assArea != null && !"".equals(assArea)){
+              String[] strRegion = assArea.split(",");
+              for (int i = 0; i < strRegion.length; i++) {
+                Region region = regionService.findRegion(strRegion[i].trim());
+                if(region != null && !"".equals(region)){
+                  RegistAreaVo r = new RegistAreaVo();
+                  r.setId(region.getId());
+                  r.setName(region.getName());
+                  r.setCoordinates(region.getCoordinates());
+                  r.setColorStatus(getPercent(region.getId()).getNum());;
+                  vo.add(r);
+                }
               }
             }
           }
-        }
-  //    }
-   // }
+    }
     return vo;
   }
   

@@ -118,7 +118,29 @@ public class RegionService {
 		return  listRegion;
 	}
 	
-	
+	/**
+	 * 
+	  * findRegiondbyRegionMore:查询多个区域. <br/> 
+	  * TODO(这里描述这个方法适用条件 – 可选).<br/> 
+	  * TODO(这里描述这个方法的执行流程 – 可选).<br/> 
+	  * TODO(这里描述这个方法的使用方法 – 可选).<br/> 
+	  * TODO(这里描述这个方法的注意事项 – 可选).<br/> 
+	  * 
+	  * @author Administrator 
+	  * @param regionMore
+	  * @return 
+	  * @since JDK 1.8
+	 */
+	public List<Region> findRegiondbyRegionMore(String regionMore){
+    List<Region> listRegion=new ArrayList<Region>();
+    for(int i=0;i<regionMore.split(",").length;i++){
+      for(Region region:regionRepository.findOne(regionMore.split(",")[i]).getChildren()){
+        listRegion.add(region);
+      }
+    }
+   
+    return  listRegion;
+  }
 	
 
 	/**
@@ -167,4 +189,8 @@ public class RegionService {
 		 
 		regionRepository.save(region); 
 	}
+	
+	
+	
+	
 }

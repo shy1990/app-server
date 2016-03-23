@@ -40,6 +40,7 @@ public class LoginController {
 		Json json = new Json();
 		Salesman salesman =salesmanService.login(username,password);
 		
+		
 		if(salesman !=null && !"".equals(salesman)){
 			
 			if((salesman.getSimId() == null || "".equals(salesman.getSimId()))){
@@ -49,7 +50,7 @@ public class LoginController {
 				return returnLogSucMsg(json, salesman);
 		
 			}else{
-				json.setMsg("手机卡信息异常！");
+				json.setMsg("与你上一次登录手机卡不同");
 				return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
 			}
 			
@@ -64,7 +65,11 @@ public class LoginController {
 		json.setPhone(salesman.getUser().getPhone());
 		json.setRegionId(salesman.getRegion().getId());
 		json.setId(salesman.getId());
-		json.setStatus(salesman.getStatus().getNum());
+		if(salesman.getIsOldSalesman()==1){
+		  json.setStatus(3);
+		}else{
+		  json.setStatus(salesman.getStatus().getNum());
+		}
 		json.setIsOldSalesman(salesman.getIsOldSalesman());
 		json.setMsg("登陆成功！");
 		json.setStage(salesman.getAssessStage());

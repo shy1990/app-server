@@ -62,6 +62,9 @@ public class Salesman extends AbstractPersistable<String> {
 	@Column(name = "OLD_ID")
   private String oldid;
 	
+	@Column(name = "REGION_MORE")
+  private String regionMore;
+	
 	public Salesman() {
 		super();
 	}
@@ -125,6 +128,14 @@ public class Salesman extends AbstractPersistable<String> {
 
   public void setOldid(String oldid) {
     this.oldid = oldid;
+  }
+
+  public String getRegionMore() {
+    return regionMore;
+  }
+
+  public void setRegionMore(String regionMore) {
+    this.regionMore = regionMore;
   }
   
   
