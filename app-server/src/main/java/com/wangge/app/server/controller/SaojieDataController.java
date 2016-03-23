@@ -70,7 +70,7 @@ public class SaojieDataController {
 	}
 
 	@RequestMapping(value = "/{regionId}/{userId}/saojie_data", method = RequestMethod.POST)
-	public ResponseEntity<Json> add(@PathVariable("regionId") Region region, @PathVariable("userId") Salesman salesman,@RequestBody JSONObject jsons) {
+	public ResponseEntity<Json> add(@PathVariable("regionId") Region region,@PathVariable("userId") Salesman salesman, @RequestBody JSONObject jsons) {
 		Json json = new Json();
 		String name = jsons.getString("name");
 		String description = jsons.getString("description");
@@ -79,7 +79,7 @@ public class SaojieDataController {
 		if (jsons.containsKey("imageUrl")) {
 			imageUrl = jsons.getString("imageUrl");
 		}
-		Saojie saojie = dataSaojieService.findByRegion(region);
+		Saojie saojie = dataSaojieService.findByRegionAndSalesman(region,salesman);
 		if (saojie != null && !"".equals(saojie)) {
 			SaojieData data = new SaojieData(name, coordinate);
 			data.setDescription(description);
@@ -116,7 +116,7 @@ public class SaojieDataController {
 		SimpleDateFormat dateformat = new SimpleDateFormat("yyyy/MM/dd/HH/");
 		// String pathdir = "/images/uploadfile/" + dateformat.format(new
 		// Date());// 构件文件保存目录
-		String pathdir = "/var/sanji/images/uploadfile/" + dateformat.format(new Date());// 构件文件保存目录
+		 String pathdir = "/var/sanji/images/uploadfile/" + dateformat.format(new Date());// 构件文件保存目录
 		// 得到图片保存目录的真实路径
 		// String realpathdir = request.getSession().getServletContext()
 		// .getRealPath(pathdir);

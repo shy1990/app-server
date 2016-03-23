@@ -134,18 +134,18 @@ public class RegionController {
 		Salesman man=salesmanService.findSalesmanbyId(salesmanid);
 		List<Saojie> listSaojie=saojieService.findBySalesman(man);
 		if(listSaojie.size()>0){
-			listRegion= regionService.findRegiondbyParentid(man.getRegion().getId());
-//			for(int i=0;i<listRegion.size();i++){
-//				for(int j=0;j<listSaojie.size();j++){
-//					if(listRegion.get(i).getName().equals(listSaojie.get(j).getRegion().getName())){
-//						listRegion.remove(i);
-//						i=i-1;
-//						break;
-//					}
-//				}
-//			}
+		  if(null!=man.getRegionMore()&&!"".equals(man.getRegionMore())){
+		    listRegion= regionService.findRegiondbyRegionMore(man.getRegionMore());
+		  }else{
+		    listRegion= regionService.findRegiondbyParentid(man.getRegion().getId());
+		  }
 		}else{
-			listRegion.add(man.getRegion());
+	    if(null!=man.getRegionMore()&&!"".equals(man.getRegionMore())){
+        listRegion= regionService.findRegiondbyRegionMore(man.getRegionMore());
+	    }else{
+	      listRegion.add(man.getRegion());
+	    }
+			
 		}
 		return new ResponseEntity<List<Region>>(listRegion,HttpStatus.OK);
 	}
@@ -157,7 +157,11 @@ public class RegionController {
     logger.debug("salesmanid"+salesmanid);
     List<Region>  listRegion=new ArrayList<Region>();
     Salesman man=salesmanService.findSalesmanbyId(salesmanid);
-    listRegion= regionService.findRegiondbyParentid(man.getRegion().getId());
+    if(null!=man.getRegionMore()&&"".equals(man.getRegionMore())){
+      listRegion= regionService.findRegiondbyRegionMore(man.getRegionMore());
+    }else{
+      listRegion= regionService.findRegiondbyParentid(man.getRegion().getId());
+    }
     return new ResponseEntity<List<Region>>(listRegion,HttpStatus.OK);
   }
 	

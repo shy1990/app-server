@@ -56,11 +56,11 @@ public class ExamImpl {
         }
       }
 	    //指标信息    a.USERNAME=(select USERNAME from SJ_DB.SYS_USER where USER_ID='"+salesId+"' ) 
-		String sql = "select a.rname as areaName , count(a.rid) as shopNum,sum(a.acount) as count from sj_yewu.BIZ_EXAMINE a where   a.USERNAME=(select USERNAME from SJ_DB.SYS_USER where USER_ID='"+salesId+"' )  and a.rname in("+areas+")  AND a.otype='sku'  group by (a.RID,a.rname)";
+		String sql = "select  a.rname as areaName , count(a.rid) as shopNum,sum(a.acount) as count from sj_yewu.BIZ_EXAMINE a where   a.USERNAME=(select USERNAME from SJ_DB.SYS_USER where USER_ID='"+salesId+"' )  and a.rname in("+areas+")  AND a.otype='sku'  group by (a.RID,a.rname)";
 		Query query =  em.createNativeQuery(sql);
 		List obj = query.getResultList();
 	  int shopNum=0; //商家数
-    int phoneNum = 0; //手机数
+    int phoneNum = 0; //手机数 	
 		if(obj!=null && obj.size()>0){
 			Iterator it = obj.iterator();
 			Set<Town> set = new HashSet<Town>();
@@ -70,12 +70,15 @@ public class ExamImpl {
 				town.setAreaName(o[0]+"");
 				town.setShopNum(o[1]+"");
 				town.setCount(o[2]+"");
-				shopNum += Integer.parseInt(o[1]+"");
+				if(Integer.parseInt(o[2]+"")>1){
+					shopNum += Integer.parseInt(o[1]+"");
+				}
 				phoneNum += Integer.parseInt(o[2]+"");
 				set.add(town);
 			}
 			exam.setTown(set);
 		}
+	
     exam.setDoneShopNum(shopNum);
     exam.setDonePhoneNum(phoneNum);
     float pnum= (float)phoneNum/exam.getGoalPhoneNum();  

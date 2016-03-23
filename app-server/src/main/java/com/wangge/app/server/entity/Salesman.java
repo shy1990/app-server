@@ -42,6 +42,8 @@ public class Salesman implements Serializable {
 	
 	private String simId;
 	
+	private int isOldSalesman;
+	
 	private SalesmanStatus status = SalesmanStatus.saojie;
 	
 
@@ -78,11 +80,21 @@ public class Salesman implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date regdate;
 	  
+	@Column(name = "OLD_ID")
+  private String oldid;
+	
+	@Column(name = "REGION_MORE")
+  private String regionMore;
+	
 	public Salesman() {
 		super();
 	}
 
-	public Region getRegion() {
+	public Salesman(String salesmanId) {
+    this.id = salesmanId;
+  }
+
+  public Region getRegion() {
 		return region;
 	}
 
@@ -161,6 +173,30 @@ public class Salesman implements Serializable {
   public void setRegdate(Date regdate) {
     this.regdate = regdate;
   }
+  public int getIsOldSalesman() {
+    return isOldSalesman;
+  }
+
+  public void setIsOldSalesman(int isOldSalesman) {
+    this.isOldSalesman = isOldSalesman;
+  }
+
+  public String getOldid() {
+    return oldid;
+  }
+
+  public void setOldid(String oldid) {
+    this.oldid = oldid;
+  }
+
+  public String getRegionMore() {
+    return regionMore;
+  }
+
+  public void setRegionMore(String regionMore) {
+    this.regionMore = regionMore;
+  }
+  
   
   
 }

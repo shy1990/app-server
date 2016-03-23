@@ -102,9 +102,9 @@ public class DataSaojieService {
 		return taskSaojieRepository.findByOrderAndSalesman(id,salesman);
 	}*/
 	
-	public Saojie findByRegion(Region region) {
+	public Saojie findByRegionAndSalesman(Region region,Salesman salesman) {
 			
-			return taskSaojieRepository.findByRegion(region);
+			return taskSaojieRepository.findByRegionAndSalesman(region,salesman);
 	}
 	
 	public SaojieData findBySaojieData(Long id) {
