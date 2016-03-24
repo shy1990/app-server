@@ -69,7 +69,7 @@ public class SaojieDataController {
 		return new ResponseEntity<List<SaojieData>>(listsj, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/{regionId}/{userId}/saojie_data", method = RequestMethod.POST)
+	@RequestMapping(value = "/{regionId}/{userId}/saojie_data", method = RequestMethod.GET)
 	public ResponseEntity<Json> add(@PathVariable("regionId") Region region,@PathVariable("userId") Salesman salesman, @RequestBody JSONObject jsons) {
 		Json json = new Json();
 		String name = jsons.getString("name");
