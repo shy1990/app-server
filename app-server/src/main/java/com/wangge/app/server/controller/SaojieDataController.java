@@ -69,7 +69,7 @@ public class SaojieDataController {
 		return new ResponseEntity<List<SaojieData>>(listsj, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/{regionId}/{userId}/saojie_data", method = RequestMethod.GET)
+	@RequestMapping(value = "/{regionId}/{userId}/saojie_data", method = RequestMethod.POST)
 	public ResponseEntity<Json> add(@PathVariable("regionId") Region region,@PathVariable("userId") Salesman salesman, @RequestBody JSONObject jsons) {
 		Json json = new Json();
 		String name = jsons.getString("name");
@@ -85,6 +85,7 @@ public class SaojieDataController {
 			data.setDescription(description);
 			data.setImageUrl(imageUrl);
 			data.setRegion(saojie.getRegion());
+			data.setSaojieDate(new Date());
 			data.setSaojie(saojie);
 			SaojieData saojiedata = dataSaojieService.addDataSaojie(data);
 
