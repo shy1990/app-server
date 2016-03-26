@@ -1,5 +1,7 @@
 package com.wangge.app.server.controller;
 
+import java.util.Date;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,9 +35,8 @@ public class importExcelController {
 	 *
 	 */
 	@RequestMapping(value="/import/updateOrderSignforByOrderNo",method=RequestMethod.POST)
-	public ResponseEntity<String> updateOrderSignforByOrderNo(String fastmailno,String orderno){
-	  
-	  osr.updateOrderSignforByOrderNo(fastmailno,orderno);
+	public ResponseEntity<String> updateOrderSignforByOrderNo(String fastmailno,String orderno,String fastmailTime){
+	  osr.updateOrderSignforByOrderNo(fastmailno,orderno,fastmailTime);
 		return new ResponseEntity<String>("success",HttpStatus.OK);
 	}
 	
