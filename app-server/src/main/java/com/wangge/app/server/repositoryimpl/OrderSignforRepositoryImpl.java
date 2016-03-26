@@ -26,6 +26,7 @@ public class OrderSignforRepositoryImpl {
    */
   @Transactional
   public String updateOrderSignforByOrderNo(String fastmailno,String orderno){
+      orderno=orderno.replace("\r\n", "").trim();
      String sql = "update  SJ_YEWU.BIZ_ORDER_SIGNFOR orderSignfor  set orderSignfor.FASTMAIL_NO = '"+fastmailno+"' where orderSignfor.ORDER_NO = '"+orderno+"'";
      Query query =  em.createNativeQuery(sql);
      return query.executeUpdate() > 0 ? "success":"false";
