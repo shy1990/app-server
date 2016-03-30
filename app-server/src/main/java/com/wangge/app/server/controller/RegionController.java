@@ -157,7 +157,7 @@ public class RegionController {
     logger.debug("salesmanid"+salesmanid);
     List<Region>  listRegion=new ArrayList<Region>();
     Salesman man=salesmanService.findSalesmanbyId(salesmanid);
-    if(null!=man.getRegionMore()&&"".equals(man.getRegionMore())){
+    if(null !=man.getRegionMore()&&!"".equals(man.getRegionMore())){
       listRegion= regionService.findRegiondbyRegionMore(man.getRegionMore());
     }else{
       listRegion= regionService.findRegiondbyParentid(man.getRegion().getId());
