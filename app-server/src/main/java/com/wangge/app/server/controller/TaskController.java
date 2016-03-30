@@ -128,17 +128,17 @@ public class TaskController {
 				String pointStr = sj.getCoordinate(); 
 				String lat=pointStr.split("-")[0];
  		  		String lag=pointStr.split("-")[1];
- 		  		String url="http://api.map.baidu.com/geocoder/v2/?ak=702632E1add3d4953d0f105f27c294b9&callback=renderReverse&location="+lag+","+lat+"&output=json&pois=1";
- 		  		String jsonString = JWtoAdrssUtil.getdata(url);
- 		  	    String jsonstr=jsonString.substring(0,jsonString.length()-1);
- 		  	    String address = jsonstr.substring(jsonstr.indexOf("formatted_address")+20,jsonstr.indexOf("business")-3);
+// 		  		String url="http://api.map.baidu.com/geocoder/v2/?ak=702632E1add3d4953d0f105f27c294b9&callback=renderReverse&location="+lag+","+lat+"&output=json&pois=1";
+// 		  		String jsonString = JWtoAdrssUtil.getdata(url);
+// 		  	    String jsonstr=jsonString.substring(0,jsonString.length()-1);
+// 		  	    String address = jsonstr.substring(jsonstr.indexOf("formatted_address")+20,jsonstr.indexOf("business")-3);
  		  		map.put("coordinate", sj.getCoordinate());
 				map.put("description", sj.getDescription());
 				map.put("id", sj.getId());
 				map.put("imageUrl", sj.getImageUrl());
 				map.put("taskname", sj.getName());
 				map.put("regionname", sj.getRegion().getName());
-				map.put("address", address);
+//				map.put("address", address);
 				sdmap.add(map);
 			}
 //			json.setObj(sdmap);
