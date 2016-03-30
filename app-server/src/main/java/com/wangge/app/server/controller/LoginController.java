@@ -8,12 +8,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wangge.app.server.entity.ChildAccount;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.pojo.Json;
+import com.wangge.app.server.pojo.JsonCustom;
 import com.wangge.app.server.service.AssessService;
+import com.wangge.app.server.service.ChildAccountService;
 import com.wangge.app.server.service.SalesmanService;
 import com.wangge.security.entity.User;
 
@@ -27,21 +31,23 @@ public class LoginController {
 	private SalesmanService salesmanService;
 	@Resource
   private AssessService assessService;
+	@Resource
+	private ChildAccountService childAccountService;
 	/**
 	 * 登录 
 	 * @param json
 	 * @return
 	 */
 	@RequestMapping(value = "/login",method = RequestMethod.POST)
-	public ResponseEntity<Json> login(@RequestBody JSONObject jsons){
+	public ResponseEntity<JsonCustom> login(@RequestBody JSONObject jsons){
 		String username=jsons.getString("username");
 		String password=jsons.getString("password");
 		String simId=jsons.getString("simId");
-		Json json = new Json();
+		JsonCustom json = new JsonCustom();
 		Salesman salesman =salesmanService.login(username,password);
 		
 		
-		if(salesman !=null && !"".equals(salesman)){
+		if(salesman !=null && !"".equals(salesman.getId())){
 			
 			if((salesman.getSimId() == null || "".equals(salesman.getSimId()))){
 				salesman.setSimId(simId);
@@ -50,18 +56,32 @@ public class LoginController {
 				return returnLogSucMsg(json, salesman);
 		
 			}else{
+			  ChildAccount childAccount  =   childAccountService.getChildAccountBySimId(simId);
+			  if(childAccount!=null){
+			    return returnLogSucMsg(json, salesman, childAccount);
+			  }
 				json.setMsg("与你上一次登录手机卡不同");
-				return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
+				return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);
 			}
 			
 				return returnLogSucMsg(json, salesman);
 	
 		}else {
 			json.setMsg("用戶名或密码错误！");
-			return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);
 		}
 	}
-	private ResponseEntity<Json> returnLogSucMsg(Json json, Salesman salesman) {
+	/**
+	 * 
+	* @Title: returnLogSucMsg 
+	* @Description: TODO(返回主账号信息) 
+	* @param @param json
+	* @param @param salesman
+	* @param @return    设定文件 
+	* @return ResponseEntity<JsonCustom>    返回类型 
+	* @throws
+	 */
+	private ResponseEntity<JsonCustom> returnLogSucMsg(JsonCustom json, Salesman salesman) {
 		json.setPhone(salesman.getUser().getPhone());
 		json.setRegionId(salesman.getRegion().getId());
 		json.setId(salesman.getId());
@@ -71,9 +91,41 @@ public class LoginController {
 		  json.setStatus(salesman.getStatus().getNum());
 		}
 		json.setIsOldSalesman(salesman.getIsOldSalesman());
+		json.setNickName(salesman.getUser().getNickname());
+		json.setIsPrimaryAccount(0);
 		json.setMsg("登陆成功！");
 		json.setStage(salesman.getAssessStage());
-		return new ResponseEntity<Json>(json, HttpStatus.OK);
+		return new ResponseEntity<JsonCustom>(json, HttpStatus.OK);
 	}
+	
+	/**
+	 * 
+	* @Title: returnLogSucMsg 
+	* @Description: TODO(返回子账号信息) 
+	* @param @param json
+	* @param @param salesman
+	* @param @param childAccount
+	* @param @return    设定文件 
+	* @return ResponseEntity<JsonCustom>    返回类型 
+	* @throws
+	 */
+	
+	 private ResponseEntity<JsonCustom> returnLogSucMsg(JsonCustom json, Salesman salesman,ChildAccount childAccount) {
+	    json.setPhone(salesman.getUser().getPhone());
+	    json.setRegionId(salesman.getRegion().getId());
+	    json.setId(salesman.getId());
+	    if(salesman.getIsOldSalesman()==1){
+	      json.setStatus(3);
+	    }else{
+	      json.setStatus(salesman.getStatus().getNum());
+	    }
+	    json.setIsOldSalesman(salesman.getIsOldSalesman());
+	    json.setNickName(childAccount.getTruename());
+	    json.setIsPrimaryAccount(1);
+	    json.setMsg("登陆成功！");
+	    json.setStage(salesman.getAssessStage());
+	    return new ResponseEntity<JsonCustom>(json, HttpStatus.OK);
+	  }
+	  
 	
 }
