@@ -47,7 +47,7 @@ public class LoginController {
 		Salesman salesman =salesmanService.login(username,password);
 		
 		
-		if(salesman !=null && !"".equals(salesman)){
+		if(salesman !=null && !"".equals(salesman.getId())){
 			
 			if((salesman.getSimId() == null || "".equals(salesman.getSimId()))){
 				salesman.setSimId(simId);
