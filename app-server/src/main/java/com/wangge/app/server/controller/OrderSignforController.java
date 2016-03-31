@@ -5,8 +5,6 @@ import java.util.Date;
 
 import javax.annotation.Resource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,6 +28,16 @@ public class OrderSignforController {
   //private static final Logger logger = LoggerFactory.getLogger(OrderSignforController.class);
   @Resource
   private OrderSignforService orderSignforService;
+  
+  private String userPhone ;
+  private String orderNo ;
+  private String smsCode;
+  private int payType;
+  private String signGeoPoint;
+  private String storePhone ;
+  private int isPrimaryAccount;
+  private String  remark;
+  private String fastMailNo;
   
   @Resource
   private OrderSignforImpl osi;
@@ -68,14 +76,14 @@ public class OrderSignforController {
   @RequestMapping(value = "/bussOrderSignFor", method = RequestMethod.POST)
   @ResponseBody
   public ResponseEntity<MessageCustom> bussOrderSignFor(@RequestBody JSONObject jsons){
-      String fastMailNo = jsons.getString("fastmailNo");
-      String userPhone = jsons.getString("userPhone");
-      String signGeoPoint = jsons.getString("signGeoPoint");
-      int isPrimaryAccount = jsons.getIntValue("isPrimaryAccount");
+       fastMailNo = jsons.getString("fastmailNo");
+       userPhone = jsons.getString("userPhone");
+       signGeoPoint = jsons.getString("signGeoPoint");
+       isPrimaryAccount = jsons.getIntValue("isPrimaryAccount");
       MessageCustom m = new MessageCustom();
       try {
         
-        Date signTime = orderSignforService.updateOrderSignforList(fastMailNo,userPhone,signGeoPoint, isPrimaryAccount);
+        Date signTime = orderSignforService.updateOrderSignforList(fastMailNo,userPhone,signGeoPoint,isPrimaryAccount);
         if(signTime != null){
           m.setMsg("success");
           m.setCode("0");
@@ -106,7 +114,7 @@ public class OrderSignforController {
   @RequestMapping(value = "/getOrderList", method = RequestMethod.POST)
   @ResponseBody
   public ResponseEntity<QueryResult<OrderSignfor>> getOrderList(@RequestBody JSONObject jsons){
-                String userPhone = jsons.getString("userPhone");
+                 userPhone = jsons.getString("userPhone");
                 String type = jsons.getString("type");
                 int pageNo = jsons.getIntValue("pageNumber");
                 int pageSize = jsons.getIntValue("pageSize");
@@ -127,16 +135,16 @@ public class OrderSignforController {
   @RequestMapping(value ="/customOrderSign", method = RequestMethod.POST)
   @ResponseBody
   public ResponseEntity<MessageCustom> customOrderSign(@RequestBody JSONObject jsons){
-    String userPhone = jsons.getString("userPhone");
-    String orderNo = jsons.getString("orderNo");
-    String smsCode = jsons.getString("smsCode");
-    int payType =  jsons.getIntValue("payType");
-    String signGeoPoint = jsons.getString("signGeoPoint");
-    String storePhone = jsons.getString("storePhone");
-    int isPrimaryAccount = jsons.getIntValue("isPrimaryAccount");
+     userPhone = jsons.getString("userPhone");
+     orderNo = jsons.getString("orderNo");
+     smsCode = jsons.getString("smsCode");
+     payType =  jsons.getIntValue("payType");
+     signGeoPoint = jsons.getString("signGeoPoint");
+     storePhone = jsons.getString("storePhone");
+     isPrimaryAccount = jsons.getIntValue("isPrimaryAccount");
     MessageCustom m = new MessageCustom();
     try {
-      if((smsCode != null && !"".equals(smsCode)) && storePhone != null && !"".equals(storePhone)){
+      if(smsCode != null && !"".equals(smsCode) && storePhone != null && !"".equals(storePhone)){
         String msg = HttpUtil.sendPost("http://www.3j1688.com/member/existMobileCode/"+storePhone+"_"+smsCode+".html","");
         if(msg!=null && msg.contains("true")){
             orderSignforService.updateOrderSignfor(orderNo, userPhone, signGeoPoint,payType,smsCode,isPrimaryAccount);
@@ -173,10 +181,10 @@ public class OrderSignforController {
   @RequestMapping(value = "/customOrderUnSign", method = RequestMethod.POST)
   @ResponseBody
   public ResponseEntity<MessageCustom> customOrderUnSign(@RequestBody JSONObject jsons){
-    String userPhone = jsons.getString("userPhone");
-    String orderNo = jsons.getString("orderNo");
-    String remark = jsons.getString("remark");
-    String signGeoPoint = jsons.getString("signGeoPoint");
+     userPhone = jsons.getString("userPhone");
+     orderNo = jsons.getString("orderNo");
+     remark = jsons.getString("remark");
+    signGeoPoint = jsons.getString("signGeoPoint");
     int isPrimaryAccount = jsons.getIntValue("isPrimaryAccount");
     MessageCustom m = new MessageCustom();
     try {

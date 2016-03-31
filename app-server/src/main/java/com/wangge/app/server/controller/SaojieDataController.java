@@ -80,13 +80,13 @@ public class SaojieDataController {
 			imageUrl = jsons.getString("imageUrl");
 		}
 		Saojie saojie = dataSaojieService.findByRegionAndSalesman(region,salesman);
-		if (saojie != null) {
+		if (saojie != null || salesman.getIsOldSalesman()==1) {
 			SaojieData data = new SaojieData(name, coordinate);
 			data.setDescription(description);
 			data.setImageUrl(imageUrl);
 			data.setRegion(region);
 			data.setSaojie(saojie);
-			SaojieData saojiedata = dataSaojieService.addDataSaojie(data);
+			SaojieData saojiedata = dataSaojieService.addDataSaojie(data,salesman);
 
 			if (saojiedata != null) {
 
@@ -162,7 +162,7 @@ public class SaojieDataController {
 			dataSaojie.setDescription(description);
 
 			try {
-				dataSaojieService.addDataSaojie(dataSaojie);
+				dataSaojieService.addDataSaojie(dataSaojie,null);
 				json.setMsg("修改成功！");
 				return new ResponseEntity<Json>(json, HttpStatus.OK);
 			} catch (Exception e) {
