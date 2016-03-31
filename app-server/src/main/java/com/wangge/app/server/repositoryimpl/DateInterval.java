@@ -19,7 +19,7 @@ public class DateInterval {
   * @throws
    */
   public  int examDateInterval(String memberId){
-    String sql = "select floor(sysdate - (select   to_date((to_char((select t.createtime from biz_dateinterval t  where rownum = 1 and t.member_id = '"+memberId+"'),'yyyy/mm/dd')),'yyyy/mm/dd')   from dual) ) as d from dual";
+    String sql = "select floor(sysdate - (select   to_date((to_char((select t.createtime from sys_dateinterval t  where rownum = 1 and t.member_id = '"+memberId+"'),'yyyy/mm/dd')),'yyyy/mm/dd')   from dual) ) as d from dual";
     Query query =  em.createNativeQuery(sql);
     Object s =   query.getSingleResult(); 
 
