@@ -76,7 +76,13 @@ public class SalesmanController {
 	@RequestMapping(value = "/findRegionIdBySale", method = RequestMethod.POST)
 	public ResponseEntity<String> findRegionIdBySaleId(String salesmanid) {
 		Salesman salesman=salesmanService.findSalesmanbyId(salesmanid.trim());
-		String regionId = salesman.getRegion().getId();
+		 String regionId=null;
+		 if(null !=salesman.getRegionMore()&&!"".equals(salesman.getRegionMore())){
+	       regionId = salesman.getRegionMore();
+	    }else{
+	       regionId = salesman.getRegion().getId();
+	    }
+		
 		
 	 return new ResponseEntity<String>(regionId,HttpStatus.OK);
 	
