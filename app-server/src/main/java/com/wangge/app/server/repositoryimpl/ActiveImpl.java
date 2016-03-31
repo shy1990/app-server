@@ -22,7 +22,7 @@ public class ActiveImpl {
   * @throws
    */
   public  Double examTwiceShopNum(String area){
-    String sql = "select count(*) from BIZ_ACTIVE c where c.n > =2 and c.member_id in  (select rd.member_id from biz_registdata rd    where rd.region_id  = '"+area+"')";
+    String sql = "select count(*) from BIZ_ACTIVE c where c.n > =2 and c.member_id in  (select rd.member_id from sys_registdata rd    where rd.region_id  = '"+area+"')";
     Query query =  em.createNativeQuery(sql);
     Object s =   query.getSingleResult(); 
     return Double.parseDouble(s.toString()); 
@@ -37,7 +37,7 @@ public class ActiveImpl {
   * @throws
    */
   public Double examOneceShopNum(String area) {
-    String sql = "select count(*) from BIZ_ACTIVE c where c.n> =1 and c.member_id in  (select rd.member_id from biz_registdata rd    where rd.region_id  = '"+area+"')";
+    String sql = "select count(*) from BIZ_ACTIVE c where c.n> =1 and c.member_id in  (select rd.member_id from sys_registdata rd    where rd.region_id  = '"+area+"')";
     Query query =  em.createNativeQuery(sql);
     Object s =  query.getSingleResult(); 
     return  Double.parseDouble(s.toString());
