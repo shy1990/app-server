@@ -85,6 +85,10 @@ public class Visit extends AbstractPersistable<Long> {
 	@JoinColumn(name = "USER_ID")
 	private Salesman salesman;
 	
+	private int isPrimaryAccount; //是否主账号
+	
+	private String signGeoPoint;//经纬度
+	
 	public Visit() {
 		super();
 	}
@@ -177,6 +181,22 @@ public class Visit extends AbstractPersistable<Long> {
 	public void setSalesman(Salesman salesman) {
 		this.salesman = salesman;
 	}
+
+  public int getIsPrimaryAccount() {
+    return isPrimaryAccount;
+  }
+
+  public void setIsPrimaryAccount(int isPrimaryAccount) {
+    this.isPrimaryAccount = isPrimaryAccount;
+  }
+
+  public String getSignGeoPoint() {
+    return signGeoPoint;
+  }
+
+  public void setSignGeoPoint(String signGeoPoint) {
+    this.signGeoPoint = signGeoPoint;
+  }
 
 	
 }

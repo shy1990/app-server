@@ -174,6 +174,15 @@ public class VisitTaskController {
 						String imageurl3 = jsons.getString("imageurl3");
 						taskVisit.setImageurl3(imageurl3);
 					}
+					if(jsons.containsKey("isPrimaryAccount")){
+					  int isPrimaryAccount = jsons.getIntValue("isPrimaryAccount");
+            taskVisit.setIsPrimaryAccount(isPrimaryAccount);
+					}
+					if(jsons.containsKey("signGeoPoint")){
+            String signGeoPoint = jsons.getString("signGeoPoint");
+            taskVisit.setSignGeoPoint(signGeoPoint);
+          }
+					
 					taskVisit.setSalesman(salesman);
 					taskVisitService.save(taskVisit);
 					json.setSuccess(true);

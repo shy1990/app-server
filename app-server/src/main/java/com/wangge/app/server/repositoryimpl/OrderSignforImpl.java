@@ -118,10 +118,12 @@ public class OrderSignforImpl {
       while(it.hasNext()){
         Object[] o = (Object[])it.next(); 
         OrderSignfor os = new OrderSignfor();
-        os.setFastmailNo(String.valueOf(o[0]+""));
         os.setOrderCount(Integer.parseInt(o[3]+""));
        
         try {
+          if(o[0] != null){
+            os.setFastmailNo(String.valueOf(o[0]+""));
+          }
          if(o[2] != null){
            os.setFastmailTime(sdf.parse(o[2]+""));
          }

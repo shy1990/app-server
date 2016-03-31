@@ -71,10 +71,11 @@ public class OrderSignforController {
       String fastMailNo = jsons.getString("fastmailNo");
       String userPhone = jsons.getString("userPhone");
       String signGeoPoint = jsons.getString("signGeoPoint");
+      int isPrimaryAccount = jsons.getIntValue("isPrimaryAccount");
       MessageCustom m = new MessageCustom();
       try {
         
-        Date signTime = orderSignforService.updateOrderSignforList(fastMailNo,userPhone,signGeoPoint);
+        Date signTime = orderSignforService.updateOrderSignforList(fastMailNo,userPhone,signGeoPoint, isPrimaryAccount);
         if(signTime != null){
           m.setMsg("success");
           m.setCode("0");
@@ -132,19 +133,20 @@ public class OrderSignforController {
     int payType =  jsons.getIntValue("payType");
     String signGeoPoint = jsons.getString("signGeoPoint");
     String storePhone = jsons.getString("storePhone");
+    int isPrimaryAccount = jsons.getIntValue("isPrimaryAccount");
     MessageCustom m = new MessageCustom();
     try {
       if((smsCode != null && !"".equals(smsCode)) && storePhone != null && !"".equals(storePhone)){
         String msg = HttpUtil.sendPost("http://www.3j1688.com/member/existMobileCode/"+storePhone+"_"+smsCode+".html","");
         if(msg!=null && msg.contains("true")){
-            orderSignforService.updateOrderSignfor(orderNo, userPhone, signGeoPoint,payType,smsCode);
+            orderSignforService.updateOrderSignfor(orderNo, userPhone, signGeoPoint,payType,smsCode,isPrimaryAccount);
             m.setMsg("success");
             m.setCode("0");
         }else{
             m.setMsg("短信验证码不存在！");
         }
       }else{
-        orderSignforService.updateOrderSignfor(orderNo, userPhone, signGeoPoint,payType,smsCode);
+        orderSignforService.updateOrderSignfor(orderNo, userPhone, signGeoPoint,payType,smsCode,isPrimaryAccount);
         m.setMsg("success");
         m.setCode("0");
       }
@@ -175,9 +177,10 @@ public class OrderSignforController {
     String orderNo = jsons.getString("orderNo");
     String remark = jsons.getString("remark");
     String signGeoPoint = jsons.getString("signGeoPoint");
+    int isPrimaryAccount = jsons.getIntValue("isPrimaryAccount");
     MessageCustom m = new MessageCustom();
     try {
-        orderSignforService.updateOrderSignfor(orderNo, userPhone, remark,signGeoPoint);
+        orderSignforService.updateOrderSignfor(orderNo, userPhone, remark,signGeoPoint,isPrimaryAccount);
         m.setMsg("success");
         m.setCode("0");
     } catch (Exception e) {

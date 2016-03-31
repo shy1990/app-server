@@ -24,7 +24,7 @@ public class OrderSignforService {
 
 
 
-  public Date updateOrderSignforList(String fastMailNo,String userPhone,String signGeoPoint) {
+  public Date updateOrderSignforList(String fastMailNo,String userPhone,String signGeoPoint, int isPrimaryAccount) {
     Date date = new Date();
     List<OrderSignfor> osList =   osr.findByFastmailNo(fastMailNo);
             if(osList != null && osList.size() > 0){
@@ -33,6 +33,7 @@ public class OrderSignforService {
                     os.setYewuSignforGeopoint(signGeoPoint);
                     os.setUserPhone(userPhone);
                     os.setOrderStatus(2);
+                    os.setIsPrimaryAccount(isPrimaryAccount);
                     osr.save(os);
                   }
                 return date;
@@ -43,13 +44,14 @@ public class OrderSignforService {
 
 
   public void updateOrderSignfor(String orderNo, String userPhone,
-      String signGeoPoint, int payType, String smsCode) {
+      String signGeoPoint, int payType, String smsCode,int isPrimaryAccount) {
       OrderSignfor orderSignFor =  findOrderSignFor(orderNo,userPhone);
       
          orderSignFor.setCustomSignforTime(new Date());
          orderSignFor.setCustomSignforGeopoint(signGeoPoint);
          orderSignFor.setOrderPayType(payType);
          orderSignFor.setOrderStatus(3);
+         orderSignFor.setIsPrimaryAccount(isPrimaryAccount);
          if(smsCode != null && !"".equals(smsCode)){
            orderSignFor.setCustomSignforException(1);
          }else{
@@ -61,13 +63,14 @@ public class OrderSignforService {
 
 
 
-  public void updateOrderSignfor(String orderNo, String userPhone, String remark,String signGeoPoint) {
+  public void updateOrderSignfor(String orderNo, String userPhone, String remark,String signGeoPoint,int isPrimaryAccount) {
     OrderSignfor orderSignFor = findOrderSignFor(orderNo,userPhone);
     
       orderSignFor.setCustomUnSignRemark(remark);
       orderSignFor.setCustomSignforTime(new Date());
       orderSignFor.setCustomSignforGeopoint(signGeoPoint);
       orderSignFor.setOrderStatus(4);
+      orderSignFor.setIsPrimaryAccount(isPrimaryAccount);
       osr.save(orderSignFor);
   }
 

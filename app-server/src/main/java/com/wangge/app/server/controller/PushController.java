@@ -83,10 +83,11 @@ public class PushController {
       o.setCreatTime(new Date());
       o.setOrderPrice(amount);
       o.setPhoneCount(skuNum);
-      o.setPartsCount(Integer.parseInt(accCount));
       o.setOrderStatus(0);
       o.setShopName(ss);
       o.setUserPhone(mobile);
+      o.setPartsCount(Integer.parseInt(accCount));
+      
       orderSignforService.saveOrderSignfor(o);
       
       str = JpushClient.sendOrder("下单通知", send,mobile,json.getString("orderNum"),json.getString("skuNum"),json.getString("accNum"),"0");

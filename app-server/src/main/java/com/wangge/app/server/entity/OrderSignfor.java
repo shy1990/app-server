@@ -67,6 +67,9 @@ public class OrderSignfor implements Serializable {
   
   private String customUnSignRemark;
   
+  private int isPrimaryAccount;//是否主账号 0 主账号1 子账号
+  
+  
   public int getOrderCount() {
     return orderCount;
   }
@@ -216,5 +219,13 @@ public class OrderSignfor implements Serializable {
   public void setCustomUnSignRemark(String customUnSignRemark) {
     this.customUnSignRemark = customUnSignRemark;
   }
-  
+
+  public int getIsPrimaryAccount() {
+    return isPrimaryAccount;
+  }
+
+  public void setIsPrimaryAccount(int isPrimaryAccount) {
+    this.isPrimaryAccount = isPrimaryAccount;
+  }
+
 }
