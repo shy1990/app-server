@@ -55,10 +55,10 @@ public class LoginController {
 				return returnLogSucMsg(json, salesman);
 		
 			}else{
-			  ChildAccount childAccount  =   childAccountService.getChildAccountBySimId(simId);
-			  if(childAccount!=null){
-			    return returnLogSucMsg(json, salesman, childAccount);
-			  }
+//			  ChildAccount childAccount  =   childAccountService.getChildAccountBySimId(simId);
+//			  if(childAccount!=null){
+//			    return returnLogSucMsg(json, salesman, childAccount);
+//			  }
 				json.setMsg("与你上一次登录手机卡不同");
 				return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);
 			}
@@ -81,7 +81,7 @@ public class LoginController {
 	* @throws
 	 */
 	private ResponseEntity<JsonCustom> returnLogSucMsg(JsonCustom json, Salesman salesman) {
-		json.setPhone(salesman.getUser().getPhone());
+		json.setPhone(salesman.getMobile());
 		json.setRegionId(salesman.getRegion().getId());
 		json.setId(salesman.getId());
 		if(salesman.getIsOldSalesman()==1){
