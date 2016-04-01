@@ -56,4 +56,8 @@ public class SalesmanService {
 		
 		return  salesmanRepository.findByUserUsernameAndUserPassword(username, password);
 	}
+	
+	public Salesman findByMobile(String mobile){
+	  return  salesmanRepository.findByMobile(mobile);
+	}
 }

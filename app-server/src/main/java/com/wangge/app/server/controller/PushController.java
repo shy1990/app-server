@@ -6,7 +6,6 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.json.JSONObject;
-import org.neo4j.cypher.internal.compiler.v2_1.docbuilders.internalDocBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,6 +19,7 @@ import com.wangge.app.server.jpush.client.JpushClient;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.service.MessageService;
 import com.wangge.app.server.service.OrderSignforService;
+import com.wangge.app.server.service.SalesmanService;
 
 @RestController
 @RequestMapping({ "/v1/push"})
@@ -33,6 +33,8 @@ public class PushController {
   private OrderImpl op;
   @Resource
   private OrderSignforService orderSignforService;
+  @Resource 
+  private SalesmanService salesmanService;
   /**
    * 
    * @Description: 新订单推送
@@ -89,7 +91,10 @@ public class PushController {
       o.setUserPhone(mobile);
       orderSignforService.saveOrderSignfor(o);
       
-      str = JpushClient.sendOrder("下单通知", send,mobile,json.getString("orderNum"),json.getString("skuNum"),json.getString("accNum"),"0");
+      if(null!=salesmanService.findByMobile(mobile)){
+        str = JpushClient.sendOrder("下单通知", send,mobile,json.getString("orderNum"),json.getString("skuNum"),json.getString("accNum"),"0");
+      }
+      
     } catch (Exception e) {
       e.printStackTrace();
       return false;
