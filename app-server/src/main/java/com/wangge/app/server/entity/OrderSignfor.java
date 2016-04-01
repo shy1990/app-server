@@ -44,11 +44,11 @@ public class OrderSignfor implements Serializable {
   private String shopName;
   private Float orderPrice;
   private Integer phoneCount;
-  @JsonFormat(pattern = "MM.dd HH:mm")
+  @JsonFormat(pattern = "MM.dd HH:mm",timezone="GMT+8")
   private Date creatTime;
-  @JsonFormat(pattern = "MM.dd HH:mm")
+  @JsonFormat(pattern = "MM.dd HH:mm",timezone="GMT+8")
   private Date yewuSignforTime; 
-  @JsonFormat(pattern = "MM.dd HH:mm")
+  @JsonFormat(pattern = "MM.dd HH:mm",timezone="GMT+8")
   private Date customSignforTime;
   private Integer orderStatus;
   private Integer orderPayType;
