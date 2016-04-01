@@ -1,5 +1,6 @@
 package com.wangge.app.server.entity;
 
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -13,7 +14,6 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -62,13 +62,12 @@ public class OrderSignfor implements Serializable {
   private int orderCount;//订单数
   @Transient
   private int status;
-  @JsonFormat(pattern = "yyyy-MM-dd")
+  @JsonFormat(pattern = "yyyy-MM-dd",timezone="GMT+8")
   private Date fastmailTime;
   
   private String customUnSignRemark;
   
-  private int isPrimaryAccount;//是否主账号 0 主账号1 子账号
-  
+  private int isPrimaryAccount;
   
   public int getOrderCount() {
     return orderCount;
@@ -227,6 +226,6 @@ public class OrderSignfor implements Serializable {
   public void setIsPrimaryAccount(int isPrimaryAccount) {
     this.isPrimaryAccount = isPrimaryAccount;
   }
-
+  
+  
 }
-

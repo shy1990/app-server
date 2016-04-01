@@ -2,6 +2,7 @@ package com.wangge.app.server.controller;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -199,8 +200,24 @@ public class OrderSignforController {
     return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
     
   }
-  
-  
+  /**
+   * 
+  * @Title: getOrdersByMailNo 
+  * @Description: TODO(根据物流单号获取订单列表) 
+  * @param @param jsons
+  * @param @return    设定文件 
+  * @return ResponseEntity<List<OrderSignfor>>    返回类型 
+  * @throws
+   */
+  @RequestMapping(value = "/getOrdersByMailNo", method = RequestMethod.POST)
+  public ResponseEntity<QueryResult<OrderSignfor>> getOrdersByMailNo(@RequestBody JSONObject jsons){
+        String fastmailNo = jsons.getString("fastmailNo");
+        String userPhone = jsons.getString("userPhone");
+        int pageNo = jsons.getIntValue("pageNumber");
+        int pageSize = jsons.getIntValue("pageSize");
+        QueryResult<OrderSignfor> qr = osi.getOrdersByMailNo(fastmailNo,userPhone, pageNo > 0 ? pageNo-1 : 0,pageSize > 0 ? pageSize : 10);   
+        return new ResponseEntity<QueryResult<OrderSignfor>>(qr,HttpStatus.OK);
+  }
   
 
 }

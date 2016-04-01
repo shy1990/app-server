@@ -1,5 +1,6 @@
 package com.wangge.app.server.repositoryimpl;
 
+
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,6 +22,30 @@ public class OrderSignforImpl {
   
   @PersistenceContext  
   private EntityManager em; 
+  
+  /**
+   * 
+  * @Title: getOrdersByMailNo 
+  * @Description: TODO(根据物流单号和业务员手机号获取订单列表) 
+  * @param @param fastmailNo
+  * @param @param userPhone
+  * @param @return    设定文件 
+  * @return List<OrderSignfor>    返回类型 
+  * @throws
+   */
+  public QueryResult<OrderSignfor>getOrdersByMailNo(String fastmailNo,String userPhone, int pageNo, int pageSize){
+   String sql = "select  os.order_no,os.shop_name,os.creat_time,os.order_status,os.phone_count,os.order_price  from BIZ_ORDER_SIGNFOR os  where os.user_phone = '"+userPhone+"' and os.FASTMAIL_NO = '"+fastmailNo+"' order by os.signid";
+  
+   String countSql = "select  count(os.signid)    from BIZ_ORDER_SIGNFOR os  where os.user_phone = '"+userPhone+"' and os.FASTMAIL_NO = '"+fastmailNo+"' order by os.signid";
+   Query query = em.createNativeQuery(sql);
+   if(pageNo !=-1 && pageSize != -1)query.setFirstResult(pageNo*pageSize).setMaxResults(pageSize);
+   BigDecimal a = (BigDecimal)  em.createNativeQuery(countSql).getSingleResult();
+   List<OrderSignfor> olist = createOrderList(query.getResultList());
+   QueryResult<OrderSignfor> qr = new QueryResult<OrderSignfor>();
+   qr.setContent(olist);
+   qr.setTotalPages(Long.parseLong(String.valueOf(a.intValue())),Long.parseLong(String.valueOf(pageSize)));
+    return qr;
+  }
   /**
    * @throws ParseException 
    * 
@@ -49,7 +74,7 @@ public class OrderSignforImpl {
     BigDecimal a = (BigDecimal)  em.createNativeQuery(countSql).getSingleResult();
     
     List<OrderSignfor> olist = createOrderList(query.getResultList());
-    QueryResult<OrderSignfor> qr = new QueryResult();
+    QueryResult<OrderSignfor> qr = new QueryResult<OrderSignfor>();
     qr.setContent(olist);
     qr.setTotalPages(Long.parseLong(String.valueOf(a.intValue())),Long.parseLong(String.valueOf(pageSize)));
    // Page<OrderSignfor> page = new PageImpl<OrderSignfor>(olist, new PageRequest(pageNo, pageSize), Long.parseLong(String.valueOf(a.intValue())));
@@ -76,7 +101,7 @@ public class OrderSignforImpl {
      if(pageNo!=-1 && pageSize != -1)query.setFirstResult(pageNo*pageSize).setMaxResults(pageSize);
      BigDecimal a = (BigDecimal)  em.createNativeQuery(countSql).getSingleResult();
      List<OrderSignfor> olist = createOrderSignforList(query.getResultList());
-     QueryResult<OrderSignfor> qr = new QueryResult();
+     QueryResult<OrderSignfor> qr = new QueryResult<OrderSignfor>();
      qr.setContent(olist);
      qr.setTotalPages(Long.parseLong(String.valueOf(a.intValue())),Long.parseLong(String.valueOf(pageSize)));
      
@@ -84,11 +109,11 @@ public class OrderSignforImpl {
      return qr;
   }
   
-  private List<OrderSignfor> createOrderList(List olist){
+  private List<OrderSignfor> createOrderList(List<?> olist){
     List<OrderSignfor> orderSignforList = new ArrayList<OrderSignfor>();
     SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss");
     if(olist!=null && olist.size()>0){
-      Iterator it = olist.iterator();  
+      Iterator<?> it = olist.iterator();  
       while(it.hasNext()){
         Object[] o = (Object[])it.next(); 
         OrderSignfor os = new OrderSignfor();
@@ -109,21 +134,18 @@ public class OrderSignforImpl {
      return  orderSignforList;
   }
   
-  @SuppressWarnings("unused")
-  private List<OrderSignfor> createOrderSignforList(List olist){
+  private List<OrderSignfor> createOrderSignforList(List<?> olist){
     List<OrderSignfor> orderSignforList = new ArrayList<OrderSignfor>();
     SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss");
     if(olist!=null && olist.size()>0){
-      Iterator it = olist.iterator();  
+      Iterator<?> it = olist.iterator();  
       while(it.hasNext()){
         Object[] o = (Object[])it.next(); 
         OrderSignfor os = new OrderSignfor();
+        os.setFastmailNo(String.valueOf(o[0]+""));
         os.setOrderCount(Integer.parseInt(o[3]+""));
        
         try {
-          if(o[0] != null){
-            os.setFastmailNo(String.valueOf(o[0]+""));
-          }
          if(o[2] != null){
            os.setFastmailTime(sdf.parse(o[2]+""));
          }
@@ -146,4 +168,3 @@ public class OrderSignforImpl {
   }
 
 }
-
