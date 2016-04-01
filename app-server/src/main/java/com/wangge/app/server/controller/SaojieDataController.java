@@ -80,7 +80,7 @@ public class SaojieDataController {
 			imageUrl = jsons.getString("imageUrl");
 		}
 		Saojie saojie = dataSaojieService.findByRegionAndSalesman(region,salesman);
-		if ((saojie != null && !"".equals(saojie))|| salesman.getIsOldSalesman()==1) {
+		if (saojie != null || salesman.getIsOldSalesman()==1) {
 			SaojieData data = new SaojieData(name, coordinate);
 			data.setDescription(description);
 			data.setImageUrl(imageUrl);
@@ -88,7 +88,7 @@ public class SaojieDataController {
 			data.setSaojie(saojie);
 			SaojieData saojiedata = dataSaojieService.addDataSaojie(data,salesman);
 
-			if (saojiedata != null && !"".equals(saojiedata)) {
+			if (saojiedata != null) {
 
 				SaojieData sj = new SaojieData();
 				sj.setId(saojiedata.getId());
@@ -157,7 +157,7 @@ public class SaojieDataController {
 		String description = jsons.getString("description");
 		Json json = new Json();
 		SaojieData dataSaojie = dataSaojieService.findSaojieDataById(Long.parseLong(saojieDataId));
-		if (dataSaojie != null && !"".equals(dataSaojie)) {
+		if (dataSaojie != null) {
 			dataSaojie.setName(name);
 			dataSaojie.setDescription(description);
 

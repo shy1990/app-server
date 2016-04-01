@@ -62,7 +62,7 @@ public class OrderSignfor implements Serializable {
   private int orderCount;//订单数
   @Transient
   private int status;
-  @JsonFormat(pattern = "yyyy-MM-dd")
+  @JsonFormat(pattern = "yyyy-MM-dd",timezone="GMT+8")
   private Date fastmailTime;
   
   private String customUnSignRemark;
