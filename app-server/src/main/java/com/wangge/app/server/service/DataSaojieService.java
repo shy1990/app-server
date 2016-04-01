@@ -31,11 +31,14 @@ public class DataSaojieService {
 	@Autowired
 	private RegionRepository regionRepository;
 
-	public SaojieData addDataSaojie(SaojieData dataSaojie) {
+	public SaojieData addDataSaojie(SaojieData dataSaojie,Salesman salesman) {
 		int taskValue = 0;
 		int dataSaojieNum = 0;
 		List<Saojie> child = new ArrayList<Saojie>();
 		SaojieData data =  dataSaojieRepository.save(dataSaojie);
+		if(null==salesman||salesman.getIsOldSalesman()==1){
+		  return data;
+		}
 		taskValue = dataSaojie.getSaojie().getMinValue();
 	    dataSaojieNum = getDtaCountBySaojieId(dataSaojie.getSaojie().getId());
 		if(taskValue == dataSaojieNum){
@@ -114,5 +117,6 @@ public class DataSaojieService {
 	public SaojieData findByRegistData(RegistData id){
 	  return dataSaojieRepository.findByRegistData(id);
 	}
+
 	
 }

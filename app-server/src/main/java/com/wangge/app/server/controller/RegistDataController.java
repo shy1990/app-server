@@ -191,7 +191,7 @@ public class RegistDataController {
 				SaojieData sjData = dataSaojieService.findBySaojieData(Long.parseLong(saojieId));
 				sjData.setRegistData(registData);
 				sjData.setDescription(description);
-				dataSaojieService.addDataSaojie(sjData);
+				dataSaojieService.addDataSaojie(sjData,salesman);
 				json.setId(String.valueOf(registData.getId()));
 				json.setSuccess(true);
 				json.setMsg("保存成功！");
