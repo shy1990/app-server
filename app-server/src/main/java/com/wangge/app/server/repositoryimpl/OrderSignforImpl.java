@@ -140,31 +140,31 @@ public class OrderSignforImpl {
       Iterator<?> it = olist.iterator();  
       while(it.hasNext()){
         Object[] o = (Object[])it.next(); 
-        OrderSignfor os = new OrderSignfor();
-        
-        os.setOrderCount(Integer.parseInt(o[3]+""));
-       
-        try {
-         if(o[0] != null){
-           os.setFastmailNo(String.valueOf(o[0]+""));
-         }
-         if(o[2] != null){
-           os.setFastmailTime(sdf.parse(o[2]+""));
-         }
-         if(o[1] != null){
-           os.setYewuSignforTime(sdf.parse(o[1]+""));
-           os.setStatus(1);
-         }else{
-           os.setStatus(0);
-         }
-        } catch (ParseException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
+        if(o.length > 0 && o[0] != null){
+          OrderSignfor os = new OrderSignfor();
+          os.setFastmailNo(String.valueOf(o[0]+""));
+          os.setOrderCount(Integer.parseInt(o[3]+""));
+         
+          try {
+           if(o[2] != null){
+             os.setFastmailTime(sdf.parse(o[2]+""));
+           }
+           if(o[1] != null){
+             os.setYewuSignforTime(sdf.parse(o[1]+""));
+             os.setStatus(1);
+           }else{
+             os.setStatus(0);
+           }
+          } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
+          
+         
+          orderSignforList.add(os);
         }
-        
        
-        orderSignforList.add(os);
-      }
+       }
       }
   return  orderSignforList;
   }
