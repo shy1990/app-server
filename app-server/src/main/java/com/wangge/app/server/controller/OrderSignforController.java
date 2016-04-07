@@ -77,7 +77,6 @@ public class OrderSignforController {
           m.setMsg("success");
           m.setCode("0");
           m.setSignTime(signTime);
-          //return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
         }else{
           m.setMsg("false");
           m.setCode("1");
