@@ -180,6 +180,11 @@ public class RegistDataController {
 			data.setDescription(description);
 			Map<String, String> member = registDataService.findMemberInfo(loginAccount);
 			if (member != null && !"".equals(member)) {
+			  if(member.size()>1){
+			    json.setMsg("输入的账号已存在");
+	        json.setSuccess(false);
+	        return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
+			  }
 				data.setConsignee(member.get("CONSIGNEE"));
 				data.setReceivingAddress(member.get("ADDRESS"));
 				data.setPhoneNum(member.get("MOBILE"));
