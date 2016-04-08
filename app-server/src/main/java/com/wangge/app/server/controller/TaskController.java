@@ -17,10 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.Saojie;
 import com.wangge.app.server.entity.SaojieData;
+import com.wangge.app.server.service.RegionService;
 import com.wangge.app.server.service.SalesmanService;
 import com.wangge.app.server.service.SaojieDataService;
 import com.wangge.app.server.service.SaojieService;
-import com.wangge.app.server.util.JWtoAdrssUtil;
+import com.wangge.common.entity.Region;
 
 @RestController
 @RequestMapping(value = "/v1/task/")
@@ -33,8 +34,8 @@ public class TaskController {
 //	private SalesmanService salesmanService;
 	@Resource
 	private SalesmanService sms;
-//	@Resource
-//	private RegionService res;
+	@Resource
+	private RegionService res;
 	@Resource
 	private SaojieDataService sds;
 	@Resource
@@ -116,7 +117,10 @@ public class TaskController {
 		 Salesman man=sms.findSalesmanbyId(userid.trim());
 //		 Json json = new Json();
 			Collection<Saojie> listSjid=sjs.findBySalesman(man);
-			List<SaojieData> sdList = sds.findsjidById(listSjid);
+		
+			Collection<Region> listRegion=res.findRegiondbyParentid(man.getRegion().getId());
+			 List<SaojieData> sdList = sds.findsjidById(listRegion);
+			
 			List<Map<String,Object>> sdmap = new ArrayList<Map<String,Object>>();
 			for(SaojieData sj:sdList){
 				Map<String,Object> map = new HashMap<String,Object>();
