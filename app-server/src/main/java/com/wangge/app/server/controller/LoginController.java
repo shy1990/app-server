@@ -104,7 +104,7 @@ public class LoginController {
 		  json.setStatus(salesman.getStatus().getNum());
 		}
 		json.setIsOldSalesman(salesman.getIsOldSalesman());
-		json.setNickName(salesman.getUser().getNickname());
+		json.setChildName(salesman.getUser().getNickname());
 		json.setIsPrimaryAccount(0);
 		json.setMsg("登陆成功！");
 		json.setStage(salesman.getAssessStage());
@@ -133,7 +133,8 @@ public class LoginController {
 	      json.setStatus(salesman.getStatus().getNum());
 	    }
 	    json.setIsOldSalesman(salesman.getIsOldSalesman());
-	    json.setNickName(childAccount.getTruename());
+	    json.setChildName(childAccount.getTruename());
+	    json.setChildId(childAccount.getId());
 	    json.setIsPrimaryAccount(1);
 	    json.setMsg("登陆成功！");
 	    json.setStage(salesman.getAssessStage());
