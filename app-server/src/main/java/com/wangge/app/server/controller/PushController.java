@@ -6,7 +6,6 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.json.JSONObject;
-import org.neo4j.cypher.internal.compiler.v2_1.docbuilders.internalDocBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,7 +22,6 @@ import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.service.MessageService;
 import com.wangge.app.server.service.OrderSignforService;
 import com.wangge.app.server.service.RegistDataService;
-import com.wangge.common.repository.RegionRepository;
 
 @RestController
 @RequestMapping({ "/v1/push"})
@@ -38,7 +36,7 @@ public class PushController {
   @Resource
   private OrderSignforService orderSignforService;
   @Resource
-  private RegistDataRepository regionRepository;
+  private RegistDataService regionDataService;
   /**
    * 
    * @Description: 新订单推送
@@ -92,7 +90,7 @@ public class PushController {
       o.setOrderStatus(0);
       o.setShopName(ss);
       o.setUserPhone(mobile);
-      o.setUserId(getUserId(mobile));
+      o.setUserId(regionDataService.getSalesmanId(mobile));
       o.setPartsCount(Integer.parseInt(accCount));
       
       orderSignforService.saveOrderSignfor(o);
@@ -108,23 +106,6 @@ public class PushController {
      }
        return true;
   }
-  /**
-   * 
-  * @Title: getUserId 
-  * @Description: TODO(通过商城用户手机号查询注册信息，返回业务员id) 
-  * @param @param mobile
-  * @param @return    设定文件 
-  * @return String    返回类型 
-  * @throws
-   */
-  private String getUserId(String mobile){
-   RegistData redata = regionRepository.findByPhoneNum(mobile);
-   if(redata != null){
-     return redata.getSalesman().getId();
-   }
-   return null;
-  }
-  
   /**
    * 
    * @Description: 取消订单推送

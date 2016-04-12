@@ -78,4 +78,12 @@ public class RegistDataService {
     return registDataRepository.countByRegionId(area);
   }
 
+  public String getSalesmanId(String mobile) {
+    RegistData data = registDataRepository.findByPhoneNum(mobile);
+    if(data != null){
+      return data.getSalesman().getId();
+    }
+    return null;
+  }
+
 }
