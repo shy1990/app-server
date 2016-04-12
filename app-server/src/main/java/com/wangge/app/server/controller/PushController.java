@@ -16,10 +16,14 @@ import com.wangge.app.server.entity.Message;
 import com.wangge.app.server.entity.Message.MessageType;
 import com.wangge.app.server.entity.Message.SendChannel;
 import com.wangge.app.server.entity.OrderSignfor;
+import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.jpush.client.JpushClient;
+import com.wangge.app.server.repository.RegistDataRepository;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.service.MessageService;
 import com.wangge.app.server.service.OrderSignforService;
+import com.wangge.app.server.service.RegistDataService;
+import com.wangge.common.repository.RegionRepository;
 
 @RestController
 @RequestMapping({ "/v1/push"})
@@ -33,6 +37,8 @@ public class PushController {
   private OrderImpl op;
   @Resource
   private OrderSignforService orderSignforService;
+  @Resource
+  private RegistDataRepository regionRepository;
   /**
    * 
    * @Description: 新订单推送
@@ -86,6 +92,7 @@ public class PushController {
       o.setOrderStatus(0);
       o.setShopName(ss);
       o.setUserPhone(mobile);
+      o.setUserId(getUserId(mobile));
       o.setPartsCount(Integer.parseInt(accCount));
       
       orderSignforService.saveOrderSignfor(o);
@@ -100,6 +107,14 @@ public class PushController {
        return false;
      }
        return true;
+  }
+  
+  private String getUserId(String mobile){
+   RegistData redata = regionRepository.findByPhoneNum(mobile);
+   if(redata != null){
+     return redata.getSalesman().getId();
+   }
+   return null;
   }
   
   /**
