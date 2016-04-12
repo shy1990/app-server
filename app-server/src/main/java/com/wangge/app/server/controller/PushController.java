@@ -108,7 +108,15 @@ public class PushController {
      }
        return true;
   }
-  
+  /**
+   * 
+  * @Title: getUserId 
+  * @Description: TODO(通过商城用户手机号查询注册信息，返回业务员id) 
+  * @param @param mobile
+  * @param @return    设定文件 
+  * @return String    返回类型 
+  * @throws
+   */
   private String getUserId(String mobile){
    RegistData redata = regionRepository.findByPhoneNum(mobile);
    if(redata != null){
