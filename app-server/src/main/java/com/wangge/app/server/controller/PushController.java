@@ -16,10 +16,13 @@ import com.wangge.app.server.entity.Message;
 import com.wangge.app.server.entity.Message.MessageType;
 import com.wangge.app.server.entity.Message.SendChannel;
 import com.wangge.app.server.entity.OrderSignfor;
+import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.jpush.client.JpushClient;
+import com.wangge.app.server.repository.RegistDataRepository;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.service.MessageService;
 import com.wangge.app.server.service.OrderSignforService;
+import com.wangge.app.server.service.RegistDataService;
 
 @RestController
 @RequestMapping({ "/v1/push"})
@@ -33,7 +36,9 @@ public class PushController {
   private OrderImpl op;
   @Resource
   private OrderSignforService orderSignforService;
-  /**
+  @Resource
+  private RegistDataService registDataService;
+  /** 
    * 
    * @Description: 新订单推送
    * @param @param msg
@@ -86,6 +91,7 @@ public class PushController {
       o.setPartsCount(Integer.parseInt(accCount));
       o.setOrderStatus(0);
       o.setShopName(ss);
+      o.setUserId(registDataService.getRegistData(mobile));
       o.setUserPhone(mobile);
       orderSignforService.saveOrderSignfor(o);
       
