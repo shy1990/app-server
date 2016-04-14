@@ -131,7 +131,7 @@ public class LoginController {
 	      json.setStatus(salesman.getStatus().getNum());
 	    }
 	    json.setIsOldSalesman(salesman.getIsOldSalesman());
-	    json.setNickName(childAccount.getTruename().replace("/n", "").trim());
+	    json.setNickName(salesman.getUser().getNickname().replace("/n", "").trim());
 	    json.setChildId(String.valueOf(childAccount.getId()));
 	    json.setChildName(childAccount.getTruename().replace("/n", "").trim());
 	    json.setIsPrimaryAccount(1);
