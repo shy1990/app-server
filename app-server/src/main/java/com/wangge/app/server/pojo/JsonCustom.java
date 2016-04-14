@@ -48,7 +48,7 @@ public class JsonCustom extends Json{
   public void setNickName(String nickName) {
     this.nickName = nickName;
   }
-  
+
   
 
 }

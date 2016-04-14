@@ -2,11 +2,9 @@ package com.wangge.app.server.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -26,7 +24,7 @@ public class ChildAccount {
 
   /*子账号主键id */
   @Id
-  /*@GenericGenerator(name = "idgen", strategy = "increment")
+ /* @GenericGenerator(name = "idgen", strategy = "increment")
   @GeneratedValue(generator = "idgen")*/
   @Column(name = "CHILD_ID")
   private String id;
@@ -40,7 +38,6 @@ public class ChildAccount {
   public ChildAccount() {
     super();
   }
- 
   public String getId() {
     return id;
   }
