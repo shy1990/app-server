@@ -26,8 +26,8 @@ public class ChildAccount {
 
   /*子账号主键id */
   @Id
-  @GenericGenerator(name = "idgen", strategy = "increment")
-  @GeneratedValue(generator = "idgen")
+ /* @GenericGenerator(name = "idgen", strategy = "increment")
+  @GeneratedValue(generator = "idgen")*/
   @Column(name = "CHILD_ID")
   private int id;
   /*父类id，关联主账号*/

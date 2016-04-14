@@ -2,6 +2,8 @@ package com.wangge.app.server.repository;
 
 import java.util.Date;
 
+import javax.annotation.Resource;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.wangge.AppServerApplication;
+import com.wangge.app.server.entity.ChildAccount;
 import com.wangge.app.server.entity.Saojie;
 import com.wangge.app.server.entity.Saojie.SaojieStatus;
 import com.wangge.common.repository.RegionRepository;
@@ -22,6 +25,8 @@ public class TaskSaojieRepositoryTest {
 	private SalesmanRepository sr;
 	@Autowired
 	private RegionRepository rr;
+	@Resource
+	private ChildAccountRepostory cr;
 
 	@Test
 	public void testAdd() {
@@ -54,7 +59,11 @@ public class TaskSaojieRepositoryTest {
 
 	@Test
 	public void testDel() {
-
+	  ChildAccount C = cr.findBySimId("460028545000000");
+	  
+	  if(C != null){
+	    System.out.println("================="+C.getTruename());
+	  }
 	}
 
 }
