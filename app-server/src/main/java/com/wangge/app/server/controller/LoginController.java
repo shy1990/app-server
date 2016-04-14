@@ -57,7 +57,7 @@ public class LoginController {
 		
 			}else{
 			  ChildAccount childAccount  =   childAccountService.getChildAccountBySimId(simId);
-			  if(childAccount!=null){
+			  if(childAccount != null){
 			    return returnLogSucMsg(json, salesman, childAccount);
 			  }
 				json.setMsg("与你上一次登录手机卡不同");
@@ -91,7 +91,7 @@ public class LoginController {
 		  json.setStatus(salesman.getStatus().getNum());
 		}
 		json.setIsOldSalesman(salesman.getIsOldSalesman());
-		json.setNickName(salesman.getUser().getNickname());
+		json.setNickName(salesman.getUser().getNickname().replace("/n", "").trim());
 		json.setIsPrimaryAccount(0);
 		json.setMsg("登陆成功！");
 		json.setStage(salesman.getAssessStage());
@@ -120,7 +120,9 @@ public class LoginController {
 	      json.setStatus(salesman.getStatus().getNum());
 	    }
 	    json.setIsOldSalesman(salesman.getIsOldSalesman());
-	    json.setNickName(childAccount.getTruename());
+	    json.setNickName(childAccount.getTruename().replace("/n", "").trim());
+	    json.setChildId(String.valueOf(childAccount.getId()));
+	    json.setChildName(childAccount.getTruename().replace("/n", "").trim());
 	    json.setIsPrimaryAccount(1);
 	    json.setMsg("登陆成功！");
 	    json.setStage(salesman.getAssessStage());

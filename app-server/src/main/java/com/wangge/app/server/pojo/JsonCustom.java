@@ -11,6 +11,10 @@ public class JsonCustom extends Json{
   private String nickName;
   
   private int isPrimaryAccount;
+  
+  private String childId;
+  
+  private String childName;
 
   public String getNickName() {
     return nickName;
@@ -26,6 +30,22 @@ public class JsonCustom extends Json{
 
   public void setIsPrimaryAccount(int isPrimaryAccount) {
     this.isPrimaryAccount = isPrimaryAccount;
+  }
+
+  public String getChildId() {
+    return childId;
+  }
+
+  public void setChildId(String childId) {
+    this.childId = childId;
+  }
+
+  public String getChildName() {
+    return childName;
+  }
+
+  public void setChildName(String childName) {
+    this.childName = childName;
   }
   
   
