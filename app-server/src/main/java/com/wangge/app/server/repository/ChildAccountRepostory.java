@@ -17,5 +17,7 @@ public interface ChildAccountRepostory extends JpaRepository<ChildAccount, Long>
 
   List<ChildAccount> findByParentId(String parentId);
 
+  ChildAccount findBySimId(String string);
+
 
 }
