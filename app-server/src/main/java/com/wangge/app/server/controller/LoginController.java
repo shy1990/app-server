@@ -10,18 +10,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.ChildAccount;
 import com.wangge.app.server.entity.Salesman;
-import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.pojo.JsonCustom;
 import com.wangge.app.server.service.AssessService;
 import com.wangge.app.server.service.ChildAccountService;
 import com.wangge.app.server.service.SalesmanService;
-import com.wangge.security.entity.User;
 
 @RestController
 @RequestMapping(value = "/v1")
