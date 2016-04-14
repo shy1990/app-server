@@ -58,16 +58,16 @@ public class LoginController {
 				return returnLogSucMsg(json, salesman);
 		
 			}else{
-			  ChildAccount child  =   childAccountService.getChildAccountBySimId(simId);
-        if(child!=null){
-          //for(ChildAccount chil : childList){
-             if(child.getSimId() == null || "".equals(child.getSimId())){
-               child.setSimId(simId);
-               childAccountService.save(child);
-               return returnLogSucMsg(json, salesman, child);
-             }else if(child.getSimId().equals(simId)){
-               return returnLogSucMsg(json, salesman, child);
-           //  }
+			  List<ChildAccount> childList  =   childAccountService.getChildAccountByParentId(salesman.getId());
+        if(childList!=null && childList.size() > 0){
+          for(ChildAccount chil : childList){
+             if(chil.getSimId() == null || "".equals(chil.getSimId())){
+               chil.setSimId(simId);
+               childAccountService.save(chil);
+               return returnLogSucMsg(json, salesman, chil);
+             }else if(chil.getSimId().equals(simId)){
+               return returnLogSucMsg(json, salesman, chil);
+             }
            
           }
           json.setMsg("与你上一次登录手机卡不同");
