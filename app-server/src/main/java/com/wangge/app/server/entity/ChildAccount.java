@@ -29,7 +29,7 @@ public class ChildAccount {
  /* @GenericGenerator(name = "idgen", strategy = "increment")
   @GeneratedValue(generator = "idgen")*/
   @Column(name = "CHILD_ID")
-  private int id;
+  private String id;
   /*父类id，关联主账号*/
   private String parentId;
   /*手机sim卡号*/
@@ -40,12 +40,15 @@ public class ChildAccount {
   public ChildAccount() {
     super();
   }
-  public int getId() {
+  
+  public String getId() {
     return id;
   }
-  public void setId(int id) {
+
+  public void setId(String id) {
     this.id = id;
   }
+
   public String getParentId() {
     return parentId;
   }
