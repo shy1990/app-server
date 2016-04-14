@@ -1,5 +1,7 @@
 package com.wangge.app.server.controller;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
@@ -56,12 +58,21 @@ public class LoginController {
 				return returnLogSucMsg(json, salesman);
 		
 			}else{
-			  ChildAccount childAccount  =   childAccountService.getChildAccountBySimId(simId);
-			  if(childAccount != null){
-			    return returnLogSucMsg(json, salesman, childAccount);
-			  }
-				json.setMsg("与你上一次登录手机卡不同");
+			  ChildAccount child  =   childAccountService.getChildAccountBySimId(simId);
+        if(child!=null){
+          //for(ChildAccount chil : childList){
+             if(child.getSimId() == null || "".equals(child.getSimId())){
+               child.setSimId(simId);
+               childAccountService.save(child);
+               return returnLogSucMsg(json, salesman, child);
+             }else if(child.getSimId().equals(simId)){
+               return returnLogSucMsg(json, salesman, child);
+           //  }
+           
+          }
+          json.setMsg("与你上一次登录手机卡不同");
 				return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);
+				}
 			}
 			
 				return returnLogSucMsg(json, salesman);
