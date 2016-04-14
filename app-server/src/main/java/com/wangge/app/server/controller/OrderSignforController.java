@@ -2,7 +2,6 @@ package com.wangge.app.server.controller;
 
 import java.text.ParseException;
 import java.util.Date;
-import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -93,13 +92,14 @@ public class OrderSignforController {
           m.setMsg("false");
           m.setCode("1");
         }
+        return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
         
       } catch (Exception e) {
         e.printStackTrace();
         m.setMsg("false");
         m.setCode("1");
+        return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
       }
-      return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
   }
   /**
    * @throws ParseException 

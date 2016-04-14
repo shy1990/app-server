@@ -77,7 +77,15 @@ public class RegistDataService {
     // TODO Auto-generated method stub
     return registDataRepository.countByRegionId(area);
   }
-
+  /**
+   * 
+  * @Title: getSalesmanId 
+  * @Description: TODO(根据商城用户电话号码查询注册信息，返回业务id) 
+  * @param @param mobile
+  * @param @return    设定文件 
+  * @return String    返回类型 
+  * @throws
+   */
   public String getSalesmanId(String mobile) {
     RegistData data = registDataRepository.findByPhoneNum(mobile);
     if(data != null){
@@ -85,5 +93,14 @@ public class RegistDataService {
     }
     return null;
   }
+
+  public String getRegionName(String storePhone) {
+    RegistData data = registDataRepository.findByPhoneNum(storePhone);
+    if(data != null){
+      return data.getRegion().getName();
+    }
+    return null;
+  }
+
 
 }

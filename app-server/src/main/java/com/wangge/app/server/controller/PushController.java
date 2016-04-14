@@ -36,8 +36,8 @@ public class PushController {
   @Resource
   private OrderSignforService orderSignforService;
   @Resource
-  private RegistDataService regionDataService;
-  /**
+  private RegistDataService registDataService;
+  /** 
    * 
    * @Description: 新订单推送
    * @param @param msg
@@ -89,8 +89,8 @@ public class PushController {
       o.setPhoneCount(skuNum);
       o.setOrderStatus(0);
       o.setShopName(ss);
+      o.setUserId(registDataService.getSalesmanId(mobile));
       o.setUserPhone(mobile);
-      o.setUserId(regionDataService.getSalesmanId(mobile));
       o.setPartsCount(Integer.parseInt(accCount));
       
       orderSignforService.saveOrderSignfor(o);

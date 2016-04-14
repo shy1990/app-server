@@ -56,4 +56,11 @@ public class SalesmanService {
 		
 		return  salesmanRepository.findByUserUsernameAndUserPassword(username, password);
 	}
+  public String getSalesman(String userId) {
+    Salesman man = salesmanRepository.findOne(userId);
+    if(man != null){
+       return man.getRegion().getName();
+    }
+    return null;
+  }
 }

@@ -8,6 +8,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.wangge.AppServerApplication;
 import com.wangge.app.server.entity.Salesman;
+import com.wangge.app.server.service.SalesmanService;
 import com.wangge.common.repository.RegionRepository;
 import com.wangge.security.entity.User;
 import com.wangge.security.entity.User.UserStatus;
@@ -22,6 +23,8 @@ public class SalesmanRepositoryTest {
 	private UserRepository ur;
 	@Autowired
 	private RegionRepository rr;
+	 @Autowired
+	  private SalesmanService srService;
 
 	@Test
 	public void testAdd() {
@@ -43,5 +46,11 @@ public class SalesmanRepositoryTest {
 		
 		sr.delete("10001");
 		ur.delete("10001");
+	}
+	
+	@Test
+	public void tset(){
+	  String s = srService.getSalesman("A371725210");
+	  System.out.println("=============="+s);
 	}
 }

@@ -13,6 +13,8 @@ public class JsonCustom extends Json{
   private int isPrimaryAccount;
   
   private String childId;
+  
+  private String nickName;
 
 
   public String getChildName() {
@@ -37,6 +39,14 @@ public class JsonCustom extends Json{
 
   public void setChildId(String childId) {
     this.childId = childId;
+  }
+
+  public String getNickName() {
+    return nickName;
+  }
+
+  public void setNickName(String nickName) {
+    this.nickName = nickName;
   }
   
   
