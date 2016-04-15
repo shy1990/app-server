@@ -270,4 +270,33 @@ public class PushController {
 //    }
 //    return false;
 //  }
+  
+  
+  @RequestMapping(value = { "/pushNewAfterSales"},method = RequestMethod.POST)
+  public boolean pushNewAfterSales(String msg){
+    JSONObject json = new JSONObject(msg);
+    String mobile = json.getString("mobile");
+    String content = json.getString("content");
+    String str = "";
+    try {
+      
+      Message mes = new Message();
+      mes.setChannel(SendChannel.PUSH);
+      mes.setType(MessageType.SHOUHOU);
+      mes.setSendTime(new Date());
+      mes.setContent(content);
+      mes.setReceiver(mobile);
+      mr.save(mes);
+      
+      str = JpushClient.sendSimple("售后通知", content, mobile,mes.getId(),"3");//3代表售后通知
+    } catch (Exception e) {
+      e.printStackTrace();
+      return false;
+    }
+     if(str.contains("发送失败")){
+     //  mr.updateMessageResult(str, mes.getId());
+       return false;
+     }
+       return true;
+  }
 }
