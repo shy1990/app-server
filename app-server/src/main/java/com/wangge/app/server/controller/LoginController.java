@@ -48,35 +48,34 @@ public class LoginController {
 		
 		if(salesman !=null && !"".equals(salesman.getId())){
 			
-			if((salesman.getSimId() == null || "".equals(salesman.getSimId()))){
-				salesman.setSimId(simId);
-				salesmanService.save(salesman);
-			}else if(salesman.getSimId() != null && !"".equals(salesman.getSimId()) && simId.equals(salesman.getSimId())){
-				return returnLogSucMsg(json, salesman);
-		
-			}else{
-			  List<ChildAccount> childList  =   childAccountService.getChildAccountByParentId(salesman.getId());
-			  if(childList!=null && childList.size() > 0){
-			    for(ChildAccount chil : childList){
-			       if(chil.getSimId() == null || "".equals(chil.getSimId())){
-			         chil.setSimId(simId);
-			         childAccountService.save(chil);
-			         return returnLogSucMsg(json, salesman, chil);
-			       }else if(chil.getSimId().equals(simId)){
-			         return returnLogSucMsg(json, salesman, chil);
-			       }
-			     
-			    }
-			    json.setMsg("与你上一次登录手机卡不同");
-	        return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);
-			  }
-				//json.setMsg("与你上一次登录手机卡不同");
-			//	return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);
+		  if((salesman.getSimId() == null || "".equals(salesman.getSimId()))){
+        salesman.setSimId(simId);
+        salesmanService.save(salesman);
+      }else if(salesman.getSimId() != null && !"".equals(salesman.getSimId()) && simId.equals(salesman.getSimId())){
+        return returnLogSucMsg(json, salesman);
+    
+      }else{
+       if(){
+         List<ChildAccount> childList  =   childAccountService.getChildAccountByParentId(salesman.getId());
+         if(childList!=null && childList.size() > 0){
+           for(ChildAccount chil : childList){
+              if(chil.getSimId() == null || "".equals(chil.getSimId())){
+                chil.setSimId(simId);
+                childAccountService.save(chil);
+                return returnLogSucMsg(json, salesman, chil);
+              }else if(chil.getSimId().equals(simId)){
+                return returnLogSucMsg(json, salesman, chil);
+              }
+            
+           }
+       }
+          json.setMsg("与你上一次登录手机卡不同");
+          return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);
+        }
 
-			}
-			
-				return returnLogSucMsg(json, salesman);
-	
+      }
+		  json.setMsg("与你上一次登录手机卡不同");
+		  return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);
 		}else {
 			json.setMsg("用戶名或密码错误！");
 			return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);

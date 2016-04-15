@@ -1,5 +1,6 @@
 package com.wangge.app.server.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -99,6 +100,18 @@ public class RegistDataService {
     if(data != null){
       return data.getRegion().getName();
     }
+    return null;
+  }
+
+  public Map<String, String> getMap(String storePhone) {
+    Map<String, String> map = new HashMap<String, String>();
+    RegistData data = registDataRepository.findByPhoneNum(storePhone);
+    if(data != null){
+     
+      map.put("regionName", data.getRegion().getName());
+      map.put("shopNmae", data.getShopName());
+    }
+    
     return null;
   }
 

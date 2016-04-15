@@ -26,6 +26,7 @@ public class Json implements Serializable{
 	private Integer totalPage;
 	@JsonInclude(Include.NON_DEFAULT)
 	private Integer status; 
+	
 	private int isOldSalesman;
 	
 	//辅助字段
