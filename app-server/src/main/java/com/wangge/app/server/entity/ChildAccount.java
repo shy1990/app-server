@@ -37,6 +37,8 @@ public class ChildAccount {
   /*子账号使用者的姓名*/
   private String truename;
   
+  private String enable;
+  
   public ChildAccount() {
     super();
   }
@@ -67,6 +69,13 @@ public class ChildAccount {
   public void setTruename(String truename) {
     this.truename = truename;
   }
+
+  public String getEnable() {
+    return enable;
+  }
+
+  public void setEnable(String enable) {
+    this.enable = enable;
+  }
  
-  
 }

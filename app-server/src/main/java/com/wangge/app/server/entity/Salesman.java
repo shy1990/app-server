@@ -65,6 +65,8 @@ public class Salesman extends AbstractPersistable<String> {
 	@Column(name = "REGION_MORE")
   private String regionMore;
 	
+	private int isPrimaryAccount;
+	
 	public Salesman() {
 		super();
 	}
@@ -136,6 +138,14 @@ public class Salesman extends AbstractPersistable<String> {
 
   public void setRegionMore(String regionMore) {
     this.regionMore = regionMore;
+  }
+
+  public int getIsPrimaryAccount() {
+    return isPrimaryAccount;
+  }
+
+  public void setIsPrimaryAccount(int isPrimaryAccount) {
+    this.isPrimaryAccount = isPrimaryAccount;
   }
   
   
