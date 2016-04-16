@@ -84,7 +84,7 @@ public class SaojieDataController {
 			SaojieData data = new SaojieData(name, coordinate);
 			data.setDescription(description);
 			data.setImageUrl(imageUrl);
-			data.setRegion(saojie.getRegion());
+			data.setRegion(region);
 			data.setSaojieDate(new Date());
 			data.setSaojie(saojie);
 			SaojieData saojiedata = dataSaojieService.addDataSaojie(data,salesman);
