@@ -180,7 +180,8 @@ public class RegistDataController {
 			data.setDescription(description);
 			Map<String, String> member = registDataService.findMemberInfo(loginAccount);
 			if (member != null && !"".equals(member)) {
-			  if(member.size()>1){
+			  List<RegistData> listRegistdata=registDataService.findByLoginAccount(loginAccount);
+			  if(listRegistdata.size()>1){
 			    json.setMsg("输入的账号已存在");
 	        json.setSuccess(false);
 	        return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);

@@ -28,6 +28,10 @@ public interface RegistDataRepository extends JpaRepository<RegistData, Long>{
   public RegistData findByMemberId(String memberId);
 
   public Double countByRegionId(String area);
+  
+  
+  public List<RegistData> findByLoginAccount(String loginAccount);
+  
 	
 //	List<RegistData> findByRegist(Regist regist);
 }

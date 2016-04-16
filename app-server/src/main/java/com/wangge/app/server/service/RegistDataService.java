@@ -77,5 +77,9 @@ public class RegistDataService {
     // TODO Auto-generated method stub
     return registDataRepository.countByRegionId(area);
   }
-
+  
+  public List<RegistData>  findByLoginAccount(String loginAccount){
+    return registDataRepository.findByLoginAccount(loginAccount);
+  }
+  
 }
