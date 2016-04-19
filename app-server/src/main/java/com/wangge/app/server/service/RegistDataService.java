@@ -109,10 +109,16 @@ public class RegistDataService {
     if(data != null){
      
       map.put("regionName", data.getRegion().getName());
-      map.put("shopNmae", data.getShopName());
+      map.put("shopName", data.getShopName());
+      map.put("regionId", data.getRegion().getId());
     }
     
     return null;
+  }
+
+  public RegistData getRegistData(String registId) {
+   
+    return  registDataRepository.findOne(Long.parseLong(registId));
   }
 
 

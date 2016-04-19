@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.annotation.Resource;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.OrderSignfor;
+import com.wangge.app.server.event.afterSignforEvent;
 import com.wangge.app.server.pojo.MessageCustom;
 import com.wangge.app.server.pojo.QueryResult;
 import com.wangge.app.server.repositoryimpl.OrderSignforImpl;
@@ -41,6 +43,7 @@ public class OrderSignforController {
   
   @Resource
   private OrderSignforImpl osi;
+ 
   /**
    * @throws ParseException 
    * @throws NumberFormatException 
@@ -80,24 +83,27 @@ public class OrderSignforController {
        userPhone = jsons.getString("userPhone");
        signGeoPoint = jsons.getString("signGeoPoint");
        isPrimaryAccount = jsons.getIntValue("isPrimaryAccount");
+       String userId = jsons.getString("userId");
+       String childId = jsons.getString("childId");
+       
       MessageCustom m = new MessageCustom();
       try {
         
-        Date signTime = orderSignforService.updateOrderSignforList(fastMailNo,userPhone,signGeoPoint,isPrimaryAccount);
+        Date signTime = orderSignforService.updateOrderSignforList(fastMailNo,userPhone,signGeoPoint,isPrimaryAccount,userId,childId);
         if(signTime != null){
           m.setMsg("success");
-          m.setCode("0");
+          m.setCode(0);
           m.setSignTime(signTime);
         }else{
           m.setMsg("false");
-          m.setCode("1");
+          m.setCode(1);
         }
         return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
         
       } catch (Exception e) {
         e.printStackTrace();
         m.setMsg("false");
-        m.setCode("1");
+        m.setCode(1);
         return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
       }
   }
@@ -143,26 +149,28 @@ public class OrderSignforController {
      signGeoPoint = jsons.getString("signGeoPoint");
      storePhone = jsons.getString("storePhone");
      isPrimaryAccount = jsons.getIntValue("isPrimaryAccount");
+    String userId =  jsons.getString("isPrimaryAccount");
+    String childId =  jsons.getString("childId");
     MessageCustom m = new MessageCustom();
     try {
       if(smsCode != null && !"".equals(smsCode) && storePhone != null && !"".equals(storePhone)){
         String msg = HttpUtil.sendPost("http://www.3j1688.com/member/existMobileCode/"+storePhone+"_"+smsCode+".html","");
         if(msg!=null && msg.contains("true")){
-            orderSignforService.updateOrderSignfor(orderNo, userPhone, signGeoPoint,payType,smsCode,isPrimaryAccount);
+            orderSignforService.updateOrderSignfor(orderNo, userPhone, signGeoPoint,payType,smsCode,isPrimaryAccount,userId,childId,storePhone);
             m.setMsg("success");
-            m.setCode("0");
+            m.setCode(0);
         }else{
             m.setMsg("短信验证码不存在！");
         }
       }else{
-        orderSignforService.updateOrderSignfor(orderNo, userPhone, signGeoPoint,payType,smsCode,isPrimaryAccount);
+        orderSignforService.updateOrderSignfor(orderNo, userPhone, signGeoPoint,payType,smsCode,isPrimaryAccount,userId,childId,storePhone);
         m.setMsg("success");
-        m.setCode("0");
+        m.setCode(0);
       }
       
     } catch (Exception e) {
       m.setMsg("false");
-      m.setCode("1");
+      m.setCode(1);
      /* logger.error("OrderSignforController updateOrderSignfor error :"+e);
       logger.debug("OrderSignforController updateOrderSignfor error :"+e);
       logger.info("OrderSignforController updateOrderSignfor error :"+e);*/
@@ -187,14 +195,17 @@ public class OrderSignforController {
      remark = jsons.getString("remark");
     signGeoPoint = jsons.getString("signGeoPoint");
     int isPrimaryAccount = jsons.getIntValue("isPrimaryAccount");
+    storePhone = jsons.getString("storePhone");
+    String userId =  jsons.getString("isPrimaryAccount");
+    String childId =  jsons.getString("childId");
     MessageCustom m = new MessageCustom();
     try {
-        orderSignforService.updateOrderSignfor(orderNo, userPhone, remark,signGeoPoint,isPrimaryAccount);
+        orderSignforService.updateOrderSignfor(orderNo, userPhone, remark,signGeoPoint,isPrimaryAccount,userId,childId,storePhone);
         m.setMsg("success");
-        m.setCode("0");
+        m.setCode(0);
     } catch (Exception e) {
       m.setMsg("false");
-      m.setCode("1");
+      m.setCode(1);
      /* logger.error("OrderSignforController customOrderUnSign() error :"+e);*/
     }
     return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);

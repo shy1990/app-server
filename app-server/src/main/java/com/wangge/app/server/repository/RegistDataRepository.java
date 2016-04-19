@@ -27,6 +27,7 @@ public interface RegistDataRepository extends JpaRepository<RegistData, Long>{
   public Double countByRegionId(String area);
   
   public RegistData findByPhoneNum(String mobile);
+
 	
 //	List<RegistData> findByRegist(Regist regist);
 }

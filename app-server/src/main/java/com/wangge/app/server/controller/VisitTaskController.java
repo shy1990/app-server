@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.Visit;
 import com.wangge.app.server.entity.Visit.VisitStatus;
+import com.wangge.app.server.event.afterDailyEvent;
 import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.repository.VisitRepository;
 import com.wangge.app.server.service.RegistDataService;
@@ -45,6 +47,8 @@ public class VisitTaskController {
 	private RegistDataService registDataService;
 	@Autowired
 	private SalesmanService salesmanService;
+	@Resource
+	private ApplicationContext cxt;
 	
 	Json json = new Json();
 	
@@ -178,15 +182,17 @@ public class VisitTaskController {
 					  int isPrimaryAccount = jsons.getIntValue("isPrimaryAccount");
             taskVisit.setIsPrimaryAccount(isPrimaryAccount);
 					}
-					if(jsons.containsKey("signGeoPoint")){
-            String signGeoPoint = jsons.getString("signGeoPoint");
-            taskVisit.setSignGeoPoint(signGeoPoint);
-          }
+            taskVisit.setSignGeoPoint(salesman.getId());
 					
 					taskVisit.setSalesman(salesman);
 					taskVisitService.save(taskVisit);
+					RegistData rd = registDataService.findRegistDataById(taskVisit.getRegistData().getId());
+					 if(rd != null){
+		          cxt.publishEvent(new afterDailyEvent(rd.getRegion().getId(),salesman.getId(),rd.getShopName(), jsons.getString("coordinate"),jsons.getIntValue("isPrimaryAccount"),jsons.getString("childId"),4));
+		        }
 					json.setSuccess(true);
 					json.setMsg("保存成功!");
+					
 					return new ResponseEntity<Json>(json, HttpStatus.CREATED);
 				}else{
 					json.setMsg("保存失败!");
@@ -215,6 +221,10 @@ public class VisitTaskController {
 				}
 				taskVisit.setSalesman(salesman);
 				taskVisitService.save(taskVisit);
+        if(rd != null){
+          cxt.publishEvent(new afterDailyEvent(rd.getRegion().getId(),salesman.getId(),rd.getShopName(), jsons.getString("coordinate"),jsons.getIntValue("isPrimaryAccount"),jsons.getString("childId"),4));
+        }
+        
 				json.setSuccess(true);
 				json.setMsg("保存成功!");
 				return new ResponseEntity<Json>(json, HttpStatus.CREATED);

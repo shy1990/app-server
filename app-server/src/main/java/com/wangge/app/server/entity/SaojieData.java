@@ -58,6 +58,10 @@ public class SaojieData extends AbstractPersistable<Long> {
 	@Transient
 	private int dateInterval;
 	
+  private int isPrimaryAccount; //是否主账号
+  
+  private String userId;//业务账号id
+	
 	public SaojieData() {
 		super();
 	}
@@ -162,5 +166,23 @@ public class SaojieData extends AbstractPersistable<Long> {
   public void setDateInterval(int dateInterval) {
     this.dateInterval = dateInterval;
   }
+
+  public int getIsPrimaryAccount() {
+    return isPrimaryAccount;
+  }
+
+  public void setIsPrimaryAccount(int isPrimaryAccount) {
+    this.isPrimaryAccount = isPrimaryAccount;
+  }
+
+  public String getUserId() {
+    return userId;
+  }
+
+  public void setUserId(String userId) {
+    this.userId = userId;
+  }
+  
+  
   
 }

@@ -5,17 +5,20 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.OrderSignfor;
+import com.wangge.app.server.event.afterSignforEvent;
 import com.wangge.app.server.repository.OrderSignforRepository;
 @Service
 public class OrderSignforService {
   @Resource
   private OrderSignforRepository osr;
+  
+  @Resource
+  private ApplicationContext ctx;
 
   public void saveOrderSignfor(OrderSignfor xlsOrder) {
     osr.save(xlsOrder);
@@ -24,7 +27,7 @@ public class OrderSignforService {
 
 
 
-  public Date updateOrderSignforList(String fastMailNo,String userPhone,String signGeoPoint, int isPrimaryAccount) {
+  public Date updateOrderSignforList(String fastMailNo,String userPhone,String signGeoPoint, int isPrimaryAccount,String userId,String childId) {
     Date date = new Date();
     List<OrderSignfor> osList =   osr.findByFastmailNo(fastMailNo);
             if(osList != null && osList.size() > 0){
@@ -35,6 +38,7 @@ public class OrderSignforService {
                     os.setOrderStatus(2);
                     os.setIsPrimaryAccount(isPrimaryAccount);
                     osr.save(os);
+                  //  ctx.publishEvent(new afterSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,5));
                   }
                 return date;
             }
@@ -44,7 +48,7 @@ public class OrderSignforService {
 
 
   public void updateOrderSignfor(String orderNo, String userPhone,
-      String signGeoPoint, int payType, String smsCode,int isPrimaryAccount) {
+      String signGeoPoint, int payType, String smsCode,int isPrimaryAccount,String userId,String childId,String  storePhone) {
       OrderSignfor orderSignFor =  findOrderSignFor(orderNo,userPhone);
       
          orderSignFor.setCustomSignforTime(new Date());
@@ -58,12 +62,13 @@ public class OrderSignforService {
            orderSignFor.setCustomSignforException(0);
          }
          osr.save(orderSignFor);
+         ctx.publishEvent(new afterSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,6,storePhone));
      
   }
 
 
 
-  public void updateOrderSignfor(String orderNo, String userPhone, String remark,String signGeoPoint,int isPrimaryAccount) {
+  public void updateOrderSignfor(String orderNo, String userPhone, String remark,String signGeoPoint,int isPrimaryAccount,String userId,String childId,String  storePhone) {
     OrderSignfor orderSignFor = findOrderSignFor(orderNo,userPhone);
     
       orderSignFor.setCustomUnSignRemark(remark);
@@ -72,6 +77,7 @@ public class OrderSignforService {
       orderSignFor.setOrderStatus(4);
       orderSignFor.setIsPrimaryAccount(isPrimaryAccount);
       osr.save(orderSignFor);
+      ctx.publishEvent(new afterSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,7,storePhone));
   }
 
   

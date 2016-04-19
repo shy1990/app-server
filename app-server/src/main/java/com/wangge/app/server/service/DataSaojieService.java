@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import com.wangge.app.server.entity.SalesmanStatus;
 import com.wangge.app.server.entity.Saojie;
 import com.wangge.app.server.entity.Saojie.SaojieStatus;
 import com.wangge.app.server.entity.SaojieData;
+import com.wangge.app.server.event.afterDailyEvent;
 import com.wangge.app.server.repository.SaojieDataRepository;
 import com.wangge.app.server.repository.SaojieRepository;
 import com.wangge.common.entity.Region;
@@ -30,6 +32,9 @@ public class DataSaojieService {
 
 	@Autowired
 	private RegionRepository regionRepository;
+	
+	@Resource
+  private ApplicationContext ctx;
 
 	public SaojieData addDataSaojie(SaojieData dataSaojie,Salesman salesman) {
 		int taskValue = 0;
