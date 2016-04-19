@@ -1,5 +1,7 @@
 package com.wangge.app.server.service;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -22,6 +24,16 @@ public class ChildAccountService {
   public ChildAccount getChildAccountBySimId(String simId) {
     
     return  childAccountRepostory.findBySimId(simId);
+  }
+
+  public List<ChildAccount> getChildAccountByParentId(String id) {
+    // TODO Auto-generated method stub
+    return childAccountRepostory.findByParentId(id);
+  }
+
+  public void save(ChildAccount chil) {
+    childAccountRepostory.save(chil);
+    
   }
 
  

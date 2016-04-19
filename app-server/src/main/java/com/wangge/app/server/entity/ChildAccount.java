@@ -26,10 +26,10 @@ public class ChildAccount {
 
   /*子账号主键id */
   @Id
-  @GenericGenerator(name = "idgen", strategy = "increment")
-  @GeneratedValue(generator = "idgen")
+ /* @GenericGenerator(name = "idgen", strategy = "increment")
+  @GeneratedValue(generator = "idgen")*/
   @Column(name = "CHILD_ID")
-  private int id;
+  private String id;
   /*父类id，关联主账号*/
   private String parentId;
   /*手机sim卡号*/
@@ -37,15 +37,20 @@ public class ChildAccount {
   /*子账号使用者的姓名*/
   private String truename;
   
+  private String enable;
+  
   public ChildAccount() {
     super();
   }
-  public int getId() {
+  
+  public String getId() {
     return id;
   }
-  public void setId(int id) {
+
+  public void setId(String id) {
     this.id = id;
   }
+
   public String getParentId() {
     return parentId;
   }
@@ -64,6 +69,13 @@ public class ChildAccount {
   public void setTruename(String truename) {
     this.truename = truename;
   }
+
+  public String getEnable() {
+    return enable;
+  }
+
+  public void setEnable(String enable) {
+    this.enable = enable;
+  }
  
-  
 }

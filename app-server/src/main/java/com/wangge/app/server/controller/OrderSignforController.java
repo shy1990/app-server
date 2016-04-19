@@ -2,7 +2,6 @@ package com.wangge.app.server.controller;
 
 import java.text.ParseException;
 import java.util.Date;
-import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -82,13 +81,14 @@ public class OrderSignforController {
           m.setMsg("false");
           m.setCode("1");
         }
+        return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
         
       } catch (Exception e) {
         e.printStackTrace();
         m.setMsg("false");
         m.setCode("1");
+        return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
       }
-      return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
   }
   /**
    * @throws ParseException 
@@ -133,7 +133,7 @@ public class OrderSignforController {
     String storePhone = jsons.getString("storePhone");
     MessageCustom m = new MessageCustom();
     try {
-      if((smsCode != null && !"".equals(smsCode)) && storePhone != null && !"".equals(storePhone)){
+      if(smsCode != null && !"".equals(smsCode) && storePhone != null && !"".equals(storePhone)){
         String msg = HttpUtil.sendPost("http://www.3j1688.com/member/existMobileCode/"+storePhone+"_"+smsCode+".html","");
         if(msg!=null && msg.contains("true")){
             orderSignforService.updateOrderSignfor(orderNo, userPhone, signGeoPoint,payType,smsCode);

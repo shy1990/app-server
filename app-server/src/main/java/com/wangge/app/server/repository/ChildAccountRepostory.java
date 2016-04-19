@@ -1,5 +1,7 @@
 package com.wangge.app.server.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.wangge.app.server.entity.ChildAccount;
@@ -14,5 +16,7 @@ import com.wangge.app.server.entity.ChildAccount;
 public interface ChildAccountRepostory extends JpaRepository<ChildAccount, Long> {
 
   ChildAccount findBySimId(String simId);
+
+  List<ChildAccount> findByParentId(String id);
 
 }

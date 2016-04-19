@@ -1,5 +1,7 @@
 package com.wangge.app.server.controller;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
@@ -56,15 +58,27 @@ public class LoginController {
 				return returnLogSucMsg(json, salesman);
 		
 			}else{
-			  ChildAccount childAccount  =   childAccountService.getChildAccountBySimId(simId);
-			  if(childAccount!=null){
-			    return returnLogSucMsg(json, salesman, childAccount);
+			  if(salesman.getIsPrimaryAccount() == 1){
+			    List<ChildAccount> childList  =   childAccountService.getChildAccountByParentId(salesman.getId());
+	        if(childList!=null && childList.size() > 0){
+	          for(ChildAccount chil : childList){
+	             if(chil.getSimId() == null || "".equals(chil.getSimId())){
+	               chil.setSimId(simId);
+	               childAccountService.save(chil);
+	               return returnLogSucMsg(json, salesman, chil);
+	             }else if(chil.getSimId().equals(simId)){
+	               return returnLogSucMsg(json, salesman, chil);
+	             }
+	           
+	          }
 			  }
-				json.setMsg("与你上一次登录手机卡不同");
+			  
+          json.setMsg("与你上一次登录手机卡不同");
 				return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);
+				}
 			}
-			
-				return returnLogSucMsg(json, salesman);
+			 json.setMsg("与你上一次登录手机卡不同");
+       return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);
 	
 		}else {
 			json.setMsg("用戶名或密码错误！");
@@ -91,7 +105,7 @@ public class LoginController {
 		  json.setStatus(salesman.getStatus().getNum());
 		}
 		json.setIsOldSalesman(salesman.getIsOldSalesman());
-		json.setNickName(salesman.getUser().getNickname());
+		json.setNickName(salesman.getUser().getNickname().replace("/n", "").trim());
 		json.setIsPrimaryAccount(0);
 		json.setMsg("登陆成功！");
 		json.setStage(salesman.getAssessStage());
@@ -120,7 +134,9 @@ public class LoginController {
 	      json.setStatus(salesman.getStatus().getNum());
 	    }
 	    json.setIsOldSalesman(salesman.getIsOldSalesman());
-	    json.setNickName(childAccount.getTruename());
+	    json.setNickName(salesman.getUser().getNickname().replace("/n", "").trim());
+	    json.setChildId(String.valueOf(childAccount.getId()));
+	    json.setChildName(childAccount.getTruename().replace("/n", "").trim());
 	    json.setIsPrimaryAccount(1);
 	    json.setMsg("登陆成功！");
 	    json.setStage(salesman.getAssessStage());
