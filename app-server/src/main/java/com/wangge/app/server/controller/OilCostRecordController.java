@@ -13,9 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
-import com.wangge.app.server.pojo.JsonCustom;
 import com.wangge.app.server.pojo.MessageCustom;
-import com.wangge.app.server.pojo.message;
+import com.wangge.app.server.pojo.TodayOilRecord;
 import com.wangge.app.server.service.OilCostRecordService;
 
 
@@ -69,5 +68,33 @@ public class OilCostRecordController {
   }
     return new ResponseEntity<JsonCustom>(json,HttpStatus.CREATED);
   }*/
-
+  
+  /**
+   * 
+    * getTodayOilRecord:(这里用一句话描述这个方法的作用). <br/> 
+    * TODO(这里描述这个方法适用条件 – 可选).<br/> 
+    * TODO(这里描述这个方法的执行流程 – 可选).<br/> 
+    * TODO(这里描述这个方法的使用方法 – 可选).<br/> 
+    * TODO(这里描述这个方法的注意事项 – 可选).<br/> 
+    * 
+    * @author robert 
+    * @param jsons
+    * @return 
+    * @since JDK 1.8
+   */
+  @RequestMapping(value = "/oilcostRecord/getTodayOilRecord", method = RequestMethod.POST)
+  public ResponseEntity<TodayOilRecord> getTodayOilRecord(@RequestBody JSONObject jsons){
+      TodayOilRecord  oildRecord=new TodayOilRecord();
+      String isPrimary=jsons.getString("isPrimary");//0-主账号 1-子账号
+      String  userId  =jsons.getString("userId");//业务员id
+      String childId  =jsons.getString("childId");//子账号id
+      
+      
+      
+      
+      return new ResponseEntity<TodayOilRecord>(oildRecord,HttpStatus.OK);
+  }
+  
+  
+  
 }
