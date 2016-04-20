@@ -30,7 +30,7 @@ import com.wangge.app.server.service.OilCostRecordService;
  */
 
 @RestController
-@RequestMapping("/oilCostRecord")
+@RequestMapping("/v1/oilCostRecord")
 public class OilCostRecordController {
   
   private static final Logger logger =  LoggerFactory.getLogger(OilCostRecordController.class); // NOPMD by Administrator on 16-3-30 下午5:43
