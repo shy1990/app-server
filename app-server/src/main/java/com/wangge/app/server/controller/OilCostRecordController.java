@@ -55,9 +55,19 @@ public class OilCostRecordController {
   * @throws
    */
   @RequestMapping(value = "/getYesterydayOilRecord",method = RequestMethod.POST)
- public ResponseEntity<OilCostRecord> yesterdayOilRecord(JSONObject jsons){
+ public ResponseEntity<MessageCustom> yesterdayOilRecord(JSONObject jsons){
+    MessageCustom m = new MessageCustom();
     OilCostRecord or =  trackService.getYesterydayOilRecord(jsons);
-   return null;
+    if(or != null){
+       m.setObj(or);
+       return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
+    }else{
+      m.setMsg("未知错误！");
+      m.setCode(0);
+      return new ResponseEntity<MessageCustom>(m,HttpStatus.BAD_REQUEST);
+    }
+    
+   
  }
 
 }

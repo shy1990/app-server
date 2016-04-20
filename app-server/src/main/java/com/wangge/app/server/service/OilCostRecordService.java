@@ -17,9 +17,12 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.OilCostRecord;
 import com.wangge.app.server.entity.SalesmanAddress;
+import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.pojo.MessageCustom;
+import com.wangge.app.server.pojo.message;
 import com.wangge.app.server.repository.ChildAccountRepostory;
 import com.wangge.app.server.repository.OilCostRecordRepository;
+import com.wangge.app.server.repositoryimpl.OilRecordImpl;
 import com.wangge.app.server.util.JWtoAdrssUtil;
 import com.wangge.app.util.ChainageUtil;
 
@@ -41,31 +44,36 @@ public class OilCostRecordService {
   private RegistDataService registDataService;
   @Resource
   private ApplicationContext cxt;
+  @Resource
+  private OilRecordImpl oilRecordImpl;
   
   private JSONArray j = null;
   private JSONObject obj = null;
   
-  private SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
   
   public OilCostRecord getYesterydayOilRecord(JSONObject jsons) {
     int isPrimaryAccount  = jsons.getIntValue("isPrimary");
     String userId = jsons.getString("userId");
-    String childId = jsons.getString("chuildId");
-    String id = null;
-    Date dateTime;
-    if(isPrimaryAccount == 1){
-      id = childId;
-    }else{
-      id = userId;
-    }
-    try {
-      dateTime = format.parse(format.format(new Date()));
-     // trackRepository.getYesterydayOilRecord(id);
-    } catch (ParseException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    String childId = jsons.getString("childId");
     
+     if(isPrimaryAccount == 0){
+       OilCostRecord o = oilRecordImpl.getYesterydayOilRecord(userId);
+       if(o != null){
+         List<OilCostRecord> orList = oilRecordImpl.getChildYesterydayOilRecord(userId);
+         o.setOilRecord(ChainageUtil.createPrimaryYesterydayOilRecord(o, orList));
+         return o;
+       }
+     }else{
+       OilCostRecord chilId = oilRecordImpl.getYesterydayOilRecord(childId);
+       if(chilId != null){
+         OilCostRecord Primary = oilRecordImpl.getYesterydayOilRecord(userId);
+         chilId.setOilRecord(ChainageUtil.createChildYesterydayOilRecord(chilId, Primary));
+         return chilId;
+       }
+     }
+    
+     
+      
     return null;
   }
   /**

@@ -2,9 +2,11 @@ package com.wangge.app.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.wangge.app.server.entity.OilCostRecord;
 import com.wangge.app.server.util.HttpUtil;
 
 public class ChainageUtil {
@@ -96,5 +98,65 @@ public class ChainageUtil {
     return json;
   }
   
-
+  public static String  createPrimaryYesterydayOilRecord(OilCostRecord o, List<OilCostRecord> childOilRecord){
+    JSONArray primaryJsonArray = JSONArray.parseArray(o.getOilRecord());
+    JSONObject jsonObject = new JSONObject();
+    JSONArray j =new JSONArray();
+    Long distance = o.getDistance();
+    Float oilCost = o.getOilCost();
+    //组装主账号油补json串
+      JSONObject primaryJson = new JSONObject();
+      primaryJson.put("type", 0);
+      primaryJson.put("content", primaryJsonArray);
+      j.add(primaryJson);
+      //组装子账号json串，计算总的公里数和又不费用
+      if(childOilRecord != null){
+        JSONObject childJson = new JSONObject();
+        JSONArray childJsonArray = new JSONArray();
+        for(OilCostRecord or : childOilRecord){
+          JSONArray JsonArray = JSONArray.parseArray(or.getOilRecord());
+          childJsonArray.addAll(JsonArray);
+          distance =distance+or.getDistance(); 
+          oilCost = oilCost + or.getOilCost();
+        }
+        childJson.put("type", 1);
+        childJson.put("content", childJsonArray);
+        j.add(childJson);
+      }
+      
+      //组装总的油补记录json串
+      jsonObject.put("distance", distance);
+      jsonObject.put("oilCost", oilCost);
+      jsonObject.put("oilRecord", j);
+      return jsonObject.toString();
+   
+}
+  public static String createChildYesterydayOilRecord(OilCostRecord chilId,
+      OilCostRecord primary) {
+    JSONArray chilIdJsonArray = JSONArray.parseArray(chilId.getOilRecord());
+    JSONObject jsonObject = new JSONObject();
+    JSONArray j =new JSONArray();
+    Long distance = chilId.getDistance();
+    Float oilCost = chilId.getOilCost();
+    //组装子账号油补json串
+      JSONObject childJson = new JSONObject();
+      childJson.put("type", 1);
+      childJson.put("content", chilIdJsonArray);
+      j.add(childJson);
+    //组装主账号json串，计算总的公里数和又不费用
+      if(chilId != null){
+        JSONObject  primaryJson = new JSONObject();
+        JSONArray  primaryJsonArray = JSONArray.parseArray(primary.getOilRecord());
+          distance =distance+primary.getDistance(); 
+          oilCost = oilCost + primary.getOilCost();
+        childJson.put("type", 0);
+        childJson.put("content", primaryJsonArray);
+        j.add(primaryJson);
+      }
+      //组装总的油补记录json串
+      jsonObject.put("distance", distance);
+      jsonObject.put("oilCost", oilCost);
+      jsonObject.put("oilRecord", j);
+      return jsonObject.toString();
+  }
 }
