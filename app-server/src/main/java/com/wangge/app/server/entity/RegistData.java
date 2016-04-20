@@ -75,7 +75,7 @@ public class RegistData extends AbstractPersistable<Long> {
 	@OneToOne(mappedBy = "registData")
   private SaojieData saojieData;
 	
-	private String userId;//业务账号id
+	private String accountId;//业务账号id
 	
 	private int isPrimaryAccount;//是否主账号，默认0主账号
 	
@@ -272,12 +272,13 @@ public class RegistData extends AbstractPersistable<Long> {
     this.memberId = memberId;
   }
 
-  public String getUserId() {
-    return userId;
+
+  public String getAccountId() {
+    return accountId;
   }
 
-  public void setUserId(String userId) {
-    this.userId = userId;
+  public void setAccountId(String accountId) {
+    this.accountId = accountId;
   }
 
   public int getIsPrimaryAccount() {

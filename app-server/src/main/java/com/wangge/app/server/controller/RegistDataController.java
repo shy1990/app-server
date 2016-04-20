@@ -168,7 +168,7 @@ public class RegistDataController {
 		try {
 			String userId = jsons.getString("userId");
 			String counterNumber = jsons.getString("counterNumber");// 柜台数
-			String loginAccount = jsons.getString("loginAccount");
+			String loginAccount = jsons.getString("loginAccount");//商城会员注册手机号
 			String clerk = jsons.getString("clerk");// 营业人数
 			String length = jsons.getString("length");
 			String width = jsons.getString("width");
@@ -177,7 +177,7 @@ public class RegistDataController {
 			String imageUrl2 = jsons.getString("imageurl2");
 			String imageUrl3 = jsons.getString("imageurl3");
 			String description = jsons.getString("description");
-			int isPrimaryAccount = jsons.getIntValue("isPrimaryAccount");
+			int isPrimaryAccount = jsons.getIntValue("isPrimary");
 			String childId = jsons.getString("childId");
 			String coordinates = jsons.getString("coordinate");
 			String id = null;
@@ -203,7 +203,7 @@ public class RegistDataController {
 				}else{
 				  id = childId;
 				}
-				data.setUserId(id);
+				data.setAccountId(id);
 				RegistData registData = registDataService.addRegistData(data);
 				
 				// 更新扫街

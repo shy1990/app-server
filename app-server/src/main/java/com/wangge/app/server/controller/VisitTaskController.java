@@ -157,6 +157,7 @@ public class VisitTaskController {
 	 */
 	@RequestMapping(value = "/task/{userId}/addVisit",method = RequestMethod.POST)
 	public ResponseEntity<Json> addVisit(@PathVariable("userId")Salesman salesman,@RequestBody JSONObject jsons) {
+	      String id = null;
 		try {
 			if(jsons.containsKey("visitId")){
 				String visitId=jsons.getString("visitId");
@@ -178,17 +179,21 @@ public class VisitTaskController {
 						String imageurl3 = jsons.getString("imageurl3");
 						taskVisit.setImageurl3(imageurl3);
 					}
-					if(jsons.containsKey("isPrimaryAccount")){
-					  int isPrimaryAccount = jsons.getIntValue("isPrimaryAccount");
+					if(jsons.containsKey("isPrimary")){
+					  int isPrimaryAccount = jsons.getIntValue("isPrimary");
             taskVisit.setIsPrimaryAccount(isPrimaryAccount);
+            if(isPrimaryAccount == 1){
+              id = jsons.getString("childId");
+            }else{
+              id = jsons.getString("userId");
+            }
 					}
-            taskVisit.setSignGeoPoint(salesman.getId());
-					
+					taskVisit.setAccountId(id);
 					taskVisit.setSalesman(salesman);
 					taskVisitService.save(taskVisit);
 					RegistData rd = registDataService.findRegistDataById(taskVisit.getRegistData().getId());
 					 if(rd != null){
-		          cxt.publishEvent(new afterDailyEvent(rd.getRegion().getId(),salesman.getId(),rd.getShopName(), jsons.getString("coordinate"),jsons.getIntValue("isPrimaryAccount"),jsons.getString("childId"),4));
+		          cxt.publishEvent(new afterDailyEvent(rd.getRegion().getId(),salesman.getId(),rd.getShopName(), jsons.getString("coordinate"),jsons.getIntValue("isPrimary"),jsons.getString("childId"),4));
 		        }
 					json.setSuccess(true);
 					json.setMsg("保存成功!");

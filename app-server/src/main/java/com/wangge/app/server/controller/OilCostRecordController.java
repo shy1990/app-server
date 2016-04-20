@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wangge.app.server.entity.OilCostRecord;
 import com.wangge.app.server.pojo.JsonCustom;
 import com.wangge.app.server.pojo.MessageCustom;
 import com.wangge.app.server.pojo.message;
@@ -47,27 +48,16 @@ public class OilCostRecordController {
   /**
    * 
   * @Title: addHandshake 
-  * @Description: TODO(添加一个握手点) 
+  * @Description: TODO(获取昨日油补记录) 
   * @param @param jsons
   * @param @return    设定文件 
   * @return ResponseEntity<JsonCustom>    返回类型 
   * @throws
    */
- /* @RequestMapping(name = "/addHandshake", method = RequestMethod.POST)
-  public ResponseEntity<JsonCustom> addHandshake(@RequestBody JSONObject jsons){
-    JsonCustom json = new JsonCustom();
-   try {
-     trackService.addHandshake(jsons);
-     json.setMsg("保存成功！");
-  } catch (Exception e) {
-    // TODO: handle exception
-    e.printStackTrace();
-    if(logger.isErrorEnabled()){
-      logger.error("addHandshake() error  curr :" + e);
-    }
-    json.setMsg("保存失败！");
-  }
-    return new ResponseEntity<JsonCustom>(json,HttpStatus.CREATED);
-  }*/
+  @RequestMapping(value = "/getYesterydayOilRecord",method = RequestMethod.POST)
+ public ResponseEntity<OilCostRecord> yesterdayOilRecord(JSONObject jsons){
+    OilCostRecord or =  trackService.getYesterydayOilRecord(jsons);
+   return null;
+ }
 
 }

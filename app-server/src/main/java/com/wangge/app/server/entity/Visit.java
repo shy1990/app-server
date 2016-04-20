@@ -89,7 +89,7 @@ public class Visit extends AbstractPersistable<Long> {
 	
 	private String signGeoPoint;//经纬度
 	
-	private String userId;
+	private String accountId;
 	
 	public Visit() {
 		super();
@@ -200,13 +200,15 @@ public class Visit extends AbstractPersistable<Long> {
     this.signGeoPoint = signGeoPoint;
   }
 
-  public String getUserId() {
-    return userId;
+  public String getAccountId() {
+    return accountId;
   }
 
-  public void setUserId(String userId) {
-    this.userId = userId;
+  public void setAccountId(String accountId) {
+    this.accountId = accountId;
   }
+
+  
 
 	
 }

@@ -20,6 +20,7 @@ import com.wangge.app.server.entity.SalesmanAddress;
 import com.wangge.app.server.pojo.MessageCustom;
 import com.wangge.app.server.repository.ChildAccountRepostory;
 import com.wangge.app.server.repository.OilCostRecordRepository;
+import com.wangge.app.server.util.JWtoAdrssUtil;
 import com.wangge.app.util.ChainageUtil;
 
 @Service
@@ -43,6 +44,98 @@ public class OilCostRecordService {
   
   private JSONArray j = null;
   private JSONObject obj = null;
+  
+  private SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+  
+  public OilCostRecord getYesterydayOilRecord(JSONObject jsons) {
+    int isPrimaryAccount  = jsons.getIntValue("isPrimary");
+    String userId = jsons.getString("userId");
+    String childId = jsons.getString("chuildId");
+    String id = null;
+    Date dateTime;
+    if(isPrimaryAccount == 1){
+      id = childId;
+    }else{
+      id = userId;
+    }
+    try {
+      dateTime = format.parse(format.format(new Date()));
+      trackRepository.findByUserId(id);
+    } catch (ParseException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    
+    return null;
+  }
+  /**
+   * 
+  * @Title: addHandshake 
+  * @Description: TODO(业务揽收添加握手) 
+  * @param @param userId
+  * @param @param coordinates
+  * @param @param isPrimaryAccount
+  * @param @param childId
+  * @param @param type    设定文件 
+  * @return void    返回类型 
+  * @throws
+   */
+  public void addHandshake(String userId, String coordinates,
+      int isPrimaryAccount, String childId, int type) {
+    String id = null;
+   
+  //  if(!isVisited(isPrimaryAccount, childId, userId, regionId)){
+      SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+      
+      try {
+        if(isPrimaryAccount == 1){
+          id = childId;
+        }else{
+          id = userId;
+        }
+        Date   dateTime = format.parse(format.format(new Date()));
+        OilCostRecord track = trackRepository.findByDateTimeAndUserId(dateTime,id);
+        if(track != null){
+        JSONArray jsonArray = JSONArray.parseArray(track.getOilRecord());
+        
+        track.setIsPrimaryAccount(isPrimaryAccount);
+       // track.setOilRecord( getOilRecord( coordinates,  type, regionId, shopName, storePhone));
+        if(isPrimaryAccount == 1){
+          track.setUserId(childId);
+          track.setParentId(userId);
+        }else{
+          track.setUserId(userId);
+        }
+        Long mileage =  getDistance(coordinates,null,track.getDistance(),jsonArray);
+        track.setDistance(mileage);
+        j  = getOilRecord( coordinates,  type, userId);
+        jsonArray.add(j.get(0));
+        track.setOilRecord(jsonArray.toString());
+        track.setOilCost(mileage*1.5f);
+        trackRepository.save(track);
+        }else{
+            OilCostRecord ocr = new OilCostRecord();
+             ocr.setDateTime(dateTime);
+             ocr.setIsPrimaryAccount(isPrimaryAccount);
+             if(isPrimaryAccount == 1){
+               ocr.setUserId(childId);
+               ocr.setParentId(userId);
+             }else{
+               ocr.setUserId(userId);
+             }
+             j = getOilRecord( coordinates,  type, userId);
+             j.add(j);
+             ocr.setOilRecord(j.toString());
+             trackRepository.save(track);
+         
+        }
+      } catch (ParseException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+     
+   // }
+  } 
   /**
    * 
   * @Title: addHandshake 
@@ -101,7 +194,12 @@ public class OilCostRecordService {
             OilCostRecord ocr = new OilCostRecord();
              ocr.setDateTime(dateTime);
              ocr.setIsPrimaryAccount(isPrimaryAccount);
-             ocr.setUserId(userId);
+             if(isPrimaryAccount == 1){
+               ocr.setUserId(childId);
+               ocr.setParentId(userId);
+             }else{
+               ocr.setUserId(userId);
+             }
              j = new JSONArray();
              JSONObject object = getOilRecord(coordinates, type, null, shopName,regionName);
              j.add(object);
@@ -166,7 +264,12 @@ public class OilCostRecordService {
               OilCostRecord ocr = new OilCostRecord();
                ocr.setDateTime(dateTime);
                ocr.setIsPrimaryAccount(isPrimaryAccount);
-               ocr.setUserId(userId);
+               if(isPrimaryAccount == 1){
+                 ocr.setUserId(childId);
+                 ocr.setParentId(userId);
+               }else{
+                 ocr.setUserId(userId);
+               }
                j = new JSONArray();
                JSONObject object = getOilRecord(coordinates, type, regionId, shopName,null);
                j.add(object);
@@ -195,21 +298,23 @@ public class OilCostRecordService {
 * @throws
  */
   public  ResponseEntity<MessageCustom> signed(JSONObject jsons) {
-   // isPrimaryAccount = jsons.getIntValue("isPrimaryAccount");
-   String coordinates = jsons.getString("coordinates");
+   int isPrimaryAccount = jsons.getIntValue("isPrimary");
+   String coordinates = jsons.getString("coordinate");
    String userId = jsons.getString("userId");
-    //String childId = jsons.getString("childId");
+    String childId = jsons.getString("childId");
     int type = jsons.getIntValue("apiType");
     OilCostRecord ocr = new OilCostRecord();
     MessageCustom m = new MessageCustom();
     
     SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+    
      try {
+       Date   dateTime = format.parse(format.format(new Date()));
        if(type == 1){
          ocr.setUserId(userId);
-         ocr.setDateTime(format.parse(format.format(new Date())));
+         ocr.setDateTime(dateTime);
          ocr.setOilRecord(getOilRecord(coordinates,type,userId).toString());
-        // ocr.setIsPrimaryAccount(isPrimaryAccount);
+         ocr.setIsPrimaryAccount(isPrimaryAccount);
            trackRepository.save(ocr);
            m.setMsg("签到成功！");
            return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
@@ -221,9 +326,13 @@ public class OilCostRecordService {
          JSONArray jsonArray = JSONArray.parseArray(track.getOilRecord());
          // String str = getOilRecord( coordinates,  type);
          jsonArray.add(getOilRecord(coordinates,type,userId).get(0));
-         
-        // track.setIsPrimaryAccount(isPrimaryAccount);
+         track.setDateTime(dateTime);
+         track.setIsPrimaryAccount(isPrimaryAccount);
+         track.setParentId(userId);
          track.setOilRecord(jsonArray.toString());
+         Long mileage =  getDistance(coordinates,null,track.getDistance(),jsonArray);
+         track.setDistance(mileage);
+         track.setOilCost(mileage*1.5f);
          trackRepository.save(track);
          m.setMsg("签到成功！");
          return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
@@ -235,7 +344,16 @@ public class OilCostRecordService {
     }
      return new ResponseEntity<MessageCustom>(m,HttpStatus.BAD_REQUEST);
   }
-  
+  /**
+   * 
+  * @Title: isError 
+  * @Description: TODO(判断上下班是否异常) 
+  * @param @param coordinates
+  * @param @param userId
+  * @param @return    设定文件 
+  * @return boolean    返回类型 
+  * @throws
+   */
   private boolean isError(String coordinates,String userId){
    String[] coordinates1 = coordinates.split("-");
    String homePont = addressService.getHomePoint(userId);
@@ -324,7 +442,7 @@ public class OilCostRecordService {
     if(type == 1 ){
      String typeName  = "上班";
     
-     regionType = 0;
+     regionType = 3;
     j  = new JSONArray();
     
      obj = ChainageUtil.createOilRecord( coordinates, typeName, regionName,regionType);
@@ -363,18 +481,23 @@ public class OilCostRecordService {
   private Long getDistance(String coordinates,String regionId,Long mileage, JSONArray jsonArray){
     String[] coordinates1 = coordinates.split("-");
     String[] coordinates2  = null;
+    String regionName = null;
     if(jsonArray != null){
      // index = 
       JSONObject  s =  (JSONObject)jsonArray.get(jsonArray.size()-1);
        coordinates2 = s.getString("coordinates").split("-");
     }
-   
-    String regionName = regionService.getRegionName(regionId);
+    if(regionId != null){
+      regionName = regionService.getRegionName(regionId);
+    }else{
+       regionName = getRegionName(coordinates);
+    }
+    
     
     String param = "&origin='"+coordinates1[1]+"','"+coordinates1[0]+"'&destination='"+coordinates2[1]+"','"+coordinates2[0]+"'&origin_region='"+regionName+"'&destination_region='"+regionName+"'";
-    Double d = ChainageUtil.createDistance(param);//百度地图返回的json中解析出两点之间的导航出的距离单位米
-    Long distance = Long.valueOf(String.valueOf(d/1000));//转换成公里
-     mileage = mileage != null ? distance+ mileage : distance;//将区域之间的距离叠加起来
+    Long d = ChainageUtil.createDistance(param);//百度地图返回的json中解析出两点之间的导航出的距离单位米
+    Long distance = d/1000;//转换成公里
+     mileage = mileage != null ? distance + mileage : distance;//将区域之间的距离叠加起来
     return mileage;
   }
   
@@ -383,7 +506,7 @@ public class OilCostRecordService {
    * @param coordinates2 
    * 
   * @Title: getLogistics 
-  * @Description: TODO(这里用一句话描述这个方法的作用) 
+  * @Description: TODO(根据当前坐标判断物流点) 
   * @param @return    设定文件 
   * @return String    返回类型 
   * @throws
@@ -427,7 +550,7 @@ public class OilCostRecordService {
   /**
    * 
   * @Title: isVisited 
-  * @Description: TODO(是否已经拜访过) 
+  * @Description: TODO(是否已经拜访过，扫过街，注册等) 
   * @param @param isPrimaryAccount
   * @param @param childId
   * @param @param userId
@@ -453,11 +576,28 @@ public class OilCostRecordService {
       return true;
     }
      
-  }  
+  }
+   
+  /**
+   * 
+  * @Title: getRegionName 
+  * @Description: TODO(通过坐标点调用百度接口，获取行政区域市) 
+  * @param @param coordinates
+  * @param @return    设定文件 
+  * @return String    返回类型 
+  * @throws
+   */
+  private String getRegionName(String coordinates){
+     String[] city =  coordinates.split("-");
+     String lng = city[1];
+     String lat = city[0];
+    String url="http://api.map.baidu.com/geocoder/v2/?ak=702632E1add3d4953d0f105f27c294b9&callback=renderReverse&location="+lng+","+lat+"&output=json&pois=1";
+     String jsonString = JWtoAdrssUtil.getdata(url);
+    String jsonstr=jsonString.substring(0,jsonString.length()-1);
+    String address = jsonstr.substring(jsonstr.indexOf("city")+6,jsonstr.indexOf("country")-2);
+    return address;
+  }
   
   
- /* private Long getDistance(String coordinates, JSONArray jsonArray){
-     return null;
-  }*/
-
+ 
 }

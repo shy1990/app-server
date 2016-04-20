@@ -60,7 +60,7 @@ public class SaojieData extends AbstractPersistable<Long> {
 	
   private int isPrimaryAccount; //是否主账号
   
-  private String userId;//业务账号id
+  private String accountId;//业务账号id
 	
 	public SaojieData() {
 		super();
@@ -175,13 +175,15 @@ public class SaojieData extends AbstractPersistable<Long> {
     this.isPrimaryAccount = isPrimaryAccount;
   }
 
-  public String getUserId() {
-    return userId;
+  public String getAccountId() {
+    return accountId;
   }
 
-  public void setUserId(String userId) {
-    this.userId = userId;
+  public void setAccountId(String accountId) {
+    this.accountId = accountId;
   }
+
+ 
   
   
   

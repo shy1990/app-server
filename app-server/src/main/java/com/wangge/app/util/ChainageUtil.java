@@ -61,7 +61,7 @@ public class ChainageUtil {
       return distance;  
   } 
   
-  public static Double createDistance(String param){
+  public static Long createDistance(String param){
     String params = mode+param+ak;
     String str = HttpUtil.sendGet(url, params);
     JSONObject json = (JSONObject) JSONObject.parse(str);
@@ -71,28 +71,28 @@ public class ChainageUtil {
     JSONArray routesA = json.parseArray(a);
     json = (JSONObject) routesA.get(0);
     String distance = json.getString("distance");
-    return Double.valueOf(distance);
+    return  Long.parseLong(distance);
   }
   
   
-  public static JSONObject createOilRecord(String coordinates,String type,String regionName,int regionType){
+  public static JSONObject createOilRecord(String coordinate,String missName,String regionName,int regionType){
     JSONObject json = new JSONObject();
     json.put("regionType", regionType);
-    json.put("coordinates", coordinates);
-    json.put("type", type);
+    json.put("coordinate", coordinate);
+    json.put("missName", missName);
     json.put("regionName", regionName);
-    json.put("time", formate.format(new Date()));
+    json.put("missTime", formate.format(new Date()));
     return json;
   }
   
-  public static JSONObject createOilRecord(String regionName,String shopName,String coordinates,String typeName,int regionType){
+  public static JSONObject createOilRecord(String regionName,String shopName,String coordinate,String missName,int regionType){
     JSONObject json = new JSONObject();
     json.put("regionType", regionType);
-    json.put("coordinates", coordinates);
-    json.put("type", typeName);
+    json.put("coordinate", coordinate);
+    json.put("missName", missName);
     json.put("regionName", regionName);
     json.put("shopName", shopName);
-    json.put("time", formate.format(new Date()));
+    json.put("missTime", formate.format(new Date()));
     return json;
   }
   
