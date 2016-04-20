@@ -60,7 +60,7 @@ public class OilCostRecordService {
     }
     try {
       dateTime = format.parse(format.format(new Date()));
-      trackRepository.findByUserId(id);
+     // trackRepository.getYesterydayOilRecord(id);
     } catch (ParseException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -189,6 +189,9 @@ public class OilCostRecordService {
         jsonArray.add(object);
         track.setOilRecord(jsonArray.toString());
         track.setOilCost(mileage*1.5f);
+        String regionIds =  track.getRegionIds();
+        regionIds = regionIds +","+regionId;
+        track.setRegionIds(regionIds);
         trackRepository.save(track);
         }else{
             OilCostRecord ocr = new OilCostRecord();
@@ -259,6 +262,9 @@ public class OilCostRecordService {
           jsonArray.add(object);
           track.setOilRecord(jsonArray.toString());
           track.setOilCost(mileage*1.5f);
+          String regionIds =  track.getRegionIds();
+          regionIds = regionIds +","+regionId;
+          track.setRegionIds(regionIds);
           trackRepository.save(track);
           }else{
               OilCostRecord ocr = new OilCostRecord();
