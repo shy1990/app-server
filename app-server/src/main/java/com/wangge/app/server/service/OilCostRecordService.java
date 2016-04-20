@@ -2,6 +2,7 @@ package com.wangge.app.server.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ import com.wangge.app.server.pojo.MessageCustom;
 import com.wangge.app.server.repository.ChildAccountRepostory;
 import com.wangge.app.server.repository.OilCostRecordRepository;
 import com.wangge.app.util.ChainageUtil;
+import com.wangge.app.util.DateUtil;
 
 @Service
 public class OilCostRecordService {
@@ -464,10 +466,6 @@ public class OilCostRecordService {
   /**
    * 
     * getOilCostYestday:昨日油补费用 <br/> 
-    * TODO(这里描述这个方法适用条件 – 可选).<br/> 
-    * TODO(这里描述这个方法的执行流程 – 可选).<br/> 
-    * TODO(这里描述这个方法的使用方法 – 可选).<br/> 
-    * TODO(这里描述这个方法的注意事项 – 可选).<br/> 
     * 
     * @author robert 
     * @param userId
@@ -475,7 +473,13 @@ public class OilCostRecordService {
     * @since JDK 1.8
    */
   public String getOilCostYestday(String userId){
+    Calendar   cal   =   Calendar.getInstance();
+    cal.add(Calendar.DATE,   -1);
+    String yesterday = new SimpleDateFormat( "yyyy-MM-dd ").format(cal.getTime());
+    Date  yestday=DateUtil.strToDate(yesterday);
     
+    List<OilCostRecord>  listOilCostRecord=trackRepository.findYestdayOil(userId, yestday);
+   
     return "";
   }
   

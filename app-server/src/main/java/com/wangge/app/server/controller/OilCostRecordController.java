@@ -90,7 +90,7 @@ public class OilCostRecordController {
       String childId  =jsons.getString("childId");//子账号id
       
       
-      
+      trackService.getOilCostYestday(userId);
       
       return new ResponseEntity<TodayOilRecord>(oildRecord,HttpStatus.OK);
   }
