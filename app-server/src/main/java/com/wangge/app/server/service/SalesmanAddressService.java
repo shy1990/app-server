@@ -56,7 +56,6 @@ public class SalesmanAddressService {
               sa.setLogisticsPoint2(logistics2);
               sa.setLogisticsPoint3(logistics3);
               salesmanAddressRepository.save(sa);
-              m.setEnable("true");
               m.setMsg("更新成功！");
               m.setCode(0);
               return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
@@ -73,7 +72,6 @@ public class SalesmanAddressService {
             sa.setLogisticsPoint2(logistics2);
             sa.setLogisticsPoint3(logistics3);
             salesmanAddressRepository.save(sa);
-            m.setEnable("false");
             m.setMsg("添加成功！");
             m.setCode(0);
            return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
@@ -103,20 +101,16 @@ public class SalesmanAddressService {
     if(sa != null){
        m.setObj(sa);
        m.setCode(0);
+       if(formate.format(sa.getUpdateTime()).equals(formate.format(new Date()))){
+         m.setEnable(false);
+       }else{
+         m.setEnable(true);
+       }
        return new ResponseEntity<MessageCustom>(m,HttpStatus.OK );
       
     }
     m.setCode(1);
     m.setMsg("还没有添加家庭和物流地址！");
-   /* if(sa != null){
-      if(formate.format(sa.getUpdateTime()).equals(formate.format(new Date()))){
-        sa.setEnable(false);
-        return sa;
-      }else{
-        sa.setEnable(true);
-        return  sa;
-      }
-    }*/
     return new ResponseEntity<MessageCustom>(m,HttpStatus.BAD_REQUEST);
    
   }

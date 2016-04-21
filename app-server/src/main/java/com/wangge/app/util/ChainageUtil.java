@@ -98,7 +98,7 @@ public class ChainageUtil {
     return json;
   }
   
-  public static String  createPrimaryYesterydayOilRecord(OilCostRecord o, List<OilCostRecord> childOilRecord){
+  public static JSONObject  createPrimaryYesterydayOilRecord(OilCostRecord o, List<OilCostRecord> childOilRecord){
     JSONArray primaryJsonArray = JSONArray.parseArray(o.getOilRecord());
     JSONObject jsonObject = new JSONObject();
     JSONArray j =new JSONArray();
@@ -128,10 +128,10 @@ public class ChainageUtil {
       jsonObject.put("distance", distance);
       jsonObject.put("oilCost", oilCost);
       jsonObject.put("oilRecord", j);
-      return jsonObject.toString();
+      return jsonObject;
    
 }
-  public static String createChildYesterydayOilRecord(OilCostRecord chilId,
+  public static JSONObject createChildYesterydayOilRecord(OilCostRecord chilId,
       OilCostRecord primary) {
     JSONArray chilIdJsonArray = JSONArray.parseArray(chilId.getOilRecord());
     JSONObject jsonObject = new JSONObject();
@@ -157,6 +157,6 @@ public class ChainageUtil {
       jsonObject.put("distance", distance);
       jsonObject.put("oilCost", oilCost);
       jsonObject.put("oilRecord", j);
-      return jsonObject.toString();
+      return jsonObject;
   }
 }

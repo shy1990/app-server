@@ -51,7 +51,7 @@ public class OilCostRecordService {
   private JSONObject obj = null;
   
   
-  public OilCostRecord getYesterydayOilRecord(JSONObject jsons) {
+  public JSONObject getYesterydayOilRecord(JSONObject jsons) {
     int isPrimaryAccount  = jsons.getIntValue("isPrimary");
     String userId = jsons.getString("userId");
     String childId = jsons.getString("childId");
@@ -60,15 +60,14 @@ public class OilCostRecordService {
        OilCostRecord o = oilRecordImpl.getYesterydayOilRecord(userId);
        if(o != null){
          List<OilCostRecord> orList = oilRecordImpl.getChildYesterydayOilRecord(userId);
-         o.setOilRecord(ChainageUtil.createPrimaryYesterydayOilRecord(o, orList));
-         return o;
+        
+         return  ChainageUtil.createPrimaryYesterydayOilRecord(o, orList);
        }
      }else{
        OilCostRecord chilId = oilRecordImpl.getYesterydayOilRecord(childId);
        if(chilId != null){
          OilCostRecord Primary = oilRecordImpl.getYesterydayOilRecord(userId);
-         chilId.setOilRecord(ChainageUtil.createChildYesterydayOilRecord(chilId, Primary));
-         return chilId;
+         return ChainageUtil.createChildYesterydayOilRecord(chilId, Primary);
        }
      }
     
