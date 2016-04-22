@@ -39,7 +39,7 @@ public class OilCostRecord implements Serializable{
   private int isPrimaryAccount;//是否主账号
   //private String regionIds;//regionId集合
   private Float oilCost;//油补的费用
-  private Long  distance;//里程数
+  private Float  distance;//里程数
   @Lob
   private String  oilRecord;//Coordinates,regionIds，shopName等  油补 json串
   
@@ -78,10 +78,11 @@ public class OilCostRecord implements Serializable{
   public void setOilCost(Float oilCost) {
     this.oilCost = oilCost;
   }
-  public Long getDistance() {
+  
+  public Float getDistance() {
     return distance;
   }
-  public void setDistance(Long distance) {
+  public void setDistance(Float distance) {
     this.distance = distance;
   }
   public String getParentId() {

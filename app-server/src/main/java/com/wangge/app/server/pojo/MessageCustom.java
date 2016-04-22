@@ -17,6 +17,7 @@ public class MessageCustom extends message {
   @JsonFormat(pattern="MM.dd HH:mm",timezone = "GMT+8")
   private Date signTime;
   private int code;
+  @JsonInclude(Include.NON_DEFAULT)
   private boolean enable;
   
   public Date getSignTime() {

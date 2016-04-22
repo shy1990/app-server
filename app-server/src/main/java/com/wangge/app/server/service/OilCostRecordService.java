@@ -16,14 +16,18 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.OilCostRecord;
+import com.wangge.app.server.entity.OilParameters;
+import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.SalesmanAddress;
 import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.pojo.MessageCustom;
+import com.wangge.app.server.pojo.QueryResult;
 import com.wangge.app.server.pojo.message;
 import com.wangge.app.server.repository.ChildAccountRepostory;
 import com.wangge.app.server.repository.OilCostRecordRepository;
 import com.wangge.app.server.repositoryimpl.OilRecordImpl;
 import com.wangge.app.server.util.JWtoAdrssUtil;
+import com.wangge.app.server.vo.OilCostRecordVo;
 import com.wangge.app.util.ChainageUtil;
 
 @Service
@@ -46,11 +50,53 @@ public class OilCostRecordService {
   private ApplicationContext cxt;
   @Resource
   private OilRecordImpl oilRecordImpl;
+  @Resource
+  private OilParametersService parametersService ;
   
   private JSONArray j = null;
   private JSONObject obj = null;
   
+  /**
+   * 
+  * @Title: getHistoryOilRecord 
+  * @Description: TODO(获取业务员每月油补历史记录) 
+  * @param @param jsons
+  * @param @return    设定文件 
+  * @return ResponseEntity<MessageCustom>    返回类型 
+  * @throws
+   */
+  public ResponseEntity<MessageCustom> getHistoryOilRecord(JSONObject jsons) {
+    String userId = jsons.getString("userId");
+    int pagerNumber = jsons.getIntValue("pagerNumber");
+    int pagerSize = jsons.getIntValue("pagerSize");
+     MessageCustom m = new MessageCustom();
+    try {
+      QueryResult<OilCostRecordVo>  qr =  oilRecordImpl.getHistoryOilRecord(userId,pagerNumber,pagerSize);
+      if(qr != null){
+        m.setCode(0);
+        m.setObj(qr);
+        return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
+      }else{
+        m.setCode(1);
+        m.setMsg("油补历史记录不存在！");
+        return new ResponseEntity<MessageCustom>(m,HttpStatus.BAD_REQUEST);
+      }
+    } catch (ParseException e) {
+      m.setCode(1);
+      m.setMsg("未知错误！"+e);
+      return new ResponseEntity<MessageCustom>(m,HttpStatus.BAD_REQUEST);
+    }
+  }
   
+  /**
+   * 
+  * @Title: getYesterydayOilRecord 
+  * @Description: TODO(昨日油补记录) 
+  * @param @param jsons
+  * @param @return    设定文件 
+  * @return JSONObject    返回类型 
+  * @throws
+   */
   public JSONObject getYesterydayOilRecord(JSONObject jsons) {
     int isPrimaryAccount  = jsons.getIntValue("isPrimary");
     String userId = jsons.getString("userId");
@@ -113,7 +159,8 @@ public class OilCostRecordService {
         }else{
           track.setUserId(userId);
         }
-        Long mileage =  getDistance(coordinates,null,track.getDistance(),jsonArray);
+        Float mileage =  getDistance(coordinates,null,track.getDistance(),jsonArray);
+        OilParameters param = getOilParam(userId);
         track.setDistance(mileage);
         j  = getOilRecord( coordinates,  type, userId);
         jsonArray.add(j.get(0));
@@ -190,7 +237,7 @@ public class OilCostRecordService {
         }else{
           track.setUserId(userId);
         }
-        Long mileage =  getDistance(coordinates,regionId,track.getDistance(),jsonArray);
+        Float mileage =  getDistance(coordinates,regionId,track.getDistance(),jsonArray);
         track.setDistance(mileage);
         JSONObject object = getOilRecord(coordinates, type, null, shopName,regionName);
         jsonArray.add(object);
@@ -233,12 +280,6 @@ public class OilCostRecordService {
   * @throws
    */
    public void addHandshake(String regionId,String userId,String shopName,String coordinates, int isPrimaryAccount,String childId,int type) {
-       /*coordinates = jsons.getString("coordinates");
-       isPrimaryAccount = jsons.getIntValue("isPrimaryAccount");
-      regionId = jsons.getString("regionId");
-      userId = jsons.getString("userId");
-      shopName = jsons.getString("shopName");
-      type = jsons.getIntValue("type");*/
       String id = null;
       
       if(!isVisited(isPrimaryAccount, childId, userId, regionId)){
@@ -263,7 +304,7 @@ public class OilCostRecordService {
           }else{
             track.setUserId(userId);
           }
-          Long mileage =  getDistance(coordinates,regionId,track.getDistance(),jsonArray);
+          Float mileage =  getDistance(coordinates,regionId,track.getDistance(),jsonArray);
           track.setDistance(mileage);
           JSONObject object = getOilRecord(coordinates, type, regionId, shopName,null);
           jsonArray.add(object);
@@ -332,7 +373,6 @@ public class OilCostRecordService {
            m.setMsg("签到成功！");
            return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
        }else if(type ==8){
-        // Date   dateTime = format.parse(format.format(new Date()));
        
          OilCostRecord track = trackRepository.findByDateTimeAndUserId(format.parse(format.format(new Date())),userId);
          if(track != null){
@@ -343,7 +383,7 @@ public class OilCostRecordService {
          track.setIsPrimaryAccount(isPrimaryAccount);
          track.setParentId(userId);
          track.setOilRecord(jsonArray.toString());
-         Long mileage =  getDistance(coordinates,null,track.getDistance(),jsonArray);
+         Float mileage =  getDistance(coordinates,null,track.getDistance(),jsonArray);
          track.setDistance(mileage);
          track.setOilCost(mileage*1.5f);
          trackRepository.save(track);
@@ -491,7 +531,7 @@ public class OilCostRecordService {
   * @return Long    返回类型 
   * @throws
    */
-  private Long getDistance(String coordinates,String regionId,Long mileage, JSONArray jsonArray){
+  private Float getDistance(String coordinates,String regionId,Float mileage, JSONArray jsonArray){
     String[] coordinates1 = coordinates.split("-");
     String[] coordinates2  = null;
     String regionName = null;
@@ -508,9 +548,9 @@ public class OilCostRecordService {
     
     
     String param = "&origin='"+coordinates1[1]+"','"+coordinates1[0]+"'&destination='"+coordinates2[1]+"','"+coordinates2[0]+"'&origin_region='"+regionName+"'&destination_region='"+regionName+"'";
-    Long d = ChainageUtil.createDistance(param);//百度地图返回的json中解析出两点之间的导航出的距离单位米
-    Long distance = d/1000;//转换成公里
-     mileage = mileage != null ? distance + mileage : distance;//将区域之间的距离叠加起来
+    Float d = ChainageUtil.createDistance(param);//百度地图返回的json中解析出两点之间的导航出的距离单位米
+    Float distance = d/1000 ;//转换成公里
+     mileage = mileage != null ? distance + mileage : distance;//将握手点之间的距离叠加起来
     return mileage;
   }
   
@@ -610,7 +650,11 @@ public class OilCostRecordService {
     String address = jsonstr.substring(jsonstr.indexOf("city")+6,jsonstr.indexOf("country")-2);
     return address;
   }
+ 
   
-  
+  private OilParameters getOilParam(String userId){
+    Salesman salesman = salesmanService.findSalesmanbyId(userId);
+     return parametersService.getOilParameters(salesman.getRegion().getId());
+  }
  
 }

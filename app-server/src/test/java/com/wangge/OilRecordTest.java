@@ -2,7 +2,9 @@ package com.wangge;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -22,15 +24,18 @@ public class OilRecordTest {
    String address = jsonstr.substring(jsonstr.indexOf("city")+6,jsonstr.indexOf("country")-2);
    System.out.println("==================="+address);
    System.out.println("+++++++++++++++++++++++++++++"+jsonstr);*/
-    SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+    
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    Calendar calendar = GregorianCalendar.getInstance();
     try {
-      Date dateTime = format.parse(format.format(new Date()));
-      
-      System.out.println("========================"+dateTime);
-    //  System.out.println("++++++++++++++++++++++++"+(dateTime-1));
+    calendar.setTime(sdf.parse("2004-6-07"));
     } catch (ParseException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+        System.out.println(e);
+    }     
+    System.out.println(calendar.get(Calendar.DATE));
+    System.out.println(calendar.get(Calendar.MONTH) + 1);
+    System.out.println(calendar.get(Calendar.YEAR));
+    Long a = 3789L;
+    System.out.println("==========="+a/1000);
   }
 }

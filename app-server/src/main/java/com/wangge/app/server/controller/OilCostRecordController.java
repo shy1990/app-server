@@ -69,6 +69,9 @@ public class OilCostRecordController {
     
    
  }
-  
-  
+  @RequestMapping(value ="/getHistoryOilRecord", method = RequestMethod.POST)
+  public void  getHistoryOilRecord(JSONObject jsons){
+    trackService.getHistoryOilRecord(jsons);
+  }
+
 }

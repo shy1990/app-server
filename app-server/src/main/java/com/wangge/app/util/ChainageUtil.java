@@ -63,7 +63,7 @@ public class ChainageUtil {
       return distance;  
   } 
   
-  public static Long createDistance(String param){
+  public static Float createDistance(String param){
     String params = mode+param+ak;
     String str = HttpUtil.sendGet(url, params);
     JSONObject json = (JSONObject) JSONObject.parse(str);
@@ -72,8 +72,9 @@ public class ChainageUtil {
     String a = json.getString("routes");
     JSONArray routesA = json.parseArray(a);
     json = (JSONObject) routesA.get(0);
-    String distance = json.getString("distance");
-    return  Long.parseLong(distance);
+    Float distance = Float.parseFloat(json.getString("distance"));
+    
+    return distance;
   }
   
   
@@ -102,7 +103,7 @@ public class ChainageUtil {
     JSONArray primaryJsonArray = JSONArray.parseArray(o.getOilRecord());
     JSONObject jsonObject = new JSONObject();
     JSONArray j =new JSONArray();
-    Long distance = o.getDistance();
+    Float distance = o.getDistance();
     Float oilCost = o.getOilCost();
     //组装主账号油补json串
       JSONObject primaryJson = new JSONObject();
@@ -136,7 +137,7 @@ public class ChainageUtil {
     JSONArray chilIdJsonArray = JSONArray.parseArray(chilId.getOilRecord());
     JSONObject jsonObject = new JSONObject();
     JSONArray j =new JSONArray();
-    Long distance = chilId.getDistance();
+    Float distance = chilId.getDistance();
     Float oilCost = chilId.getOilCost();
     //组装子账号油补json串
       JSONObject childJson = new JSONObject();
