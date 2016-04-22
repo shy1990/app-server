@@ -3,14 +3,34 @@ package com.wangge;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
-import com.wangge.app.server.util.JWtoAdrssUtil;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.wangge.app.server.entity.OilParameters;
+import com.wangge.app.server.service.OilParametersService;
+
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = AppServerApplication.class)
 public class OilRecordTest {
+  @Resource
+  private OilParametersService oilParametersService;
+  
+  @Test
+  public void test(){
+   OilParameters oil = oilParametersService.getOilParameters("370105");
+   if(oil != null){
+     System.out.println("===================="+oil.getKmOilSubsidy());
+   }
+   
+  }
+  
   
  
   public static void main(String[] args) {
@@ -39,3 +59,4 @@ public class OilRecordTest {
     System.out.println("==========="+a/1000);
   }
 }
+

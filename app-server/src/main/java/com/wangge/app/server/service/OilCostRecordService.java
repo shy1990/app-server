@@ -2,6 +2,7 @@ package com.wangge.app.server.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -19,23 +20,24 @@ import com.wangge.app.server.entity.OilCostRecord;
 import com.wangge.app.server.entity.OilParameters;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.SalesmanAddress;
-import com.wangge.app.server.pojo.Json;
+import com.wangge.app.server.pojo.HistoryDestOilRecord;
+import com.wangge.app.server.pojo.HistoryOilRecord;
 import com.wangge.app.server.pojo.MessageCustom;
 import com.wangge.app.server.pojo.QueryResult;
-import com.wangge.app.server.pojo.message;
+import com.wangge.app.server.pojo.Record;
+import com.wangge.app.server.pojo.TodayOilRecord;
 import com.wangge.app.server.repository.ChildAccountRepostory;
 import com.wangge.app.server.repository.OilCostRecordRepository;
 import com.wangge.app.server.repositoryimpl.OilRecordImpl;
 import com.wangge.app.server.util.JWtoAdrssUtil;
 import com.wangge.app.server.vo.OilCostRecordVo;
 import com.wangge.app.util.ChainageUtil;
+import com.wangge.app.util.DateUtil;
 
 @Service
 public class OilCostRecordService {
   @Resource
   private OilCostRecordRepository trackRepository;
- // @Resource
- // private RegionRepository regionRepository;
   @Resource
   private ChildAccountRepostory accountRepostory;
   @Resource
@@ -83,7 +85,7 @@ public class OilCostRecordService {
       }
     } catch (ParseException e) {
       m.setCode(1);
-      m.setMsg("未知错误！"+e);
+      m.setMsg("未知错误！");
       return new ResponseEntity<MessageCustom>(m,HttpStatus.BAD_REQUEST);
     }
   }
@@ -160,12 +162,13 @@ public class OilCostRecordService {
           track.setUserId(userId);
         }
         Float mileage =  getDistance(coordinates,null,track.getDistance(),jsonArray);
-        OilParameters param = getOilParam(userId);
-        track.setDistance(mileage);
+        OilParameters param = getOilParam(userId);//获取油补系数
+        Float mileages = mileage*param.getKmRatio();//实际公里数
+        track.setDistance(mileages);
         j  = getOilRecord( coordinates,  type, userId);
         jsonArray.add(j.get(0));
         track.setOilRecord(jsonArray.toString());
-        track.setOilCost(mileage*1.5f);
+        track.setOilCost(mileages*param.getKmOilSubsidy());
         trackRepository.save(track);
         }else{
             OilCostRecord ocr = new OilCostRecord();
@@ -193,7 +196,7 @@ public class OilCostRecordService {
   /**
    * 
   * @Title: addHandshake 
-  * @Description: TODO(揽收签收拒收添加握手) 
+  * @Description: TODO(签收拒收添加握手) 
   * @param @param regionId
   * @param @param userId
   * @param @param coordinates
@@ -238,11 +241,13 @@ public class OilCostRecordService {
           track.setUserId(userId);
         }
         Float mileage =  getDistance(coordinates,regionId,track.getDistance(),jsonArray);
-        track.setDistance(mileage);
+        OilParameters param = parametersService.getOilParameters(regionId);
+        Float mileages = mileage * param.getKmRatio();//实际公里数
+        track.setDistance(mileages);
         JSONObject object = getOilRecord(coordinates, type, null, shopName,regionName);
         jsonArray.add(object);
         track.setOilRecord(jsonArray.toString());
-        track.setOilCost(mileage*1.5f);
+        track.setOilCost(mileages*param.getKmOilSubsidy());
         String regionIds =  track.getRegionIds();
         regionIds = regionIds +","+regionId;
         track.setRegionIds(regionIds);
@@ -305,11 +310,13 @@ public class OilCostRecordService {
             track.setUserId(userId);
           }
           Float mileage =  getDistance(coordinates,regionId,track.getDistance(),jsonArray);
-          track.setDistance(mileage);
+          OilParameters param = parametersService.getOilParameters(regionId);
+          Float mileages = mileage * param.getKmRatio();//实际公里数
+          track.setDistance(mileages);
           JSONObject object = getOilRecord(coordinates, type, regionId, shopName,null);
           jsonArray.add(object);
           track.setOilRecord(jsonArray.toString());
-          track.setOilCost(mileage*1.5f);
+          track.setOilCost(mileages*param.getKmOilSubsidy());
           String regionIds =  track.getRegionIds();
           regionIds = regionIds +","+regionId;
           track.setRegionIds(regionIds);
@@ -384,8 +391,10 @@ public class OilCostRecordService {
          track.setParentId(userId);
          track.setOilRecord(jsonArray.toString());
          Float mileage =  getDistance(coordinates,null,track.getDistance(),jsonArray);
-         track.setDistance(mileage);
-         track.setOilCost(mileage*1.5f);
+         OilParameters param = getOilParam(userId);
+         Float mileages = mileage * param.getKmRatio();//实际公里数
+         track.setDistance(mileages);
+         track.setOilCost(mileages*param.getKmOilSubsidy());
          trackRepository.save(track);
          m.setMsg("签到成功！");
          return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
@@ -651,10 +660,151 @@ public class OilCostRecordService {
     return address;
   }
  
-  
+  /**
+   * 
+  * @Title: getOilParam 
+  * @Description: TODO(根据业务员自定义区域获取油补的系数) 
+  * @param @param userId
+  * @param @return    设定文件 
+  * @return OilParameters    返回类型 
+  * @throws
+   */
   private OilParameters getOilParam(String userId){
     Salesman salesman = salesmanService.findSalesmanbyId(userId);
      return parametersService.getOilParameters(salesman.getRegion().getId());
   }
+  
+  
+  
+  
+  /**
+   * 
+    * getOilCostYestday:获取昨日油补费用 <br/> 
+    * 
+    * @author robert 
+    * @param userId
+    * @return 
+    * @since JDK 1.8
+   */
+  public Float getOilCostYestday(String userId){
+    List<OilCostRecord>  listOilCostRecord=trackRepository.findYestdayOil(userId,DateUtil.getYesterdayDate());
+    Float yestderdayCost=(float) 0.00;
+    for(OilCostRecord oilCostRecord:listOilCostRecord){
+      yestderdayCost+=oilCostRecord.getOilCost();
+    }
+   
+    return yestderdayCost;
+  }
+  
+  
+  /**
+   * 
+    * getOilCostMonth:当月累计油补费用. <br/> 
+    * @author rebort 
+    * @param userId
+    * @return 
+    * @since JDK 1.8
+   */
+   public Float getOilCostMonth(String userId){
+       List<OilCostRecord>  listOilCostRecord=trackRepository.findMonthOil(userId,DateUtil.getMonthFirstDay(),DateUtil.getYesterdayDate());
+       Float monthCost=(float) 0.00;
+       for(OilCostRecord oilCostRecord:listOilCostRecord){
+         monthCost+=oilCostRecord.getOilCost();
+       }
+      return monthCost;
+    }
+ 
+   /**
+    * 
+     * getTodayOilRecord:当天油补统计
+     * @author Administrator 
+     * @param isPrimary
+     * @param userId
+     * @param childId
+     * @return 
+     * @since JDK 1.8
+    */
+   public TodayOilRecord getTodayOilRecord(String isPrimary,String userId,String childId) throws  Exception{
+     TodayOilRecord oilRecord=new TodayOilRecord();
+     List<OilCostRecord>  listOilCostRecord=trackRepository.findYestdayOil(userId,DateUtil.gettoday());
+     ArrayList<Record> listRecord=new  ArrayList<Record>();
+     if(listOilCostRecord.size()>0){
+       for(OilCostRecord oilCostRecord:listOilCostRecord){
+           Record record=new Record();
+           record.setType(oilCostRecord.getIsPrimaryAccount());
+           record.setContent(JSONArray.parseArray( oilCostRecord.getOilRecord()));
+           listRecord.add(record);
+       }
+       oilRecord.setOilCostYesterday(getOilCostYestday(userId)+"");//昨日油补数
+       oilRecord.setOilCostMonth(getOilCostMonth(userId)+"");//当月累计
+       oilRecord.setOilRecord(listRecord);
+       oilRecord.setMsg("查询成功");
+       oilRecord.setCode(200);
+     }else{
+       oilRecord.setMsg("查询成功但无数据");
+       oilRecord.setCode(200);
+     }
+     return oilRecord;
+   }
+   /**
+    * 
+     * getTodayOilRecord:查询月记录详情
+     * @author Administrator 
+     * @param userId
+     * @param dateYear
+     * @param dateMonth
+     * @return 
+     * @since JDK 1.8
+    */
+   public HistoryDestOilRecord getMonthOilRecord(String userId,int dateYear,int dateMonth) throws  Exception{
+     HistoryDestOilRecord historyDestOilRecord=new HistoryDestOilRecord();
+     //1.当前月 2月初第一天(详情不用考虑)
+     Date endDay=null;
+     Date beginDay=null;
+     if(dateMonth== DateUtil.getNowMonth()&&dateYear==DateUtil.getNowYear()){//当前年月
+        endDay=DateUtil.getYesterdayDate();
+     }else{
+        endDay=DateUtil.getLastDayOfMonth(dateYear,dateMonth);
+     }
+     beginDay=DateUtil.getFisrtDayOfMonth(dateYear,dateMonth);
+     List<OilCostRecord>  listOilCostRecord=trackRepository.findHistoryDestOilRecord(userId,beginDay,endDay);//查询主账号
+     List<HistoryOilRecord> listHistoryOilRecord=new ArrayList<HistoryOilRecord>();
+     if(listOilCostRecord.size()>0){
+       int dateDay=0;
+       float distance=(float) 0.0;
+       float oilCost=(float) 0.0;
+       for(OilCostRecord orecord:listOilCostRecord){
+         HistoryOilRecord historyOilRecord=new HistoryOilRecord();
+         dateDay=DateUtil.getMonth(orecord.getDateTime());//日期
+         distance=orecord.getDistance();//公里数
+         oilCost=orecord.getOilCost();//油补记录
+         historyOilRecord.setFatherContent(JSONArray.parseArray(orecord.getOilRecord()));
+         List<OilCostRecord>  listChildOilCostRecord=trackRepository.findByDateTimeAndParentId(orecord.getDateTime(),orecord.getUserId());//查询子账号
+         List<Object> childcontent=new ArrayList<Object>();
+         if(listChildOilCostRecord.size()>0){
+           for(OilCostRecord childRecord:listChildOilCostRecord){
+             distance+=orecord.getDistance();
+             oilCost+=orecord.getOilCost();
+             childcontent.add(JSONArray.parseArray(childRecord.getOilRecord()));
+           }
+         }
+         historyOilRecord.setChildContents(childcontent);
+         historyOilRecord.setDateDay(dateDay);
+         historyOilRecord.setDistance(distance+"");
+         historyOilRecord.setOilCost(oilCost+"");
+         listHistoryOilRecord.add(historyOilRecord);
+       }
+       historyDestOilRecord.setCode(400);
+       historyDestOilRecord.setMsg("查询成功");
+       historyDestOilRecord.setContent(listHistoryOilRecord);
+     }else{
+       historyDestOilRecord.setMsg("查询成功但无数据");
+       historyDestOilRecord.setCode(200);
+     }
+    
+     return historyDestOilRecord;
+   }
+  
  
 }
+ 

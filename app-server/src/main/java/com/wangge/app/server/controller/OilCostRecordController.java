@@ -13,10 +13,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
-import com.wangge.app.server.entity.OilCostRecord;
-import com.wangge.app.server.pojo.JsonCustom;
+import com.wangge.app.server.pojo.HistoryDestOilRecord;
 import com.wangge.app.server.pojo.MessageCustom;
-import com.wangge.app.server.pojo.message;
+import com.wangge.app.server.pojo.TodayOilRecord;
 import com.wangge.app.server.service.OilCostRecordService;
 
 
@@ -40,8 +39,6 @@ public class OilCostRecordController {
   
   @RequestMapping(value = "/workCheck", method = RequestMethod.POST)
   public ResponseEntity<MessageCustom> signed(@RequestBody JSONObject jsons){
-  //  message m = trackService.addHandshake(jsons);
-   // ResponseEntity<message> ms = trackService.signed(jsons);
     
     return trackService.signed(jsons);
   }
@@ -74,4 +71,55 @@ public class OilCostRecordController {
     trackService.getHistoryOilRecord(jsons);
   }
 
+  /**
+   * 
+    * getTodayOilRecord:当日油补记录
+    * @author robert 
+    * @param jsons
+    * @return 
+    * @since JDK 1.8
+   */
+  @RequestMapping(value = "/getTodayOilRecord", method = RequestMethod.POST)
+  public ResponseEntity<TodayOilRecord> getTodayOilRecord(@RequestBody JSONObject jsons){
+      String isPrimary=jsons.getString("isPrimary");//0-主账号 1-子账号
+      String  userId  =jsons.getString("userId");//业务员id
+      String childId  =jsons.getString("childId");//子账号id
+      
+      TodayOilRecord oildRecord=new TodayOilRecord();
+      try {
+        oildRecord = trackService.getTodayOilRecord(isPrimary,userId,childId);
+      } catch (Exception e) {
+        oildRecord.setCode(400);
+        oildRecord.setMsg("服务器异常");
+      }
+      return new ResponseEntity<TodayOilRecord>(oildRecord,HttpStatus.OK);
+  }
+  
+  
+  /**
+   * 
+    * getHistoryDestOilRecord:历史油补详情
+    * @author Administrator 
+    * @param jsons
+    * @return 
+    * @since JDK 1.8
+   */
+  @RequestMapping(value = "/getHistoryDestOilRecord", method = RequestMethod.POST)
+  public ResponseEntity<HistoryDestOilRecord> getHistoryDestOilRecord(@RequestBody JSONObject jsons){
+      String  userId  =jsons.getString("userId");//业务员id
+      int dateYear    =jsons.getIntValue("dateYear");//日期-年
+      int dateMonth   =jsons.getIntValue("dateMonth");//日期-月份
+      
+      HistoryDestOilRecord historyDestOilRecord=new HistoryDestOilRecord();
+      
+      try {
+        historyDestOilRecord=trackService.getMonthOilRecord(userId, dateYear, dateMonth) ;
+      } catch (Exception e) {
+        historyDestOilRecord.setCode(400);
+        historyDestOilRecord.setMsg("服务器异常");
+      }
+      
+      return new ResponseEntity<HistoryDestOilRecord>(historyDestOilRecord,HttpStatus.OK);
+  }
+  
 }
