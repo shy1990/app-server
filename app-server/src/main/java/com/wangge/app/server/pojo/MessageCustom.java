@@ -17,7 +17,7 @@ public class MessageCustom extends message {
   @JsonFormat(pattern="MM.dd HH:mm",timezone = "GMT+8")
   private Date signTime;
   private int code;
-  private String enable;
+  private boolean enable;
   
   public Date getSignTime() {
     return signTime;
@@ -31,12 +31,13 @@ public class MessageCustom extends message {
   public void setCode(int code) {
     this.code = code;
   }
-  public String getEnable() {
+  public boolean isEnable() {
     return enable;
   }
-  public void setEnable(String enable) {
+  public void setEnable(boolean enable) {
     this.enable = enable;
   }
+  
   
   
 

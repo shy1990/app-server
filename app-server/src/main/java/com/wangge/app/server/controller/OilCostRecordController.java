@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
-import com.wangge.app.server.entity.OilCostRecord;
 import com.wangge.app.server.pojo.HistoryDestOilRecord;
 import com.wangge.app.server.pojo.MessageCustom;
 import com.wangge.app.server.pojo.TodayOilRecord;
@@ -55,11 +54,23 @@ public class OilCostRecordController {
   * @throws
    */
   @RequestMapping(value = "/getYesterydayOilRecord",method = RequestMethod.POST)
- public ResponseEntity<OilCostRecord> yesterdayOilRecord(JSONObject jsons){
-    OilCostRecord or =  trackService.getYesterydayOilRecord(jsons);
-   return null;
+ public ResponseEntity<MessageCustom> yesterdayOilRecord(JSONObject jsons){
+    MessageCustom m = new MessageCustom();
+    JSONObject object =  trackService.getYesterydayOilRecord(jsons);
+    if(object != null){
+       m.setObj(object);
+       return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
+    }else{
+      m.setMsg("未知错误！");
+      m.setCode(0);
+      return new ResponseEntity<MessageCustom>(m,HttpStatus.BAD_REQUEST);
+    }
+    
+   
  }
   
+  
+
   /**
    * 
     * getTodayOilRecord:当日油补记录
@@ -110,4 +121,5 @@ public class OilCostRecordController {
       
       return new ResponseEntity<HistoryDestOilRecord>(historyDestOilRecord,HttpStatus.OK);
   }
+  
 }

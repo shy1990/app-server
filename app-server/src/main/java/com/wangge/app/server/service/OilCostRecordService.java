@@ -3,7 +3,6 @@ package com.wangge.app.server.service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +25,7 @@ import com.wangge.app.server.pojo.Record;
 import com.wangge.app.server.pojo.TodayOilRecord;
 import com.wangge.app.server.repository.ChildAccountRepostory;
 import com.wangge.app.server.repository.OilCostRecordRepository;
+import com.wangge.app.server.repositoryimpl.OilRecordImpl;
 import com.wangge.app.server.util.JWtoAdrssUtil;
 import com.wangge.app.util.ChainageUtil;
 import com.wangge.app.util.DateUtil;
@@ -48,31 +48,35 @@ public class OilCostRecordService {
   private RegistDataService registDataService;
   @Resource
   private ApplicationContext cxt;
+  @Resource
+  private OilRecordImpl oilRecordImpl;
   
   private JSONArray j = null;
   private JSONObject obj = null;
   
-  private SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
   
-  public OilCostRecord getYesterydayOilRecord(JSONObject jsons) {
+  public JSONObject getYesterydayOilRecord(JSONObject jsons) {
     int isPrimaryAccount  = jsons.getIntValue("isPrimary");
     String userId = jsons.getString("userId");
-    String childId = jsons.getString("chuildId");
-    String id = null;
-    Date dateTime;
-    if(isPrimaryAccount == 1){
-      id = childId;
-    }else{
-      id = userId;
-    }
-    try {
-      dateTime = format.parse(format.format(new Date()));
-     // trackRepository.getYesterydayOilRecord(id);
-    } catch (ParseException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    String childId = jsons.getString("childId");
     
+     if(isPrimaryAccount == 0){
+       OilCostRecord o = oilRecordImpl.getYesterydayOilRecord(userId);
+       if(o != null){
+         List<OilCostRecord> orList = oilRecordImpl.getChildYesterydayOilRecord(userId);
+        
+         return  ChainageUtil.createPrimaryYesterydayOilRecord(o, orList);
+       }
+     }else{
+       OilCostRecord chilId = oilRecordImpl.getYesterydayOilRecord(childId);
+       if(chilId != null){
+         OilCostRecord Primary = oilRecordImpl.getYesterydayOilRecord(userId);
+         return ChainageUtil.createChildYesterydayOilRecord(chilId, Primary);
+       }
+     }
+    
+     
+      
     return null;
   }
   /**
@@ -611,7 +615,6 @@ public class OilCostRecordService {
     return address;
   }
   
-  
   /**
    * 
     * getOilCostYestday:获取昨日油补费用 <br/> 
@@ -739,6 +742,6 @@ public class OilCostRecordService {
     
      return historyDestOilRecord;
    }
-   
-}
+  
  
+}
