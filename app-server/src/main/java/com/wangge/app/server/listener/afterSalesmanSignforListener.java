@@ -14,13 +14,13 @@ import com.wangge.app.server.service.OilCostRecordService;
 * @date 2016年4月16日 下午2:59:48
 *
  */
-public class afterSignforListener implements ApplicationListener<afterSignforEvent> {
+public class afterSalesmanSignforListener implements ApplicationListener<afterSignforEvent> {
   @Resource
   private OilCostRecordService oilCostRecordService;
 
   @Override
   public void onApplicationEvent(afterSignforEvent event) {
-    oilCostRecordService.addHandshake(event.getUserId(),event.getCoordinates(),event.getIsPrimaryAccount(),event.getChildId(),event.getType(),event.getStorePhone());
+    oilCostRecordService.addHandshake(event.getUserId(),event.getCoordinates(),event.getIsPrimaryAccount(),event.getChildId(),event.getType());
   }
   
   

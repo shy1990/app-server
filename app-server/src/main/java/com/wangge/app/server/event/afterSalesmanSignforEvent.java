@@ -11,7 +11,7 @@ import com.alibaba.fastjson.JSONObject;
 * @date 2016年4月16日 下午2:31:41
 *
  */
-public class afterSignforEvent extends ApplicationEvent {
+public class afterSalesmanSignforEvent extends ApplicationEvent {
 
 
   /**
@@ -24,8 +24,7 @@ public class afterSignforEvent extends ApplicationEvent {
   private  int isPrimaryAccount;
   private String  childId;
   private int  type;
-  private String storePhone;
-  public afterSignforEvent(String userId, String coordinates, int isPrimaryAccount, String childId, int type,String storePhone) {
+  public afterSalesmanSignforEvent(String userId, String coordinates, int isPrimaryAccount, String childId, int type) {
     super("");
     this.userId = userId;
     this.coordinates = coordinates;
@@ -62,12 +61,6 @@ public class afterSignforEvent extends ApplicationEvent {
   }
   public void setType(int type) {
     this.type = type;
-  }
-  public String getStorePhone() {
-    return storePhone;
-  }
-  public void setStorePhone(String storePhone) {
-    this.storePhone = storePhone;
   }
   
   

@@ -31,7 +31,7 @@ public class OrderSignforController {
   @Resource
   private OrderSignforService orderSignforService;
   
-  private String userPhone ;
+  /*private String userPhone ;
   private String orderNo ;
   private String smsCode;
   private int payType;
@@ -39,7 +39,7 @@ public class OrderSignforController {
   private String storePhone ;
   private int isPrimaryAccount;
   private String  remark;
-  private String fastMailNo;
+  private String fastMailNo;*/
   
   @Resource
   private OrderSignforImpl osi;
@@ -79,10 +79,10 @@ public class OrderSignforController {
   @RequestMapping(value = "/bussOrderSignFor", method = RequestMethod.POST)
   @ResponseBody
   public ResponseEntity<MessageCustom> bussOrderSignFor(@RequestBody JSONObject jsons){
-       fastMailNo = jsons.getString("fastmailNo");
-       userPhone = jsons.getString("userPhone");
-       signGeoPoint = jsons.getString("signGeoPoint");
-       isPrimaryAccount = jsons.getIntValue("isPrimaryAccount");
+      String fastMailNo = jsons.getString("fastmailNo");
+      String userPhone = jsons.getString("userPhone");
+      String signGeoPoint = jsons.getString("signGeoPoint");
+      int isPrimaryAccount = jsons.getIntValue("isPrimary");
        String userId = jsons.getString("userId");
        String childId = jsons.getString("childId");
        
@@ -121,7 +121,7 @@ public class OrderSignforController {
   @RequestMapping(value = "/getOrderList", method = RequestMethod.POST)
   @ResponseBody
   public ResponseEntity<QueryResult<OrderSignfor>> getOrderList(@RequestBody JSONObject jsons){
-                 userPhone = jsons.getString("userPhone");
+                String userPhone = jsons.getString("userPhone");
                 String type = jsons.getString("type");
                 int pageNo = jsons.getIntValue("pageNumber");
                 int pageSize = jsons.getIntValue("pageSize");
@@ -142,14 +142,14 @@ public class OrderSignforController {
   @RequestMapping(value ="/customOrderSign", method = RequestMethod.POST)
   @ResponseBody
   public ResponseEntity<MessageCustom> customOrderSign(@RequestBody JSONObject jsons){
-     userPhone = jsons.getString("userPhone");
-     orderNo = jsons.getString("orderNo");
-     smsCode = jsons.getString("smsCode");
-     payType =  jsons.getIntValue("payType");
-     signGeoPoint = jsons.getString("signGeoPoint");
-     storePhone = jsons.getString("storePhone");
-     isPrimaryAccount = jsons.getIntValue("isPrimaryAccount");
-    String userId =  jsons.getString("isPrimaryAccount");
+    String userPhone = jsons.getString("userPhone");
+     String orderNo = jsons.getString("orderNo");
+     String smsCode = jsons.getString("smsCode");
+     int payType =  jsons.getIntValue("payType");
+     String signGeoPoint = jsons.getString("signGeoPoint");
+     String storePhone = jsons.getString("storePhone");
+     int isPrimaryAccount = jsons.getIntValue("isPrimary");
+    String userId =  jsons.getString("userId");
     String childId =  jsons.getString("childId");
     MessageCustom m = new MessageCustom();
     try {
@@ -190,13 +190,13 @@ public class OrderSignforController {
   @RequestMapping(value = "/customOrderUnSign", method = RequestMethod.POST)
   @ResponseBody
   public ResponseEntity<MessageCustom> customOrderUnSign(@RequestBody JSONObject jsons){
-     userPhone = jsons.getString("userPhone");
-     orderNo = jsons.getString("orderNo");
-     remark = jsons.getString("remark");
-    signGeoPoint = jsons.getString("signGeoPoint");
-    int isPrimaryAccount = jsons.getIntValue("isPrimaryAccount");
-    storePhone = jsons.getString("storePhone");
-    String userId =  jsons.getString("isPrimaryAccount");
+    String userPhone = jsons.getString("userPhone");
+     String orderNo = jsons.getString("orderNo");
+     String  remark = jsons.getString("remark");
+    String signGeoPoint = jsons.getString("signGeoPoint");
+    int isPrimaryAccount = jsons.getIntValue("isPrimary");
+    String storePhone = jsons.getString("storePhone");
+    String userId =  jsons.getString("userId");
     String childId =  jsons.getString("childId");
     MessageCustom m = new MessageCustom();
     try {

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wangge.app.server.entity.OilCostRecord;
+import com.wangge.app.server.pojo.HistoryDestOilRecord;
 import com.wangge.app.server.pojo.MessageCustom;
 import com.wangge.app.server.pojo.TodayOilRecord;
 import com.wangge.app.server.service.OilCostRecordService;
@@ -28,7 +30,7 @@ import com.wangge.app.server.service.OilCostRecordService;
  */
 
 @RestController
-@RequestMapping("/oilCostRecord")
+@RequestMapping("/v1/oilCostRecord")
 public class OilCostRecordController {
   
   private static final Logger logger =  LoggerFactory.getLogger(OilCostRecordController.class); // NOPMD by Administrator on 16-3-30 下午5:43
@@ -46,55 +48,66 @@ public class OilCostRecordController {
   /**
    * 
   * @Title: addHandshake 
-  * @Description: TODO(添加一个握手点) 
+  * @Description: TODO(获取昨日油补记录) 
   * @param @param jsons
   * @param @return    设定文件 
   * @return ResponseEntity<JsonCustom>    返回类型 
   * @throws
    */
- /* @RequestMapping(name = "/addHandshake", method = RequestMethod.POST)
-  public ResponseEntity<JsonCustom> addHandshake(@RequestBody JSONObject jsons){
-    JsonCustom json = new JsonCustom();
-   try {
-     trackService.addHandshake(jsons);
-     json.setMsg("保存成功！");
-  } catch (Exception e) {
-    // TODO: handle exception
-    e.printStackTrace();
-    if(logger.isErrorEnabled()){
-      logger.error("addHandshake() error  curr :" + e);
-    }
-    json.setMsg("保存失败！");
-  }
-    return new ResponseEntity<JsonCustom>(json,HttpStatus.CREATED);
-  }*/
+  @RequestMapping(value = "/getYesterydayOilRecord",method = RequestMethod.POST)
+ public ResponseEntity<OilCostRecord> yesterdayOilRecord(JSONObject jsons){
+    OilCostRecord or =  trackService.getYesterydayOilRecord(jsons);
+   return null;
+ }
   
   /**
    * 
-    * getTodayOilRecord:(这里用一句话描述这个方法的作用). <br/> 
-    * TODO(这里描述这个方法适用条件 – 可选).<br/> 
-    * TODO(这里描述这个方法的执行流程 – 可选).<br/> 
-    * TODO(这里描述这个方法的使用方法 – 可选).<br/> 
-    * TODO(这里描述这个方法的注意事项 – 可选).<br/> 
-    * 
+    * getTodayOilRecord:当日油补记录
     * @author robert 
     * @param jsons
     * @return 
     * @since JDK 1.8
    */
-  @RequestMapping(value = "/oilcostRecord/getTodayOilRecord", method = RequestMethod.POST)
+  @RequestMapping(value = "/getTodayOilRecord", method = RequestMethod.POST)
   public ResponseEntity<TodayOilRecord> getTodayOilRecord(@RequestBody JSONObject jsons){
-      TodayOilRecord  oildRecord=new TodayOilRecord();
       String isPrimary=jsons.getString("isPrimary");//0-主账号 1-子账号
       String  userId  =jsons.getString("userId");//业务员id
       String childId  =jsons.getString("childId");//子账号id
       
-      
-      trackService.getOilCostYestday(userId);
-      
+      TodayOilRecord oildRecord=new TodayOilRecord();
+      try {
+        oildRecord = trackService.getTodayOilRecord(isPrimary,userId,childId);
+      } catch (Exception e) {
+        oildRecord.setCode(400);
+        oildRecord.setMsg("服务器异常");
+      }
       return new ResponseEntity<TodayOilRecord>(oildRecord,HttpStatus.OK);
   }
   
   
-  
+  /**
+   * 
+    * getHistoryDestOilRecord:历史油补详情
+    * @author Administrator 
+    * @param jsons
+    * @return 
+    * @since JDK 1.8
+   */
+  @RequestMapping(value = "/getHistoryDestOilRecord", method = RequestMethod.POST)
+  public ResponseEntity<HistoryDestOilRecord> getHistoryDestOilRecord(@RequestBody JSONObject jsons){
+      String  userId  =jsons.getString("userId");//业务员id
+      int dateYear    =jsons.getIntValue("dateYear");//日期-年
+      int dateMonth   =jsons.getIntValue("dateMonth");//日期-月份
+      
+      HistoryDestOilRecord historyDestOilRecord=new HistoryDestOilRecord();
+      
+      try {
+        historyDestOilRecord=trackService.getMonthOilRecord(userId, dateYear, dateMonth) ;
+      } catch (Exception e) {
+        historyDestOilRecord.setCode(400);
+        historyDestOilRecord.setMsg("服务器异常");
+      }
+      
+      return new ResponseEntity<HistoryDestOilRecord>(historyDestOilRecord,HttpStatus.OK);
+  }
 }

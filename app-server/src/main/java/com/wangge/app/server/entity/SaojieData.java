@@ -4,7 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -14,7 +13,6 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import com.wangge.app.server.pojo.Color;
 import com.wangge.common.entity.Region;
 import com.wangge.core.entity.AbstractPersistable;
 
@@ -60,7 +58,7 @@ public class SaojieData extends AbstractPersistable<Long> {
 	
   private int isPrimaryAccount; //是否主账号
   
-  private String userId;//业务账号id
+  private String accountId;//业务账号id
 	
 	public SaojieData() {
 		super();
@@ -175,13 +173,15 @@ public class SaojieData extends AbstractPersistable<Long> {
     this.isPrimaryAccount = isPrimaryAccount;
   }
 
-  public String getUserId() {
-    return userId;
+  public String getAccountId() {
+    return accountId;
   }
 
-  public void setUserId(String userId) {
-    this.userId = userId;
+  public void setAccountId(String accountId) {
+    this.accountId = accountId;
   }
+
+ 
   
   
   

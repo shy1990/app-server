@@ -79,10 +79,10 @@ public class SaojieDataController {
 	@RequestMapping(value = "/{regionId}/{userId}/saojie_data", method = RequestMethod.POST)
 	public ResponseEntity<Json> add(@PathVariable("regionId") Region region,@PathVariable("userId") Salesman salesman, @RequestBody JSONObject jsons) {
 		Json json = new Json();
-		String name = jsons.getString("shopName");
+		String name = jsons.getString("name");
 		String description = jsons.getString("description");
 		String coordinate = jsons.getString("coordinate");
-	  int	isPrimaryAccount = jsons.getIntValue("isPrimaryAccount");
+	  int	isPrimaryAccount = jsons.getIntValue("isPrimary");
 	  String childId = jsons.getString("childId");
 		String imageUrl = null;
 		String id = null;
@@ -103,9 +103,9 @@ public class SaojieDataController {
 			}else{
 			  id = childId;
 			}
-			data.setUserId(id);
+			data.setAccountId(id);
 			SaojieData saojiedata = dataSaojieService.addDataSaojie(data,salesman);
-			cxt.publishEvent(new afterDailyEvent(region.getId(),salesman.getId(),name,coordinate,isPrimaryAccount,childId,3));
+			cxt.publishEvent(new afterDailyEvent(region.getId(),salesman.getId(),name,coordinate,isPrimaryAccount,childId,2));
 			//oilsCostRecordService.addHandshake(region.getId(),salesman.getId(),name,coordinate,isPrimaryAccount,childId,2);
 			if (saojiedata != null) {
 

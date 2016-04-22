@@ -69,6 +69,7 @@ public class OrderSignfor implements Serializable {
   
   private int isPrimaryAccount;
   
+  private String accountId;
   public int getOrderCount() {
     return orderCount;
   }
@@ -225,6 +226,14 @@ public class OrderSignfor implements Serializable {
 
   public void setIsPrimaryAccount(int isPrimaryAccount) {
     this.isPrimaryAccount = isPrimaryAccount;
+  }
+
+  public String getAccountId() {
+    return accountId;
+  }
+
+  public void setAccountId(String accountId) {
+    this.accountId = accountId;
   }
   
   

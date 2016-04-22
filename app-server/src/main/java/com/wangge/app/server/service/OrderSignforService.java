@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.OrderSignfor;
+import com.wangge.app.server.event.afterSalesmanSignforEvent;
 import com.wangge.app.server.event.afterSignforEvent;
 import com.wangge.app.server.repository.OrderSignforRepository;
 @Service
@@ -25,10 +26,24 @@ public class OrderSignforService {
     
   }
 
-
+  /**
+   * 
+  * @Title: updateOrderSignforList 
+  * @Description: TODO(业务揽收) 
+  * @param @param fastMailNo
+  * @param @param userPhone
+  * @param @param signGeoPoint
+  * @param @param isPrimaryAccount
+  * @param @param userId
+  * @param @param childId
+  * @param @return    设定文件 
+  * @return Date    返回类型 
+  * @throws
+   */
 
   public Date updateOrderSignforList(String fastMailNo,String userPhone,String signGeoPoint, int isPrimaryAccount,String userId,String childId) {
     Date date = new Date();
+    String accountId = null;
     List<OrderSignfor> osList =   osr.findByFastmailNo(fastMailNo);
             if(osList != null && osList.size() > 0){
                 for(OrderSignfor os : osList){
@@ -37,8 +52,14 @@ public class OrderSignforService {
                     os.setUserPhone(userPhone);
                     os.setOrderStatus(2);
                     os.setIsPrimaryAccount(isPrimaryAccount);
+                    if(isPrimaryAccount==0){
+                      accountId = userId;
+                    }else{
+                      accountId = childId;
+                    }
+                    os.setAccountId(accountId);
                     osr.save(os);
-                  //  ctx.publishEvent(new afterSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,5));
+                    ctx.publishEvent(new afterSalesmanSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,5));
                   }
                 return date;
             }
@@ -46,11 +67,26 @@ public class OrderSignforService {
   }
 
 
-
+  /**
+   * 
+  * @Title: updateOrderSignfor 
+  * @Description: TODO(客户签收) 
+  * @param @param orderNo
+  * @param @param userPhone
+  * @param @param signGeoPoint
+  * @param @param payType
+  * @param @param smsCode
+  * @param @param isPrimaryAccount
+  * @param @param userId
+  * @param @param childId
+  * @param @param storePhone    设定文件 
+  * @return void    返回类型 
+  * @throws
+   */
   public void updateOrderSignfor(String orderNo, String userPhone,
       String signGeoPoint, int payType, String smsCode,int isPrimaryAccount,String userId,String childId,String  storePhone) {
       OrderSignfor orderSignFor =  findOrderSignFor(orderNo,userPhone);
-      
+         String accountId = null;
          orderSignFor.setCustomSignforTime(new Date());
          orderSignFor.setCustomSignforGeopoint(signGeoPoint);
          orderSignFor.setOrderPayType(payType);
@@ -61,21 +97,47 @@ public class OrderSignforService {
          }else{
            orderSignFor.setCustomSignforException(0);
          }
+         if(isPrimaryAccount==0){
+           accountId = userId;
+         }else{
+           accountId = childId;
+         }
+         orderSignFor.setAccountId(accountId);
          osr.save(orderSignFor);
          ctx.publishEvent(new afterSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,6,storePhone));
      
   }
 
 
-
+  /**
+   * 
+  * @Title: updateOrderSignfor 
+  * @Description: TODO(客户拒签) 
+  * @param @param orderNo
+  * @param @param userPhone
+  * @param @param remark
+  * @param @param signGeoPoint
+  * @param @param isPrimaryAccount
+  * @param @param userId
+  * @param @param childId
+  * @param @param storePhone    设定文件 
+  * @return void    返回类型 
+  * @throws
+   */
   public void updateOrderSignfor(String orderNo, String userPhone, String remark,String signGeoPoint,int isPrimaryAccount,String userId,String childId,String  storePhone) {
     OrderSignfor orderSignFor = findOrderSignFor(orderNo,userPhone);
-    
+      String accountId = null;
       orderSignFor.setCustomUnSignRemark(remark);
       orderSignFor.setCustomSignforTime(new Date());
       orderSignFor.setCustomSignforGeopoint(signGeoPoint);
       orderSignFor.setOrderStatus(4);
       orderSignFor.setIsPrimaryAccount(isPrimaryAccount);
+      if(isPrimaryAccount==0){
+        accountId = userId;
+      }else{
+        accountId = childId;
+      }
+      orderSignFor.setAccountId(accountId);
       osr.save(orderSignFor);
       ctx.publishEvent(new afterSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,7,storePhone));
   }

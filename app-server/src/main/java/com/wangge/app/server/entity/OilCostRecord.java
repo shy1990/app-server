@@ -42,7 +42,7 @@ public class OilCostRecord implements Serializable{
   private String  oilRecord;//Coordinates,regionIds，shopName等  油补 json串
   
   private String parentId;
-  
+  @Column(name = "REGIONIDS")
   private String regionIds;
   
   public int getId() {
