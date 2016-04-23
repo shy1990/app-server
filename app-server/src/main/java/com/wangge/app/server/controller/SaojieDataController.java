@@ -59,20 +59,24 @@ public class SaojieDataController {
 	public ResponseEntity<List<SaojieData>> list(@PathVariable("regionId") String regionId) {
 
 		List<SaojieData> Data = dataSaojieService.getSaojieDataByregion(regionId);
+		
 		List<SaojieData> listsj = new ArrayList<SaojieData>();
-		for (SaojieData sj : Data) {
-			// select
-			// sjd.id,sjd.imageUrl,sjd.name,sjd.description,sjd.coordinate from
-			// SaojieData sjd left join sjd.region r where r.id = ?")
-			SaojieData sjdata = new SaojieData();
-			sjdata.setId(sj.getId());
-			sjdata.setImageUrl(sj.getImageUrl());
-			sjdata.setName(sj.getName());
-			sjdata.setCoordinate(sj.getCoordinate());
-			sjdata.setDescription(sj.getDescription());
-			// sjdata.setRegion(sj.getRegion());
-			listsj.add(sjdata);
-		}
+  if(Data != null){
+      for (SaojieData sj : Data) {
+        // select
+        // sjd.id,sjd.imageUrl,sjd.name,sjd.description,sjd.coordinate from
+        // SaojieData sjd left join sjd.region r where r.id = ?")
+        SaojieData sjdata = new SaojieData();
+        sjdata.setId(sj.getId());
+        sjdata.setImageUrl(sj.getImageUrl());
+        sjdata.setName(sj.getName());
+        sjdata.setCoordinate(sj.getCoordinate());
+        sjdata.setDescription(sj.getDescription());
+        // sjdata.setRegion(sj.getRegion());
+        listsj.add(sjdata);
+      }
+    }
+		
 		return new ResponseEntity<List<SaojieData>>(listsj, HttpStatus.OK);
 	}
 
