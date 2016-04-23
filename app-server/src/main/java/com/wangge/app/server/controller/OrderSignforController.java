@@ -171,9 +171,7 @@ public class OrderSignforController {
     } catch (Exception e) {
       m.setMsg("false");
       m.setCode(1);
-     /* logger.error("OrderSignforController updateOrderSignfor error :"+e);
-      logger.debug("OrderSignforController updateOrderSignfor error :"+e);
-      logger.info("OrderSignforController updateOrderSignfor error :"+e);*/
+     /* logger.error("OrderSignforController updateOrderSignfor error :"+e);*/
     }
     
    return  new ResponseEntity<MessageCustom>(m, HttpStatus.OK);

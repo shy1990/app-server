@@ -111,6 +111,7 @@ public class RegistDataService {
       map.put("regionName", data.getRegion().getName());
       map.put("shopName", data.getShopName());
       map.put("regionId", data.getRegion().getId());
+      return map;
     }
     
     return null;

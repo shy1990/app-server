@@ -32,6 +32,7 @@ public class afterSignforEvent extends ApplicationEvent {
     this.isPrimaryAccount = isPrimaryAccount;
     this.childId = childId;
     this.type = type;
+    this.storePhone = storePhone;
   }
   public String getUserId() {
     return userId;

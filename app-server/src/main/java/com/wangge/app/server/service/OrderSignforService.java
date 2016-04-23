@@ -44,12 +44,11 @@ public class OrderSignforService {
   public Date updateOrderSignforList(String fastMailNo,String userPhone,String signGeoPoint, int isPrimaryAccount,String userId,String childId) {
     Date date = new Date();
     String accountId = null;
-    List<OrderSignfor> osList =   osr.findByFastmailNo(fastMailNo);
+    List<OrderSignfor> osList =   osr.findByUserPhoneAndFastmailNo(userPhone,fastMailNo);
             if(osList != null && osList.size() > 0){
                 for(OrderSignfor os : osList){
                     os.setYewuSignforTime(date);
                     os.setYewuSignforGeopoint(signGeoPoint);
-                    os.setUserPhone(userPhone);
                     os.setOrderStatus(2);
                     os.setIsPrimaryAccount(isPrimaryAccount);
                     if(isPrimaryAccount==0){
@@ -59,8 +58,8 @@ public class OrderSignforService {
                     }
                     os.setAccountId(accountId);
                     osr.save(os);
-                    ctx.publishEvent(new afterSalesmanSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,5));
                   }
+                ctx.publishEvent(new afterSalesmanSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,5));
                 return date;
             }
             return null;

@@ -1,5 +1,7 @@
 package com.wangge.app.util;
 
+import java.io.BufferedReader;
+import java.io.Reader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -100,7 +102,7 @@ public class ChainageUtil {
   }
   
   public static JSONObject  createPrimaryYesterydayOilRecord(OilCostRecord o, List<OilCostRecord> childOilRecord){
-    JSONArray primaryJsonArray = JSONArray.parseArray(o.getOilRecord());
+    JSONArray primaryJsonArray = JSONArray.parseArray(o.getOilRecord().toString());
     JSONObject jsonObject = new JSONObject();
     JSONArray j =new JSONArray();
     Float distance = o.getDistance();
@@ -111,7 +113,7 @@ public class ChainageUtil {
       primaryJson.put("content", primaryJsonArray);
       j.add(primaryJson);
       //组装子账号json串，计算总的公里数和又不费用
-      if(childOilRecord != null){
+      if(childOilRecord != null && childOilRecord.size() > 0){
         JSONObject childJson = new JSONObject();
         JSONArray childJsonArray = new JSONArray();
         for(OilCostRecord or : childOilRecord){

@@ -69,7 +69,7 @@ public class OilCostRecordService {
    */
   public ResponseEntity<MessageCustom> getHistoryOilRecord(JSONObject jsons) {
     String userId = jsons.getString("userId");
-    int pagerNumber = jsons.getIntValue("pagerNumber");
+    int pagerNumber = jsons.getIntValue("pagerNumber") ;
     int pagerSize = jsons.getIntValue("pagerSize");
      MessageCustom m = new MessageCustom();
     try {
@@ -84,6 +84,7 @@ public class OilCostRecordService {
         return new ResponseEntity<MessageCustom>(m,HttpStatus.BAD_REQUEST);
       }
     } catch (ParseException e) {
+      e.printStackTrace();
       m.setCode(1);
       m.setMsg("未知错误！");
       return new ResponseEntity<MessageCustom>(m,HttpStatus.BAD_REQUEST);
@@ -161,8 +162,7 @@ public class OilCostRecordService {
         }else{
           track.setUserId(userId);
         }
-       /* Float mileage =  getDistance(coordinates,null,track.getDistance(),jsonArray);*/
-        Float mileage = 10f;
+       Float mileage =  getDistance(coordinates,null,track.getDistance(),jsonArray);
         OilParameters param = getOilParam(userId);//获取油补系数
         Float mileages = mileage*param.getKmRatio();//实际公里数
         track.setDistance(mileages);
@@ -241,8 +241,7 @@ public class OilCostRecordService {
         }else{
           track.setUserId(userId);
         }
-        /*Float mileage =  getDistance(coordinates,regionId,track.getDistance(),jsonArray);*/
-        Float mileage = 10f;
+        Float mileage =  getDistance(coordinates,regionId,track.getDistance(),jsonArray);
         OilParameters param = parametersService.getOilParameters(regionId);
         Float mileages = mileage * param.getKmRatio();//实际公里数
         track.setDistance(mileages);
@@ -311,8 +310,7 @@ public class OilCostRecordService {
           }else{
             track.setUserId(userId);
           }
-         /* Float mileage =  getDistance(coordinates,regionId,track.getDistance(),jsonArray);*/
-          Float mileage =  10f;
+          Float mileage =  getDistance(coordinates,regionId,track.getDistance(),jsonArray);
           OilParameters param = parametersService.getOilParameters(regionId);
           Float mileages = mileage * param.getKmRatio();//实际公里数
           track.setDistance(mileages);
@@ -376,7 +374,7 @@ public class OilCostRecordService {
        Date   dateTime = format.parse(format.format(new Date()));
        OilCostRecord track = trackRepository.findByDateTimeAndUserId(format.parse(format.format(new Date())),userId);
        if(type == 1){
-         if(track != null){
+         if(track == null){
            ocr.setUserId(userId);
            ocr.setDateTime(dateTime);
            ocr.setOilRecord(getOilRecord(coordinates,type,userId).toString());
@@ -385,7 +383,7 @@ public class OilCostRecordService {
              m.setMsg("签到成功！");
              return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
          }
-         m.setMsg("已经签到签到成功！");
+         m.setMsg("已经签到成功！");
          return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
        }else if(type ==8){
        
@@ -397,8 +395,7 @@ public class OilCostRecordService {
          track.setIsPrimaryAccount(isPrimaryAccount);
          track.setParentId(userId);
          track.setOilRecord(jsonArray.toString());
-         /*Float mileage =  getDistance(coordinates,null,track.getDistance(),jsonArray);*/
-         Float mileage = 10f;
+         Float mileage =  getDistance(coordinates,null,track.getDistance(),jsonArray);
          OilParameters param = getOilParam(userId);
          Float mileages = mileage * param.getKmRatio();//实际公里数
          track.setDistance(mileages);
@@ -564,9 +561,12 @@ public class OilCostRecordService {
     }
     
     
-    String param = "&origin='"+coordinates1[1]+"','"+coordinates1[0]+"'&destination='"+coordinates2[1]+"','"+coordinates2[0]+"'&origin_region='"+regionName+"'&destination_region='"+regionName+"'";
+    /*String param = "&origin='"+coordinates1[1]+"','"+coordinates1[0]+"'&destination='"+coordinates2[1]+"','"+coordinates2[0]+"'&origin_region='"+regionName+"'&destination_region='"+regionName+"'";
     Float d = ChainageUtil.createDistance(param);//百度地图返回的json中解析出两点之间的导航出的距离单位米
+*/    
+    Float d = 1000f;
     Float distance = d/1000 ;//转换成公里
+
      mileage = mileage != null ? distance + mileage : distance;//将握手点之间的距离叠加起来
     return mileage;
   }

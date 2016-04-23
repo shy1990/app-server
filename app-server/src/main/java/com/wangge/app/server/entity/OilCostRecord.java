@@ -1,22 +1,20 @@
 package com.wangge.app.server.entity;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
-
-import com.wangge.app.util.ChainageUtil;
 
 @Entity
 @Table(name = "BIZ_OIL_COST_RECORD")
@@ -40,7 +38,10 @@ public class OilCostRecord implements Serializable{
   //private String regionIds;//regionId集合
   private Float oilCost;//油补的费用
   private Float  distance;//里程数
-  @Lob
+  
+  @Lob  
+  @Basic(fetch = FetchType.LAZY)  
+  @Column(columnDefinition = "CLOB", name = "OIL_RECORD")
   private String  oilRecord;//Coordinates,regionIds，shopName等  油补 json串
   
   private String parentId;

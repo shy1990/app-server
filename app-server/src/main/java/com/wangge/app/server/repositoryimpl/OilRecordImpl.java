@@ -1,11 +1,15 @@
 package com.wangge.app.server.repositoryimpl;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
 import java.math.BigDecimal;
+import java.sql.Clob;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
@@ -15,17 +19,11 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.apache.log4j.Logger;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.google.gson.JsonObject;
 import com.wangge.app.server.entity.OilCostRecord;
-import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.pojo.QueryResult;
 import com.wangge.app.server.vo.OilCostRecordVo;
-import com.wangge.app.server.vo.OrderPub;
 @Service
 public class OilRecordImpl {
   
@@ -53,7 +51,21 @@ public class OilRecordImpl {
         oilRecord.setId(Integer.parseInt(o[0]+""));
         oilRecord.setParentId(o[1]+"");
         oilRecord.setUserId(o[2]+"");
-        oilRecord.setOilRecord(o[3]+"");
+        String reString = ""; 
+        Reader is = null;
+        String s=null;
+        try {
+          is = ((Clob)o[3]).getCharacterStream();
+          BufferedReader br = new BufferedReader(is); 
+          s = br.readLine();
+        } catch (Exception e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }// 得到流 
+        
+       
+        StringBuffer sb = new StringBuffer(); 
+        oilRecord.setOilRecord(s);
         oilRecord.setDistance(Float.parseFloat(o[4]+""));
         oilRecord.setOilCost(Float.parseFloat(o[5]+""));
         oilRecord.setIsPrimaryAccount(Integer.parseInt(o[6]+""));
@@ -99,10 +111,10 @@ public class OilRecordImpl {
   
   public QueryResult<OilCostRecordVo>  getHistoryOilRecord(String userId,int pageNo,int pageSize) throws ParseException{
     String sql="select sum(t.oil_cost)as oilCost ,sum(t.distance)as distance,to_char(t.date_time,'yyyy/mm') as dateTime  from biz_oil_cost_record t where t.user_id = '"+userId+"' or t.parent_id = '"+userId+"' group by   to_char(t.date_time,'yyyy/mm')";
-    String countSql = "select count(a.dateTime) from (+"
-+"select to_char(t.date_time,'yyyy/mm') as dateTime  from biz_oil_cost_record t where t.user_id = '"+userId+"'and t.parent_id = 'C370105470' group by   to_char(t.date_time,'yyyy/mm') ) a";
+    String countSql = "select count(a.dateTime) from ("+
+"select to_char(t.date_time,'yyyy/mm') as dateTime  from biz_oil_cost_record t where t.user_id = '"+userId+"'or t.parent_id = '"+userId+"' group by   to_char(t.date_time,'yyyy/mm') ) a";
     Query query = em.createNativeQuery(sql);
-    if(pageNo !=-1 && pageSize != -1)query.setFirstResult(pageNo*pageSize).setMaxResults(pageSize);
+    if(pageNo !=-1 && pageSize != -1)query.setFirstResult(0*pageSize).setMaxResults(pageSize);
     BigDecimal a = (BigDecimal)  em.createNativeQuery(countSql).getSingleResult();
     List<OilCostRecordVo> olist = createOilCostRecordList(query.getResultList());
     
@@ -116,7 +128,7 @@ public class OilRecordImpl {
   
   private  List<OilCostRecordVo> createOilCostRecordList(List<?> olist) throws ParseException{
     List<OilCostRecordVo> voList = new ArrayList<OilCostRecordVo>();
-    SimpleDateFormat sdf = new SimpleDateFormat( "yyyy/MM/dd");
+    SimpleDateFormat sdf = new SimpleDateFormat( "yyyy/MM");
    
     if(olist!=null && olist.size()>0){
       Iterator<?> it = olist.iterator();  
@@ -130,7 +142,7 @@ public class OilRecordImpl {
         
         calendar.setTime(sdf.parse(o[2]+""));
         vo.setDateYear(String.valueOf(calendar.get(Calendar.YEAR)));
-        vo.setDateMonth(String.valueOf(calendar.get(Calendar.MONTH)));
+        vo.setDateMonth(String.valueOf(calendar.get(Calendar.MONTH)+1));
         
         voList.add(vo);    
         

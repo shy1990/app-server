@@ -52,23 +52,31 @@ public class OilCostRecordController {
   * @throws
    */
   @RequestMapping(value = "/getYesterydayOilRecord",method = RequestMethod.POST)
- public ResponseEntity<MessageCustom> yesterdayOilRecord(JSONObject jsons){
+ public ResponseEntity<MessageCustom> yesterdayOilRecord(@RequestBody JSONObject jsons){
     MessageCustom m = new MessageCustom();
     JSONObject object =  trackService.getYesterydayOilRecord(jsons);
     if(object != null){
        m.setObj(object);
        return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
     }else{
-      m.setMsg("未知错误！");
+      m.setMsg("无昨日油补！");
       m.setCode(0);
       return new ResponseEntity<MessageCustom>(m,HttpStatus.BAD_REQUEST);
     }
     
    
  }
+  /**
+   * 
+  * @Title: getHistoryOilRecord 
+  * @Description: TODO(历史油补累计) 
+  * @param @param jsons    设定文件 
+  * @return void    返回类型 
+  * @throws
+   */
   @RequestMapping(value ="/getHistoryOilRecord", method = RequestMethod.POST)
-  public void  getHistoryOilRecord(JSONObject jsons){
-    trackService.getHistoryOilRecord(jsons);
+  public ResponseEntity<MessageCustom>  getHistoryOilRecord(@RequestBody JSONObject jsons){
+    return trackService.getHistoryOilRecord(jsons);
   }
 
   /**
