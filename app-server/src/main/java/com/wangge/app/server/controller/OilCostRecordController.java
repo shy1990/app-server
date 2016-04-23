@@ -89,7 +89,7 @@ public class OilCostRecordController {
       try {
         oildRecord = trackService.getTodayOilRecord(isPrimary,userId,childId);
       } catch (Exception e) {
-        oildRecord.setCode(400);
+        oildRecord.setCode(1);
         oildRecord.setMsg("服务器异常");
       }
       return new ResponseEntity<TodayOilRecord>(oildRecord,HttpStatus.OK);

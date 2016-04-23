@@ -87,7 +87,6 @@ public class Visit extends AbstractPersistable<Long> {
 	
 	private int isPrimaryAccount; //是否主账号
 	
-	private String signGeoPoint;//经纬度
 	
 	private String accountId;
 	
@@ -192,13 +191,6 @@ public class Visit extends AbstractPersistable<Long> {
     this.isPrimaryAccount = isPrimaryAccount;
   }
 
-  public String getSignGeoPoint() {
-    return signGeoPoint;
-  }
-
-  public void setSignGeoPoint(String signGeoPoint) {
-    this.signGeoPoint = signGeoPoint;
-  }
 
   public String getAccountId() {
     return accountId;

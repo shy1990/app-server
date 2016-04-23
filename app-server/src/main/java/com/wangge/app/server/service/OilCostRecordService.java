@@ -161,7 +161,8 @@ public class OilCostRecordService {
         }else{
           track.setUserId(userId);
         }
-        Float mileage =  getDistance(coordinates,null,track.getDistance(),jsonArray);
+       /* Float mileage =  getDistance(coordinates,null,track.getDistance(),jsonArray);*/
+        Float mileage = 10f;
         OilParameters param = getOilParam(userId);//获取油补系数
         Float mileages = mileage*param.getKmRatio();//实际公里数
         track.setDistance(mileages);
@@ -240,7 +241,8 @@ public class OilCostRecordService {
         }else{
           track.setUserId(userId);
         }
-        Float mileage =  getDistance(coordinates,regionId,track.getDistance(),jsonArray);
+        /*Float mileage =  getDistance(coordinates,regionId,track.getDistance(),jsonArray);*/
+        Float mileage = 10f;
         OilParameters param = parametersService.getOilParameters(regionId);
         Float mileages = mileage * param.getKmRatio();//实际公里数
         track.setDistance(mileages);
@@ -287,7 +289,7 @@ public class OilCostRecordService {
    public void addHandshake(String regionId,String userId,String shopName,String coordinates, int isPrimaryAccount,String childId,int type) {
       String id = null;
       
-      if(!isVisited(isPrimaryAccount, childId, userId, regionId)){
+      if(!isVisited(isPrimaryAccount, childId, userId, regionId)){//测试用，
         SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
         
         try {
@@ -309,7 +311,8 @@ public class OilCostRecordService {
           }else{
             track.setUserId(userId);
           }
-          Float mileage =  getDistance(coordinates,regionId,track.getDistance(),jsonArray);
+         /* Float mileage =  getDistance(coordinates,regionId,track.getDistance(),jsonArray);*/
+          Float mileage =  10f;
           OilParameters param = parametersService.getOilParameters(regionId);
           Float mileages = mileage * param.getKmRatio();//实际公里数
           track.setDistance(mileages);
@@ -318,7 +321,7 @@ public class OilCostRecordService {
           track.setOilRecord(jsonArray.toString());
           track.setOilCost(mileages*param.getKmOilSubsidy());
           String regionIds =  track.getRegionIds();
-          regionIds = regionIds +","+regionId;
+          regionIds = regionIds != null ? regionIds+","+regionId : regionId;
           track.setRegionIds(regionIds);
           trackRepository.save(track);
           }else{
@@ -368,20 +371,24 @@ public class OilCostRecordService {
     MessageCustom m = new MessageCustom();
     
     SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
-    
+   
      try {
        Date   dateTime = format.parse(format.format(new Date()));
+       OilCostRecord track = trackRepository.findByDateTimeAndUserId(format.parse(format.format(new Date())),userId);
        if(type == 1){
-         ocr.setUserId(userId);
-         ocr.setDateTime(dateTime);
-         ocr.setOilRecord(getOilRecord(coordinates,type,userId).toString());
-         ocr.setIsPrimaryAccount(isPrimaryAccount);
-           trackRepository.save(ocr);
-           m.setMsg("签到成功！");
-           return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
+         if(track != null){
+           ocr.setUserId(userId);
+           ocr.setDateTime(dateTime);
+           ocr.setOilRecord(getOilRecord(coordinates,type,userId).toString());
+           ocr.setIsPrimaryAccount(isPrimaryAccount);
+             trackRepository.save(ocr);
+             m.setMsg("签到成功！");
+             return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
+         }
+         m.setMsg("已经签到签到成功！");
+         return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
        }else if(type ==8){
        
-         OilCostRecord track = trackRepository.findByDateTimeAndUserId(format.parse(format.format(new Date())),userId);
          if(track != null){
          JSONArray jsonArray = JSONArray.parseArray(track.getOilRecord());
          // String str = getOilRecord( coordinates,  type);
@@ -390,7 +397,8 @@ public class OilCostRecordService {
          track.setIsPrimaryAccount(isPrimaryAccount);
          track.setParentId(userId);
          track.setOilRecord(jsonArray.toString());
-         Float mileage =  getDistance(coordinates,null,track.getDistance(),jsonArray);
+         /*Float mileage =  getDistance(coordinates,null,track.getDistance(),jsonArray);*/
+         Float mileage = 10f;
          OilParameters param = getOilParam(userId);
          Float mileages = mileage * param.getKmRatio();//实际公里数
          track.setDistance(mileages);
@@ -450,19 +458,19 @@ public class OilCostRecordService {
    if(type == 2){
       String typeName  = "扫街";
       int regionType = 2;
-       regionName = regionService.getRegionName(regionId);
+       regionName = regionService.getRegionName(regionId).replace("\n", "");
       obj = ChainageUtil.createOilRecord( regionName, shopName, coordinates, typeName, regionType);
       
     }else if(type == 3){
       String typeName  = "注册";
       int regionType = 2;
-       regionName = regionService.getRegionName(regionId);
+       regionName = regionService.getRegionName(regionId).replace("\n", "");
       obj = ChainageUtil.createOilRecord(regionName, shopName, coordinates, typeName, regionType);
       
     }else if(type == 4){
       String typeName  = "拜访";
       int regionType = 2;
-      regionName = regionService.getRegionName(regionId);
+      regionName = regionService.getRegionName(regionId).replace("\n", "");
       obj = ChainageUtil.createOilRecord(regionName, shopName, coordinates, typeName, regionType);
       
     }else if(type == 6){
@@ -547,7 +555,7 @@ public class OilCostRecordService {
     if(jsonArray != null){
      // index = 
       JSONObject  s =  (JSONObject)jsonArray.get(jsonArray.size()-1);
-       coordinates2 = s.getString("coordinates").split("-");
+       coordinates2 = s.getString("coordinate").split("-");
     }
     if(regionId != null){
       regionName = regionService.getRegionName(regionId);
@@ -623,15 +631,17 @@ public class OilCostRecordService {
    */
   private boolean  isVisited(int isPrimaryAccount,String childId,String userId,String regionId){
     if(isPrimaryAccount == 0){
-      List<OilCostRecord> orList = trackRepository.findByParentId(userId);
+      List<OilCostRecord> orList = trackRepository.findByUserId(userId);
        for(OilCostRecord  oilCostRecord : orList){
-        if( oilCostRecord.getRegionIds().contains(regionId)){
-          return false;
-        }
+         if(oilCostRecord.getRegionIds() != null){
+           if( oilCostRecord.getRegionIds().contains(regionId)){
+             return false;
+           }
+         }
        }
        return true;
     }else{
-      OilCostRecord or = trackRepository.findByUserId(userId);
+      OilCostRecord or = trackRepository.findByParentId(childId);
       if(or.getRegionIds().contains(regionId)){
         return false;
       }
