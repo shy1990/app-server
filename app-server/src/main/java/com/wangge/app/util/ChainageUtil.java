@@ -1,7 +1,5 @@
 package com.wangge.app.util;
 
-import java.io.BufferedReader;
-import java.io.Reader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;

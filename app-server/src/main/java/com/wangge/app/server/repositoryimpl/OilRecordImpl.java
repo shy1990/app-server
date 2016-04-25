@@ -51,7 +51,6 @@ public class OilRecordImpl {
         oilRecord.setId(Integer.parseInt(o[0]+""));
         oilRecord.setParentId(o[1]+"");
         oilRecord.setUserId(o[2]+"");
-        String reString = ""; 
         Reader is = null;
         String s=null;
         try {
@@ -64,7 +63,6 @@ public class OilRecordImpl {
         }// 得到流 
         
        
-        StringBuffer sb = new StringBuffer(); 
         oilRecord.setOilRecord(s);
         oilRecord.setDistance(Float.parseFloat(o[4]+""));
         oilRecord.setOilCost(Float.parseFloat(o[5]+""));
@@ -99,7 +97,19 @@ public class OilRecordImpl {
         oilRecord.setId(Integer.parseInt(o[0]+""));
         oilRecord.setParentId(o[1]+"");
         oilRecord.setUserId(o[2]+"");
-        oilRecord.setOilRecord(o[3]+"");
+        Reader is = null;
+        String s=null;
+        try {
+          is = ((Clob)o[3]).getCharacterStream();
+          BufferedReader br = new BufferedReader(is); 
+          s = br.readLine();
+        } catch (Exception e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }// 得到流 
+        
+       
+        oilRecord.setOilRecord(s);
         oilRecord.setDistance(Float.parseFloat(o[4]+""));
         oilRecord.setOilCost(Float.parseFloat(o[5]+""));
         oilRecord.setIsPrimaryAccount(Integer.parseInt(o[6]+""));
