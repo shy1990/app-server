@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.gson.JsonObject;
 import com.wangge.app.server.entity.OilCostRecord;
 import com.wangge.app.server.entity.OilParameters;
 import com.wangge.app.server.entity.Salesman;
@@ -788,14 +789,14 @@ public class OilCostRecordService {
          dateDay=DateUtil.getMonth(orecord.getDateTime());//日期
          distance=orecord.getDistance();//公里数
          oilCost=orecord.getOilCost();//油补记录
-         historyOilRecord.setFatherContent(JSONArray.parseArray(orecord.getOilRecord()));
+         historyOilRecord.setFatherContent(JSONArray.parseArray(getChildRecord(orecord.getOilRecord())));
          List<OilCostRecord>  listChildOilCostRecord=trackRepository.findByDateTimeAndParentId(orecord.getDateTime(),orecord.getUserId());//查询子账号
          List<Object> childcontent=new ArrayList<Object>();
          if(listChildOilCostRecord.size()>0){
            for(OilCostRecord childRecord:listChildOilCostRecord){
              distance+=orecord.getDistance();
              oilCost+=orecord.getOilCost();
-             childcontent.add(JSONArray.parseArray(childRecord.getOilRecord()));
+             childcontent.add(JSONArray.parseArray(getChildRecord(childRecord.getOilRecord()))  );
            }
          }
          historyOilRecord.setChildContents(childcontent);
@@ -804,17 +805,32 @@ public class OilCostRecordService {
          historyOilRecord.setOilCost(oilCost+"");
          listHistoryOilRecord.add(historyOilRecord);
        }
-       historyDestOilRecord.setCode(400);
+       historyDestOilRecord.setCode(0);
        historyDestOilRecord.setMsg("查询成功");
        historyDestOilRecord.setContent(listHistoryOilRecord);
      }else{
        historyDestOilRecord.setMsg("查询成功但无数据");
-       historyDestOilRecord.setCode(200);
+       historyDestOilRecord.setCode(0);
      }
     
      return historyDestOilRecord;
    }
   
  
+   public String getChildRecord(String  oilRecord){
+     System.out.println(oilRecord);
+     List<Object> list=new ArrayList<Object>();
+     JSONArray jsonArr=JSONArray.parseArray(oilRecord);
+     
+     JSONArray newJsonArr=new JSONArray();
+     for(int i=0;i<jsonArr.size();i++){
+        JSONObject jsonObject=jsonArr.getJSONObject(i);
+       jsonObject.remove("missTime");
+       jsonObject.remove("missName");
+       jsonObject.remove("coordinate");
+        newJsonArr.add(jsonObject);
+     }
+     return jsonArr.toString();
+   }
 }
  

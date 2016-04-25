@@ -97,8 +97,9 @@ public class OilCostRecordController {
       try {
         oildRecord = trackService.getTodayOilRecord(isPrimary,userId,childId);
       } catch (Exception e) {
-        oildRecord.setCode(1);
+        oildRecord.setCode(0);
         oildRecord.setMsg("服务器异常");
+        return new ResponseEntity<TodayOilRecord>(oildRecord,HttpStatus.BAD_REQUEST);
       }
       return new ResponseEntity<TodayOilRecord>(oildRecord,HttpStatus.OK);
   }
@@ -123,8 +124,10 @@ public class OilCostRecordController {
       try {
         historyDestOilRecord=trackService.getMonthOilRecord(userId, dateYear, dateMonth) ;
       } catch (Exception e) {
-        historyDestOilRecord.setCode(400);
+        e.printStackTrace();
+        historyDestOilRecord.setCode(0);
         historyDestOilRecord.setMsg("服务器异常");
+        return new ResponseEntity<HistoryDestOilRecord>(historyDestOilRecord,HttpStatus.BAD_REQUEST);
       }
       
       return new ResponseEntity<HistoryDestOilRecord>(historyDestOilRecord,HttpStatus.OK);
