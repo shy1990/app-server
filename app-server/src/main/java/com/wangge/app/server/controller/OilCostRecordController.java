@@ -123,7 +123,7 @@ public class OilCostRecordController {
       try {
         historyDestOilRecord=trackService.getMonthOilRecord(userId, dateYear, dateMonth) ;
       } catch (Exception e) {
-        historyDestOilRecord.setCode(400);
+        historyDestOilRecord.setCode(1);
         historyDestOilRecord.setMsg("服务器异常");
       }
       

@@ -80,12 +80,13 @@ public class ChainageUtil {
   }
   
   
-  public static JSONObject createOilRecord(String coordinate,String missName,String regionName,int regionType){
+  public static JSONObject createOilRecord(String coordinate,String missName,String regionName,int regionType,int exception){
     JSONObject json = new JSONObject();
     json.put("regionType", regionType);
     json.put("coordinate", coordinate);
     json.put("missName", missName);
     json.put("regionName", regionName);
+    json.put("exception", exception);
     json.put("missTime", formate.format(new Date()));
     return json;
   }

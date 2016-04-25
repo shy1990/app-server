@@ -432,7 +432,7 @@ public class OilCostRecordService {
    String param = "&origin='"+coordinates1[1]+"','"+coordinates1[0]+"'&destination='"+coordinates2[1]+"','"+coordinates2[0]+"'&origin_region='"+regionName+"'&destination_region='"+regionName+"'";
    Double d = ChainageUtil.createDistance(param);*/
    Double d = ChainageUtil.GetShortDistance(Double.parseDouble(coordinates1[0]) , Double.parseDouble(coordinates1[1]), Double.parseDouble(coordinates2[0]), Double.parseDouble(coordinates2[1]));
-   if(d < Double.parseDouble("50")){
+   if(d < Double.parseDouble("150")){
      return false;
    }
    
@@ -497,38 +497,38 @@ public class OilCostRecordService {
   private JSONArray  getOilRecord(String coordinates, int type,String userId){
     String  regionName = null;
     int  regionType;
+    int exception ;
     if (isError(coordinates, userId)) {
-      regionName = "异常 ";
+      exception = 1;
     }else{
-      if(type == 1 || type == 8){
-        regionName = "家";
-      }else{
-        regionName = getLogistics( coordinates, userId);
-      }
-    } 
+      exception = 0;
+    }
+      
     if(type == 1 ){
      String typeName  = "上班";
-    
-     regionType = 3;
+     regionName = "家";
+     regionType = 0;
     j  = new JSONArray();
     
-     obj = ChainageUtil.createOilRecord( coordinates, typeName, regionName,regionType);
+     obj = ChainageUtil.createOilRecord( coordinates, typeName, regionName,regionType, exception);
    
      j.add(obj);
    // return j;
   }else if(type == 8){
     String typeName  = "下班";
+    regionName = "家";
     regionType = 3;
     j  = new JSONArray();
-    obj = ChainageUtil.createOilRecord(coordinates, typeName, regionName,regionType);
+    obj = ChainageUtil.createOilRecord(coordinates, typeName, regionName,regionType, exception);
    
     j.add(obj);
    // return j;
   }else if(type == 5){
     regionType = 1;
     String  typeName  = "业务揽收";
+    regionName = getLogistics( coordinates, userId);
     j  = new JSONArray();
-    obj = ChainageUtil.createOilRecord(coordinates, typeName, regionName,regionType);
+    obj = ChainageUtil.createOilRecord(coordinates, typeName, regionName,regionType, exception);
     j.add(obj);
   }
     return j;
@@ -561,10 +561,10 @@ public class OilCostRecordService {
     }
     
     
-    /*String param = "&origin='"+coordinates1[1]+"','"+coordinates1[0]+"'&destination='"+coordinates2[1]+"','"+coordinates2[0]+"'&origin_region='"+regionName+"'&destination_region='"+regionName+"'";
+    String param = "&origin='"+coordinates1[1]+"','"+coordinates1[0]+"'&destination='"+coordinates2[1]+"','"+coordinates2[0]+"'&origin_region='"+regionName+"'&destination_region='"+regionName+"'";
     Float d = ChainageUtil.createDistance(param);//百度地图返回的json中解析出两点之间的导航出的距离单位米
-*/    
-    Float d = 1000f;
+    
+   // Float d = 1000f;
     Float distance = d/1000 ;//转换成公里
 
      mileage = mileage != null ? distance + mileage : distance;//将握手点之间的距离叠加起来
@@ -608,14 +608,14 @@ public class OilCostRecordService {
         }
       }
      
-      if(d1 < Double.parseDouble("50")){
+      if(d1 < Double.parseDouble("150")){
         Logistics =  "物流点一";
-      }else if(d2 <  Double.parseDouble("50")){
+      }else if(d2 <  Double.parseDouble("150")){
         Logistics = "物流点二";
-      }else if(d3 <  Double.parseDouble("50")){
+      }else if(d3 <  Double.parseDouble("150")){
         Logistics = "物流点三";
       }
-      return  Logistics ;
+      return  Logistics != null ? Logistics : "物流点";
   }
   /**
    * 

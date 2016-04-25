@@ -110,9 +110,40 @@ public class OilRecordImpl {
   }
   
   public QueryResult<OilCostRecordVo>  getHistoryOilRecord(String userId,int pageNo,int pageSize) throws ParseException{
-    String sql="select sum(t.oil_cost)as oilCost ,sum(t.distance)as distance,to_char(t.date_time,'yyyy/mm') as dateTime  from biz_oil_cost_record t where t.user_id = '"+userId+"' or t.parent_id = '"+userId+"' group by   to_char(t.date_time,'yyyy/mm')";
+    String sql="select sum(t.oil_cost) as oilCost,"+
+       "sum(t.distance) as distance,"+
+      " to_char(t.date_time, 'yyyy/mm') as dateTime"+
+  " from (select t.*, t.rowid"+
+          " from biz_oil_cost_record t"+
+        " where t.track_id not in"+
+              "(select t.track_id"+
+                  " from biz_oil_cost_record t"+
+                 " where t.user_id = '"+userId+"'"+
+                 "and t.date_time ="+
+                      " (select to_date(to_char(sysdate, 'yyyy/mm/dd'),"+
+                                      " 'yyyy/mm/dd')"+
+                         " from dual))) t"+
+ " where t.user_id = '"+userId+"'"+
+    "or t.parent_id = '"+userId+"'"+
+ " group by to_char(t.date_time, 'yyyy/mm') order by to_char(t.date_time, 'yyyy/mm') desc";
+    
     String countSql = "select count(a.dateTime) from ("+
-"select to_char(t.date_time,'yyyy/mm') as dateTime  from biz_oil_cost_record t where t.user_id = '"+userId+"'or t.parent_id = '"+userId+"' group by   to_char(t.date_time,'yyyy/mm') ) a";
+     "select  to_char(t.date_time, 'yyyy/mm') as dateTime"+
+  " from (select t.*"+
+          " from biz_oil_cost_record t"+
+         " where t.track_id not in"+
+               "(select t.track_id"+
+                 " from biz_oil_cost_record t"+
+                " where t.user_id = '"+userId+"'"+
+                  " and t.date_time ="+
+                       "(select to_date(to_char(sysdate, 'yyyy/mm/dd'),"+
+                                       "'yyyy/mm/dd')"+
+                          " from dual))) t"+
+ " where t.user_id = '"+userId+"'"+
+    " or t.parent_id = '"+userId+"'"+
+ " group by to_char(t.date_time, 'yyyy/mm')"+
+ 
+ ") a ";
     Query query = em.createNativeQuery(sql);
     if(pageNo !=-1 && pageSize != -1)query.setFirstResult(0*pageSize).setMaxResults(pageSize);
     BigDecimal a = (BigDecimal)  em.createNativeQuery(countSql).getSingleResult();
