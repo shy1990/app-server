@@ -43,8 +43,6 @@ public class SalesmanAddress {
   private String logisticsPoint2;//二号物流点坐标
   
   private String logisticsPoint3;//三号物流点坐标
-  @Transient
-  private boolean enable;//是否可以修改
 
   public int getId() {
     return id;
@@ -103,13 +101,6 @@ public class SalesmanAddress {
     this.logisticsPoint3 = logisticsPoint3;
   }
 
-  public boolean isEnable() {
-    return enable;
-  }
-
-  public void setEnable(boolean enable) {
-    this.enable = enable;
-  }
 
   
 }

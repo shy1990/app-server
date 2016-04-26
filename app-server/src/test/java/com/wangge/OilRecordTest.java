@@ -30,6 +30,12 @@ public class OilRecordTest {
    }
    
   }
+  @Test
+  public void test2(){
+     double d =10d;
+     Float c = (float)d;
+     System.out.println("=====>>>>"+c);
+  }
   
   
  

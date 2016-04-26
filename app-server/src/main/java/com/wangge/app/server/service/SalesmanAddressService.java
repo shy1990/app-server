@@ -27,7 +27,7 @@ public class SalesmanAddressService {
   @Resource
   private SalesmanAddressRepository salesmanAddressRepository;
   
-  private  SimpleDateFormat formate = new SimpleDateFormat("yyyy/MM/dd");
+  private  SimpleDateFormat formate = new SimpleDateFormat("yyyy/MM");
   /**
    * 
   * @Title: addSalesmanAddress 

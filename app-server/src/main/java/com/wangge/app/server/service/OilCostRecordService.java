@@ -75,7 +75,6 @@ public class OilCostRecordService {
     try {
       QueryResult<OilCostRecordVo>  qr =  oilRecordImpl.getHistoryOilRecord(userId,pagerNumber,pagerSize);
       if(qr != null){
-        m.setCode(0);
         m.setObj(qr);
         return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
       }else{
@@ -84,7 +83,6 @@ public class OilCostRecordService {
         return new ResponseEntity<MessageCustom>(m,HttpStatus.BAD_REQUEST);
       }
     } catch (ParseException e) {
-      e.printStackTrace();
       m.setCode(1);
       m.setMsg("服务器错误！");
       return new ResponseEntity<MessageCustom>(m,HttpStatus.BAD_REQUEST);
@@ -380,9 +378,11 @@ public class OilCostRecordService {
            ocr.setOilRecord(getOilRecord(coordinates,type,userId).toString());
            ocr.setIsPrimaryAccount(isPrimaryAccount);
              trackRepository.save(ocr);
+             m.setCode(0);
              m.setMsg("签到成功！");
              return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
          }
+         m.setCode(0);
          m.setMsg("已经签到成功！");
          return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
        }else if(type ==8){
@@ -401,12 +401,13 @@ public class OilCostRecordService {
          track.setDistance(mileages);
          track.setOilCost(mileages*param.getKmOilSubsidy());
          trackRepository.save(track);
+         m.setCode(0);
          m.setMsg("签到成功！");
          return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
          }
        }      
     } catch (Exception e) {
-      e.printStackTrace();
+      m.setCode(1);
       m.setMsg("签到失败!");
     }
      return new ResponseEntity<MessageCustom>(m,HttpStatus.BAD_REQUEST);
@@ -563,6 +564,10 @@ public class OilCostRecordService {
     
     String param = "&origin='"+coordinates1[1]+"','"+coordinates1[0]+"'&destination='"+coordinates2[1]+"','"+coordinates2[0]+"'&origin_region='"+regionName+"'&destination_region='"+regionName+"'";
     Float d = ChainageUtil.createDistance(param);//百度地图返回的json中解析出两点之间的导航出的距离单位米
+    
+    if(d == null){
+      d = (float) ChainageUtil.GetShortDistance(Double.parseDouble(coordinates1[0]) , Double.parseDouble(coordinates1[1]), Double.parseDouble(coordinates2[0]), Double.parseDouble(coordinates2[1]));
+    }
     
    // Float d = 1000f;
     Float distance = d/1000 ;//转换成公里

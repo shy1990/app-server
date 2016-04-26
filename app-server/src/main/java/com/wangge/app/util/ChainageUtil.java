@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.hamcrest.text.IsEmptyString;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.OilCostRecord;
@@ -64,17 +66,21 @@ public class ChainageUtil {
   } 
   
   public static Float createDistance(String param){
+    Float distance = null;
     String params = mode+param+ak;
     String str = HttpUtil.sendGet(url, params);
     JSONObject json = (JSONObject) JSONObject.parse(str);
     String s = json.getString("result");
-    json = (JSONObject) JSONObject.parse(s);
-    String a = json.getString("routes");
-    JSONArray routesA = json.parseArray(a);
-    json = (JSONObject) routesA.get(0);
-    Float distance = Float.parseFloat(json.getString("distance"));
+    if(s.isEmpty()){
+      json = (JSONObject) JSONObject.parse(s);
+      String a = json.getString("routes");
+      JSONArray routesA = json.parseArray(a);
+      json = (JSONObject) routesA.get(0);
+       distance = Float.parseFloat(json.getString("distance"));
+    }
+   
     
-    return distance;
+    return distance ;
   }
   
   

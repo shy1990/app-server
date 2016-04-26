@@ -60,7 +60,7 @@ public class OilCostRecordController {
        return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
     }else{
       m.setMsg("无昨日油补！");
-      m.setCode(0);
+      m.setCode(1);
       return new ResponseEntity<MessageCustom>(m,HttpStatus.BAD_REQUEST);
     }
     
@@ -96,11 +96,13 @@ public class OilCostRecordController {
       TodayOilRecord oildRecord=new TodayOilRecord();
       try {
         oildRecord = trackService.getTodayOilRecord(isPrimary,userId,childId);
+        return new ResponseEntity<TodayOilRecord>(oildRecord,HttpStatus.OK);
       } catch (Exception e) {
         oildRecord.setCode(1);
         oildRecord.setMsg("服务器异常");
+        return new ResponseEntity<TodayOilRecord>(oildRecord,HttpStatus.BAD_REQUEST);
       }
-      return new ResponseEntity<TodayOilRecord>(oildRecord,HttpStatus.OK);
+      
   }
   
   
@@ -122,12 +124,14 @@ public class OilCostRecordController {
       
       try {
         historyDestOilRecord=trackService.getMonthOilRecord(userId, dateYear, dateMonth) ;
+        return new ResponseEntity<HistoryDestOilRecord>(historyDestOilRecord,HttpStatus.OK);
       } catch (Exception e) {
         historyDestOilRecord.setCode(1);
         historyDestOilRecord.setMsg("服务器异常");
+        return new ResponseEntity<HistoryDestOilRecord>(historyDestOilRecord,HttpStatus.BAD_REQUEST);
       }
       
-      return new ResponseEntity<HistoryDestOilRecord>(historyDestOilRecord,HttpStatus.OK);
+      
   }
   
 }
