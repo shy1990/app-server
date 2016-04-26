@@ -85,6 +85,11 @@ public class Visit implements Serializable {
 	@JoinColumn(name = "USER_ID")
 	private Salesman salesman;
 	
+	private int isPrimaryAccount; //是否主账号
+	
+	
+	private String accountId;
+	
 	public Visit() {
 		super();
 	}
@@ -176,6 +181,25 @@ public class Visit implements Serializable {
 	public void setSalesman(Salesman salesman) {
 		this.salesman = salesman;
 	}
+
+  public int getIsPrimaryAccount() {
+    return isPrimaryAccount;
+  }
+
+  public void setIsPrimaryAccount(int isPrimaryAccount) {
+    this.isPrimaryAccount = isPrimaryAccount;
+  }
+
+
+  public String getAccountId() {
+    return accountId;
+  }
+
+  public void setAccountId(String accountId) {
+    this.accountId = accountId;
+  }
+
+  
 
 	
 }

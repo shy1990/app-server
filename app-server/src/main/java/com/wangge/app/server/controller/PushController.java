@@ -15,11 +15,14 @@ import com.wangge.app.server.entity.Message;
 import com.wangge.app.server.entity.Message.MessageType;
 import com.wangge.app.server.entity.Message.SendChannel;
 import com.wangge.app.server.entity.OrderSignfor;
+import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.jpush.client.JpushClient;
+import com.wangge.app.server.repository.RegistDataRepository;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.service.MessageService;
 import com.wangge.app.server.service.OrderSignforService;
 import com.wangge.app.server.service.SalesmanService;
+import com.wangge.app.server.service.RegistDataService;
 
 @RestController
 @RequestMapping({ "/v1/push"})
@@ -35,7 +38,10 @@ public class PushController {
   private OrderSignforService orderSignforService;
   @Resource 
   private SalesmanService salesmanService;
-  /**
+  
+  @Resource
+  private RegistDataService registDataService;
+  /** 
    * 
    * @Description: 新订单推送
    * @param @param msg
@@ -85,10 +91,12 @@ public class PushController {
       o.setCreatTime(new Date());
       o.setOrderPrice(amount);
       o.setPhoneCount(skuNum);
-      o.setPartsCount(Integer.parseInt(accCount));
       o.setOrderStatus(0);
       o.setShopName(ss);
+      o.setUserId(registDataService.getSalesmanId(mobile));
       o.setUserPhone(mobile);
+      o.setPartsCount(Integer.parseInt(accCount));
+      
       orderSignforService.saveOrderSignfor(o);
       
       if(null!=salesmanService.findByMobile(mobile)){
@@ -105,7 +113,6 @@ public class PushController {
      }
        return true;
   }
-  
   /**
    * 
    * @Description: 取消订单推送

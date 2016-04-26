@@ -184,6 +184,23 @@ public class RegionService {
 		 
 		regionRepository.save(region); 
 	}
+
+/**
+ * 
+* @Title: getRegionId 
+* @Description: TODO(这里用一句话描述这个方法的作用) 
+* @param @param regionId
+* @param @return    设定文件 
+* @return String    返回类型 
+* @throws
+ */
+  public String getRegionName(String regionId) {
+    Region r = regionRepository.findById(regionId);
+    if(r != null){
+      return r.getName();
+    }
+    return null;
+  }
 	
 	
 	

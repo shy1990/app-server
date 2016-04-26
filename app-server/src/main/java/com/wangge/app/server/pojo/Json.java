@@ -26,7 +26,10 @@ public class Json implements Serializable{
 	private Integer totalPage;
 	@JsonInclude(Include.NON_DEFAULT)
 	private Integer status; 
+	
 	private int isOldSalesman;
+	
+	private int code;
 	
 	//辅助字段
 	private String stage;//第几阶段
@@ -91,5 +94,12 @@ public class Json implements Serializable{
   public void setIsOldSalesman(int isOldSalesman) {
     this.isOldSalesman = isOldSalesman;
   }
+  public int getCode() {
+    return code;
+  }
+  public void setCode(int code) {
+    this.code = code;
+  }
+  
   
 }

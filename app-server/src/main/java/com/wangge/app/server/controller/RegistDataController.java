@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,7 @@ import com.wangge.app.server.entity.Region;
 import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.SaojieData;
+import com.wangge.app.server.event.afterDailyEvent;
 import com.wangge.app.server.pojo.Color;
 import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.repository.SaojieDataRepository;
@@ -58,6 +60,8 @@ public class RegistDataController {
 	private PickingImpl ppl;
 	@Resource
 	private DateInterval dateInterval;
+	@Resource
+	private ApplicationContext cxt;
 
 	/**
 	 * 
@@ -160,7 +164,7 @@ public class RegistDataController {
 		try {
 			String userId = jsons.getString("userId");
 			String counterNumber = jsons.getString("counterNumber");// 柜台数
-			String loginAccount = jsons.getString("loginAccount");
+			String loginAccount = jsons.getString("loginAccount");//商城会员注册手机号
 			String clerk = jsons.getString("clerk");// 营业人数
 			String length = jsons.getString("length");
 			String width = jsons.getString("width");
@@ -169,6 +173,10 @@ public class RegistDataController {
 			String imageUrl2 = jsons.getString("imageurl2");
 			String imageUrl3 = jsons.getString("imageurl3");
 			String description = jsons.getString("description");
+			int isPrimaryAccount = jsons.getIntValue("isPrimary");
+			String childId = jsons.getString("childId");
+			String coordinates = jsons.getString("coordinate");
+			String id = null;
 			// Assess assess = assessService.findBySalesman(userId);
 			Salesman salesman = salesmanService.findSalesmanbyId(userId);
 			RegistData data = new RegistData(loginAccount, imageUrl, length, width, imageUrl1, imageUrl2, imageUrl3);
@@ -191,6 +199,13 @@ public class RegistDataController {
 				data.setPhoneNum(member.get("MOBILE"));
 				data.setShopName(member.get("SHOPNAME"));
 				data.setMemberId(member.get("MEMBERID"));
+				data.setIsPrimaryAccount(isPrimaryAccount);
+				if(isPrimaryAccount == 0){
+				  id = userId;
+				}else{
+				  id = childId;
+				}
+				data.setAccountId(id);
 				RegistData registData = registDataService.addRegistData(data);
 				
 				// 更新扫街
@@ -198,6 +213,7 @@ public class RegistDataController {
 				sjData.setRegistData(registData);
 				sjData.setDescription(description);
 				dataSaojieService.addDataSaojie(sjData,salesman);
+				cxt.publishEvent(new afterDailyEvent(region.getId(),userId,member.get("SHOPNAME"),coordinates,isPrimaryAccount,childId,3));
 				json.setId(String.valueOf(registData.getId()));
 				json.setSuccess(true);
 				json.setMsg("保存成功！");

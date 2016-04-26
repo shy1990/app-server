@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,9 @@ public class DataSaojieService {
 
 	@Autowired
 	private RegionRepository regionRepository;
+	
+	@Resource
+  private ApplicationContext ctx;
 
 	public SaojieData addDataSaojie(SaojieData dataSaojie,Salesman salesman) {
 		int taskValue = 0;

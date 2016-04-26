@@ -1,5 +1,7 @@
 package com.wangge.app.server.controller;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
@@ -8,13 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.ChildAccount;
 import com.wangge.app.server.entity.Salesman;
-import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.pojo.JsonCustom;
 import com.wangge.app.server.service.AssessService;
 import com.wangge.app.server.service.ChildAccountService;
@@ -38,38 +38,51 @@ public class LoginController {
 	 * @return
 	 */
 	@RequestMapping(value = "/login",method = RequestMethod.POST)
-	public ResponseEntity<JsonCustom> login(@RequestBody JSONObject jsons){
-		String username=jsons.getString("username");
-		String password=jsons.getString("password");
-		String simId=jsons.getString("simId");
-		JsonCustom json = new JsonCustom();
-		Salesman salesman =salesmanService.login(username,password);
-		
-		
-		if(salesman !=null && !"".equals(salesman.getId())){
-			
-			if((salesman.getSimId() == null || "".equals(salesman.getSimId()))){
-				salesman.setSimId(simId);
-				salesmanService.save(salesman);
-			}else if(salesman.getSimId() != null && !"".equals(salesman.getSimId()) && simId.equals(salesman.getSimId())){
-				return returnLogSucMsg(json, salesman);
-		
-			}else{
-//			  ChildAccount childAccount  =   childAccountService.getChildAccountBySimId(simId);
-//			  if(childAccount!=null){
-//			    return returnLogSucMsg(json, salesman, childAccount);
-//			  }
-				json.setMsg("与你上一次登录手机卡不同");
-				return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);
-			}
-			
-				return returnLogSucMsg(json, salesman);
-	
-		}else {
-			json.setMsg("用戶名或密码错误！");
-			return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);
-		}
-	}
+
+  public ResponseEntity<JsonCustom> login(@RequestBody JSONObject jsons){
+    String username=jsons.getString("username");
+    String password=jsons.getString("password");
+    String simId=jsons.getString("simId");
+    JsonCustom json = new JsonCustom();
+    Salesman salesman =salesmanService.login(username,password);
+    
+    
+    if(salesman !=null && !"".equals(salesman.getId())){
+      
+      if((salesman.getSimId() == null || "".equals(salesman.getSimId()))){
+        salesman.setSimId(simId);
+        salesmanService.save(salesman);
+      }else if(salesman.getSimId() != null && !"".equals(salesman.getSimId()) && simId.equals(salesman.getSimId())){
+        return returnLogSucMsg(json, salesman);
+    
+      }else{
+        if(salesman.getIsPrimaryAccount() == 1){
+          List<ChildAccount> childList  =   childAccountService.getChildAccountByParentId(salesman.getId());
+          if(childList!=null && childList.size() > 0){
+            for(ChildAccount chil : childList){
+               if(chil.getSimId() == null || "".equals(chil.getSimId())){
+                 chil.setSimId(simId);
+                 childAccountService.save(chil);
+                 return returnLogSucMsg(json, salesman, chil);
+               }else if(chil.getSimId().equals(simId)){
+                 return returnLogSucMsg(json, salesman, chil);
+               }
+             
+            }
+        }
+        
+          json.setMsg("与你上一次登录手机卡不同");
+        return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);
+        }
+      }
+       json.setMsg("与你上一次登录手机卡不同");
+       return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);
+  
+    }else {
+      json.setMsg("用戶名或密码错误！");
+      return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);
+    }
+  }
 	/**
 	 * 
 	* @Title: returnLogSucMsg 
@@ -90,7 +103,7 @@ public class LoginController {
 		  json.setStatus(salesman.getStatus().getNum());
 		}
 		json.setIsOldSalesman(salesman.getIsOldSalesman());
-		json.setNickName(salesman.getUser().getNickname());
+		json.setNickName(salesman.getUser().getNickname().replace("/n", "").trim());
 		json.setIsPrimaryAccount(0);
 		json.setMsg("登陆成功！");
 		json.setStage(salesman.getAssessStage());
@@ -119,7 +132,9 @@ public class LoginController {
 	      json.setStatus(salesman.getStatus().getNum());
 	    }
 	    json.setIsOldSalesman(salesman.getIsOldSalesman());
-	    json.setNickName(childAccount.getTruename());
+	    json.setNickName(salesman.getUser().getNickname().replace("/n", "").trim());
+	    json.setChildName(childAccount.getTruename().replace("/n", "").trim());
+	    json.setChildId(childAccount.getId());
 	    json.setIsPrimaryAccount(1);
 	    json.setMsg("登陆成功！");
 	    json.setStage(salesman.getAssessStage());

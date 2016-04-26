@@ -74,6 +74,10 @@ public class RegistData implements Serializable {
 	@OneToOne(mappedBy = "registData")
   private SaojieData saojieData;
 	
+	private String accountId;//业务账号id
+	
+	private int isPrimaryAccount;//是否主账号，默认0主账号
+	
   public RegistData() {
 		super();
 	}
@@ -265,5 +269,24 @@ public class RegistData implements Serializable {
   public void setMemberId(String memberId) {
     this.memberId = memberId;
   }
+
+
+  public String getAccountId() {
+    return accountId;
+  }
+
+  public void setAccountId(String accountId) {
+    this.accountId = accountId;
+  }
+
+  public int getIsPrimaryAccount() {
+    return isPrimaryAccount;
+  }
+
+  public void setIsPrimaryAccount(int isPrimaryAccount) {
+    this.isPrimaryAccount = isPrimaryAccount;
+  }
+  
+  
   
 }

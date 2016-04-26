@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,8 +26,10 @@ import com.wangge.app.server.entity.Region;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.Saojie;
 import com.wangge.app.server.entity.SaojieData;
+import com.wangge.app.server.event.afterDailyEvent;
 import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.service.DataSaojieService;
+import com.wangge.app.server.service.OilCostRecordService;
 import com.wangge.app.server.util.UploadUtil;
 
 @RestController
@@ -36,7 +39,11 @@ public class SaojieDataController {
 	private static final Logger logger = Logger.getLogger(SaojieDataController.class);
 	@Resource
 	private DataSaojieService dataSaojieService;
-
+	@Resource
+	private OilCostRecordService oilsCostRecordService;
+	@Resource
+	private ApplicationContext cxt;
+	
 	// private static String url="http://192.168.2.247/uploadfile/"; 内网测试
 	// private static String url="http://imagetest.3j168.cn/uploadfile/";
 	// //外网测试环境
@@ -52,20 +59,24 @@ public class SaojieDataController {
 	public ResponseEntity<List<SaojieData>> list(@PathVariable("regionId") String regionId) {
 
 		List<SaojieData> Data = dataSaojieService.getSaojieDataByregion(regionId);
+		
 		List<SaojieData> listsj = new ArrayList<SaojieData>();
-		for (SaojieData sj : Data) {
-			// select
-			// sjd.id,sjd.imageUrl,sjd.name,sjd.description,sjd.coordinate from
-			// SaojieData sjd left join sjd.region r where r.id = ?")
-			SaojieData sjdata = new SaojieData();
-			sjdata.setId(sj.getId());
-			sjdata.setImageUrl(sj.getImageUrl());
-			sjdata.setName(sj.getName());
-			sjdata.setCoordinate(sj.getCoordinate());
-			sjdata.setDescription(sj.getDescription());
-			// sjdata.setRegion(sj.getRegion());
-			listsj.add(sjdata);
-		}
+  if(Data != null){
+      for (SaojieData sj : Data) {
+        // select
+        // sjd.id,sjd.imageUrl,sjd.name,sjd.description,sjd.coordinate from
+        // SaojieData sjd left join sjd.region r where r.id = ?")
+        SaojieData sjdata = new SaojieData();
+        sjdata.setId(sj.getId());
+        sjdata.setImageUrl(sj.getImageUrl());
+        sjdata.setName(sj.getName());
+        sjdata.setCoordinate(sj.getCoordinate());
+        sjdata.setDescription(sj.getDescription());
+        // sjdata.setRegion(sj.getRegion());
+        listsj.add(sjdata);
+      }
+    }
+		
 		return new ResponseEntity<List<SaojieData>>(listsj, HttpStatus.OK);
 	}
 
@@ -75,11 +86,15 @@ public class SaojieDataController {
 		String name = jsons.getString("name");
 		String description = jsons.getString("description");
 		String coordinate = jsons.getString("coordinate");
+	  int	isPrimaryAccount = jsons.getIntValue("isPrimary");
+	  String childId = jsons.getString("childId");
 		String imageUrl = null;
+		String id = null;
 		if (jsons.containsKey("imageUrl")) {
 			imageUrl = jsons.getString("imageUrl");
 		}
 		Saojie saojie = dataSaojieService.findByRegionAndSalesman(region,salesman);
+		
 		if (saojie != null || salesman.getIsOldSalesman()==1) {
 			SaojieData data = new SaojieData(name, coordinate);
 			data.setDescription(description);
@@ -87,8 +102,16 @@ public class SaojieDataController {
 			data.setRegion(region);
 			data.setSaojieDate(new Date());
 			data.setSaojie(saojie);
+			data.setIsPrimaryAccount(isPrimaryAccount);
+			if(isPrimaryAccount ==0){
+			  id = salesman.getId();
+			}else{
+			  id = childId;
+			}
+			data.setAccountId(id);
 			SaojieData saojiedata = dataSaojieService.addDataSaojie(data,salesman);
-
+			cxt.publishEvent(new afterDailyEvent(region.getId(),salesman.getId(),name,coordinate,isPrimaryAccount,childId,2));
+			//oilsCostRecordService.addHandshake(region.getId(),salesman.getId(),name,coordinate,isPrimaryAccount,childId,2);
 			if (saojiedata != null) {
 
 				SaojieData sj = new SaojieData();

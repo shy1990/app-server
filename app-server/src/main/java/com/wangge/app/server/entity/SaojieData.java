@@ -7,7 +7,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -67,6 +66,10 @@ public class SaojieData implements Serializable {
 	private int incSize;
 	@Transient
 	private int dateInterval;
+	
+  private int isPrimaryAccount; //是否主账号
+  
+  private String accountId;//业务账号id
 	
 	public SaojieData() {
 		super();
@@ -179,5 +182,21 @@ public class SaojieData implements Serializable {
   public void setSaojieDate(Date saojieDate) {
     this.saojieDate = saojieDate;
   }
+  public int getIsPrimaryAccount() {
+    return isPrimaryAccount;
+  }
+
+  public void setIsPrimaryAccount(int isPrimaryAccount) {
+    this.isPrimaryAccount = isPrimaryAccount;
+  }
+
+  public String getAccountId() {
+    return accountId;
+  }
+
+  public void setAccountId(String accountId) {
+    this.accountId = accountId;
+  }
+
   
 }
