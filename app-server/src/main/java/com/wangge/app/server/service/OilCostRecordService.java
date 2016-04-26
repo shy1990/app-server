@@ -555,11 +555,12 @@ public class OilCostRecordService {
       JSONObject  s =  (JSONObject)jsonArray.get(jsonArray.size()-1);
        coordinates2 = s.getString("coordinate").split("-");
     }
-    if(regionId != null){
+    regionName = getRegionName(coordinates);
+   /* if(regionId != null){
       regionName = regionService.getRegionName(regionId);
     }else{
        regionName = getRegionName(coordinates);
-    }
+    }*/
     
     
     String param = "&origin='"+coordinates1[1]+"','"+coordinates1[0]+"'&destination='"+coordinates2[1]+"','"+coordinates2[0]+"'&origin_region='"+regionName+"'&destination_region='"+regionName+"'";
@@ -701,8 +702,10 @@ public class OilCostRecordService {
   public Float getOilCostYestday(String userId){
     List<OilCostRecord>  listOilCostRecord=trackRepository.findYestdayOil(userId,DateUtil.getYesterdayDate());
     Float yestderdayCost=(float) 0.00;
+    Float cost = (float) 0.00;;
     for(OilCostRecord oilCostRecord:listOilCostRecord){
-      yestderdayCost+=oilCostRecord.getOilCost();
+      cost =  oilCostRecord.getOilCost();
+      yestderdayCost+=cost != null ? cost : yestderdayCost;
     }
    
     return yestderdayCost;
@@ -720,8 +723,10 @@ public class OilCostRecordService {
    public Float getOilCostMonth(String userId){
        List<OilCostRecord>  listOilCostRecord=trackRepository.findMonthOil(userId,DateUtil.getMonthFirstDay(),DateUtil.getYesterdayDate());
        Float monthCost=(float) 0.00;
+       Float cost = (float) 0.00;
        for(OilCostRecord oilCostRecord:listOilCostRecord){
-         monthCost+=oilCostRecord.getOilCost();
+         cost = oilCostRecord.getOilCost();
+         monthCost+=cost != null ? cost : monthCost;
        }
       return monthCost;
     }
