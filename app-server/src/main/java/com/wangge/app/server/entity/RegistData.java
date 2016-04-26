@@ -74,7 +74,7 @@ public class RegistData extends AbstractPersistable<Long> {
 	private String memberId;
 	@OneToOne(mappedBy = "registData")
   private SaojieData saojieData;
-	
+	private String coordinate;
   public RegistData() {
 		super();
 	}
@@ -266,6 +266,14 @@ public class RegistData extends AbstractPersistable<Long> {
 
   public void setMemberId(String memberId) {
     this.memberId = memberId;
+  }
+
+  public String getCoordinate() {
+    return coordinate;
+  }
+
+  public void setCoordinate(String coordinate) {
+    this.coordinate = coordinate;
   }
   
 }

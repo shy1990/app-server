@@ -189,24 +189,31 @@ public class RegistDataController {
 				data.setPhoneNum(member.get("MOBILE"));
 				data.setShopName(member.get("SHOPNAME"));
 				data.setMemberId(member.get("MEMBERID"));
-				RegistData registData = registDataService.addRegistData(data);
-				
-				// 更新扫街
-				SaojieData sjData = dataSaojieService.findBySaojieData(Long.parseLong(saojieId));
-				sjData.setRegistData(registData);
-				sjData.setDescription(description);
-				dataSaojieService.addDataSaojie(sjData,salesman);
-				json.setId(String.valueOf(registData.getId()));
-				json.setSuccess(true);
-				json.setMsg("保存成功！");
-				return new ResponseEntity<Json>(json, HttpStatus.CREATED);
+				RegistData rd = registDataService.findByMemberId(data.getMemberId());
+				if(rd != null && !"".equals(rd)){
+				  json.setSuccess(false);
+	        json.setMsg("该店铺已注册！");
+	        return new ResponseEntity<Json>(json, HttpStatus.CONFLICT);
+				}else{
+				  RegistData registData = registDataService.addRegistData(data);
+	        // 更新扫街
+	        SaojieData sjData = dataSaojieService.findBySaojieData(Long.parseLong(saojieId));
+	        sjData.setRegistData(registData);
+	        sjData.setDescription(description);
+	        dataSaojieService.addDataSaojie(sjData,salesman);
+	        registData.setCoordinate(sjData.getCoordinate());//添加扫街的坐标点
+	        registDataService.addRegistData(registData);//更新注册数据
+	        json.setId(String.valueOf(registData.getId()));
+	        json.setSuccess(true);
+	        json.setMsg("保存成功！");
+	        return new ResponseEntity<Json>(json, HttpStatus.CREATED);
+				}
 			}else{
 				json.setMsg("与商城登录帐号不匹配,请重新输入!");
 				json.setSuccess(false);
 				return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
 			}
 		} catch (NumberFormatException e) {
-			e.printStackTrace();
 			json.setMsg("保存异常!");
 			return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
 		}

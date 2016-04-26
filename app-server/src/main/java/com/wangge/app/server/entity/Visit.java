@@ -79,6 +79,9 @@ public class Visit extends AbstractPersistable<Long> {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Temporal(TemporalType.DATE)
 	private Date expiredTime;
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+  @Temporal(TemporalType.TIMESTAMP)
+  private Date finishTime;
 	
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -178,5 +181,13 @@ public class Visit extends AbstractPersistable<Long> {
 		this.salesman = salesman;
 	}
 
+  public Date getFinishTime() {
+    return finishTime;
+  }
+
+  public void setFinishTime(Date finishTime) {
+    this.finishTime = finishTime;
+  }
+	
 	
 }

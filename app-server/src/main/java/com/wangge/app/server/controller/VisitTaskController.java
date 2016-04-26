@@ -174,6 +174,7 @@ public class VisitTaskController {
 						String imageurl3 = jsons.getString("imageurl3");
 						taskVisit.setImageurl3(imageurl3);
 					}
+					taskVisit.setFinishTime(new Date());
 					taskVisit.setSalesman(salesman);
 					taskVisitService.save(taskVisit);
 					json.setSuccess(true);
@@ -204,6 +205,7 @@ public class VisitTaskController {
 					String imageurl3 = jsons.getString("imageurl3");
 					taskVisit.setImageurl3(imageurl3);
 				}
+				taskVisit.setFinishTime(new Date());
 				taskVisit.setSalesman(salesman);
 				taskVisitService.save(taskVisit);
 				json.setSuccess(true);
