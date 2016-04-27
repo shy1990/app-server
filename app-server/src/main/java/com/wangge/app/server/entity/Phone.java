@@ -11,9 +11,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.wangge.core.entity.AbstractPersistable;
 
 
 /**
@@ -23,8 +23,8 @@ import com.wangge.core.entity.AbstractPersistable;
  *
  */
 
-@Entity
-@Table(name = "BIZ_PHONE")
+//@Entity
+//@Table(name = "SYS_PHONE")
 public class Phone extends AbstractPersistable<Long>{
 	private static final long serialVersionUID = 1L;
 	

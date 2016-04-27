@@ -6,9 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wangge.app.server.entity.Region;
 import com.wangge.app.server.entity.SaojieData;
 import com.wangge.app.server.repository.SaojieDataRepository;
-import com.wangge.common.entity.Region;
 @Service
 public class SaojieDataService {
 
@@ -20,6 +20,8 @@ public class SaojieDataService {
 		
 		return saojieDataRepository.findByRegionIn(listSjid);
 	}
-
-
+	
+	public List<SaojieData> findByRegion(Region region){
+	  return saojieDataRepository.findByRegion(region);
+	}
 }

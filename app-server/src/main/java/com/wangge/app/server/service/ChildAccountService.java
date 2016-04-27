@@ -21,19 +21,13 @@ public class ChildAccountService {
   @Resource
   private ChildAccountRepostory childAccountRepostory;
 
-  public ChildAccount getChildAccountBySimId(String simId) {
+  public List<ChildAccount> getChildAccountByParentId(String parentId) {
     
-    return  childAccountRepostory.findBySimId(simId);
-  }
-
-  public List<ChildAccount> getChildAccountByParentId(String id) {
-    // TODO Auto-generated method stub
-    return childAccountRepostory.findByParentId(id);
+    return  childAccountRepostory.findByParentId(parentId);
   }
 
   public void save(ChildAccount chil) {
     childAccountRepostory.save(chil);
-    
   }
 
  

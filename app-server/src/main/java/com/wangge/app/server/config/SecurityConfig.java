@@ -9,13 +9,13 @@ import javax.servlet.Filter;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.filter.authc.AnonymousFilter;
+import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.apache.shiro.web.filter.session.NoSessionCreationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
 
-import com.wangge.security.shiro.web.filter.authc.HmacAuthcFilter;
 
 @Configuration
 @Profile("prod")
@@ -30,7 +30,7 @@ public class SecurityConfig {
 		shiroFilter.setUnauthorizedUrl("/forbidden");
 
 		Map<String, Filter> filters = new HashMap<String, Filter>();
-		filters.put("hmacAuthc", new HmacAuthcFilter());
+		filters.put("authc", new FormAuthenticationFilter());
 		filters.put("rest", new NoSessionCreationFilter());
 		filters.put("anon", new AnonymousFilter());
 		shiroFilter.setFilters(filters);

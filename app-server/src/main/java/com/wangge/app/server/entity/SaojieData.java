@@ -1,22 +1,25 @@
 package com.wangge.app.server.entity;
 
+import java.io.Serializable;
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wangge.app.server.pojo.Color;
-import com.wangge.common.entity.Region;
-import com.wangge.core.entity.AbstractPersistable;
 
 /**
  * 扫街数据
@@ -25,8 +28,8 @@ import com.wangge.core.entity.AbstractPersistable;
  *
  */
 @Entity
-@Table(name = "BIZ_SAOJIEDATA")
-public class SaojieData extends AbstractPersistable<Long> {
+@Table(name = "SYS_SAOJIEDATA")
+public class SaojieData implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -49,6 +52,12 @@ public class SaojieData extends AbstractPersistable<Long> {
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "REGISTDATA_ID")
 	private RegistData registData;
+	
+	@JsonFormat(pattern="yyyy-MM-dd")
+	@Column(name = "SAOJIE_DATE")
+//@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date saojieDate;
 	@Transient
 	private Long registId;
 	@Transient
@@ -57,6 +66,10 @@ public class SaojieData extends AbstractPersistable<Long> {
 	private int incSize;
 	@Transient
 	private int dateInterval;
+	
+  private int isPrimaryAccount; //是否主账号
+  
+  private String accountId;//业务账号id
 	
 	public SaojieData() {
 		super();
@@ -67,7 +80,6 @@ public class SaojieData extends AbstractPersistable<Long> {
 		this.coordinate = coordinate;
 	}
 
-	@Override
 	public Long getId() {
 		return id;
 	}
@@ -162,5 +174,29 @@ public class SaojieData extends AbstractPersistable<Long> {
   public void setDateInterval(int dateInterval) {
     this.dateInterval = dateInterval;
   }
+
+  public Date getSaojieDate() {
+    return saojieDate;
+  }
+
+  public void setSaojieDate(Date saojieDate) {
+    this.saojieDate = saojieDate;
+  }
+  public int getIsPrimaryAccount() {
+    return isPrimaryAccount;
+  }
+
+  public void setIsPrimaryAccount(int isPrimaryAccount) {
+    this.isPrimaryAccount = isPrimaryAccount;
+  }
+
+  public String getAccountId() {
+    return accountId;
+  }
+
+  public void setAccountId(String accountId) {
+    this.accountId = accountId;
+  }
+
   
 }

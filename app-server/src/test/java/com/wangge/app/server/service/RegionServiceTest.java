@@ -1,8 +1,5 @@
 package com.wangge.app.server.service;
 
-import java.util.List;
-import java.util.Map;
-
 import javax.annotation.Resource;
 
 import org.junit.Test;
@@ -13,12 +10,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.wangge.AppServerApplication;
 import com.wangge.app.server.entity.SaojieData;
+import com.wangge.app.server.repository.RegionRepository;
 import com.wangge.app.server.repository.SalesmanRepository;
 import com.wangge.app.server.repository.SaojieDataRepository;
 import com.wangge.app.server.repositoryimpl.ActiveImpl;
-import com.wangge.app.server.repositoryimpl.ExamImpl;
-import com.wangge.common.entity.Region;
-import com.wangge.common.repository.RegionRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = AppServerApplication.class)

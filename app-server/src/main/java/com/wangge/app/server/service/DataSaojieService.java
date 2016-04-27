@@ -6,19 +6,20 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.wangge.app.server.entity.Region;
 import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.SalesmanStatus;
 import com.wangge.app.server.entity.Saojie;
 import com.wangge.app.server.entity.Saojie.SaojieStatus;
 import com.wangge.app.server.entity.SaojieData;
+import com.wangge.app.server.repository.RegionRepository;
 import com.wangge.app.server.repository.SaojieDataRepository;
 import com.wangge.app.server.repository.SaojieRepository;
-import com.wangge.common.entity.Region;
-import com.wangge.common.repository.RegionRepository;
 
 @Service
 public class DataSaojieService {
@@ -30,6 +31,9 @@ public class DataSaojieService {
 
 	@Autowired
 	private RegionRepository regionRepository;
+	
+	@Resource
+  private ApplicationContext ctx;
 
 	public SaojieData addDataSaojie(SaojieData dataSaojie,Salesman salesman) {
 		int taskValue = 0;
@@ -95,10 +99,9 @@ public class DataSaojieService {
 		}
 	}
 
-/*	public void updateSaojie(Saojie saojie) {
+	public void updateSaojie(Saojie saojie) {
 		taskSaojieRepository.save(saojie);
-		
-	}*/
+	}
 
 	/*public Saojie findByOrderAndSalesman(Integer id, Salesman salesman) {
 		
@@ -118,5 +121,7 @@ public class DataSaojieService {
 	  return dataSaojieRepository.findByRegistData(id);
 	}
 
-	
+	public int findMaxOrderByuserId(String userId){
+	  return taskSaojieRepository.findMaxOrderByuserId(userId);
+	}
 }

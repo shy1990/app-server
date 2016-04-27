@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import com.wangge.app.server.entity.Region;
 import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.entity.Saojie;
 import com.wangge.app.server.entity.SaojieData;
@@ -23,4 +24,6 @@ public interface SaojieDataRepository extends JpaRepository<SaojieData, Long>{
 	List<SaojieData> findByRegionIn(Collection<Region> listSjid);
 	
 	SaojieData findByRegistData(RegistData id);
+	
+	List<SaojieData> findByRegion(Region region);
 }

@@ -5,7 +5,7 @@ package com.wangge.app.server.entity;
  *
  */
 public enum SalesmanStatus {
-	saojie(1), kaifa(2), weihu(3);
+	saojie(1), kaifa(2), weihu(3),zhuanzheng(4),shenhe(5);
 
 	private Integer num;
 

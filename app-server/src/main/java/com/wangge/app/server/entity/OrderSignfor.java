@@ -1,5 +1,6 @@
 package com.wangge.app.server.entity;
 
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -13,7 +14,6 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -67,6 +67,9 @@ public class OrderSignfor implements Serializable {
   
   private String customUnSignRemark;
   
+  private int isPrimaryAccount;
+  
+  private String accountId;
   public int getOrderCount() {
     return orderCount;
   }
@@ -216,5 +219,22 @@ public class OrderSignfor implements Serializable {
   public void setCustomUnSignRemark(String customUnSignRemark) {
     this.customUnSignRemark = customUnSignRemark;
   }
+
+  public int getIsPrimaryAccount() {
+    return isPrimaryAccount;
+  }
+
+  public void setIsPrimaryAccount(int isPrimaryAccount) {
+    this.isPrimaryAccount = isPrimaryAccount;
+  }
+
+  public String getAccountId() {
+    return accountId;
+  }
+
+  public void setAccountId(String accountId) {
+    this.accountId = accountId;
+  }
+  
   
 }

@@ -1,5 +1,8 @@
 package com.wangge.app.server.entity;
 
+import java.io.Serializable;
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,13 +11,15 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import com.wangge.common.entity.Region;
-import com.wangge.core.entity.AbstractPersistable;
-import com.wangge.security.entity.User;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
  * 业务员
@@ -23,8 +28,10 @@ import com.wangge.security.entity.User;
  *
  */
 @Entity
-@Table(name = "BIZ_SALESMAN")
-public class Salesman extends AbstractPersistable<String> {
+@Table(name ="SYS_SALESMAN")
+@JsonIgnoreProperties(value = { "hibernateLazyInitializer" ,"handler"})
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class Salesman implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(generator = "foreign")
@@ -48,17 +55,31 @@ public class Salesman extends AbstractPersistable<String> {
 		this.status = status;
 	}
 
-	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "region_id")
-	private Region region;
+	
 
-	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "user_id")
-	private User user;
 	
 	@Column(name = "ASSESS_STAGE")
   private String assessStage;
 
+	private String truename;
+	  
+	private String jobNum;
+	
+	
+	@OneToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "region_id")
+  private Region region;
+	
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "user_id")
+	private User user;
+	
+	private String towns;
+	
+	private String mobile;
+	@Temporal(TemporalType.DATE)
+	private Date regdate;
+	  
 	@Column(name = "OLD_ID")
   private String oldid;
 	
@@ -87,7 +108,6 @@ public class Salesman extends AbstractPersistable<String> {
 		this.id = id;
 	}
 
-	@Override
 	public String getId() {
 		return id;
 	}
@@ -116,6 +136,45 @@ public class Salesman extends AbstractPersistable<String> {
     this.assessStage = assessStage;
   }
 
+  public String getTruename() {
+    return truename;
+  }
+
+  public void setTruename(String truename) {
+    this.truename = truename;
+  }
+
+  public String getJobNum() {
+    return jobNum;
+  }
+
+  public void setJobNum(String jobNum) {
+    this.jobNum = jobNum;
+  }
+
+  public String getTowns() {
+    return towns;
+  }
+
+  public void setTowns(String towns) {
+    this.towns = towns;
+  }
+
+  public String getMobile() {
+    return mobile;
+  }
+
+  public void setMobile(String mobile) {
+    this.mobile = mobile;
+  }
+
+  public Date getRegdate() {
+    return regdate;
+  }
+
+  public void setRegdate(Date regdate) {
+    this.regdate = regdate;
+  }
   public int getIsOldSalesman() {
     return isOldSalesman;
   }

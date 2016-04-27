@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "BIZ_ORDER_ITEM")
+@Table(name = "SYS_ORDER_ITEM")
 public class OrderItem implements Serializable {
   private static final long serialVersionUID = 1L;
 
@@ -28,7 +28,8 @@ public class OrderItem implements Serializable {
   public String getId() {
     return id;
   }
-
+  
+  
   public String getType() {
     return type;
   }

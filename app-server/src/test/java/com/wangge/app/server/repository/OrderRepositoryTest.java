@@ -12,7 +12,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.wangge.AppServerApplication;
 import com.wangge.app.server.entity.Order;
 import com.wangge.app.server.entity.OrderItem;
-import com.wangge.common.repository.RegionRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = AppServerApplication.class)
