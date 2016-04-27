@@ -1,5 +1,6 @@
 package com.wangge.app.server.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -23,7 +24,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.wangge.app.server.entity.Regist.RegistStatus;
-import com.wangge.core.entity.AbstractPersistable;
 
 /**
  * 注册
@@ -32,8 +32,8 @@ import com.wangge.core.entity.AbstractPersistable;
  *
  */
 @Entity
-@Table(name = "BIZ_VISIT")
-public class Visit extends AbstractPersistable<Long> {
+@Table(name = "SYS_VISIT")
+public class Visit implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public enum VisitStatus {
@@ -88,11 +88,15 @@ public class Visit extends AbstractPersistable<Long> {
 	@JoinColumn(name = "USER_ID")
 	private Salesman salesman;
 	
+	private int isPrimaryAccount; //是否主账号
+	
+	
+	private String accountId;
+	
 	public Visit() {
 		super();
 	}
 
-	@Override
 	public Long getId() {
 		return id;
 	}
@@ -189,5 +193,21 @@ public class Visit extends AbstractPersistable<Long> {
     this.finishTime = finishTime;
   }
 	
-	
+  public int getIsPrimaryAccount() {
+    return isPrimaryAccount;
+  }
+
+  public void setIsPrimaryAccount(int isPrimaryAccount) {
+    this.isPrimaryAccount = isPrimaryAccount;
+  }
+
+
+  public String getAccountId() {
+    return accountId;
+  }
+
+  public void setAccountId(String accountId) {
+    this.accountId = accountId;
+  }
+
 }

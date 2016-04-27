@@ -3,6 +3,8 @@ package com.wangge.app.server.repository;
 
 
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -26,7 +28,11 @@ public interface RegistDataRepository extends JpaRepository<RegistData, Long>{
 
   public Double countByRegionId(String area);
   
+  
+  public List<RegistData> findByLoginAccount(String loginAccount);
+  
   public RegistData findByPhoneNum(String mobile);
+
 	
 //	List<RegistData> findByRegist(Regist regist);
 }

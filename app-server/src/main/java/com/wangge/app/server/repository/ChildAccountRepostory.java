@@ -15,8 +15,9 @@ import com.wangge.app.server.entity.ChildAccount;
  */
 public interface ChildAccountRepostory extends JpaRepository<ChildAccount, Long> {
 
-  ChildAccount findBySimId(String simId);
+  List<ChildAccount> findByParentId(String parentId);
 
-  List<ChildAccount> findByParentId(String id);
+  ChildAccount findBySimId(String string);
+
 
 }

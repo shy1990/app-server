@@ -2,7 +2,6 @@ package com.wangge.app.server.service;
 
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -14,10 +13,9 @@ import org.springframework.stereotype.Service;
 import com.wangge.app.server.entity.ApplyPrice;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.repository.ApplyPriceRepository;
+import com.wangge.app.server.repository.RegionRepository;
 import com.wangge.app.server.repository.SalesmanRepository;
 import com.wangge.app.server.vo.Apply;
-import com.wangge.common.entity.Region;
-import com.wangge.common.repository.RegionRepository;
 
 @Service
 public class ApplyPriceService {

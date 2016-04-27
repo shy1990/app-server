@@ -11,8 +11,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.wangge.AppServerApplication;
-import com.wangge.common.entity.Region;
-import com.wangge.common.repository.RegionRepository;
+import com.wangge.app.server.entity.Region;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = AppServerApplication.class)

@@ -11,7 +11,7 @@ public class message implements Serializable{
   private Boolean success;//是否成功
   private String msg;
   private Object obj;
-  
+  private int code;
   public Boolean getSuccess() {
     return success;
   }
@@ -29,6 +29,12 @@ public class message implements Serializable{
   }
   public void setObj(Object obj) {
     this.obj = obj;
+  }
+  public int getCode() {
+    return code;
+  }
+  public void setCode(int code) {
+    this.code = code;
   }
   
   

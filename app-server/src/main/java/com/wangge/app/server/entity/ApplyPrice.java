@@ -1,5 +1,6 @@
 package com.wangge.app.server.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -9,19 +10,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
 
-import com.wangge.common.entity.Region;
-import com.wangge.core.entity.AbstractPersistable;
-import com.wangge.security.entity.User;
 @Entity
 //@Table(name = "BIZ_CHANGEPRICE")
-public class ApplyPrice extends AbstractPersistable<Long>{
+public class ApplyPrice implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	@Id
@@ -77,7 +73,6 @@ public class ApplyPrice extends AbstractPersistable<Long>{
 	public ApplyPrice() {
 		super();
 	}
-	@Override
 	public Long getId() {
 		// TODO Auto-generated method stub
 		return id;

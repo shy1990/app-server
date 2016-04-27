@@ -1,5 +1,6 @@
 package com.wangge.app.server.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,12 +9,12 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wangge.app.server.entity.Region;
 import com.wangge.app.server.entity.Regist;
 import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.repository.RegistDataRepository;
 import com.wangge.app.server.repository.RegistRepository;
 import com.wangge.app.server.repositoryimpl.MemberImpl;
-import com.wangge.common.entity.Region;
 
 @Service
 public class RegistDataService {
@@ -77,6 +78,11 @@ public class RegistDataService {
     // TODO Auto-generated method stub
     return registDataRepository.countByRegionId(area);
   }
+  
+  public List<RegistData>  findByLoginAccount(String loginAccount){
+    return registDataRepository.findByLoginAccount(loginAccount);
+  }
+  
   /**
    * 
   * @Title: getSalesmanId 
@@ -93,5 +99,33 @@ public class RegistDataService {
     }
     return null;
   }
+
+  public String getRegionName(String storePhone) {
+    RegistData data = registDataRepository.findByPhoneNum(storePhone);
+    if(data != null){
+      return data.getRegion().getName();
+    }
+    return null;
+  }
+
+  public Map<String, String> getMap(String storePhone) {
+    Map<String, String> map = new HashMap<String, String>();
+    RegistData data = registDataRepository.findByPhoneNum(storePhone);
+    if(data != null){
+     
+      map.put("regionName", data.getRegion().getName());
+      map.put("shopName", data.getShopName());
+      map.put("regionId", data.getRegion().getId());
+      return map;
+    }
+    
+    return null;
+  }
+
+  public RegistData getRegistData(String registId) {
+   
+    return  registDataRepository.findOne(Long.parseLong(registId));
+  }
+
 
 }

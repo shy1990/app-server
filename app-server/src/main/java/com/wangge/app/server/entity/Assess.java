@@ -1,5 +1,6 @@
 package com.wangge.app.server.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -19,8 +20,6 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.wangge.app.server.entity.Regist.RegistStatus;
-import com.wangge.core.entity.AbstractPersistable;
 
 /**
  * 注册
@@ -29,8 +28,8 @@ import com.wangge.core.entity.AbstractPersistable;
  *
  */
 @Entity
-@Table(name = "BIZ_ASSESS")
-public class Assess extends AbstractPersistable<Long> {
+@Table(name = "SYS_ASSESS")
+public class Assess implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public enum AssessStatus {

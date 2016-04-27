@@ -18,10 +18,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.wangge.common.entity.Region;
 
 @Entity
-@Table(name = "BIZ_ORDER")
+@Table(name = "SYS_ORDER")
 public class Order implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -37,6 +36,7 @@ public class Order implements Serializable {
 			return name;
 		}
 	}
+	
 	
 	public enum PayMent{
 	  PAY_ONLINE("线上支付"),PAY_OFFLINE("货到付款"),POS("POS支付");

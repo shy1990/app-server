@@ -24,16 +24,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.wangge.app.server.entity.Region;
 import com.wangge.app.server.entity.Salesman;
+import com.wangge.app.server.entity.User;
 import com.wangge.app.server.pojo.Json;
+import com.wangge.app.server.repository.RegionRepository;
 import com.wangge.app.server.repository.SalesmanRepository;
+import com.wangge.app.server.repository.UserRepository;
 import com.wangge.app.server.service.SalesmanService;
 import com.wangge.app.server.vo.Exam.Town;
-import com.wangge.common.entity.Region;
-import com.wangge.common.repository.RegionRepository;
-import com.wangge.security.entity.User;
-import com.wangge.security.entity.User.UserStatus;
-import com.wangge.security.repository.UserRepository;
 
 @RestController
 @RequestMapping(value = "/v1/saleman")
@@ -127,7 +126,7 @@ public class SalesmanController {
 		user.setId(uid);
 		user.setPassword(password);
 		user.setPhone(phone);
-		user.setStatus(UserStatus.NORMAl);
+		user.setStatus(User.UserStatus.NORMAL);
 		user.setUsername(username);
 		user.setNickname(nickname);
 		ur.save(user);

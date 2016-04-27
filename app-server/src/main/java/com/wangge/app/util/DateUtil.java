@@ -3,6 +3,7 @@ package com.wangge.app.util;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class DateUtil {
@@ -112,7 +113,186 @@ public class DateUtil {
     	return null;
     }
     
+    /**
+     * 
+      * getYesterdayDate:获取昨日时间
+      * @author robert 
+      * @return 
+      * @since JDK 1.8
+     */
+    public static Date getYesterdayDate(){
+      Calendar   cal   =   Calendar.getInstance();
+      cal.add(Calendar.DATE,   -1);
+      String yesterday = new SimpleDateFormat( "yyyy-MM-dd").format(cal.getTime());
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+      Date date=null;
+      try {
+        date = sdf.parse(yesterday);
+      } catch (ParseException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      return date;
+    }
+    
+    /**
+     * 
+      * getMonthFirstDay:当月第一天
+      * @author Administrator 
+      * @return 
+      * @since JDK 1.8
+     */
+    public static Date getMonthFirstDay(){
+      Calendar   cal   =   Calendar.getInstance();
+      cal.add(Calendar.MONTH, 0);
+      cal.set(Calendar.DAY_OF_MONTH,1);//设置为1号,当前日期既为本月第一天 
+      String yesterday = new SimpleDateFormat( "yyyy-MM-dd").format(cal.getTime());
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+      Date date=null;
+      try {
+        date = sdf.parse(yesterday);
+      } catch (ParseException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      return date;
+    }
+    
+    /**
+     * 
+      * gettoday:今天
+      * @author Administrator 
+      * @return 
+      * @since JDK 1.8
+     */
+    public static Date gettoday(){
+      Calendar   cal   =   Calendar.getInstance();
+      cal.add(Calendar.MONTH, 0);
+      cal.add(Calendar.DATE, 0);;//设置为1号,今天
+      String yesterday = new SimpleDateFormat( "yyyy-MM-dd").format(cal.getTime());
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+      Date date=null;
+      try {
+        date = sdf.parse(yesterday);
+      } catch (ParseException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      return date;
+    }
+    
+    /**
+     * 
+      * getNowMonth:当前月. <br/> 
+      * 
+      * @author Administrator 
+      * @return 
+      * @since JDK 1.8
+     */
+    public static int getNowMonth(){
+      Calendar   cal   =   Calendar.getInstance();
+      int month=cal.get(Calendar.MONTH)+1;
+      return month;
+    }
+    
+    /**
+     * 
+      * getNowMonth:当前年份
+      * @author Administrator 
+      * @return 
+      * @since JDK 1.8
+     */
+    public static int getNowYear(){
+      Calendar   cal   =   Calendar.getInstance();
+      int year=cal.get(Calendar.YEAR);
+      return year;
+    }
+    
+    /**
+     * 
+      * getMonth：通过date获取月份
+      * @author Administrator 
+      * @return 
+      * @since JDK 1.8
+     */
+    public static int getMonth(Date date){
+      Calendar c = Calendar.getInstance();
+      c.setTime(date);
+     
+      return  c.get(Calendar.DAY_OF_MONTH);
+    }
+    
+    
+    /**
+     * 
+      * getLastDayOfMonth:某个月的最后一天
+      * @author Administrator 
+      * @param year
+      * @param month
+      * @return 
+      * @since JDK 1.8
+     */
+    public static Date getLastDayOfMonth(int year,int month){
+        Calendar cal = Calendar.getInstance();
+        //设置年份
+        cal.set(Calendar.YEAR,year);
+        //设置月份
+        cal.set(Calendar.MONTH, month-1);
+        //获取某月最大天数
+        int lastDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        //设置日历中月份的最大天数
+        cal.set(Calendar.DAY_OF_MONTH, lastDay);
+        //格式化日期
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String lastDayOfMonth = sdf.format(cal.getTime());
+        
+        Date date=null;
+        try {
+          date = sdf.parse(lastDayOfMonth);
+        } catch (ParseException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+        return date;
+    }
+    
+    /**
+     * 
+      * getFisrtDayOfMonth:某个月的第一天
+      * @author Administrator 
+      * @param year
+      * @param month
+      * @return 
+      * @since JDK 1.8
+     */
+    public static Date getFisrtDayOfMonth(int year,int month){
+      Calendar cal = Calendar.getInstance();
+      //设置年份
+      cal.set(Calendar.YEAR,year);
+      //设置月份
+      cal.set(Calendar.MONTH, month-1);
+      //获取某月最小天数
+      int firstDay = cal.getActualMinimum(Calendar.DAY_OF_MONTH);
+      //设置日历中月份的最小天数
+      cal.set(Calendar.DAY_OF_MONTH, firstDay);
+      //格式化日期
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+      String firstDayOfMonth = sdf.format(cal.getTime());
+      Date date=null;
+      try {
+        date = sdf.parse(firstDayOfMonth);
+      } catch (ParseException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      return date;
       
+    }
+    
+    
+    
+    
+    
  /*   *//** 
      * 主函数 
      *  

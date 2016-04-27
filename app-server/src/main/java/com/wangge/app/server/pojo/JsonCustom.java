@@ -8,20 +8,22 @@ public class JsonCustom extends Json{
   
   private static final long serialVersionUID = 1L;
   
-  private String nickName;
+
+  private String childName;
   
   private int isPrimaryAccount;
   
   private String childId;
   
-  private String childName;
+  private String nickName;
 
-  public String getNickName() {
-    return nickName;
+
+  public String getChildName() {
+    return childName;
   }
 
-  public void setNickName(String nickName) {
-    this.nickName = nickName;
+  public void setChildName(String childName) {
+    this.childName = childName;
   }
 
   public int getIsPrimaryAccount() {
@@ -40,14 +42,14 @@ public class JsonCustom extends Json{
     this.childId = childId;
   }
 
-  public String getChildName() {
-    return childName;
+  public String getNickName() {
+    return nickName;
   }
 
-  public void setChildName(String childName) {
-    this.childName = childName;
+  public void setNickName(String nickName) {
+    this.nickName = nickName;
   }
-  
+
   
 
 }

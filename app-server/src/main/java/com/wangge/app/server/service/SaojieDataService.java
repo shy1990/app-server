@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.wangge.app.server.entity.Region;
 import com.wangge.app.server.entity.Saojie;
 import com.wangge.app.server.entity.SaojieData;
 import com.wangge.app.server.repository.SaojieDataRepository;
@@ -19,5 +20,9 @@ public class SaojieDataService {
 	public List<SaojieData> findsjidById (Collection<Saojie> listSjid) {
 		
 		return saojieDataRepository.findBySaojieIn(listSjid);
+	}
+	
+	public List<SaojieData> findByRegion(Region region){
+	  return saojieDataRepository.findByRegion(region);
 	}
 }

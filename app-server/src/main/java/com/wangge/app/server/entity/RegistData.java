@@ -1,5 +1,6 @@
 package com.wangge.app.server.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -15,8 +16,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.wangge.common.entity.Region;
-import com.wangge.core.entity.AbstractPersistable;
 
 /**
  * 注册店铺信息
@@ -25,9 +24,9 @@ import com.wangge.core.entity.AbstractPersistable;
  *
  */
 @Entity
-@Table(name = "BIZ_REGISTDATA")
+@Table(name = "SYS_REGISTDATA")
 @JsonIgnoreProperties(value={"hibernateLazyInitializer","handler","fieldHandler"}) 
-public class RegistData extends AbstractPersistable<Long> {
+public class RegistData implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -75,6 +74,11 @@ public class RegistData extends AbstractPersistable<Long> {
 	@OneToOne(mappedBy = "registData")
   private SaojieData saojieData;
 	private String coordinate;
+	
+	private String accountId;//业务账号id
+	
+	private int isPrimaryAccount;//是否主账号，默认0主账号
+	
   public RegistData() {
 		super();
 	}
@@ -99,7 +103,6 @@ public class RegistData extends AbstractPersistable<Long> {
 		this.phoneNum = phoneNum;
 	}
 
-	@Override
 	public Long getId() {
 		return id;
 	}
@@ -274,6 +277,22 @@ public class RegistData extends AbstractPersistable<Long> {
 
   public void setCoordinate(String coordinate) {
     this.coordinate = coordinate;
+  }
+
+  public String getAccountId() {
+    return accountId;
+  }
+
+  public void setAccountId(String accountId) {
+    this.accountId = accountId;
+  }
+
+  public int getIsPrimaryAccount() {
+    return isPrimaryAccount;
+  }
+
+  public void setIsPrimaryAccount(int isPrimaryAccount) {
+    this.isPrimaryAccount = isPrimaryAccount;
   }
   
 }

@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,13 +22,17 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wangge.app.server.entity.Region;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.Saojie;
 import com.wangge.app.server.entity.SaojieData;
+import com.wangge.app.server.entity.Saojie.SaojieStatus;
+import com.wangge.app.server.event.afterDailyEvent;
 import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.service.DataSaojieService;
+import com.wangge.app.server.service.OilCostRecordService;
+import com.wangge.app.server.service.SaojieDataService;
 import com.wangge.app.server.util.UploadUtil;
-import com.wangge.common.entity.Region;
 
 @RestController
 @RequestMapping(value = "/v1")
@@ -36,7 +41,13 @@ public class SaojieDataController {
 	private static final Logger logger = Logger.getLogger(SaojieDataController.class);
 	@Resource
 	private DataSaojieService dataSaojieService;
-
+	@Resource
+	private OilCostRecordService oilsCostRecordService;
+	@Resource
+	private ApplicationContext cxt;
+	@Resource
+  private SaojieDataService sds;
+	
 	// private static String url="http://192.168.2.247/uploadfile/"; 内网测试
 	// private static String url="http://imagetest.3j168.cn/uploadfile/";
 	// //外网测试环境
@@ -52,20 +63,24 @@ public class SaojieDataController {
 	public ResponseEntity<List<SaojieData>> list(@PathVariable("regionId") String regionId) {
 
 		List<SaojieData> Data = dataSaojieService.getSaojieDataByregion(regionId);
+		
 		List<SaojieData> listsj = new ArrayList<SaojieData>();
-		for (SaojieData sj : Data) {
-			// select
-			// sjd.id,sjd.imageUrl,sjd.name,sjd.description,sjd.coordinate from
-			// SaojieData sjd left join sjd.region r where r.id = ?")
-			SaojieData sjdata = new SaojieData();
-			sjdata.setId(sj.getId());
-			sjdata.setImageUrl(sj.getImageUrl());
-			sjdata.setName(sj.getName());
-			sjdata.setCoordinate(sj.getCoordinate());
-			sjdata.setDescription(sj.getDescription());
-			// sjdata.setRegion(sj.getRegion());
-			listsj.add(sjdata);
-		}
+  if(Data != null){
+      for (SaojieData sj : Data) {
+        // select
+        // sjd.id,sjd.imageUrl,sjd.name,sjd.description,sjd.coordinate from
+        // SaojieData sjd left join sjd.region r where r.id = ?")
+        SaojieData sjdata = new SaojieData();
+        sjdata.setId(sj.getId());
+        sjdata.setImageUrl(sj.getImageUrl());
+        sjdata.setName(sj.getName());
+        sjdata.setCoordinate(sj.getCoordinate());
+        sjdata.setDescription(sj.getDescription());
+        // sjdata.setRegion(sj.getRegion());
+        listsj.add(sjdata);
+      }
+    }
+		
 		return new ResponseEntity<List<SaojieData>>(listsj, HttpStatus.OK);
 	}
 
@@ -75,27 +90,50 @@ public class SaojieDataController {
 		String name = jsons.getString("name");
 		String description = jsons.getString("description");
 		String coordinate = jsons.getString("coordinate");
+	  int	isPrimaryAccount = jsons.getIntValue("isPrimary");
+	  String childId = jsons.getString("childId");
 		String imageUrl = null;
+		String id = null;
 		if (jsons.containsKey("imageUrl")) {
 			imageUrl = jsons.getString("imageUrl");
 		}
 		Saojie saojie = dataSaojieService.findByRegionAndSalesman(region,salesman);
+
 		if (saojie != null || salesman.getIsOldSalesman()==1) {
+		  int maxOrder = dataSaojieService.findMaxOrderByuserId(salesman.getId());//扫街最后一个
+	    List<SaojieData> sjData = sds.findByRegion(region);
+	    if(sjData != null && sjData.size() > 0){
+	      if(saojie.getOrder() != maxOrder && sjData.size() == saojie.getMinValue()){//当前扫街序号不等于最后一个并达标时修改扫街状态为mommit
+	        saojie.setStatus(SaojieStatus.COMMIT);
+	      }else if(saojie.getOrder() == maxOrder && sjData.size() == saojie.getMinValue()){//等于最后一个时为通过
+	        saojie.setStatus(SaojieStatus.AGREE);
+	      }
+	      dataSaojieService.updateSaojie(saojie);
+	    }
 			SaojieData data = new SaojieData(name, coordinate);
 			data.setDescription(description);
 			data.setImageUrl(imageUrl);
 			data.setRegion(region);
+			data.setSaojieDate(new Date());
 			data.setSaojie(saojie);
+			data.setIsPrimaryAccount(isPrimaryAccount);
+			if(isPrimaryAccount ==0){
+			  id = salesman.getId();
+			}else{
+			  id = childId;
+			}
+			data.setAccountId(id);
 			SaojieData saojiedata = dataSaojieService.addDataSaojie(data,salesman);
-
+			cxt.publishEvent(new afterDailyEvent(region.getId(),salesman.getId(),name,coordinate,isPrimaryAccount,childId,2));
+			//oilsCostRecordService.addHandshake(region.getId(),salesman.getId(),name,coordinate,isPrimaryAccount,childId,2);
 			if (saojiedata != null) {
-
 				SaojieData sj = new SaojieData();
 				sj.setId(saojiedata.getId());
 				sj.setName(saojiedata.getName());
 				sj.setCoordinate(saojiedata.getCoordinate());
 				sj.setDescription(saojiedata.getDescription());
 				sj.setImageUrl(saojiedata.getImageUrl());
+				sj.setSaojieDate(new Date());
 				json.setMsg("保存成功！");
 				json.setObj(sj);
 			} else {

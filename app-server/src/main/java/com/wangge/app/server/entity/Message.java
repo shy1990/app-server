@@ -35,7 +35,8 @@ public class Message implements Serializable {
 			return name;
 		}
 	}
-
+	
+	
 	public enum MessageType {
 		ORDER("下单通知"), SYSTEM("提交审核"), ACTIVE("活动"),CANCELORDER("取消订单通知");
 		private String name;

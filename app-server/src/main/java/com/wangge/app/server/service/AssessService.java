@@ -1,6 +1,5 @@
 package com.wangge.app.server.service;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +13,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.wangge.app.server.entity.Assess;
 import com.wangge.app.server.entity.Assess.AssessStatus;
+import com.wangge.app.server.entity.Region;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.pojo.Color;
 import com.wangge.app.server.repository.AssessRepository;
@@ -21,7 +21,6 @@ import com.wangge.app.server.repository.SalesmanRepository;
 import com.wangge.app.server.repositoryimpl.ActiveImpl;
 import com.wangge.app.server.vo.RegionVo;
 import com.wangge.app.server.vo.RegistAreaVo;
-import com.wangge.common.entity.Region;
 
 /**
  * 
