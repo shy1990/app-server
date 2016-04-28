@@ -1,5 +1,6 @@
 package com.wangge.app.server.service;
 
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -20,8 +21,35 @@ public class OilParametersService {
 
   @Resource
   private OilParametersRepository oilParametersRepository;
+  @Resource
+  private RegionService regionService;
   
   public OilParameters getOilParameters (String regionId){
-   return  oilParametersRepository.findByRegionId(regionId);
-  }
+   
+   
+    OilParameters oilParameters = oilParametersRepository.findByRegionId(regionId);
+    if(oilParameters != null){
+      
+      return getOilParameters(oilParameters);
+   
+    }else{
+    
+      OilParameters Parameters = oilParametersRepository.findByRegionIdIn(regionService.findParentIds(regionId));
+       return getOilParameters(Parameters);
+    }
+    
 }
+    private OilParameters getOilParameters(OilParameters oilParameters){
+     
+          if (oilParameters.getKmOilSubsidy() != null) {
+            return oilParameters;
+          } else {
+            OilParameters Parameters = oilParametersRepository.findOilParameters();
+            oilParameters.setKmOilSubsidy(Parameters.getKmOilSubsidy());
+            return oilParameters;
+          }
+    }
+   
+  }
+
+

@@ -71,7 +71,7 @@ public class ChainageUtil {
     String str = HttpUtil.sendGet(url, params);
     JSONObject json = (JSONObject) JSONObject.parse(str);
     String s = json.getString("result");
-    if(s.isEmpty()){
+    if(!s.isEmpty()){
       json = (JSONObject) JSONObject.parse(s);
       String a = json.getString("routes");
       JSONArray routesA = json.parseArray(a);
@@ -133,8 +133,8 @@ public class ChainageUtil {
       }
       
       //组装总的油补记录json串
-      jsonObject.put("distance", distance);
-      jsonObject.put("oilCost", oilCost);
+      jsonObject.put("distance",String.format("%.2f", distance));
+      jsonObject.put("oilCost", String.format("%.2f", oilCost));
       jsonObject.put("oilRecord", j);
       return jsonObject;
    
@@ -162,8 +162,8 @@ public class ChainageUtil {
         j.add(primaryJson);
       }
       //组装总的油补记录json串
-      jsonObject.put("distance", distance);
-      jsonObject.put("oilCost", oilCost);
+      jsonObject.put("distance", String.format("%.2f", distance));
+      jsonObject.put("oilCost",String.format("%.2f", oilCost));
       jsonObject.put("oilRecord", j);
       return jsonObject;
   }

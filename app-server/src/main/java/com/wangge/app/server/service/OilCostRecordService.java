@@ -182,7 +182,7 @@ public class OilCostRecordService {
              j = getOilRecord( coordinates,  type, userId);
              j.add(j);
              ocr.setOilRecord(j.toString());
-             trackRepository.save(track);
+             trackRepository.save(ocr);
          
         }
       } catch (ParseException e) {
@@ -217,7 +217,7 @@ public class OilCostRecordService {
       shopName = map.get("shopName");
       regionName = map.get("regionName").replace("\n", "");
     }
-    if(!isVisited(isPrimaryAccount, childId, userId, regionId)){
+    if(isVisited(isPrimaryAccount, childId, userId, regionId)){
       SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
       
       try {
@@ -265,7 +265,7 @@ public class OilCostRecordService {
              JSONObject object = getOilRecord(coordinates, type, null, shopName,regionName);
              j.add(object);
              ocr.setOilRecord(j.toString());
-             trackRepository.save(track);
+             trackRepository.save(ocr);
          
         }
       } catch (ParseException e) {
@@ -286,7 +286,7 @@ public class OilCostRecordService {
    public void addHandshake(String regionId,String userId,String shopName,String coordinates, int isPrimaryAccount,String childId,int type) {
       String id = null;
       
-      if(!isVisited(isPrimaryAccount, childId, userId, regionId)){//测试用，
+      if(isVisited(isPrimaryAccount, childId, userId, regionId)){//测试用，
         SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
         
         try {
@@ -334,7 +334,7 @@ public class OilCostRecordService {
                JSONObject object = getOilRecord(coordinates, type, regionId, shopName,null);
                j.add(object);
                ocr.setOilRecord(j.toString());
-               trackRepository.save(track);
+               trackRepository.save(ocr);
            
           }
         } catch (ParseException e) {
@@ -393,7 +393,7 @@ public class OilCostRecordService {
          jsonArray.add(getOilRecord(coordinates,type,userId).get(0));
          track.setDateTime(dateTime);
          track.setIsPrimaryAccount(isPrimaryAccount);
-         track.setParentId(userId);
+        // track.setParentId(userId);
          track.setOilRecord(jsonArray.toString());
          Float mileage =  getDistance(coordinates,null,track.getDistance(),jsonArray);
          OilParameters param = getOilParam(userId);
@@ -402,7 +402,7 @@ public class OilCostRecordService {
          track.setOilCost(mileages*param.getKmOilSubsidy());
          trackRepository.save(track);
          m.setCode(0);
-         m.setMsg("签到成功！");
+         m.setMsg("下班签到成功！");
          return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
          }
        }      
@@ -555,14 +555,15 @@ public class OilCostRecordService {
       JSONObject  s =  (JSONObject)jsonArray.get(jsonArray.size()-1);
        coordinates2 = s.getString("coordinate").split("-");
     }
-    if(regionId != null){
+    regionName = getRegionName(coordinates);
+   /* if(regionId != null){
       regionName = regionService.getRegionName(regionId);
     }else{
        regionName = getRegionName(coordinates);
-    }
+    }*/
     
     
-    String param = "&origin='"+coordinates1[1]+"','"+coordinates1[0]+"'&destination='"+coordinates2[1]+"','"+coordinates2[0]+"'&origin_region='"+regionName+"'&destination_region='"+regionName+"'";
+    String param = "&origin="+coordinates1[1]+","+coordinates1[0]+"&destination="+coordinates2[1]+","+coordinates2[0]+"&origin_region="+regionName+"&destination_region="+regionName+"";
     Float d = ChainageUtil.createDistance(param);//百度地图返回的json中解析出两点之间的导航出的距离单位米
     
     if(d == null){
@@ -571,6 +572,7 @@ public class OilCostRecordService {
     
    // Float d = 1000f;
     Float distance = d/1000 ;//转换成公里
+   // Float distance = Float.parseFloat(String.format("%.6f", d/1000));
 
      mileage = mileage != null ? distance + mileage : distance;//将握手点之间的距离叠加起来
     return mileage;
@@ -601,26 +603,31 @@ public class OilCostRecordService {
         String Logistics1 = address.getLogisticsPoint1();
         String Logistics2 = address.getLogisticsPoint2();
         String Logistics3 = address.getLogisticsPoint3();
-        if(Logistics1 != null && "".equals(Logistics1)){
+        if(Logistics1 != null && !"".equals(Logistics1)){
           coordinates2 = Logistics1.split("-");
            d1 = ChainageUtil.GetShortDistance(Double.parseDouble(coordinates1[0]) , Double.parseDouble(coordinates1[1]), Double.parseDouble(coordinates2[0]), Double.parseDouble(coordinates2[1]));
-        }else if(Logistics2 != null && "".equals(Logistics2)){
+        }
+        if(Logistics2 != null && !"".equals(Logistics2)){
           coordinates3 = Logistics2.split("-");
            d2 = ChainageUtil.GetShortDistance(Double.parseDouble(coordinates1[0]) , Double.parseDouble(coordinates1[1]), Double.parseDouble(coordinates3[0]), Double.parseDouble(coordinates3[1]));
-        }else if(Logistics3 != null && "".equals(Logistics3)){
+        }
+        if(Logistics3 != null && !"".equals(Logistics3)){
           coordinates4 = Logistics3.split("-");
            d3 = ChainageUtil.GetShortDistance(Double.parseDouble(coordinates1[0]) , Double.parseDouble(coordinates1[1]), Double.parseDouble(coordinates4[0]), Double.parseDouble(coordinates4[1]));
         }
       }
      
-      if(d1 < Double.parseDouble("150")){
+      if(null!=d1&&d1 < Double.parseDouble("150")){
         Logistics =  "物流点一";
-      }else if(d2 <  Double.parseDouble("150")){
+        return  Logistics;
+      }else if(null!=d2&&d2 <  Double.parseDouble("150")){
         Logistics = "物流点二";
-      }else if(d3 <  Double.parseDouble("150")){
+        return  Logistics ;
+      }else if(null!=d3&&d3 <  Double.parseDouble("150")){
         Logistics = "物流点三";
+        return  Logistics ;
       }
-      return  Logistics != null ? Logistics : "物流点";
+      return  "物流点";
   }
   /**
    * 
@@ -640,14 +647,14 @@ public class OilCostRecordService {
        for(OilCostRecord  oilCostRecord : orList){
          if(oilCostRecord.getRegionIds() != null){
            if( oilCostRecord.getRegionIds().contains(regionId)){
-             return false;
+             return true;
            }
          }
        }
-       return true;
+       return false;
     }else{
       OilCostRecord or = trackRepository.findByParentId(childId);
-      if(or.getRegionIds().contains(regionId)){
+      if(or != null && or.getRegionIds().contains(regionId)){
         return false;
       }
       return true;
@@ -701,11 +708,13 @@ public class OilCostRecordService {
   public Float getOilCostYestday(String userId){
     List<OilCostRecord>  listOilCostRecord=trackRepository.findYestdayOil(userId,DateUtil.getYesterdayDate());
     Float yestderdayCost=(float) 0.00;
+    Float cost = (float) 0.00;;
     for(OilCostRecord oilCostRecord:listOilCostRecord){
-      yestderdayCost+=oilCostRecord.getOilCost();
+      cost =  oilCostRecord.getOilCost();
+      yestderdayCost+=cost != null ? cost : yestderdayCost;
     }
    
-    return yestderdayCost;
+    return Float.parseFloat(String.format("%.2f", yestderdayCost)); 
   }
   
   
@@ -720,10 +729,12 @@ public class OilCostRecordService {
    public Float getOilCostMonth(String userId){
        List<OilCostRecord>  listOilCostRecord=trackRepository.findMonthOil(userId,DateUtil.getMonthFirstDay(),DateUtil.getYesterdayDate());
        Float monthCost=(float) 0.00;
+       Float cost = (float) 0.00;
        for(OilCostRecord oilCostRecord:listOilCostRecord){
-         monthCost+=oilCostRecord.getOilCost();
+         cost = oilCostRecord.getOilCost();
+         monthCost+=cost != null ? cost : monthCost;
        }
-      return monthCost;
+      return Float.parseFloat(String.format("%.2f", monthCost));
     }
  
    /**
@@ -802,8 +813,8 @@ public class OilCostRecordService {
          }
          historyOilRecord.setChildContents(childcontent);
          historyOilRecord.setDateDay(dateDay);
-         historyOilRecord.setDistance(distance+"");
-         historyOilRecord.setOilCost(oilCost+"");
+         historyOilRecord.setDistance(String.format("%.2f", distance));
+         historyOilRecord.setOilCost(String.format("%.2f", oilCost));
          listHistoryOilRecord.add(historyOilRecord);
        }
        historyDestOilRecord.setCode(0);

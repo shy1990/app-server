@@ -1,11 +1,9 @@
 package com.wangge.app.server.controller;
 
-import java.text.ParseException;
 import java.util.Date;
 
 import javax.annotation.Resource;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,11 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.OrderSignfor;
-import com.wangge.app.server.event.afterSignforEvent;
+import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.pojo.MessageCustom;
 import com.wangge.app.server.pojo.QueryResult;
 import com.wangge.app.server.repositoryimpl.OrderSignforImpl;
 import com.wangge.app.server.service.OrderSignforService;
+import com.wangge.app.server.service.SalesmanService;
 import com.wangge.app.server.util.HttpUtil;
 
 @RestController
@@ -30,6 +29,8 @@ public class OrderSignforController {
   //private static final Logger logger = LoggerFactory.getLogger(OrderSignforController.class);
   @Resource
   private OrderSignforService orderSignforService;
+  @Resource
+  private SalesmanService salesmanService;
   
   /*private String userPhone ;
   private String orderNo ;
@@ -63,6 +64,7 @@ public class OrderSignforController {
 	  int pageNo = jsons.getIntValue("pageNumber");
 	  int pageSize = jsons.getIntValue("pageSize");
     String userPhone = jsons.getString("userPhone") ;
+    Salesman s= salesmanService.findByMobile(userPhone);
     QueryResult<OrderSignfor> qr = osi.getOrderSignforList(userPhone, pageNo > 0 ? pageNo-1 : 0,pageSize > 0 ? pageSize : 10);   
     return new ResponseEntity<QueryResult<OrderSignfor>>(qr,HttpStatus.OK);
   }

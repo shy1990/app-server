@@ -227,7 +227,7 @@ public class VisitTaskController {
 				taskVisit.setSalesman(salesman);
 				taskVisitService.save(taskVisit);
         if(rd != null){
-          cxt.publishEvent(new afterDailyEvent(rd.getRegion().getId(),salesman.getId(),rd.getShopName(), jsons.getString("coordinate"),jsons.getIntValue("isPrimaryAccount"),jsons.getString("childId"),4));
+          cxt.publishEvent(new afterDailyEvent(rd.getRegion().getId(),salesman.getId(),rd.getShopName(), jsons.getString("coordinate"),jsons.getIntValue("isPrimary"),jsons.getString("childId"),4));
         }
         
 				json.setSuccess(true);
@@ -236,7 +236,7 @@ public class VisitTaskController {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error("addVisit() occur error...");
+			logger.error("addVisit() occur error..."+ e);
 			json.setMsg("保存异常!");
 			return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
 		}

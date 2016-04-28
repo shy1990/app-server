@@ -176,8 +176,8 @@ public class OilRecordImpl {
       while(it.hasNext()){
         Object[] o = (Object[])it.next(); 
         OilCostRecordVo vo = new OilCostRecordVo();
-        vo.setDistance(o[0]+"");
-        vo.setOilCost(o[1]+"");
+        vo.setDistance(String.format("%.2f", o[0]));
+        vo.setOilCost(String.format("%.2f", o[1]));
       
         Calendar calendar = GregorianCalendar.getInstance();
         
