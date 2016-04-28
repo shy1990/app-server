@@ -217,7 +217,7 @@ public class OilCostRecordService {
       shopName = map.get("shopName");
       regionName = map.get("regionName").replace("\n", "");
     }
-    if(isVisited(isPrimaryAccount, childId, userId, regionId)){
+    if(!isVisited(isPrimaryAccount, childId, userId, regionId)){
       SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
       
       try {
@@ -286,7 +286,7 @@ public class OilCostRecordService {
    public void addHandshake(String regionId,String userId,String shopName,String coordinates, int isPrimaryAccount,String childId,int type) {
       String id = null;
       
-      if(isVisited(isPrimaryAccount, childId, userId, regionId)){//测试用，
+      if(!isVisited(isPrimaryAccount, childId, userId, regionId)){//测试用，
         SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
         
         try {
