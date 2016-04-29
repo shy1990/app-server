@@ -20,6 +20,8 @@ public class MessageCustom extends message {
   @JsonInclude(Include.NON_DEFAULT)
   private boolean enable;
   
+  private int exception;
+  
   public Date getSignTime() {
     return signTime;
   }
@@ -37,6 +39,12 @@ public class MessageCustom extends message {
   }
   public void setEnable(boolean enable) {
     this.enable = enable;
+  }
+  public int getException() {
+    return exception;
+  }
+  public void setException(int exception) {
+    this.exception = exception;
   }
   
   

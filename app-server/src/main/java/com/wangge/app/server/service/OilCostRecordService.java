@@ -212,15 +212,17 @@ public class OilCostRecordService {
     String shopName = null;
     String regionName = null;
     Map<String, String> map = registDataService.getMap(storePhone);
+    SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
     if(map != null){
       regionId = map.get("regionId");
       shopName = map.get("shopName");
       regionName = map.get("regionName").replace("\n", "");
     }
-    if(!isVisited(isPrimaryAccount, childId, userId, regionId)){
-      SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+    
+     
       
       try {
+        if(!isVisited(isPrimaryAccount, childId, userId, regionId,format.parse(format.format(new Date())))){
         if(isPrimaryAccount == 1){
           id = childId;
         }else{
@@ -268,12 +270,13 @@ public class OilCostRecordService {
              trackRepository.save(ocr);
          
         }
+        }
       } catch (ParseException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
      
-    }
+    
   }
   /**
    * 
@@ -285,11 +288,12 @@ public class OilCostRecordService {
    */
    public void addHandshake(String regionId,String userId,String shopName,String coordinates, int isPrimaryAccount,String childId,int type) {
       String id = null;
-      
-      if(!isVisited(isPrimaryAccount, childId, userId, regionId)){//测试用，
-        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+      SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+     
+       
         
         try {
+          if(!isVisited(isPrimaryAccount, childId, userId, regionId,format.parse(format.format(new Date())))){//测试用，
           if(isPrimaryAccount == 1){
             id = childId;
           }else{
@@ -337,11 +341,12 @@ public class OilCostRecordService {
                trackRepository.save(ocr);
            
           }
+          }
         } catch (ParseException e) {
           e.printStackTrace();
         }
        
-      }
+    
       
    
   
@@ -407,8 +412,9 @@ public class OilCostRecordService {
          }
        }      
     } catch (Exception e) {
+      e.printStackTrace();
       m.setCode(1);
-      m.setMsg("签到失败!");
+      m.setMsg("签到失败");
     }
      return new ResponseEntity<MessageCustom>(m,HttpStatus.BAD_REQUEST);
   }
@@ -425,16 +431,18 @@ public class OilCostRecordService {
   private boolean isError(String coordinates,String userId){
    String[] coordinates1 = coordinates.split("-");
    String homePont = addressService.getHomePoint(userId);
-   String[] coordinates2 = homePont.split("-");
-   /*String regionName = salesmanService.getSalesman(userId);
+   if(homePont!=null){
+     String[] coordinates2 = homePont.split("-");
+     /*String regionName = salesmanService.getSalesman(userId);
    
    
    
    String param = "&origin='"+coordinates1[1]+"','"+coordinates1[0]+"'&destination='"+coordinates2[1]+"','"+coordinates2[0]+"'&origin_region='"+regionName+"'&destination_region='"+regionName+"'";
    Double d = ChainageUtil.createDistance(param);*/
-   Double d = ChainageUtil.GetShortDistance(Double.parseDouble(coordinates1[0]) , Double.parseDouble(coordinates1[1]), Double.parseDouble(coordinates2[0]), Double.parseDouble(coordinates2[1]));
-   if(d < Double.parseDouble("150")){
-     return false;
+     Double d = ChainageUtil.GetShortDistance(Double.parseDouble(coordinates1[0]) , Double.parseDouble(coordinates1[1]), Double.parseDouble(coordinates2[0]), Double.parseDouble(coordinates2[1]));
+     if(d < Double.parseDouble("150")){
+       return false;
+     }
    }
    
     return true;
@@ -641,9 +649,10 @@ public class OilCostRecordService {
   * @return boolean    返回类型 
   * @throws
    */
-  private boolean  isVisited(int isPrimaryAccount,String childId,String userId,String regionId){
+  private boolean  isVisited(int isPrimaryAccount,String childId,String userId,String regionId,Date todayTime){
     if(isPrimaryAccount == 0){
-      List<OilCostRecord> orList = trackRepository.findByUserId(userId);
+      List<OilCostRecord> orList = trackRepository.findByDateTimeAndParentId(todayTime,userId);
+      
        for(OilCostRecord  oilCostRecord : orList){
          if(oilCostRecord.getRegionIds() != null){
            if( oilCostRecord.getRegionIds().contains(regionId)){
@@ -653,11 +662,11 @@ public class OilCostRecordService {
        }
        return false;
     }else{
-      OilCostRecord or = trackRepository.findByParentId(childId);
+      OilCostRecord or = trackRepository.findByDateTimeAndUserId(todayTime,userId);
       if(or != null && or.getRegionIds().contains(regionId)){
-        return false;
+        return true;
       }
-      return true;
+      return false;
     }
      
   }

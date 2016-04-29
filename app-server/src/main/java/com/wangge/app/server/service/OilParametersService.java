@@ -38,16 +38,25 @@ public class OilParametersService {
        return getOilParameters(Parameters);
     }
     
-}
+}   
+  
     private OilParameters getOilParameters(OilParameters oilParameters){
-     
-          if (oilParameters.getKmOilSubsidy() != null) {
-            return oilParameters;
-          } else {
+          if(null==oilParameters){
             OilParameters Parameters = oilParametersRepository.findOilParameters();
-            oilParameters.setKmOilSubsidy(Parameters.getKmOilSubsidy());
-            return oilParameters;
+            return Parameters;
+          }else{
+            if (oilParameters.getKmOilSubsidy() != null && oilParameters.getKmRatio()==null) {
+              OilParameters Parameters = oilParametersRepository.findOilParameters();
+              oilParameters.setKmRatio(Parameters.getKmRatio());
+            }
+            
+            if (oilParameters.getKmOilSubsidy() == null && oilParameters.getKmRatio()!=null) {
+              OilParameters Parameters = oilParametersRepository.findOilParameters();
+              oilParameters.setKmOilSubsidy(Parameters.getKmOilSubsidy());
+            }
           }
+          return oilParameters;
+     
     }
    
   }

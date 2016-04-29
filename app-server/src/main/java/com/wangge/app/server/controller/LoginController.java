@@ -103,7 +103,7 @@ public class LoginController {
 		  json.setStatus(salesman.getStatus().getNum());
 		}
 		json.setIsOldSalesman(salesman.getIsOldSalesman());
-		json.setNickName(salesman.getUser().getNickname().replace("/n", "").trim());
+		json.setNickName(salesman.getTruename().replace("/n", "").trim());
 		json.setIsPrimaryAccount(0);
 		json.setMsg("登陆成功！");
 		json.setStage(salesman.getAssessStage());
