@@ -366,7 +366,6 @@ public class OilCostRecordService {
    int isPrimaryAccount = jsons.getIntValue("isPrimary");
    String coordinates = jsons.getString("coordinate");
    String userId = jsons.getString("userId");
-    String childId = jsons.getString("childId");
     int type = jsons.getIntValue("apiType");
     OilCostRecord ocr = new OilCostRecord();
     MessageCustom m = new MessageCustom();
@@ -651,7 +650,7 @@ public class OilCostRecordService {
    */
   private boolean  isVisited(int isPrimaryAccount,String childId,String userId,String regionId,Date todayTime){
     
-    List<OilCostRecord> orList = trackRepository.findByDateTimeAndParentId(todayTime,userId);
+    List<OilCostRecord> orList = trackRepository.findYestdayOil(userId, todayTime);
     
     if(orList != null){
       for(OilCostRecord  oilCostRecord : orList){
@@ -837,7 +836,6 @@ public class OilCostRecordService {
  
    public String getChildRecord(String  oilRecord){
      System.out.println(oilRecord);
-     List<Object> list=new ArrayList<Object>();
      JSONArray jsonArr=JSONArray.parseArray(oilRecord);
      
      JSONArray newJsonArr=new JSONArray();
