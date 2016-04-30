@@ -137,11 +137,11 @@ public class OilCostRecordService {
   public void addHandshake(String userId, String coordinates,
       int isPrimaryAccount, String childId, int type) {
     String id = null;
-   
-  //  if(!isVisited(isPrimaryAccount, childId, userId, regionId)){
-      SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+    SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+    try {
+    if(!isVisited(isPrimaryAccount, childId, userId, getRegionName(coordinates), format.parse(format.format(new Date())))){
       
-      try {
+     
         if(isPrimaryAccount == 1){
           id = childId;
         }else{
@@ -185,13 +185,14 @@ public class OilCostRecordService {
              trackRepository.save(ocr);
          
         }
+    } 
       } catch (ParseException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
      
-   // }
-  } 
+    }
+ 
   /**
    * 
   * @Title: addHandshake 
