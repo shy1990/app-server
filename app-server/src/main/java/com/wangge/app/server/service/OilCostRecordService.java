@@ -650,26 +650,22 @@ public class OilCostRecordService {
   * @throws
    */
   private boolean  isVisited(int isPrimaryAccount,String childId,String userId,String regionId,Date todayTime){
-    if(isPrimaryAccount == 0){
-      List<OilCostRecord> orList = trackRepository.findByDateTimeAndParentId(todayTime,userId);
-      
-       for(OilCostRecord  oilCostRecord : orList){
-         if(oilCostRecord.getRegionIds() != null){
-           if( oilCostRecord.getRegionIds().contains(regionId)){
-             return true;
-           }
-         }
-       }
-       return false;
-    }else{
-      OilCostRecord or = trackRepository.findByDateTimeAndUserId(todayTime,userId);
-      if(or != null && or.getRegionIds().contains(regionId)){
-        return true;
+    
+    List<OilCostRecord> orList = trackRepository.findByDateTimeAndParentId(todayTime,userId);
+    
+    if(orList != null){
+      for(OilCostRecord  oilCostRecord : orList){
+        if(oilCostRecord.getRegionIds() != null){
+          if( oilCostRecord.getRegionIds().contains(regionId)){
+            return true;
+          }
+        }
       }
+    }
+    
       return false;
     }
      
-  }
    
   /**
    * 

@@ -53,9 +53,9 @@ public class DataSaojieService {
 				
 				child.add(sj2);
 				
-			}else{
+			}/*else{
 				data.getSaojie().getSalesman().setStatus(SalesmanStatus.kaifa);
-			}
+			}*/
 			child.add(dataSaojie.getSaojie());
 			dataSaojie.getSaojie().setChildren(child);
 			taskSaojieRepository.save(dataSaojie.getSaojie());
