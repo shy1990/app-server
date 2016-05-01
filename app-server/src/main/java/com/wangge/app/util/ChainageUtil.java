@@ -152,15 +152,15 @@ public class ChainageUtil {
       childJson.put("content", chilIdJsonArray);
       j.add(childJson);
     //组装主账号json串，计算总的公里数和又不费用
-      if(chilId != null){
+     /* if(chilId != null){
         JSONObject  primaryJson = new JSONObject();
         JSONArray  primaryJsonArray = JSONArray.parseArray(primary.getOilRecord());
           distance =distance+primary.getDistance(); 
           oilCost = oilCost + primary.getOilCost();
-        childJson.put("type", 0);
-        childJson.put("content", primaryJsonArray);
+          primaryJson.put("type", 0);
+          primaryJson.put("content", primaryJsonArray);
         j.add(primaryJson);
-      }
+      }*/
       //组装总的油补记录json串
       jsonObject.put("distance", String.format("%.2f", distance));
       jsonObject.put("oilCost",String.format("%.2f", oilCost));
