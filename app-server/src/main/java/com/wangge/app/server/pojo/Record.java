@@ -14,6 +14,8 @@ public class Record {
   
     private int type; //类型
     
+    private String userId;
+    
     private JSONArray content;     //内容 json
 
     public int getType() {
@@ -30,6 +32,14 @@ public class Record {
 
     public void setContent(JSONArray content) {
       this.content = content;
+    }
+
+    public String getUserId() {
+      return userId;
+    }
+
+    public void setUserId(String userId) {
+      this.userId = userId;
     }
 
     

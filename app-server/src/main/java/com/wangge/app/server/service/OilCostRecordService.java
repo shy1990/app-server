@@ -760,6 +760,7 @@ public class OilCostRecordService {
        for(OilCostRecord oilCostRecord:listOilCostRecord){
            Record record=new Record();
            record.setType(oilCostRecord.getIsPrimaryAccount());
+           record.setUserId(oilCostRecord.getUserId());
            record.setContent(JSONArray.parseArray( oilCostRecord.getOilRecord()));
            listRecord.add(record);
        }
