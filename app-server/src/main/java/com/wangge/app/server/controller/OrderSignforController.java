@@ -64,7 +64,6 @@ public class OrderSignforController {
 	  int pageNo = jsons.getIntValue("pageNumber");
 	  int pageSize = jsons.getIntValue("pageSize");
     String userPhone = jsons.getString("userPhone") ;
-    Salesman s= salesmanService.findByMobile(userPhone);
     QueryResult<OrderSignfor> qr = osi.getOrderSignforList(userPhone, pageNo > 0 ? pageNo-1 : 0,pageSize > 0 ? pageSize : 10);   
     return new ResponseEntity<QueryResult<OrderSignfor>>(qr,HttpStatus.OK);
   }

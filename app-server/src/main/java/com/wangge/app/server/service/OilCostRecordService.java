@@ -578,8 +578,8 @@ public class OilCostRecordService {
     }
     
    // Float d = 1000f;
-    Float distance = d/1000 ;//转换成公里
-   // Float distance = Float.parseFloat(String.format("%.6f", d/1000));
+   // Float distance = d/1000 ;//转换成公里
+    Float distance = Float.parseFloat(String.format("%.2f", d/1000));
 
      mileage = mileage != null ? distance + mileage : distance;//将握手点之间的距离叠加起来
     return mileage;
