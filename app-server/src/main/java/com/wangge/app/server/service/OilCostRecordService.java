@@ -266,6 +266,7 @@ public class OilCostRecordService {
              j = new JSONArray();
              JSONObject object = getOilRecord(coordinates, type, null, shopName,regionName);
              j.add(object);
+             ocr.setRegionIds(regionId);
              ocr.setOilRecord(j.toString());
              trackRepository.save(ocr);
          
@@ -337,6 +338,7 @@ public class OilCostRecordService {
                j = new JSONArray();
                JSONObject object = getOilRecord(coordinates, type, regionId, shopName,null);
                j.add(object);
+               ocr.setRegionIds(regionId);
                ocr.setOilRecord(j.toString());
                trackRepository.save(ocr);
            
