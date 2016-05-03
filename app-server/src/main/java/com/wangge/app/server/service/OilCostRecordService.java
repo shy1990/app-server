@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -812,14 +813,17 @@ public class OilCostRecordService {
          historyOilRecord.setFatherContent(JSONArray.parseArray(getChildRecord(orecord.getOilRecord())));
          List<OilCostRecord>  listChildOilCostRecord=trackRepository.findByDateTimeAndParentId(orecord.getDateTime(),orecord.getUserId());//查询子账号
          List<Object> childcontent=new ArrayList<Object>();
+         Map<Object, Object> map =new HashMap<Object, Object>();
+         List<Map<Object, Object>> listChild=new ArrayList<Map<Object,Object>>();
          if(listChildOilCostRecord.size()>0){
            for(OilCostRecord childRecord:listChildOilCostRecord){
              distance+=orecord.getDistance();
              oilCost+=orecord.getOilCost();
-             childcontent.add(JSONArray.parseArray(getChildRecord(childRecord.getOilRecord()))  );
+             map.put("childContent", JSONArray.parseArray(getChildRecord(childRecord.getOilRecord()))) ;
+             listChild.add(map);
            }
          }
-         historyOilRecord.setChildContents(childcontent);
+         historyOilRecord.setChildContents(listChild);
          historyOilRecord.setDateDay(dateDay);
          historyOilRecord.setDistance(String.format("%.2f", distance));
          historyOilRecord.setOilCost(String.format("%.2f", oilCost));
@@ -847,9 +851,10 @@ public class OilCostRecordService {
        jsonObject.remove("missTime");
        jsonObject.remove("missName");
        jsonObject.remove("coordinate");
+       jsonObject.remove("shopName");
         newJsonArr.add(jsonObject);
      }
-     return jsonArr.toString();
+     return newJsonArr.toString();
    }
 }
  

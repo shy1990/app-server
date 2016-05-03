@@ -1,6 +1,7 @@
 package com.wangge.app.server.pojo;
 
 import java.util.List;
+import java.util.Map;
 
 
 
@@ -19,7 +20,7 @@ public class HistoryOilRecord extends message {
     private String oilCost;//油补费用
     private List<Object> fatherContent;//父账号内容
     
-    private List<Object> childContents;//子账号内容
+    private List<Map<Object, Object>> childContents;//子账号内容
     
     private List<Record> oilRecord;     //内容 json
 
@@ -56,11 +57,14 @@ public class HistoryOilRecord extends message {
     }
 
     
-    public List<Object> getChildContents() {
+  
+
+
+    public List<Map<Object, Object>> getChildContents() {
       return childContents;
     }
 
-    public void setChildContents(List<Object> childContents) {
+    public void setChildContents(List<Map<Object, Object>> childContents) {
       this.childContents = childContents;
     }
 
