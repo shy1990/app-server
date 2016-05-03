@@ -162,6 +162,26 @@ public class OrderImpl {
     Query query =  em.createNativeQuery(sql);
     return query.executeUpdate()>0?"suc":"false";
   }
+  
+  /**
+   * 
+   * @Description: 修改订单状态及客户签收时间
+   * @param @param ordernum
+   * @param @param status
+   * @param @return   
+   * @return boolean  
+   * @throws
+   * @author changjun
+   * @date 2015年11月12日
+   */
+  
+  @Transactional
+  public void updateOrderShipStateByOrderNum(String ordernum,String status){
+      String sql = "update SJZAIXIAN.SJ_TB_ORDER set ship_status="+status+" ,custom_signfor_time=sysdate,signfortime = sysdate where order_num="+ordernum+"";
+    
+    Query query =  em.createNativeQuery(sql);
+    query.executeUpdate(); 
+  }
   /**
    * 
    * @Description: 客户拒收原因保存
