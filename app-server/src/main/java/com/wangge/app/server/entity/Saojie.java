@@ -92,7 +92,9 @@ public class Saojie implements Serializable {
 
 	@Column(name = "SAOJIE_ORDER")
 	private Integer order;
-
+	@Column(name = "FINISH_STATUS")
+  private Integer finishStatus;//状态为1表示扫街全部完成
+	
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "parent")
 	@OrderBy("saojie_order")
 	private Collection<Saojie> children;
@@ -196,5 +198,13 @@ public class Saojie implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
+
+  public Integer getFinishStatus() {
+    return finishStatus;
+  }
+
+  public void setFinishStatus(Integer finishStatus) {
+    this.finishStatus = finishStatus;
+  }
 
 }
