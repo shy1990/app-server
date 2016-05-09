@@ -12,10 +12,10 @@ public interface OilParametersRepository  extends JpaRepository<OilParameters, L
  
   @Query("select oil from OilParameters oil where oil.regionId = ?1")
   OilParameters findByRegionId(String regionId);
-  @Query("select oil from OilParameters oil where oil.regionId is null")
+  @Query("select oil from OilParameters oil where oil.regionId == '0'")
   OilParameters findOilParameters();
   
-  OilParameters findByRegionIdIn(List<String> list);
+  List<OilParameters> findByRegionIdIn(List<String> list);
 
   
   
