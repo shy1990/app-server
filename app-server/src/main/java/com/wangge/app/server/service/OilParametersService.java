@@ -1,6 +1,8 @@
 package com.wangge.app.server.service;
 
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -34,11 +36,37 @@ public class OilParametersService {
    
     }else{
     
-      OilParameters Parameters = oilParametersRepository.findByRegionIdIn(regionService.findParentIds(regionId));
+      List<OilParameters> Parameters = oilParametersRepository.findByRegionIdIn(regionService.findParentIds(regionId));
        return getOilParameters(Parameters);
     }
     
 }   
+  
+  private OilParameters getOilParameters(List<OilParameters> oilParametersList){
+    for(OilParameters  oilParameters : oilParametersList){
+        if(null == oilParametersList){
+          OilParameters Parameters = oilParametersRepository.findOilParameters();
+          return Parameters;
+        }else{
+         
+            if (oilParameters.getKmOilSubsidy() != null && oilParameters.getKmRatio()==null) {
+              OilParameters Parameters = oilParametersRepository.findOilParameters();
+              oilParameters.setKmRatio(Parameters.getKmRatio());
+              return oilParameters;
+            }
+            
+            if (oilParameters.getKmOilSubsidy() == null && oilParameters.getKmRatio()!=null) {
+              OilParameters Parameters = oilParametersRepository.findOilParameters();
+              oilParameters.setKmOilSubsidy(Parameters.getKmOilSubsidy());
+              return oilParameters;
+            }
+            
+          }
+          
+    }
+    
+    return null;
+}
   
     private OilParameters getOilParameters(OilParameters oilParameters){
           if(null==oilParameters){
