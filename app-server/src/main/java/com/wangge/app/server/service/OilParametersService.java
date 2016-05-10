@@ -48,6 +48,12 @@ public class OilParametersService {
           OilParameters Parameters = oilParametersRepository.findOilParameters();
           return Parameters;
         }else{
+             
+
+            if (oilParameters.getKmOilSubsidy() != null && oilParameters.getKmRatio()!=null) {
+              return oilParameters;
+            }
+          
          
             if (oilParameters.getKmOilSubsidy() != null && oilParameters.getKmRatio()==null) {
               OilParameters Parameters = oilParametersRepository.findOilParameters();
