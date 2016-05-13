@@ -183,7 +183,7 @@ public class OilCostRecordService {
              }
              j = getOilRecord( coordinates,  type, userId);
              j.add(j);
-             ocr.setOilRecord(j.toJSONString(SerializerFeature.DisableCircularReferenceDetect));
+             ocr.setOilRecord(j.toJSONString());
              trackRepository.save(ocr);
          
         }
@@ -269,7 +269,7 @@ public class OilCostRecordService {
              JSONObject object = getOilRecord(coordinates, type, null, shopName,regionName);
              j.add(object);
              ocr.setRegionIds(regionId);
-             ocr.setOilRecord(j.toJSONString(SerializerFeature.DisableCircularReferenceDetect));
+             ocr.setOilRecord(j.toJSONString());
              trackRepository.save(ocr);
          
         }
@@ -321,7 +321,7 @@ public class OilCostRecordService {
           track.setDistance(mileages);
           JSONObject object = getOilRecord(coordinates, type, regionId, shopName,null);
           jsonArray.add(object);
-          track.setOilRecord(jsonArray.toJSONString(SerializerFeature.DisableCircularReferenceDetect));
+          track.setOilRecord(jsonArray.toJSONString());
           track.setOilCost(mileages*param.getKmOilSubsidy());
           String regionIds =  track.getRegionIds();
           regionIds = regionIds != null ? regionIds+","+regionId : regionId;
@@ -341,7 +341,7 @@ public class OilCostRecordService {
                JSONObject object = getOilRecord(coordinates, type, regionId, shopName,null);
                j.add(object);
                ocr.setRegionIds(regionId);
-               ocr.setOilRecord(j.toJSONString(SerializerFeature.DisableCircularReferenceDetect));
+               ocr.setOilRecord(j.toJSONString());
                trackRepository.save(ocr);
            
           }
@@ -383,7 +383,7 @@ public class OilCostRecordService {
          if(track == null){
            ocr.setUserId(userId);
            ocr.setDateTime(dateTime);
-           ocr.setOilRecord(getOilRecord(coordinates,type,userId).toJSONString(SerializerFeature.DisableCircularReferenceDetect));
+           ocr.setOilRecord(getOilRecord(coordinates,type,userId).toJSONString());
            ocr.setIsPrimaryAccount(isPrimaryAccount);
              trackRepository.save(ocr);
              m.setCode(0);
@@ -402,7 +402,7 @@ public class OilCostRecordService {
          track.setDateTime(dateTime);
          track.setIsPrimaryAccount(isPrimaryAccount);
         // track.setParentId(userId);
-         track.setOilRecord(jsonArray.toJSONString(SerializerFeature.DisableCircularReferenceDetect));
+         track.setOilRecord(jsonArray.toJSONString());
          Float mileage =  getDistance(coordinates,null,track.getDistance(),jsonArray);
          OilParameters param = getOilParam(userId);
          Float mileages = mileage * param.getKmRatio();//实际公里数
