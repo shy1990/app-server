@@ -7,17 +7,22 @@ import javax.annotation.Resource;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wangge.app.server.entity.Cash;
 import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.event.afterSalesmanSignforEvent;
 import com.wangge.app.server.event.afterSignforEvent;
+import com.wangge.app.server.repository.CashRepository;
 import com.wangge.app.server.repository.OrderSignforRepository;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
 @Service
 public class OrderSignforService {
   @Resource
   private OrderSignforRepository osr;
+  @Resource
+  private CashRepository cr;
   
   @Resource
   private OrderImpl opl ;
@@ -86,6 +91,7 @@ public class OrderSignforService {
   * @return void    返回类型 
   * @throws
    */
+  @Transactional(readOnly=false)
   public void updateOrderSignfor(String orderNo, String userPhone,
       String signGeoPoint, int payType, String smsCode,int isPrimaryAccount,String userId,String childId,String  storePhone) {
       OrderSignfor orderSignFor =  findOrderSignFor(orderNo,userPhone);
@@ -107,8 +113,13 @@ public class OrderSignforService {
          }
          orderSignFor.setAccountId(accountId);
          orderSignFor = osr.save(orderSignFor);
-          opl.updateOrderShipStateByOrderNum(orderNo,"3");
-           ctx.publishEvent(new afterSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,6,storePhone));
+         //收现金
+         if(2 == payType){
+          Cash cash= new Cash(Long.valueOf(orderSignFor.getId().toString()),userId);
+          cr.save(cash);
+         }
+//          opl.updateOrderShipStateByOrderNum(orderNo,"3");
+//           ctx.publishEvent(new afterSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,6,storePhone));
         
      
   }
