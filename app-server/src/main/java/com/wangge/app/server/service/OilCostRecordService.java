@@ -182,7 +182,6 @@ public class OilCostRecordService {
                ocr.setUserId(userId);
              }
              j = getOilRecord( coordinates,  type, userId);
-            // j.add(j);
              ocr.setOilRecord(j.toJSONString());
              trackRepository.save(ocr);
          
