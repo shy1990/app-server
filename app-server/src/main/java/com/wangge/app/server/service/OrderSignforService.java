@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.spi.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +21,8 @@ import com.wangge.app.server.repository.OrderSignforRepository;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
 @Service
 public class OrderSignforService {
+  
+  private Logger logger = Logger.getLogger(OrderSignforService.class);
   @Resource
   private OrderSignforRepository osr;
   @Resource
@@ -114,12 +118,16 @@ public class OrderSignforService {
          orderSignFor.setAccountId(accountId);
          orderSignFor = osr.save(orderSignFor);
          //收现金
-         if(2 == payType){
-          Cash cash= new Cash(Long.valueOf(orderSignFor.getId().toString()),userId);
-          cr.save(cash);
-         }
-//          opl.updateOrderShipStateByOrderNum(orderNo,"3");
-//           ctx.publishEvent(new afterSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,6,storePhone));
+         try {
+           if(2 == payType){
+             Cash cash= new Cash(orderSignFor.getId(),userId);
+             cr.save(cash);
+           }
+        } catch (Exception e) {
+          logger.info(e.getMessage());
+        }
+          opl.updateOrderShipStateByOrderNum(orderNo,"3");
+           ctx.publishEvent(new afterSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,6,storePhone));
         
      
   }

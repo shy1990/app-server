@@ -1,18 +1,15 @@
 package com.wangge.app.server.repository;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import com.wangge.app.server.entity.Cash;
-import com.wangge.app.server.entity.OilCostRecord;
 
-public interface CashRepository extends JpaRepository<Cash, Long>{
+public interface CashRepository extends JpaRepository<Cash, Integer>{
 
-  List<Cash> findByUserId(String userId);
+  List<Cash> findByUserIdAndStatus(String userId,Integer status);
   
-  
+  List<Cash> findByUserIdAndCashIdIn(String userId,Integer[] ids);
   
 }

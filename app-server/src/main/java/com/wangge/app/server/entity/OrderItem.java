@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "SYS_ORDER_ITEM")
@@ -21,6 +22,8 @@ public class OrderItem implements Serializable {
   private String name;
 
   private String type;
+  private Integer nums;
+  
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "ORDER_NUM")
   private Order order;
@@ -58,4 +61,15 @@ public class OrderItem implements Serializable {
     this.order = order;
   }
 
+
+  public Integer getNums() {
+    return nums;
+  }
+
+
+  public void setNums(Integer nums) {
+    this.nums = nums;
+  }
+
+  
 }

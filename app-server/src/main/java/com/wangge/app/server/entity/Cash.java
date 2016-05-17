@@ -2,6 +2,7 @@ package com.wangge.app.server.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,6 +15,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -41,16 +43,15 @@ public class Cash implements Serializable  {
     super();
   }
   
-  public Cash(Long cashId, String userId) {
+  public Cash(Integer cashId, String userId) {
     this.cashId = cashId;
     this.userId = userId;
     this.createDate = new Date();
+    this.status = 0;
   }
   @Id
-  @GenericGenerator(name = "idgen", strategy = "increment")
-  @GeneratedValue(generator = "idgen")
   @Column(name="id")
-  private Long cashId ; //订单id
+  private Integer cashId ; //订单id
 //  @Transient
   @OneToOne(cascade = CascadeType.ALL,fetch=FetchType.LAZY)
   @JoinColumn(name="id",insertable =false,updatable=false)
@@ -59,21 +60,28 @@ public class Cash implements Serializable  {
   
   private Integer status;//支付状态
   
-  @DateTimeFormat(pattern = "yyyy-MM-dd")
   @JsonFormat(pattern="MM.dd HH:mm",timezone = "GMT+8")  
-  @Temporal(TemporalType.TIMESTAMP)
   private Date createDate ;//创建日期
-  @DateTimeFormat(pattern = "yyyy-MM-dd")
+  
   @JsonFormat(pattern="MM.dd HH:mm",timezone = "GMT+8")  
-  @Temporal(TemporalType.TIMESTAMP)
   private Date payDate  ;//支付时间
   
+  @Transient
+  private List<OrderItem> orderItem;
   
   
-  public Long getCashId() {
+  public List<OrderItem> getOrderItem() {
+    return orderItem;
+  }
+
+  public void setOrderItem(List<OrderItem> orderItem) {
+    this.orderItem = orderItem;
+  }
+
+  public Integer getCashId() {
     return cashId;
   }
-  public void setCashId(Long id) {
+  public void setCashId(Integer id) {
     this.cashId = id;
   }
   public OrderSignfor getOrder() {
