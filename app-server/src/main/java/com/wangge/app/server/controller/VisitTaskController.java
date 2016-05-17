@@ -224,6 +224,16 @@ public class VisitTaskController {
 					String imageurl3 = jsons.getString("imageurl3");
 					taskVisit.setImageurl3(imageurl3);
 				}
+				if(jsons.containsKey("isPrimary")){
+          int isPrimaryAccount = jsons.getIntValue("isPrimary");
+          taskVisit.setIsPrimaryAccount(isPrimaryAccount);
+          if(isPrimaryAccount == 1){
+            id = jsons.getString("childId");
+          }else{
+            id = jsons.getString("userId");
+          }
+        }
+			  taskVisit.setAccountId(id);
 				taskVisit.setSalesman(salesman);
 				taskVisitService.save(taskVisit);
         if(rd != null){

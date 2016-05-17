@@ -212,6 +212,7 @@ public class RegistDataController {
 				SaojieData sjData = dataSaojieService.findBySaojieData(Long.parseLong(saojieId));
 				sjData.setRegistData(registData);
 				sjData.setDescription(description);
+				sjData.setCoordinate(coordinates);
 				dataSaojieService.addDataSaojie(sjData,salesman);
 				cxt.publishEvent(new afterDailyEvent(region.getId(),userId,member.get("SHOPNAME"),coordinates,isPrimaryAccount,childId,3));
 				json.setId(String.valueOf(registData.getId()));
