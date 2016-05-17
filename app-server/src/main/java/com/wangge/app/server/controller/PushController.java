@@ -133,7 +133,7 @@ public class PushController {
     
     JSONObject json = new JSONObject(msg);
     String send = json.getString("username")+",订单号:"+json.getString("orderNum");
-    op.updateMessageType("3", json.getString("orderNum"));
+    orderSignforService.updateMessageType(1, json.getString("orderNum"));
     String str = "";
     System.out.println(json.getString("mobiles"));
     try {
