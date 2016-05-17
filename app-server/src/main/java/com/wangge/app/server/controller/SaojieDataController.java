@@ -45,8 +45,6 @@ public class SaojieDataController {
 	private OilCostRecordService oilsCostRecordService;
 	@Resource
 	private ApplicationContext cxt;
-	@Resource
-  private SaojieDataService sds;
 	
 	// private static String url="http://192.168.2.247/uploadfile/"; 内网测试
 	// private static String url="http://imagetest.3j168.cn/uploadfile/";
@@ -100,16 +98,6 @@ public class SaojieDataController {
 		Saojie saojie = dataSaojieService.findByRegionAndSalesman(region,salesman);
 
 		if (saojie != null || salesman.getIsOldSalesman()==1) {
-		  int maxOrder = dataSaojieService.findMaxOrderByuserId(salesman.getId());//扫街最后一个
-	    List<SaojieData> sjData = sds.findByRegion(region);
-	    if(sjData != null && sjData.size() > 0){
-	      if(saojie.getOrder() != maxOrder && sjData.size() == saojie.getMinValue()){//当前扫街序号不等于最后一个并达标时修改扫街状态为mommit
-	        saojie.setStatus(SaojieStatus.COMMIT);
-	      }else if(saojie.getOrder() == maxOrder && sjData.size() == saojie.getMinValue()){//等于最后一个时为通过
-	        saojie.setStatus(SaojieStatus.AGREE);
-	      }
-	      dataSaojieService.updateSaojie(saojie);
-	    }
 			SaojieData data = new SaojieData(name, coordinate);
 			data.setDescription(description);
 			data.setImageUrl(imageUrl);
