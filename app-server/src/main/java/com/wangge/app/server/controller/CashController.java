@@ -59,7 +59,7 @@ public class CashController {
   }
   @RequestMapping(value = "/{userId}",method = RequestMethod.POST)
   public ResponseEntity<JsonResponse<String>> OverCash(@PathVariable("userId") String userId,
-      @RequestParam(required=true) String cashIds){
+      @RequestParam(required=false) String cashIds){
     JsonResponse<String> json=new JsonResponse<>();
     try {
       boolean msg=cashService.cashToWaterOrder(userId);

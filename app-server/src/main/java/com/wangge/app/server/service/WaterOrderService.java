@@ -76,14 +76,24 @@ public class WaterOrderService {
     return orderPartPage;
   }
   /**
+   * 查询流水单号详情
+   * @param serailNo
+   * @return
+   */
+  public WaterOrderPart findBySerailNo(String serailNo){
+    WaterOrderCash order=wocr.findOne(serailNo);
+    return disposeWop(order,true);
+  }
+  /**
    * 将waterOrderCash数据包装成需要数据
    * @param order
    * @param isDetail 是否是查询顶订单详情
    * @return
    */
   public WaterOrderPart disposeWop(WaterOrderCash order,boolean isDetail) {
-    WaterOrderPart part=new WaterOrderPart();
+    WaterOrderPart part=null;
     if(order!=null){
+      part=new WaterOrderPart();
       part.setSeriaNo(order.getSerialNo());
       part.setCash(order.getCashMoney());
       part.setStatus(order.getPayStatus());

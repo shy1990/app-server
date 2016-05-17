@@ -70,20 +70,20 @@ public class WaterOrderController {
     return new ResponseEntity<>(waterOrderJson,HttpStatus.OK);
   }
   /**
-   * 结算后流水单号列表
+   * 流水单详情
    * @param request
    * @param userId
    * @return
    */
   @RequestMapping(value = "" ,method = RequestMethod.GET)
   @ResponseBody
-  public ResponseEntity<JsonResponse<WaterOrderPart>> getCsahList(@RequestParam(value="seriaNo") WaterOrderCash seriaNo,
+  public ResponseEntity<JsonResponse<WaterOrderPart>> getCsahList(@RequestParam(value="seriaNo") String seriaNo,
       HttpServletRequest request){
     //
     JsonResponse<WaterOrderPart> waterOrderJson=new JsonResponse<>();
     try {
       
-      WaterOrderPart wop=waterOrderService.disposeWop(seriaNo,true);
+      WaterOrderPart wop=waterOrderService.findBySerailNo(seriaNo);
       if(wop!=null){
         waterOrderJson.setResult(wop);
         waterOrderJson.setSuccessMsg("操作成功");

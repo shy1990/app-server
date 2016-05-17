@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import com.wangge.app.server.entity.WaterOrderCash;
 
-public interface WaterOrderCashRepository extends JpaRepository<WaterOrderCash, Integer>,
+public interface WaterOrderCashRepository extends JpaRepository<WaterOrderCash, String>,
 JpaSpecificationExecutor<WaterOrderCash>{
 
   List<WaterOrderCash> findByUserId(String userId);

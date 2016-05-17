@@ -13,12 +13,12 @@ public class WaterOrderPart implements Serializable{
   private static final long serialVersionUID = 1L;
   
   private String seriaNo;//流水号
-  private Float cash;//现金
+  private Float cash=new Float(0);//现金
   private Float debt=new Float(0);//拖欠
   private Float amerce=new Float(0);//扣罚
-  private Float payable=cash+debt+amerce;//应付=现金+拖欠+扣罚
-  private Float paid;//实付
-  private Float nopay=payable-paid;//待付=应付-实付。
+  private Float payable;//应付=现金+拖欠+扣罚
+  private Float paid=new Float(0);//实付
+  private Float nopay;//待付=应付-实付。
   private Integer status;//状态：0-未审核，1-已审核
   private String time;//创建日期
   
@@ -37,7 +37,7 @@ public class WaterOrderPart implements Serializable{
   }
 
   public void setCash(Float cash) {
-    this.cash = cash;
+    this.cash = cash==null? new Float(0):cash;
   }
 
   public Float getDebt() {
@@ -45,7 +45,7 @@ public class WaterOrderPart implements Serializable{
   }
 
   public void setDebt(Float debt) {
-    this.debt = debt;
+    this.debt = debt==null?new Float(0):debt;
   }
 
   public Float getAmerce() {
@@ -53,15 +53,16 @@ public class WaterOrderPart implements Serializable{
   }
 
   public void setAmerce(Float amerce) {
-    this.amerce = amerce;
+    this.amerce = amerce==null?new Float(0):amerce;
   }
 
   public Float getPayable() {
+    payable=cash+debt+amerce;
     return payable;
   }
 
   public void setPayable(Float payable) {
-    this.payable = payable;
+    this.payable = payable==null?new Float(0):payable;
   }
 
   public Float getPaid() {
@@ -69,10 +70,11 @@ public class WaterOrderPart implements Serializable{
   }
 
   public void setPaid(Float paid) {
-    this.paid = paid;
+    this.paid = paid==null?new Float(0) :paid;
   }
 
   public Float getNopay() {
+    nopay=payable-paid;
     return nopay;
   }
 
