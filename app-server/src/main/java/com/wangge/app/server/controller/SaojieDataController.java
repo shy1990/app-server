@@ -26,10 +26,12 @@ import com.wangge.app.server.entity.Region;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.Saojie;
 import com.wangge.app.server.entity.SaojieData;
+import com.wangge.app.server.entity.Saojie.SaojieStatus;
 import com.wangge.app.server.event.afterDailyEvent;
 import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.service.DataSaojieService;
 import com.wangge.app.server.service.OilCostRecordService;
+import com.wangge.app.server.service.SaojieDataService;
 import com.wangge.app.server.util.UploadUtil;
 
 @RestController
@@ -45,9 +47,9 @@ public class SaojieDataController {
 	private ApplicationContext cxt;
 	
 	// private static String url="http://192.168.2.247/uploadfile/"; 内网测试
-	 private static String url="http://imagetest.3j168.cn/uploadfile/";
+	// private static String url="http://imagetest.3j168.cn/uploadfile/";
 	// //外网测试环境
-	//private static String url = "http://image.3j1688.com/uploadfile/"; // 外网正式环境
+	private static String url = "http://image.3j1688.com/uploadfile/"; // 外网正式环境
 
 	/**
 	 * 获取指定业务扫街数据
@@ -94,7 +96,7 @@ public class SaojieDataController {
 			imageUrl = jsons.getString("imageUrl");
 		}
 		Saojie saojie = dataSaojieService.findByRegionAndSalesman(region,salesman);
-		
+
 		if (saojie != null || salesman.getIsOldSalesman()==1) {
 			SaojieData data = new SaojieData(name, coordinate);
 			data.setDescription(description);
@@ -114,7 +116,6 @@ public class SaojieDataController {
 			//oilsCostRecordService.addHandshake(region.getId(),salesman.getId(),name,coordinate,isPrimaryAccount,childId,2);
 			
 			if (saojiedata != null) {
-
 				SaojieData sj = new SaojieData();
 				sj.setId(saojiedata.getId());
 				sj.setName(saojiedata.getName());

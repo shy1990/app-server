@@ -179,6 +179,7 @@ public class VisitTaskController {
 						String imageurl3 = jsons.getString("imageurl3");
 						taskVisit.setImageurl3(imageurl3);
 					}
+					taskVisit.setFinishTime(new Date());
 					if(jsons.containsKey("isPrimary")){
 					  int isPrimaryAccount = jsons.getIntValue("isPrimary");
             taskVisit.setIsPrimaryAccount(isPrimaryAccount);
@@ -234,6 +235,7 @@ public class VisitTaskController {
           }
         }
 			  taskVisit.setAccountId(id);
+				taskVisit.setFinishTime(new Date());
 				taskVisit.setSalesman(salesman);
 				taskVisitService.save(taskVisit);
         if(rd != null){

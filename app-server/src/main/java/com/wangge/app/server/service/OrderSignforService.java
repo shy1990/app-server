@@ -14,6 +14,7 @@ import com.wangge.app.server.event.afterSalesmanSignforEvent;
 import com.wangge.app.server.event.afterSignforEvent;
 import com.wangge.app.server.repository.OrderSignforRepository;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
+import com.wangge.app.server.repositoryimpl.OrderSignforImpl;
 @Service
 public class OrderSignforService {
   @Resource
@@ -22,6 +23,8 @@ public class OrderSignforService {
   @Resource
   private OrderImpl opl ;
   
+  @Resource
+  private OrderSignforImpl osi;
   @Resource
   private ApplicationContext ctx;
 
@@ -153,4 +156,7 @@ public class OrderSignforService {
      return osr.findByOrderNoAndUserPhone(orderNo,userPhone);  
   }
 
+  public String updateMessageType(int status,String orderNum){
+    return osi.updateMessageType(status, orderNum);
+  }
 }

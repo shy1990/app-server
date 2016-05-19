@@ -52,6 +52,7 @@ public class LoginController {
       if((salesman.getSimId() == null || "".equals(salesman.getSimId()))){
         salesman.setSimId(simId);
         salesmanService.save(salesman);
+        return returnLogSucMsg(json, salesman);
       }else if(salesman.getSimId() != null && !"".equals(salesman.getSimId()) && simId.equals(salesman.getSimId())){
         return returnLogSucMsg(json, salesman);
     
