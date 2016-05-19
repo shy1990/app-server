@@ -36,8 +36,8 @@ public class OilCostRecord implements Serializable{
   private Date dateTime;//日期
   private int isPrimaryAccount;//是否主账号
   //private String regionIds;//regionId集合
-  private Float oilCost;//油补的费用
-  private Float  distance;//里程数
+  private Float oilCost = 0f;//油补的费用
+  private Float  distance =0f;//里程数
   
   @Lob  
   @Basic(fetch = FetchType.LAZY)  

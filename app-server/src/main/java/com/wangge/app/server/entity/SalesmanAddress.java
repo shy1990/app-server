@@ -24,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
  */
 
 @Entity
-@Table(name = "BIZ_SALESMAN_ADDRESS")
+@Table(name = "SYS_SALESMAN_ADDRESS")
 public class SalesmanAddress {
   @Id
   @GenericGenerator(name = "idgen", strategy = "increment")

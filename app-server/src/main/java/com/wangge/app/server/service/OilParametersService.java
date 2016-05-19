@@ -1,5 +1,8 @@
 package com.wangge.app.server.service;
 
+
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -20,8 +23,76 @@ public class OilParametersService {
 
   @Resource
   private OilParametersRepository oilParametersRepository;
+  @Resource
+  private RegionService regionService;
   
   public OilParameters getOilParameters (String regionId){
-   return  oilParametersRepository.findByRegionId(regionId);
-  }
+   
+   
+    OilParameters oilParameters = oilParametersRepository.findByRegionId(regionId);
+    if(oilParameters != null){
+      
+      return getOilParameters(oilParameters);
+   
+    }else{
+    
+      List<OilParameters> Parameters = oilParametersRepository.findByRegionIdIn(regionService.findParentIds(regionId));
+       return getOilParameters(Parameters);
+    }
+    
+}   
+  
+  private OilParameters getOilParameters(List<OilParameters> oilParametersList){
+    for(OilParameters  oilParameters : oilParametersList){
+        if(null == oilParametersList){
+          OilParameters Parameters = oilParametersRepository.findOilParameters();
+          return Parameters;
+        }else{
+             
+
+            if (oilParameters.getKmOilSubsidy() != null && oilParameters.getKmRatio()!=null) {
+              return oilParameters;
+            }
+          
+         
+            if (oilParameters.getKmOilSubsidy() != null && oilParameters.getKmRatio()==null) {
+              OilParameters Parameters = oilParametersRepository.findOilParameters();
+              oilParameters.setKmRatio(Parameters.getKmRatio());
+              return oilParameters;
+            }
+            
+            if (oilParameters.getKmOilSubsidy() == null && oilParameters.getKmRatio()!=null) {
+              OilParameters Parameters = oilParametersRepository.findOilParameters();
+              oilParameters.setKmOilSubsidy(Parameters.getKmOilSubsidy());
+              return oilParameters;
+            }
+            
+          }
+          
+    }
+    
+    return null;
 }
+  
+    private OilParameters getOilParameters(OilParameters oilParameters){
+          if(null==oilParameters){
+            OilParameters Parameters = oilParametersRepository.findOilParameters();
+            return Parameters;
+          }else{
+            if (oilParameters.getKmOilSubsidy() != null && oilParameters.getKmRatio()==null) {
+              OilParameters Parameters = oilParametersRepository.findOilParameters();
+              oilParameters.setKmRatio(Parameters.getKmRatio());
+            }
+            
+            if (oilParameters.getKmOilSubsidy() == null && oilParameters.getKmRatio()!=null) {
+              OilParameters Parameters = oilParametersRepository.findOilParameters();
+              oilParameters.setKmOilSubsidy(Parameters.getKmOilSubsidy());
+            }
+          }
+          return oilParameters;
+     
+    }
+   
+  }
+
+

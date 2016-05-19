@@ -128,13 +128,11 @@ public class OilRecordImpl {
         " where t.track_id not in"+
               "(select t.track_id"+
                   " from biz_oil_cost_record t"+
-                 " where t.user_id = '"+userId+"'"+
+                 " where (t.user_id = '"+userId+"'  or t.parent_id = '"+userId+"')"+
                  "and t.date_time ="+
                       " (select to_date(to_char(sysdate, 'yyyy/mm/dd'),"+
                                       " 'yyyy/mm/dd')"+
-                         " from dual))) t"+
- " where t.user_id = '"+userId+"'"+
-    "or t.parent_id = '"+userId+"'"+
+                         " from dual)) and (t.user_id = '"+userId+"' or t.parent_id = '"+userId+"')) t"+
  " group by to_char(t.date_time, 'yyyy/mm') order by to_char(t.date_time, 'yyyy/mm') desc";
     
     String countSql = "select count(a.dateTime) from ("+
@@ -144,13 +142,11 @@ public class OilRecordImpl {
          " where t.track_id not in"+
                "(select t.track_id"+
                  " from biz_oil_cost_record t"+
-                " where t.user_id = '"+userId+"'"+
+                " where (t.user_id = '"+userId+"'  or t.parent_id = '"+userId+"')"+
                   " and t.date_time ="+
                        "(select to_date(to_char(sysdate, 'yyyy/mm/dd'),"+
                                        "'yyyy/mm/dd')"+
-                          " from dual))) t"+
- " where t.user_id = '"+userId+"'"+
-    " or t.parent_id = '"+userId+"'"+
+                          " from dual)) and (t.user_id = '"+userId+"' or t.parent_id = '"+userId+"')) t"+
  " group by to_char(t.date_time, 'yyyy/mm')"+
  
  ") a ";
@@ -176,8 +172,9 @@ public class OilRecordImpl {
       while(it.hasNext()){
         Object[] o = (Object[])it.next(); 
         OilCostRecordVo vo = new OilCostRecordVo();
-        vo.setDistance(o[0]+"");
-        vo.setOilCost(o[1]+"");
+        vo.setOilCost(String.format("%.2f", o[0]));
+        vo.setDistance(String.format("%.2f", o[1]));
+       
       
         Calendar calendar = GregorianCalendar.getInstance();
         

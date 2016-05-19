@@ -13,10 +13,14 @@ import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.event.afterSalesmanSignforEvent;
 import com.wangge.app.server.event.afterSignforEvent;
 import com.wangge.app.server.repository.OrderSignforRepository;
+import com.wangge.app.server.repositoryimpl.OrderImpl;
 @Service
 public class OrderSignforService {
   @Resource
   private OrderSignforRepository osr;
+  
+  @Resource
+  private OrderImpl opl ;
   
   @Resource
   private ApplicationContext ctx;
@@ -102,8 +106,10 @@ public class OrderSignforService {
            accountId = childId;
          }
          orderSignFor.setAccountId(accountId);
-         osr.save(orderSignFor);
-         ctx.publishEvent(new afterSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,6,storePhone));
+         orderSignFor = osr.save(orderSignFor);
+          opl.updateOrderShipStateByOrderNum(orderNo,"3");
+           ctx.publishEvent(new afterSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,6,storePhone));
+        
      
   }
 
@@ -138,7 +144,8 @@ public class OrderSignforService {
       }
       orderSignFor.setAccountId(accountId);
       osr.save(orderSignFor);
-      ctx.publishEvent(new afterSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,7,storePhone));
+       opl.updateOrderShipStateByOrderNum(orderNo,"7");
+         ctx.publishEvent(new afterSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,7,storePhone));
   }
 
   

@@ -71,12 +71,12 @@ public class LoginController {
             }
         }
         
-          json.setMsg("与你上一次登录手机卡不同");
+          json.setMsg("与你上一次登录手机卡不同！");
         return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);
         }
       }
-       json.setMsg("与你上一次登录手机卡不同");
-       return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);
+       json.setMsg("登陆成功！");
+       return new ResponseEntity<JsonCustom>(json, HttpStatus.OK);
   
     }else {
       json.setMsg("用戶名或密码错误！");
@@ -103,7 +103,7 @@ public class LoginController {
 		  json.setStatus(salesman.getStatus().getNum());
 		}
 		json.setIsOldSalesman(salesman.getIsOldSalesman());
-		json.setNickName(salesman.getUser().getNickname().replace("/n", "").trim());
+		json.setNickName(salesman.getTruename().replace("/n", "").trim());
 		json.setIsPrimaryAccount(0);
 		json.setMsg("登陆成功！");
 		json.setStage(salesman.getAssessStage());
@@ -123,7 +123,7 @@ public class LoginController {
 	 */
 	
 	 private ResponseEntity<JsonCustom> returnLogSucMsg(JsonCustom json, Salesman salesman,ChildAccount childAccount) {
-	    json.setPhone(salesman.getUser().getPhone());
+	    json.setPhone(salesman.getMobile());
 	    json.setRegionId(salesman.getRegion().getId());
 	    json.setId(salesman.getId());
 	    if(salesman.getIsOldSalesman()==1){
@@ -132,9 +132,9 @@ public class LoginController {
 	      json.setStatus(salesman.getStatus().getNum());
 	    }
 	    json.setIsOldSalesman(salesman.getIsOldSalesman());
-	    json.setNickName(salesman.getUser().getNickname().replace("/n", "").trim());
+	    json.setNickName(salesman.getTruename().replace("/n", "").trim());
 	    json.setChildName(childAccount.getTruename().replace("/n", "").trim());
-	    json.setChildId(childAccount.getId());
+	    json.setChildId(childAccount.getChildId());
 	    json.setIsPrimaryAccount(1);
 	    json.setMsg("登陆成功！");
 	    json.setStage(salesman.getAssessStage());

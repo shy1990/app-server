@@ -176,7 +176,7 @@ public class RegistDataController {
 			int isPrimaryAccount = jsons.getIntValue("isPrimary");
 			String childId = jsons.getString("childId");
 			String coordinates = jsons.getString("coordinate");
-			String id = null;
+			String accId = null;
 			// Assess assess = assessService.findBySalesman(userId);
 			Salesman salesman = salesmanService.findSalesmanbyId(userId);
 			RegistData data = new RegistData(loginAccount, imageUrl, length, width, imageUrl1, imageUrl2, imageUrl3);
@@ -189,7 +189,7 @@ public class RegistDataController {
 			Map<String, String> member = registDataService.findMemberInfo(loginAccount);
 			if (member != null && !"".equals(member)) {
 			  List<RegistData> listRegistdata=registDataService.findByLoginAccount(loginAccount);
-			  if(listRegistdata.size()>1){
+			  if(listRegistdata.size()>=1){
 			    json.setMsg("输入的账号已存在");
 	        json.setSuccess(false);
 	        return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
@@ -201,17 +201,18 @@ public class RegistDataController {
 				data.setMemberId(member.get("MEMBERID"));
 				data.setIsPrimaryAccount(isPrimaryAccount);
 				if(isPrimaryAccount == 0){
-				  id = userId;
+				  accId = userId;
 				}else{
-				  id = childId;
+				  accId = childId;
 				}
-				data.setAccountId(id);
+				data.setAccountId(accId);
 				RegistData registData = registDataService.addRegistData(data);
 				
 				// 更新扫街
 				SaojieData sjData = dataSaojieService.findBySaojieData(Long.parseLong(saojieId));
 				sjData.setRegistData(registData);
 				sjData.setDescription(description);
+				sjData.setCoordinate(coordinates);
 				dataSaojieService.addDataSaojie(sjData,salesman);
 				cxt.publishEvent(new afterDailyEvent(region.getId(),userId,member.get("SHOPNAME"),coordinates,isPrimaryAccount,childId,3));
 				json.setId(String.valueOf(registData.getId()));

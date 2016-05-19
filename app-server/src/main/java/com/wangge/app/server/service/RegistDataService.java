@@ -95,7 +95,7 @@ public class RegistDataService {
   public String getSalesmanId(String mobile) {
     RegistData data = registDataRepository.findByPhoneNum(mobile);
     if(data != null){
-      return data.getSalesman().getId();
+      return data.getAccountId();
     }
     return null;
   }

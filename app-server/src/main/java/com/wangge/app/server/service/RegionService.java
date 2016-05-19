@@ -18,6 +18,7 @@ import com.wangge.app.server.entity.Saojie.SaojieStatus;
 import com.wangge.app.server.repository.RegionRepository;
 import com.wangge.app.server.repository.SalesmanRepository;
 import com.wangge.app.server.repository.SaojieRepository;
+import com.wangge.app.server.repositoryimpl.RegionImpl;
 import com.wangge.app.server.vo.RegionVo;
 import com.wangge.app.server.vo.TreeVo;
 
@@ -29,6 +30,9 @@ public class RegionService {
 	private RegionRepository regionRepository;
 	@Resource
 	private SalesmanRepository salesmanRepository;
+	@Resource
+	private RegionImpl regionImpl;
+	
 
 	/**
 	 * 获取扫街区域信息
@@ -201,6 +205,12 @@ public class RegionService {
     }
     return null;
   }
+
+
+public List<String> findParentIds(String regionId) {
+  List<String> list = regionImpl.findParentIds(regionId);
+  return list;
+}
 	
 	
 	

@@ -12,8 +12,8 @@ public interface OilCostRecordRepository extends JpaRepository<OilCostRecord, Lo
 
   OilCostRecord findByDateTimeAndUserId(Date dateTime, String userId);
 
-   OilCostRecord findByParentId(String id) ;
-
+  // List<OilCostRecord> findByDateTimeAndParentId  (Date dateTime,String id) ;
+   
   List<OilCostRecord> findByUserId(String userId);
   
   @Query("select o from OilCostRecord o where (o.userId=?1 or o.parentId=?1) and o.dateTime=?2 " )
@@ -24,9 +24,10 @@ public interface OilCostRecordRepository extends JpaRepository<OilCostRecord, Lo
   
   List<OilCostRecord> findByDateTime(Date dateTime);
   
-  @Query("select o from OilCostRecord o where o.userId=?1  and o.dateTime between ?2 and ?3 " )
+  @Query("select o from OilCostRecord o where o.userId=?1  and o.dateTime between ?2 and ?3 order by o.dateTime desc" )
   List<OilCostRecord> findHistoryDestOilRecord(String userId,Date beginDay,Date endDay);
-  
+  @Query("select o from OilCostRecord o where o.dateTime=?1  and o.userId = ?2  order by o.dateTime desc" )
   List<OilCostRecord>  findByDateTimeAndParentId(Date dateTime, String userId);
+  
   
 }
