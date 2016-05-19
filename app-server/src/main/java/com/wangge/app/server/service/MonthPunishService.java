@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +31,7 @@ import com.wangge.app.server.entity.WaterOrderDetail;
 import com.wangge.app.server.pojo.OrderDetailPart;
 import com.wangge.app.server.pojo.WaterOrderPart;
 import com.wangge.app.server.repository.CashRepository;
+import com.wangge.app.server.repository.MonthPunishRepository;
 import com.wangge.app.server.repository.OrderItemRepository;
 import com.wangge.app.server.repository.WaterOrderCashRepository;
 import com.wangge.app.server.repository.WaterOrderDetailRepository;
@@ -37,105 +39,34 @@ import com.wangge.app.server.util.DateUtil;
 import com.wangge.app.util.SearchFilter;
 
 @Service
-public class WaterOrderService {
+public class MonthPunishService {
 
-  private Logger logger = Logger.getLogger(WaterOrderService.class);
+  private Logger logger = Logger.getLogger(MonthPunishService.class);
 
   @Resource
-  private MonthPunishService mps;
-  @Resource
-  private CashRepository cr;
-  @Resource
-  private OrderItemRepository oir;
-  @Resource
-  private WaterOrderCashRepository wocr;
-  @Resource
-  private WaterOrderDetailRepository wodr;
+  private MonthPunishRepository mpr;
+
 
   /**
-   * 已结算流水单号分页记录
    * 
-   * @param userId
+   * @param searchParams
+   * @param pageable
    * @return
    */
-  public Page<WaterOrderPart> findByUserId(String userId, Pageable pageable) {
-    Page<WaterOrderPart> orderPartPage = null;
-    List<WaterOrderPart> orderList = new ArrayList<>();
+  public List<MonthPunish> findByUserIdAndCreateDate(String userId,String createDate) {
+    Map<String, Object> spec= new HashMap<>();
+    spec.put("EQ_userId", userId);
+    spec.put("GTE_createDate", createDate);
+    spec.put("LTE_createDate", createDate);
+    
+    List<MonthPunish> monthPunishList=null;
     try {
-      Page<WaterOrderCash> orderPage = wocr.findByUserId(userId, pageable);
       
-      orderPage.getContent().forEach(order->{
-        //处理数据
-        WaterOrderPart part=disposeWop(order,false);
-        orderList.add(part);
-      });
-      
-      
-      
-      orderPartPage = new PageImpl<WaterOrderPart>(orderList, pageable, orderPage.getTotalElements());
+      monthPunishList = this.findAll(spec);
     } catch (Exception e) {
       logger.info(e.getMessage());
     }
-    return orderPartPage;
-  }
-  /**
-   * 查询流水单号详情
-   * @param serailNo
-   * @return
-   */
-  public WaterOrderPart findBySerailNo(String serailNo){
-    WaterOrderCash order=wocr.findOne(serailNo);
-    return disposeWop(order,true);
-  }
-  /**
-   * 将waterOrderCash数据包装成需要数据
-   * @param order
-   * @param isDetail 是否是查询顶订单详情
-   * @return
-   */
-  public WaterOrderPart disposeWop(WaterOrderCash order,boolean isDetail) {
-    WaterOrderPart part=null;
-    if(order!=null){
-      part=new WaterOrderPart();
-      part.setSeriaNo(order.getSerialNo());
-      part.setCash(order.getCashMoney());
-      part.setStatus(order.getPayStatus());
-      part.setPaid(order.getPaymentMoney());
-      part.setTime(DateUtil.date2String(order.getCreateDate(), "yyyy-MM-dd HH:mm"));
-      
-      //判断是否有扣罚
-      if(order.getIsPunish()==1){
-        //TODO去查询扣罚记录
-        List<MonthPunish> mpl=mps.findByUserIdAndCreateDate(order.getUserId(), DateUtil.date2String(DateUtil.moveDate(order.getCreateDate(),-1)));
-        if(mpl.size()>0){
-          
-          MonthPunish monthPunish=mpl.get(0);
-          part.setDebt(monthPunish.getDebt());//拖欠
-          part.setAmerce(monthPunish.getAmerce());//扣罚
-        }
-        
-        
-      }
-      if(isDetail){
-        //组装数据详情列表
-        List<OrderDetailPart> orderItem=new ArrayList<>();
-        //获取流水单号详情列表
-        List<WaterOrderDetail> wodL=order.getOrderDetailList();
-        
-        wodL.forEach(wod->{
-          OrderDetailPart odp=new OrderDetailPart();
-          OrderSignfor osf= wod.getCash().getOrder();
-          odp.setNum(osf.getOrderNo());
-          odp.setAmount(osf.getOrderPrice());
-          
-          orderItem.add(odp);
-        });
-        part.setOrder(orderItem);
-        
-      }
-      
-    }
-    return part;
+    return monthPunishList;
   }
   /**
    * 
@@ -143,19 +74,17 @@ public class WaterOrderService {
    * @param pageable
    * @return
    */
-  public Page<WaterOrderPart> findAll(Map<String, Object> searchParams, Pageable pageable) {
-    Page<WaterOrderPart> orderPartPage = null;
+  public List<MonthPunish> findAll(Map<String, Object> searchParams) {
     Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-    Specification<WaterOrderCash> spec = oilCostSearchFilter(filters.values(), WaterOrderCash.class);
+    Specification<MonthPunish> spec = oilCostSearchFilter(filters.values(), MonthPunish.class);
+    List<MonthPunish> monthPunishList=null;
     try {
       
-      Page<WaterOrderCash> orderPage = wocr.findAll(spec,pageable);
-      List<WaterOrderPart> orderList = new ArrayList<>();
-      orderPartPage = new PageImpl<WaterOrderPart>(orderList, pageable, orderPage.getTotalElements());
+      monthPunishList = mpr.findAll(spec);
     } catch (Exception e) {
       logger.info(e.getMessage());
     }
-    return orderPartPage;
+    return monthPunishList;
   }
 
   private static <T> Specification<T> oilCostSearchFilter(final Collection<SearchFilter> filters,
