@@ -754,30 +754,20 @@ public class DateUtil {
     return hour+"小时"+minute+"分钟";
   }
 	
-//	public static void main(String[] args) throws Exception{
-//		  Date currentTime = new Date();//获取当前时间
-//		  //Date stateDate=DateUtil.string2Timestamp("");
-//		  //Long min=currentTime.getTime()-stateDate.getTime()/(1000*60*60);
-////		  Long min=(string2Date("20150128095306873").getTime()-System.currentTimeMillis())/(60*1000*60);
-////		  System.out.println(string2Date("20150128095306873").getTime());
-////		  System.out.println(System.currentTimeMillis());
-////		  System.out.println(min);
-//		  
-///*		  boolean flag = isDateBefore("2006-09-09 12:12:12","2006-09-09 12:12:12");
-//		  System.out.println(flag);
-//		  
-//		  int i = getWeekNum("2015-04-01", "2015-04-30", "yyyy-MM-dd", 1);
-//		  System.out.println("周一天数---------------->"+i);*/
-//		  
-//		  String str1 = "2015-06-04 08:37";
-//		  String str2 = "2015-06-06 12:28";
-//		  
-//		  
-//		  long l1 = string2Date(str2,"yyyy-MM-dd HH:mm").getTime() -string2Date(str1,"yyyy-MM-dd HH:mm").getTime();
-//		  
-//		  System.out.println("相差天数---------->"+formatDate(l1));
-//	}
-	
+  /**
+ 	 * 得到前N个月的时间
+ 	 * @param date
+ 	 * @param  flag 正数为前移,负数为后移
+ 	 * @return
+ 	 */
+ 	public static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");// 定义日期显示格式
+ 	public static String  getPreMonth(Date date,int flag){
+ 		 Calendar calendar = new GregorianCalendar();
+ 		 calendar.setTime(date);
+ 		 calendar.add(Calendar.MONTH,flag);//把月份往前移一个月
+ 		 return sdf.format(calendar.getTime()); //
+ 		
+ 	}
 	
 	
 }

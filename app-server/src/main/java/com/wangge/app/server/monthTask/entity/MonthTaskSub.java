@@ -20,7 +20,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "sys_monthtask_sub")
-@NamedEntityGraph(name = "monthExecution.monthsd", attributeNodes = @NamedAttributeNode(value = "monthsd", subgraph = "monthExecution.monthsd.registData.graph"), subgraphs = {
+@NamedEntityGraph(name = "monthTaskSub.monthsd", attributeNodes = @NamedAttributeNode(value = "monthsd", subgraph = "monthExecution.monthsd.registData.graph"), subgraphs = {
 		@NamedSubgraph(name = "monthExecution.monthsd.registData.graph", attributeNodes = @NamedAttributeNode("registData")) })
 public class MonthTaskSub implements Serializable {
 	/**
@@ -40,7 +40,7 @@ public class MonthTaskSub implements Serializable {
 	MonthTask monthTask;
 	private Integer finish = 0;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "dataId")
 	private MonthshopBasData monthsd;
 	// 是否延期提醒

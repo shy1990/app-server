@@ -23,20 +23,7 @@ public class DateUtil {
         DateFormat df = new SimpleDateFormat(DATE_TIME_FORMAT);  
         return Math.abs(df.parse(dateA).getTime() - df.parse(dateB).getTime());  
     }  
-    /**
-	 * 得到前N个月的时间
-	 * @param date
-	 * @param  flag 正数为前移,负数为后移
-	 * @return
-	 */
-	public static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");// 定义日期显示格式
-	public static String  getPreMonth(Date date,int flag){
-		 Calendar calendar = new GregorianCalendar();
-		 calendar.setTime(date);
-		 calendar.add(Calendar.MONTH,flag);//把月份往前移一个月
-		 return sdf.format(calendar.getTime()); //
-		
-	}
+   
     /**
      * 对比当前时间，返回时间差
      * @param dateA
@@ -302,6 +289,7 @@ public class DateUtil {
       return date;
       
     }
+	
     
     
     

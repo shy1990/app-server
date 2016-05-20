@@ -43,11 +43,11 @@ public class MonthshopBasData implements Serializable {
 	private int visitCount;
 	// private String salemanId;
 	// private String salemanName;
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "REGISTDATA_ID")
 	private RegistData registData;
 
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "salesman_ID")
 	private Salesman salesman;
 	private int used;

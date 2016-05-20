@@ -92,6 +92,8 @@ public class MonthTaskController {
 	@RequestMapping(value = "executions/{shopId}", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> findActions(@PathVariable Long shopId) {
 		try {
+			//测试用
+//			monthSevice.saveExecution(shopId, "主动拜访");
 			return new ResponseEntity<Map<String, Object>>(monthSevice.findExecution(shopId), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();

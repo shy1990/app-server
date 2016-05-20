@@ -23,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.wangge.app.server.entity.Region;
+import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.monthTask.entity.MonthTask;
 import com.wangge.app.server.monthTask.entity.MonthTaskExecution;
 import com.wangge.app.server.monthTask.entity.MonthTaskSub;
@@ -32,7 +33,8 @@ import com.wangge.app.server.monthTask.repository.MonthTaskRepository;
 import com.wangge.app.server.monthTask.repository.MonthTaskSubRepository;
 import com.wangge.app.server.monthTask.repository.MonthshopBasDataRepository;
 import com.wangge.app.server.repository.RegionRepository;
-import com.wangge.app.util.DateUtil;
+import com.wangge.app.server.repository.RegistDataRepository;
+import com.wangge.app.server.util.DateUtil;
 
 @Service
 public class MonthTaskServiceImpl implements MonthTaskServive {
@@ -46,6 +48,8 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 	MonthTaskSubRepository subTaskRep;
 	@Autowired
 	MonthTaskExecutionRepository mtExecRepository;
+	@Autowired
+	RegistDataRepository registRep;
 	private Integer[] levels = new Integer[] { 20, 15, 10, 7, 4 };
 
 	@Override
@@ -169,13 +173,13 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 				// root = query.from(MonthshopBasData.class);
 				List<Predicate> predicates = new ArrayList<Predicate>();
 				String month = DateUtil.getPreMonth(new Date(), 1);
+//				月份为默认查询条件,为下个月
+				
 				if (null == params.get("EQ_month")) {
 					predicates.add(cb.equal(root.get("month"), month));
 
 				}
 				createPedicateByMap(params, root, cb, predicates);
-				// query.where(predicates.toArray(new Predicate[] {}));
-				// return cb.equal(root.get("month").as(String.class), month);
 				return cb.and(predicates.toArray(new Predicate[] {}));
 			}
 
@@ -184,7 +188,7 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 		Map<String, Object> dmap = new HashMap<String, Object>();
 		List<MonthshopBasData> dlist = data.getContent();
 		/*
-		 * {“regionId”:”370281”, ”lastmonthcount”:”2” ,”monthAvg”:1,”
+		 * 返回数据格式 {“regionId”:”370281”, ”lastmonthcount”:”2” ,”monthAvg”:1,”
 		 * month”:”2016-06”, ”visitCount”:0,”userd”:0, ”shopName”:”章丘魅族手机专卖”},
 		 * 
 		 */
@@ -255,8 +259,8 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 				: (List<Integer>) talMap.get("monthsdId");
 		@SuppressWarnings("unchecked")
 		// 取消外键集合
-		List<Long> CancelIdList = null == talMap.get("CancelId") ? new ArrayList<Long>()
-				: (List<Long>) talMap.get("monthsdId");
+		List<Integer> CancelIdList = null == talMap.get("cancelId") ? new ArrayList<Integer>()
+				: (List<Integer>) talMap.get("cancelId");
 
 		List<MonthTaskSub> oldTList = new ArrayList<MonthTaskSub>();
 		List<MonthTaskSub> newTList = new ArrayList<MonthTaskSub>();
@@ -271,10 +275,10 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 			ms.setMonthTask(monthT);
 			newTList.add(ms);
 		}
-		for (Long id : CancelIdList) {
+		for (Integer id : CancelIdList) {
 			MonthshopBasData monShopd = monthShopDRep.findOne((long) id);
 			monShopd.setUsed(0);
-			MonthTaskSub oldTask = subTaskRep.findFirstByMonthsd_id(id);
+			MonthTaskSub oldTask = subTaskRep.findFirstByMonthsd_id((long) id);
 			oldTList.add(oldTask);
 			sTList.add(monShopd);
 		}
@@ -321,9 +325,10 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 		List<MonthTaskSub> dlist = data.getContent();
 		List<SubtaskVo> subtList = new ArrayList<SubtaskVo>();
 		for (MonthTaskSub tasksub : dlist) {
-			SubtaskVo vo = new SubtaskVo(tasksub.getMonthsd().getRegistData().getShopName(),
-					tasksub.getMonthsd().getId() + "", tasksub.getMonthsd().getMonth(), tasksub.getGoal(),
-					tasksub.getDone(), tasksub.getDelay());
+			MonthshopBasData mtsbd = tasksub.getMonthsd();
+			RegistData regData = mtsbd.getRegistData();
+			SubtaskVo vo = new SubtaskVo(regData.getShopName(), regData.getId() + "", mtsbd.getMonth(),
+					tasksub.getGoal(), tasksub.getDone(), tasksub.getDelay());
 			subtList.add(vo);
 		}
 		dmap.put("totalPages", data.getTotalPages());
@@ -333,36 +338,65 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 		return dmap;
 	}
 
+	/*
+	 * {       "code": 0,   “msg”:””, “goal”:15, “done”:10,
+	 * “shopName”:”章丘魅族手机专卖”, “visit”:[ {“day”:28,”action”:”送货”,”time”:”08:23”},
+	 * {“day”:20,”action”:”送货”,”time”:”08:23”} ]
+	 * 
+	 * }
+	 */
 	@Override
 	public Map<String, Object> findExecution(Long memberId) {
-		String taskMonth = DateUtil.getPreMonth(new Date(), 1);
+		String taskMonth = DateUtil.getPreMonth(new Date(), 0);
 		MonthTaskSub mtaskSub = subTaskRep.findFirstByMonthsd_RegistData_IdAndMonthsd_Month(memberId, taskMonth);
 		List<MonthTaskExecution> dlist = mtExecRepository.findByTaskmonthAndRegistData_idOrderByTime(taskMonth,
 				memberId);
 		Map<String, Object> dmap = new HashMap<String, Object>();
 		dmap.put("goal", mtaskSub.getGoal());
 		dmap.put("done", mtaskSub.getDone());
+		dmap.put("shopName", mtaskSub.getMonthsd().getRegistData().getShopName());
 		dmap.put("code", "0");
 		dmap.put("msg", "");
-		/*
-		 * {       "code": 0,   “msg”:””, “goal”:15, “done”:10,
-		 * “shopName”:”章丘魅族手机专卖”, “visit”:[
-		 * {“day”:28,”action”:”送货”,”time”:”08:23”},
-		 * {“day”:20,”action”:”送货”,”time”:”08:23”} ]
-		 * 
-		 * }
-		 */
+		List<Map<String, String>> vlist = new ArrayList<Map<String, String>>();
+		
 		for (MonthTaskExecution mt : dlist) {
 			Map<String, String> mtMap = new HashMap<String, String>();
-			String sd = mt.getTime().toString();
-			String[] timeArr = sd.split(",");
-			String day = timeArr[0].substring(5, 7);
-			String time = timeArr[1].substring(0, 4);
+			String sd = DateUtil.date2String(mt.getTime(), "yyyy-MM-dd HH:mm:dd");
+			String[] timeArr = sd.split(" ");
+			String day = timeArr[0].substring(8);
+			String time = timeArr[1].substring(0, 5);
 			mtMap.put("day", day);
 			mtMap.put("time", time);
 			mtMap.put("action", mt.getAction());
+			vlist.add(mtMap);
 		}
-		return null;
+		dmap.put("visit", vlist);
+		return dmap;
+	}
+
+	/**
+	 * 根据其上次有效访问时间来判断其是否为有效访问
+	 * 
+	 * @param shopId
+	 * @param action
+	 */
+	@Override
+	public void saveExecution(Long shopId, String action) {
+		String taskMonth = DateUtil.getPreMonth(new Date(), 0);
+		MonthTaskSub mtaskSub = subTaskRep.findFirstByMonthsd_RegistData_IdAndMonthsd_Month(shopId, taskMonth);
+		RegistData regd = registRep.findOne(shopId);
+		MonthTaskExecution mtsExec = new MonthTaskExecution(regd, taskMonth, new Date(), action);
+		mtExecRepository.save(mtsExec);
+		Date lsTime = mtaskSub.getLastTime();
+		if ((DateUtil.date2String(lsTime)).equals(DateUtil.date2String(new Date()))) {
+			if (mtaskSub.getGoal() <= mtaskSub.getDone() + 1) {
+				mtaskSub.setFinish(1);
+			}else{
+				mtaskSub.setFinish(0);
+			}
+			mtaskSub.setDone(mtaskSub.getDone() + 1);
+		}
+		subTaskRep.save(mtaskSub);
 	}
 }
 

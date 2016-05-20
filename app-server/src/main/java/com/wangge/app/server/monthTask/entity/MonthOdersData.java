@@ -7,6 +7,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -16,6 +19,9 @@ import com.wangge.app.server.entity.Salesman;
 
 @Entity
 @Table(name = "sys_month_Task_basicdata")
+@NamedEntityGraph(name = "salesman.graph", 
+attributeNodes = @NamedAttributeNode(value = "salesman", subgraph = "registData.graph"),subgraphs = {
+		@NamedSubgraph(name = "region.graph", attributeNodes = @NamedAttributeNode("region")) })
 public class MonthOdersData implements Serializable {
 	/**
 	 * 
@@ -49,7 +55,7 @@ public class MonthOdersData implements Serializable {
 	private int sysgive20;
 	// 相应计划是否已生成
 	private int used;
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "salesman_ID")
 	private Salesman salesman;
 
