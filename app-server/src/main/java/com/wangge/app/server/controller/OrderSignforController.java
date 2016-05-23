@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.OrderSignfor;
-import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.pojo.MessageCustom;
 import com.wangge.app.server.pojo.QueryResult;
 import com.wangge.app.server.repositoryimpl.OrderSignforImpl;
