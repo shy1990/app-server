@@ -3,17 +3,23 @@ package com.wangge;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.wangge.app.server.entity.MonthPunish;
 import com.wangge.app.server.entity.OilParameters;
+import com.wangge.app.server.service.MonthPunishService;
 import com.wangge.app.server.service.OilParametersService;
+import com.wangge.app.server.util.DateUtil;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -21,6 +27,8 @@ import com.wangge.app.server.service.OilParametersService;
 public class OilRecordTest {
   @Resource
   private OilParametersService oilParametersService;
+  @Resource
+  private MonthPunishService mps;
   
   @Test
   public void test(){
@@ -36,8 +44,12 @@ public class OilRecordTest {
      Float c = (float)d;
      System.out.println("=====>>>>"+c);
   }
-  
-  
+  @Test
+  public void test3(){
+    
+    String moveDate= DateUtil.date2String(DateUtil.moveDate(new Date(),-1));
+    System.out.println(moveDate);
+  }
  
   public static void main(String[] args) {
    // String[] city =  coordinates.split("-");
@@ -63,6 +75,15 @@ public class OilRecordTest {
     System.out.println(calendar.get(Calendar.YEAR));
     Long a = 3789L;
     System.out.println("==========="+a/1000);
+  }
+  
+  @Test
+  public void test_(){
+    List<MonthPunish> mpl=mps.findByUserIdAndCreateDate("A37010504010","2016-05-17" );
+    MonthPunish mp= mpl.get(0);
+    System.out.println("test_"+mp.getSeriaNo());
+    System.out.println("test_"+mp.getUserId());
+    
   }
 }
 

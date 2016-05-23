@@ -5,19 +5,28 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.spi.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wangge.app.server.entity.Cash;
 import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.event.afterSalesmanSignforEvent;
 import com.wangge.app.server.event.afterSignforEvent;
+import com.wangge.app.server.repository.CashRepository;
 import com.wangge.app.server.repository.OrderSignforRepository;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
 @Service
 public class OrderSignforService {
+  
+  private Logger logger = Logger.getLogger(OrderSignforService.class);
   @Resource
   private OrderSignforRepository osr;
+  @Resource
+  private CashRepository cr;
   
   @Resource
   private OrderImpl opl ;
@@ -86,6 +95,7 @@ public class OrderSignforService {
   * @return void    返回类型 
   * @throws
    */
+  @Transactional(readOnly=false)
   public void updateOrderSignfor(String orderNo, String userPhone,
       String signGeoPoint, int payType, String smsCode,int isPrimaryAccount,String userId,String childId,String  storePhone) {
       OrderSignfor orderSignFor =  findOrderSignFor(orderNo,userPhone);
@@ -107,6 +117,15 @@ public class OrderSignforService {
          }
          orderSignFor.setAccountId(accountId);
          orderSignFor = osr.save(orderSignFor);
+         //收现金
+         try {
+           if(2 == payType){
+             Cash cash= new Cash(orderSignFor.getId(),userId);
+             cr.save(cash);
+           }
+        } catch (Exception e) {
+          logger.info(e.getMessage());
+        }
           opl.updateOrderShipStateByOrderNum(orderNo,"3");
            ctx.publishEvent(new afterSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,6,storePhone));
         

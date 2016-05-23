@@ -349,3 +349,4 @@ public class RegistDataController {
 		return new ResponseEntity<List<Map<String, Object>>>(clist, HttpStatus.OK);
 	}
 }
+

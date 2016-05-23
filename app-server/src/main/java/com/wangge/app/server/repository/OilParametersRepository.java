@@ -22,3 +22,4 @@ public interface OilParametersRepository  extends JpaRepository<OilParameters, L
   
   
 }
+
