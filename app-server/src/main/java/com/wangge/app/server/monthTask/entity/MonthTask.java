@@ -88,7 +88,6 @@ public class MonthTask implements Serializable {
 		this.agentid = agentid;
 	}
 
-
 	public Integer getTal15goal() {
 		return tal15goal;
 	}

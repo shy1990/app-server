@@ -1,5 +1,6 @@
 package com.wangge.app.server.monthTask.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
@@ -43,8 +44,15 @@ public interface MonthTaskServive {
 	 * 保存店铺任务实体
 	 * 
 	 * @param talMap
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 * @throws NumberFormatException 
+	 * @throws NoSuchFieldException 
 	 */
-	void save(Map<String, Object> talMap);
+	void save(Map<String, Object> talMap) throws NumberFormatException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NoSuchFieldException;
 
 	/**
 	 * 根据区域和其他条件查找子任务

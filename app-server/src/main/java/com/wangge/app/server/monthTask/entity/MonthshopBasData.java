@@ -21,9 +21,10 @@ import com.wangge.app.server.entity.Salesman;
 
 @Entity
 @Table(name = "sys_Monthshop_Basdata")
-@NamedEntityGraph(name = "monthShopBasData.graph", 
-attributeNodes = @NamedAttributeNode(value = "registData", subgraph = "registData.graph"), subgraphs = {
-		@NamedSubgraph(name = "region.graph", attributeNodes = @NamedAttributeNode("region")) })
+@NamedEntityGraphs(value = {
+		@NamedEntityGraph(name = "monthShopBasData.graph", attributeNodes = @NamedAttributeNode(value = "registData", subgraph = "registData.graph"), subgraphs = {
+				@NamedSubgraph(name = "region.graph", attributeNodes = @NamedAttributeNode("region")) }),
+		@NamedEntityGraph(name = "task.graph", attributeNodes = @NamedAttributeNode(value = "monthTaskSub")) })
 public class MonthshopBasData implements Serializable {
 
 	/**
@@ -41,8 +42,6 @@ public class MonthshopBasData implements Serializable {
 	private int monthAvg;
 	private String month;
 	private int visitCount;
-	// private String salemanId;
-	// private String salemanName;
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "REGISTDATA_ID")
 	private RegistData registData;
@@ -50,7 +49,18 @@ public class MonthshopBasData implements Serializable {
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "salesman_ID")
 	private Salesman salesman;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "task_ID")
+	private MonthTaskSub monthTaskSub;
 	private int used;
+
+	public MonthTaskSub getMonthTaskSub() {
+		return monthTaskSub;
+	}
+
+	public void setMonthTaskSub(MonthTaskSub monthTaskSub) {
+		this.monthTaskSub = monthTaskSub;
+	}
 
 	public long getId() {
 		return id;

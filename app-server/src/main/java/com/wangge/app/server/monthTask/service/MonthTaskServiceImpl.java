@@ -1,6 +1,8 @@
 package com.wangge.app.server.monthTask.service;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -98,16 +100,10 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 		return new ResponseEntity<Map<String, Object>>(taskmap, HttpStatus.OK);
 	}
 
+	
 	/**
-	 * @param monthTask
-	 * @param mclass
-	 * @param i
+	 * @param o
 	 * @return
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
-	 * @throws NoSuchMethodException
-	 * @throws SecurityException
 	 */
 	private int getReflectInt(Object o) {
 		return o == null ? 0 : Integer.parseInt(o + "");
@@ -165,7 +161,9 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 	 **/
 	@Override
 	public ResponseEntity<Map<String, Object>> findShopBy(Map<String, Object> params, Pageable page) {
-
+		String goalstr = params.get("EQ_goal") == null ? "" : params.get("EQ_goal") + "";
+		int goal = !"".equals(goalstr) ? Integer.parseInt(goalstr) : 0;
+		params.remove("EQ_goal");
 		Page<MonthshopBasData> data = monthShopDRep.findAll(new Specification<MonthshopBasData>() {
 			@Override
 			public Predicate toPredicate(Root<MonthshopBasData> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -173,13 +171,17 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 				// root = query.from(MonthshopBasData.class);
 				List<Predicate> predicates = new ArrayList<Predicate>();
 				String month = DateUtil.getPreMonth(new Date(), 1);
-//				月份为默认查询条件,为下个月
-				
+				// 月份为默认查询条件,为下个月
+
 				if (null == params.get("EQ_month")) {
 					predicates.add(cb.equal(root.get("month"), month));
 
 				}
+				Join<MonthshopBasData, MonthTaskSub> leftJoin = root
+						.join(root.getModel().getSingularAttribute("monthTaskSub", MonthTaskSub.class), JoinType.LEFT);
+				predicates.add(cb.or(cb.equal(leftJoin.get("goal"), goal), cb.equal(root.get("used"), 0)));
 				createPedicateByMap(params, root, cb, predicates);
+
 				return cb.and(predicates.toArray(new Predicate[] {}));
 			}
 
@@ -246,50 +248,66 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 	}
 
 	@Override
-	public void save(Map<String, Object> talMap) {
+	public void save(Map<String, Object> talMap)
+			throws NumberFormatException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NoSuchFieldException {
 		/*
 		 * "monthTaskId": 6, "goal": 10 , “monthsdId": --没有就不传 [ 49 , 50 ]
 		 * ,保存需关联的店铺历史fk “CancelId": --没有就不传 [49] 取消需关联的店铺历史fk
 		 */
-		Integer mainTaskId = (Integer) talMap.get("monthTaskId");
+		Integer mainTaskId = (int) talMap.get("monthTaskId");
+		MonthTask monthTask = monthTaskrep.getOne((long)mainTaskId);
+		Class<? extends MonthTask> mclass = monthTask.getClass();
 		Integer goal = (Integer) talMap.get("goal");
+		Integer set = Integer.parseInt(mclass.getDeclaredMethod("getTal" + goal + "set").invoke(monthTask) + "");
 		@SuppressWarnings("unchecked")
 		// 新增外键集合
-		List<Integer> monthsdIdList = null == talMap.get("monthsdId") ? new ArrayList<Integer>()
-				: (List<Integer>) talMap.get("monthsdId");
+		List<String> monthsdIdList = null == talMap.get("monthsdId") ? new ArrayList<String>()
+				: (List<String>) talMap.get("monthsdId");
 		@SuppressWarnings("unchecked")
 		// 取消外键集合
-		List<Integer> CancelIdList = null == talMap.get("cancelId") ? new ArrayList<Integer>()
-				: (List<Integer>) talMap.get("cancelId");
+		List<String> CancelIdList = null == talMap.get("cancelId") ? new ArrayList<String>()
+				: (List<String>) talMap.get("cancelId");
 
 		List<MonthTaskSub> oldTList = new ArrayList<MonthTaskSub>();
-		List<MonthTaskSub> newTList = new ArrayList<MonthTaskSub>();
 		List<MonthshopBasData> sTList = new ArrayList<MonthshopBasData>();
-		for (Integer id : monthsdIdList) {
-			MonthshopBasData monShopd = monthShopDRep.findOne((long) id);
+		for (String id : monthsdIdList) {
+			if ("".equals(id))
+				continue;
+			MonthshopBasData monShopd = monthShopDRep.findOne(Long.parseLong(id));
 			MonthTaskSub ms = new MonthTaskSub();
 			ms.setGoal(goal);
 			monShopd.setUsed(1);
+			monShopd.setMonthTaskSub(null);
 			MonthTask monthT = monthTaskrep.findOne((long) mainTaskId);
 			ms.setMonthsd(monShopd);
 			ms.setMonthTask(monthT);
-			newTList.add(ms);
+			MonthTaskSub ms1 = subTaskRep.save(ms);
+			monShopd.setMonthTaskSub(ms1);
+			set++;
 		}
-		for (Integer id : CancelIdList) {
-			MonthshopBasData monShopd = monthShopDRep.findOne((long) id);
+		for (String id : CancelIdList) {
+			if ("".equals(id))
+				continue;
+			MonthshopBasData monShopd = monthShopDRep.findOne(Long.parseLong(id));
 			monShopd.setUsed(0);
-			MonthTaskSub oldTask = subTaskRep.findFirstByMonthsd_id((long) id);
+			monShopd.setMonthTaskSub(null);
+			MonthTaskSub oldTask = subTaskRep.findFirstByMonthsd_id(Long.parseLong(id));
 			oldTList.add(oldTask);
 			sTList.add(monShopd);
+			set--;
 		}
-
+		// setTal10set
+		// Method[] mets=mclass.getDeclaredMethods();
+		Method m1 = mclass.getDeclaredMethod("setTal" + goal + "set", Integer.class);
+		m1.invoke(monthTask, set);
+		monthTaskrep.save(monthTask);
 		if (sTList.size() > 0) {
 			monthShopDRep.save(sTList);
 		}
-		if (newTList.size() > 0)
-			subTaskRep.save(newTList);
 		if (oldTList.size() > 0)
 			subTaskRep.delete(oldTList);
+
 	}
 
 	@Override
@@ -306,7 +324,8 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 				List<Predicate> predicates = new ArrayList<Predicate>();
 
 				// query.
-
+				// builder.or(predicates.toArray(new
+				// Predicate[predicates.size()]));
 				Join<MonthTaskSub, MonthshopBasData> leftJoin = root
 						.join(root.getModel().getSingularAttribute("monthsd", MonthshopBasData.class), JoinType.LEFT);
 				predicates.add(cb.like(leftJoin.get("regionId").as(String.class), regionId + "%"));
@@ -358,7 +377,7 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 		dmap.put("code", "0");
 		dmap.put("msg", "");
 		List<Map<String, String>> vlist = new ArrayList<Map<String, String>>();
-		
+
 		for (MonthTaskExecution mt : dlist) {
 			Map<String, String> mtMap = new HashMap<String, String>();
 			String sd = DateUtil.date2String(mt.getTime(), "yyyy-MM-dd HH:mm:dd");
@@ -391,7 +410,7 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 		if ((DateUtil.date2String(lsTime)).equals(DateUtil.date2String(new Date()))) {
 			if (mtaskSub.getGoal() <= mtaskSub.getDone() + 1) {
 				mtaskSub.setFinish(1);
-			}else{
+			} else {
 				mtaskSub.setFinish(0);
 			}
 			mtaskSub.setDone(mtaskSub.getDone() + 1);

@@ -32,5 +32,5 @@ public interface MonthTaskSubRepository
 	@Modifying
 	@Transient
 	@Query(value = "update   sys_monthtask_sub t set t.delay=1 where  (t.goal-t.done+3)> to_char(add_months(to_date(to_char(sysdate,'yyyy-mm'),'yyyy-mm'),1)-sysdate) and  t.delay=0", nativeQuery = true)
-	int updatebyDelay();
+	void updatebyDelay();
 }

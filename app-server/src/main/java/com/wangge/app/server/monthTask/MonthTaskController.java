@@ -53,7 +53,6 @@ public class MonthTaskController {
 	@RequestMapping(value = "/historydata/allShops", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> findShopData(HttpServletRequest request, Pageable pageRequest) {
 		Map<String, Object> searchParams = WebUtils.getParametersStartingWith(request, SEARCH_OPERTOR);
-		monthSevice.findShopBy(searchParams, pageRequest);
 		return monthSevice.findShopBy(searchParams, pageRequest);
 	}
 
