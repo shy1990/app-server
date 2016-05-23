@@ -368,7 +368,7 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 	public Map<String, Object> findExecution(Long memberId) {
 		String taskMonth = DateUtil.getPreMonth(new Date(), 0);
 		MonthTaskSub mtaskSub = subTaskRep.findFirstByMonthsd_RegistData_IdAndMonthsd_Month(memberId, taskMonth);
-		List<MonthTaskExecution> dlist = mtExecRepository.findByTaskmonthAndRegistData_idOrderByTime(taskMonth,
+		List<MonthTaskExecution> dlist = mtExecRepository.findByTaskmonthAndRegistData_idOrderByTimeDesc(taskMonth,
 				memberId);
 		Map<String, Object> dmap = new HashMap<String, Object>();
 		dmap.put("goal", mtaskSub.getGoal());

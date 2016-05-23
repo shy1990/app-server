@@ -39,7 +39,7 @@ public class MonthTaskExecution implements Serializable {
 	// 任务月份
 	private String taskmonth;
 	// 任务时间
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH24:mm")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date time = new Date();
 	// 动作
