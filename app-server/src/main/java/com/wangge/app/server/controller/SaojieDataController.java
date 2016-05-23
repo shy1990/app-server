@@ -111,6 +111,7 @@ public class SaojieDataController {
 			  id = childId;
 			}
 			data.setAccountId(id);
+			data.setSalesman(salesman);
 			SaojieData saojiedata = dataSaojieService.addDataSaojie(data,salesman);
 			cxt.publishEvent(new afterDailyEvent(region.getId(),salesman.getId(),name,coordinate,isPrimaryAccount,childId,2));
 			//oilsCostRecordService.addHandshake(region.getId(),salesman.getId(),name,coordinate,isPrimaryAccount,childId,2);
