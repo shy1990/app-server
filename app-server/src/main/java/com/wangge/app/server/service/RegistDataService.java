@@ -83,6 +83,10 @@ public class RegistDataService {
     return registDataRepository.findByLoginAccount(loginAccount);
   }
   
+  public RegistData  findByPhoneNum(String loginAccount){
+    return registDataRepository.findByPhoneNum(loginAccount);
+  }
+  
   /**
    * 
   * @Title: getSalesmanId 

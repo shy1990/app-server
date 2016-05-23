@@ -24,6 +24,7 @@ import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.SaojieData;
 import com.wangge.app.server.event.afterDailyEvent;
+import com.wangge.app.server.monthTask.service.MonthTaskServive;
 import com.wangge.app.server.pojo.Color;
 import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.repository.SaojieDataRepository;
@@ -62,6 +63,8 @@ public class RegistDataController {
 	private DateInterval dateInterval;
 	@Resource
 	private ApplicationContext cxt;
+	@Resource
+	private MonthTaskServive monthTaskServive;
 
 	/**
 	 * 
@@ -214,6 +217,7 @@ public class RegistDataController {
 				sjData.setDescription(description);
 				sjData.setCoordinate(coordinates);
 				dataSaojieService.addDataSaojie(sjData,salesman);
+			  monthTaskServive.saveExecution(registData.getId(), "注册");
 				cxt.publishEvent(new afterDailyEvent(region.getId(),userId,member.get("SHOPNAME"),coordinates,isPrimaryAccount,childId,3));
 				json.setId(String.valueOf(registData.getId()));
 				json.setSuccess(true);

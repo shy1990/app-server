@@ -14,8 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.Cash;
 import com.wangge.app.server.entity.OrderSignfor;
+import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.event.afterSalesmanSignforEvent;
 import com.wangge.app.server.event.afterSignforEvent;
+import com.wangge.app.server.monthTask.service.MonthTaskServive;
 import com.wangge.app.server.repository.CashRepository;
 import com.wangge.app.server.repository.OrderSignforRepository;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
@@ -33,6 +35,10 @@ public class OrderSignforService {
   
   @Resource
   private ApplicationContext ctx;
+  @Resource
+  private RegistDataService registDataService;
+  @Resource
+  private MonthTaskServive monthTaskServive;
 
   public void saveOrderSignfor(OrderSignfor xlsOrder) {
     osr.save(xlsOrder);
@@ -127,6 +133,11 @@ public class OrderSignforService {
           logger.info(e.getMessage());
         }
           opl.updateOrderShipStateByOrderNum(orderNo,"3");
+         RegistData registData = registDataService.findByPhoneNum(storePhone);
+         if(registData != null){
+           monthTaskServive.saveExecution(registData.getId(), "客户签收");
+         }
+        
            ctx.publishEvent(new afterSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,6,storePhone));
         
      
@@ -164,6 +175,10 @@ public class OrderSignforService {
       orderSignFor.setAccountId(accountId);
       osr.save(orderSignFor);
        opl.updateOrderShipStateByOrderNum(orderNo,"7");
+       RegistData registData = registDataService.findByPhoneNum(storePhone);
+       if(registData != null){
+         monthTaskServive.saveExecution(registData.getId(), "客户拒签");
+       }
          ctx.publishEvent(new afterSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,7,storePhone));
   }
 

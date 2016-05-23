@@ -24,6 +24,7 @@ import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.Visit;
 import com.wangge.app.server.entity.Visit.VisitStatus;
 import com.wangge.app.server.event.afterDailyEvent;
+import com.wangge.app.server.monthTask.service.MonthTaskServive;
 import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.repository.VisitRepository;
 import com.wangge.app.server.service.RegistDataService;
@@ -49,6 +50,8 @@ public class VisitTaskController {
 	private SalesmanService salesmanService;
 	@Resource
 	private ApplicationContext cxt;
+	@Resource
+	private MonthTaskServive monthTaskServive;
 	
 	Json json = new Json();
 	
@@ -192,6 +195,7 @@ public class VisitTaskController {
 					taskVisit.setSalesman(salesman);
 					taskVisitService.save(taskVisit);
 					RegistData rd = registDataService.findRegistDataById(taskVisit.getRegistData().getId());
+					monthTaskServive.saveExecution(rd.getId(), "拜访");
 					 if(rd != null){
 		          cxt.publishEvent(new afterDailyEvent(rd.getRegion().getId(),salesman.getId(),rd.getShopName(), jsons.getString("coordinate"),jsons.getIntValue("isPrimary"),jsons.getString("childId"),4));
 		        }
@@ -205,7 +209,8 @@ public class VisitTaskController {
 				}
 			}else{
 				Visit taskVisit = new Visit();
-				RegistData rd = registDataService.findRegistDataById(Long.parseLong(jsons.getString("registId")));
+				String registId = jsons.getString("registId");
+				RegistData rd = registDataService.findRegistDataById(Long.parseLong(registId));
 				taskVisit.setRegistData(rd);
 				taskVisit.setSalesman(rd.getSalesman());
 				taskVisit.setAddress(jsons.getString("address"));
@@ -236,6 +241,7 @@ public class VisitTaskController {
 			  taskVisit.setAccountId(id);
 				taskVisit.setSalesman(salesman);
 				taskVisitService.save(taskVisit);
+				monthTaskServive.saveExecution(Long.parseLong(registId), "拜访");
         if(rd != null){
           cxt.publishEvent(new afterDailyEvent(rd.getRegion().getId(),salesman.getId(),rd.getShopName(), jsons.getString("coordinate"),jsons.getIntValue("isPrimary"),jsons.getString("childId"),4));
         }
