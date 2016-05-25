@@ -84,6 +84,7 @@ public class MonthTaskController {
 			e.printStackTrace();
 			Map<String, Object> smap = new HashMap<String, Object>();
 			smap.put("code", "1");
+			smap.put("msg", "数据服务器异常");
 			return new ResponseEntity<Map<String, Object>>(smap, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -99,6 +100,7 @@ public class MonthTaskController {
 			log.debug(e);
 			Map<String, Object> smap = new HashMap<String, Object>();
 			smap.put("code", "1");
+			smap.put("msg", "数据服务器异常");
 			return new ResponseEntity<Map<String, Object>>(smap, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
