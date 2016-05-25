@@ -61,7 +61,7 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 
 		Map<String, Object> taskmap = new HashMap<String, Object>();
 		if (null == monthTask) {
-			return generateErrorResp(taskmap, "0", "没有任务,请与上级领导联系");
+			return generateErrorResp(taskmap, "0", "没有本月任务,请与上级领导联系");
 		}
 		/*
 		 * "code": 0, "msg": "", “regionId”: ”37001”, //业务所属id,为任务分配准备
