@@ -20,7 +20,7 @@ import com.wangge.app.server.entity.Salesman;
 @Entity
 @Table(name = "sys_month_Task_basicdata")
 @NamedEntityGraph(name = "salesman.graph", 
-attributeNodes = @NamedAttributeNode(value = "salesman", subgraph = "registData.graph"),subgraphs = {
+attributeNodes = @NamedAttributeNode(value = "salesman", subgraph = "region.graph"),subgraphs = {
 		@NamedSubgraph(name = "region.graph", attributeNodes = @NamedAttributeNode("region")) })
 public class MonthOdersData implements Serializable {
 	/**
