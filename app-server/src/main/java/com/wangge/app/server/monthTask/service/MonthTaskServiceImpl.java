@@ -1,6 +1,5 @@
 package com.wangge.app.server.monthTask.service;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -61,7 +60,7 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 
 		Map<String, Object> taskmap = new HashMap<String, Object>();
 		if (null == monthTask) {
-			return generateErrorResp(taskmap, "1");
+			return generateErrorResp(taskmap, "0", "没有本月任务,请与上级领导联系");
 		}
 		/*
 		 * "code": 0, "msg": "", “regionId”: ”37001”, //业务所属id,为任务分配准备
@@ -89,18 +88,17 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 			taskmap.put("obj", dList);
 		} catch (IllegalArgumentException | IllegalAccessException | SecurityException e) {
 			e.printStackTrace();
-			return generateErrorResp(taskmap, "0");
+			return generateErrorResp(taskmap, "1", "");
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
-			return generateErrorResp(taskmap, "0");
+			return generateErrorResp(taskmap, "1", "");
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
-			return generateErrorResp(taskmap, "0");
+			return generateErrorResp(taskmap, "1", "");
 		}
 		return new ResponseEntity<Map<String, Object>>(taskmap, HttpStatus.OK);
 	}
 
-	
 	/**
 	 * @param o
 	 * @return
@@ -115,11 +113,19 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 	 * @param taskmap
 	 * @param flag
 	 *            "0" 程序错误 ,"1",没有数据
+	 * @param msg
 	 * @return
 	 */
-	private ResponseEntity<Map<String, Object>> generateErrorResp(Map<String, Object> taskmap, String flag) {
+	private ResponseEntity<Map<String, Object>> generateErrorResp(Map<String, Object> taskmap, String flag,
+			String msg) {
 		taskmap.clear();
 		taskmap.put("code", flag);
+		if (flag.equals("1")) {
+			taskmap.put("msg", "数据服务器异常");
+		} else {
+			taskmap.put("msg", msg);
+
+		}
 		return new ResponseEntity<Map<String, Object>>(taskmap, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
@@ -129,7 +135,7 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 		try {
 			List<Region> rlist = regionRep.findByParentId(regionId);
 			if (null == rlist || rlist.size() < 1) {
-				return generateErrorResp(taskmap, "1");
+				return generateErrorResp(taskmap, "0", "请联系上级领导划定区域");
 
 			}
 			List<Map<String, String>> dList = new ArrayList<Map<String, String>>();
@@ -150,7 +156,7 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 			taskmap.put("region", dList);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return generateErrorResp(taskmap, "0");
+			return generateErrorResp(taskmap, "1", "");
 		}
 		return new ResponseEntity<Map<String, Object>>(taskmap, HttpStatus.OK);
 	}
@@ -256,7 +262,7 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 		 * ,保存需关联的店铺历史fk “CancelId": --没有就不传 [49] 取消需关联的店铺历史fk
 		 */
 		Integer mainTaskId = (int) talMap.get("monthTaskId");
-		MonthTask monthTask = monthTaskrep.getOne((long)mainTaskId);
+		MonthTask monthTask = monthTaskrep.getOne((long) mainTaskId);
 		Class<? extends MonthTask> mclass = monthTask.getClass();
 		Integer goal = (Integer) talMap.get("goal");
 		Integer set = Integer.parseInt(mclass.getDeclaredMethod("getTal" + goal + "set").invoke(monthTask) + "");
@@ -368,7 +374,8 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 	public Map<String, Object> findExecution(Long memberId) {
 		String taskMonth = DateUtil.getPreMonth(new Date(), 0);
 		MonthTaskSub mtaskSub = subTaskRep.findFirstByMonthsd_RegistData_IdAndMonthsd_Month(memberId, taskMonth);
-		List<MonthTaskExecution> dlist = mtExecRepository.findByTaskmonthAndRegistData_idOrderByTimeDesc(taskMonth,memberId);
+		List<MonthTaskExecution> dlist = mtExecRepository.findByTaskmonthAndRegistData_idOrderByTimeDesc(taskMonth,
+				memberId);
 		Map<String, Object> dmap = new HashMap<String, Object>();
 		dmap.put("goal", mtaskSub.getGoal());
 		dmap.put("done", mtaskSub.getDone());
