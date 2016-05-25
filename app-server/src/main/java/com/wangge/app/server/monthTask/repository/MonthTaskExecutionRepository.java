@@ -11,5 +11,5 @@ import com.wangge.app.server.monthTask.entity.MonthTaskExecution;
 public interface MonthTaskExecutionRepository
 		extends JpaRepository< MonthTaskExecution, Long>{
 	@EntityGraph("monthExecution.graph")
-	List<MonthTaskExecution> findByTaskmonthAndRegistData_idOrderByTime(String taskMonth, Long memberId);
+	List<MonthTaskExecution> findByTaskmonthAndRegistData_idOrderByTimeDesc(String taskMonth, Long memberId);
 }
