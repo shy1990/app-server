@@ -170,6 +170,7 @@ public class OrderSignforController {
       }
       
     } catch (Exception e) {
+      e.printStackTrace();
       m.setMsg("false");
       m.setCode(1);
      /* logger.error("OrderSignforController updateOrderSignfor error :"+e);*/

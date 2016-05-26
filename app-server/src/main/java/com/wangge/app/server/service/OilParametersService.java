@@ -43,7 +43,8 @@ public class OilParametersService {
 }   
   
   private OilParameters getOilParameters(List<OilParameters> oilParametersList){
-    for(OilParameters  oilParameters : oilParametersList){
+    if(oilParametersList != null){
+      for(OilParameters  oilParameters : oilParametersList){
         if(null == oilParametersList){
           OilParameters Parameters = oilParametersRepository.findOilParameters();
           return Parameters;
@@ -69,9 +70,13 @@ public class OilParametersService {
             
           }
           
+      }
     }
+      OilParameters Parameters = oilParametersRepository.findOilParameters();
+      return Parameters;
     
-    return null;
+   
+    
 }
   
     private OilParameters getOilParameters(OilParameters oilParameters){
