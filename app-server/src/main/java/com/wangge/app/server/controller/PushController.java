@@ -93,7 +93,7 @@ public class PushController {
       o.setPhoneCount(skuNum);
       o.setOrderStatus(0);
       o.setShopName(ss);
-      o.setUserId(registDataService.getSalesmanId(mobile));
+      o.setUserId(salesmanService.findByMobile(mobile).getId());
       o.setUserPhone(mobile);
       o.setPartsCount(Integer.parseInt(accCount));
       

@@ -21,11 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.entity.Salesman;
+import com.wangge.app.server.entity.SaojieData;
 import com.wangge.app.server.entity.Visit;
 import com.wangge.app.server.entity.Visit.VisitStatus;
 import com.wangge.app.server.event.afterDailyEvent;
 import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.repository.VisitRepository;
+import com.wangge.app.server.service.DataSaojieService;
 import com.wangge.app.server.service.RegistDataService;
 import com.wangge.app.server.service.SalesmanService;
 import com.wangge.app.server.service.TaskVisitService;
@@ -47,6 +49,8 @@ public class VisitTaskController {
 	private RegistDataService registDataService;
 	@Autowired
 	private SalesmanService salesmanService;
+	@Resource
+  private DataSaojieService dataSaojieService;
 	@Resource
 	private ApplicationContext cxt;
 	
@@ -159,6 +163,8 @@ public class VisitTaskController {
 	public ResponseEntity<Json> addVisit(@PathVariable("userId")Salesman salesman,@RequestBody JSONObject jsons) {
 	      String id = null;
 		try {
+		  int fixGeo= jsons.getIntValue("fixGeo");
+		  String coordinate=jsons.getString("coordinate");
 			if(jsons.containsKey("visitId")){
 				String visitId=jsons.getString("visitId");
 				Visit taskVisit = taskVisitService.findByVisitId(Long.parseLong(visitId));
@@ -193,7 +199,15 @@ public class VisitTaskController {
 					taskVisit.setSalesman(salesman);
 					taskVisitService.save(taskVisit);
 					RegistData rd = registDataService.findRegistDataById(taskVisit.getRegistData().getId());
+					
 					 if(rd != null){
+					   if(fixGeo==1){//修改坐标点 1是修改，0不修改
+		            SaojieData saojiedata= dataSaojieService.findByRegistData(rd);
+		            if(saojiedata!=null){
+		              saojiedata.setCoordinate(coordinate);
+		              dataSaojieService.addDataSaojie(saojiedata, salesman);
+		            }
+		          }
 		          cxt.publishEvent(new afterDailyEvent(rd.getRegion().getId(),salesman.getId(),rd.getShopName(), jsons.getString("coordinate"),jsons.getIntValue("isPrimary"),jsons.getString("childId"),4));
 		        }
 					json.setSuccess(true);
@@ -239,6 +253,13 @@ public class VisitTaskController {
 				taskVisit.setSalesman(salesman);
 				taskVisitService.save(taskVisit);
         if(rd != null){
+          if(fixGeo==1){//修改坐标点 1是修改，0不修改
+            SaojieData saojiedata= dataSaojieService.findByRegistData(rd);
+            if(saojiedata!=null&&coordinate!=null){
+              saojiedata.setCoordinate(coordinate);
+              dataSaojieService.addDataSaojie(saojiedata, salesman);
+            }
+          }
           cxt.publishEvent(new afterDailyEvent(rd.getRegion().getId(),salesman.getId(),rd.getShopName(), jsons.getString("coordinate"),jsons.getIntValue("isPrimary"),jsons.getString("childId"),4));
         }
         

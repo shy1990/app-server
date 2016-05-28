@@ -77,7 +77,8 @@ public class LoginController {
         }
       }
        json.setMsg("登陆成功！");
-       return new ResponseEntity<JsonCustom>(json, HttpStatus.OK);
+       return returnLogSucMsg(json, salesman);
+     //  return new ResponseEntity<JsonCustom>(json, HttpStatus.OK);
   
     }else {
       json.setMsg("用戶名或密码错误！");
