@@ -165,7 +165,6 @@ public class OrderSignforController {
         String msg = HttpUtil.sendPost("http://www.3j1688.com/member/existMobileCode/"+storePhone+"_"+smsCode+".html","");
         if(msg!=null && msg.contains("true")){
             orderSignforService.updateOrderSignfor(orderNo, userPhone, signGeoPoint,payType,smsCode,isPrimaryAccount,userId,childId,storePhone);
-            m = refund(orderNo,m);
             m.setMsg("success");
             m.setCode(0);
         }else{
@@ -173,7 +172,6 @@ public class OrderSignforController {
         }
       }else{
         orderSignforService.updateOrderSignfor(orderNo, userPhone, signGeoPoint,payType,smsCode,isPrimaryAccount,userId,childId,storePhone);
-        m = refund(orderNo,m);
         m.setMsg("success");
         m.setCode(0);
       }
@@ -187,6 +185,42 @@ public class OrderSignforController {
     
    return  new ResponseEntity<MessageCustom>(m, HttpStatus.OK);
   }
+ 
+  /**
+   * 
+  * @Title: customOrderUnSign 
+  * @Description: TODO(客户拒签) 
+  * @param @param jsons
+  * @param @return    设定文件 
+  * @return ResponseEntity<MessageCustom>    返回类型 
+  * @throws
+   */
+  @RequestMapping(value = "/customOrderUnSign", method = RequestMethod.POST)
+  @ResponseBody
+  public ResponseEntity<MessageCustom> customOrderUnSign(@RequestBody JSONObject jsons){
+    String userPhone = jsons.getString("userPhone");
+     String orderNo = jsons.getString("orderNo");
+     String  remark = jsons.getString("remark");
+    String signGeoPoint = jsons.getString("signGeoPoint");
+    int isPrimaryAccount = jsons.getIntValue("isPrimary");
+    String storePhone = jsons.getString("storePhone");
+    String userId =  jsons.getString("userId");
+    String childId =  jsons.getString("childId");
+    MessageCustom m = new MessageCustom();
+    try {
+        orderSignforService.updateOrderSignfor(orderNo, userPhone, remark,signGeoPoint,isPrimaryAccount,userId,childId,storePhone);
+        m = refund(orderNo,m);
+        m.setMsg("success");
+        m.setCode(0);
+    } catch (Exception e) {
+      m.setMsg("false");
+      m.setCode(1);
+     /* logger.error("OrderSignforController customOrderUnSign() error :"+e);*/
+    }
+    return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
+    
+  }
+  
   /**
    * 
   * @Title: refund 
@@ -231,39 +265,6 @@ public class OrderSignforController {
          }
        }
     return m;
-  }
-  /**
-   * 
-  * @Title: customOrderUnSign 
-  * @Description: TODO(客户拒签) 
-  * @param @param jsons
-  * @param @return    设定文件 
-  * @return ResponseEntity<MessageCustom>    返回类型 
-  * @throws
-   */
-  @RequestMapping(value = "/customOrderUnSign", method = RequestMethod.POST)
-  @ResponseBody
-  public ResponseEntity<MessageCustom> customOrderUnSign(@RequestBody JSONObject jsons){
-    String userPhone = jsons.getString("userPhone");
-     String orderNo = jsons.getString("orderNo");
-     String  remark = jsons.getString("remark");
-    String signGeoPoint = jsons.getString("signGeoPoint");
-    int isPrimaryAccount = jsons.getIntValue("isPrimary");
-    String storePhone = jsons.getString("storePhone");
-    String userId =  jsons.getString("userId");
-    String childId =  jsons.getString("childId");
-    MessageCustom m = new MessageCustom();
-    try {
-        orderSignforService.updateOrderSignfor(orderNo, userPhone, remark,signGeoPoint,isPrimaryAccount,userId,childId,storePhone);
-        m.setMsg("success");
-        m.setCode(0);
-    } catch (Exception e) {
-      m.setMsg("false");
-      m.setCode(1);
-     /* logger.error("OrderSignforController customOrderUnSign() error :"+e);*/
-    }
-    return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
-    
   }
   /**
    * 
