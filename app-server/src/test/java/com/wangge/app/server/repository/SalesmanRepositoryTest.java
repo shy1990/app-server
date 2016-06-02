@@ -47,7 +47,7 @@ public class SalesmanRepositoryTest {
 	
 	@Test
 	public void tset(){
-	  String s = srService.getSalesman("A371725210");
-	  System.out.println("=============="+s);
+	  Salesman s = srService.findByUsernameAndPassword("caochangzhi", "123456");
+	  System.out.println("=============="+s.getMobile());
 	}
 }

@@ -1,6 +1,7 @@
 package com.wangge;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -16,8 +17,10 @@ import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.repositoryimpl.RegionImpl;
 import com.wangge.app.server.service.OilParametersService;
 import com.wangge.app.server.service.RegionService;
+import com.wangge.app.server.service.RegistDataService;
 import com.wangge.app.server.service.SalesmanService;
 import com.wangge.app.server.util.HttpUtil;
+import com.wangge.app.util.ChainageUtil;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -31,12 +34,14 @@ public class OilRecordTest {
   private RegionImpl impl;
   @Resource
   private SalesmanService salesmanService;
+  @Resource
+  private RegistDataService registDataService;
   @Test
   public void testOildCost(){
     
     String url ="  http://api.map.baidu.com/direction/v1";
     String param2 = "mode=driving&origin='42.913345','125.681496'&destination='36.73533570586392','116.99656722742283'&origin_region='天桥区'&destination_region='天桥区'&output=json&ak=Cr4PTLm91KMTG9eeYxxYhHFt";
-    String param = "mode=driving&origin=37.546055,121.336559&destination=37.555966,121.344857&origin_region=烟台市&destination_region=烟台市&output=json&ak=Cr4PTLm91KMTG9eeYxxYhHFt";
+    String param = "mode=driving&origin=36.31344,120.485732&destination=36.332946,120.457936&origin_region=青岛市&destination_region=青岛市&output=json&ak=Cr4PTLm91KMTG9eeYxxYhHFt";
     Float mileage =null;
     
     String str = HttpUtil.sendGet(url, param);
@@ -66,6 +71,21 @@ public class OilRecordTest {
     Salesman salesman = salesmanService.findSalesmanbyId("B37018805170");
     List<String> ids = regionService.findParentIds(salesman.getRegion().getId());
     System.out.println("size========"+ids.size());
+  }
+  @Test
+  public void testgetUserId(){
+    String userId = salesmanService.findByMobile("15065991531").getId();
+    System.out.println("=========================userId"+userId);
+  }
+  @Test
+  public void test2(){
+     Map<String, String> map = registDataService.getMap("18769727652");
+     System.out.println("+++++++++++++"+map.get("regionId"));
+  }
+  @Test
+  public void test3(){
+    Float  d = (float)ChainageUtil.GetShortDistance(Double.parseDouble("120.421") , Double.parseDouble("36.245946"), Double.parseDouble("120.38495"), Double.parseDouble("36.307558"));
+    System.out.println("========>>>>>>>>>>>>>>>>"+d);
   }
 }
 
