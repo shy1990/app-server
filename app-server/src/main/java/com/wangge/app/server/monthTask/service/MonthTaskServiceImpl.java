@@ -60,9 +60,11 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 		MonthTask monthTask = monthTaskrep.findFirstByMonth(month, userid);
 
 		Map<String, Object> taskmap = new HashMap<String, Object>();
+
 		if (null == monthTask) {
 			return generateErrorResp(taskmap, "0", "没有本月任务,请与上级领导联系");
 		}
+
 		/*
 		 * "code": 0, "msg": "", “regionId”: ”37001”, //业务所属id,为任务分配准备
 		 * ‘maintaskid’:””,
@@ -96,6 +98,9 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
 			return generateErrorResp(taskmap, "1", "");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return generateErrorResp(taskmap, "1", "");
 		}
 		return new ResponseEntity<Map<String, Object>>(taskmap, HttpStatus.OK);
 	}
@@ -121,13 +126,14 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 			String msg) {
 		taskmap.clear();
 		taskmap.put("code", flag);
+		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
 		if (flag.equals("1")) {
 			taskmap.put("msg", "数据服务器异常");
 		} else {
 			taskmap.put("msg", msg);
-
+			status = HttpStatus.NOT_FOUND;
 		}
-		return new ResponseEntity<Map<String, Object>>(taskmap, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<Map<String, Object>>(taskmap, status);
 	}
 
 	@Override
@@ -380,7 +386,11 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 		Map<String, Object> dmap = new HashMap<String, Object>();
 		dmap.put("goal", mtaskSub.getGoal());
 		dmap.put("done", mtaskSub.getDone());
-		dmap.put("shopName", mtaskSub.getMonthsd().getRegistData().getShopName());
+		if (dlist.size() > 0) {
+			dmap.put("shopName", dlist.get(0).getRegistData().getShopName());
+		} else {
+			dmap.put("shopName", mtaskSub.getMonthsd().getRegistData().getShopName());
+		}
 		dmap.put("code", "0");
 		dmap.put("msg", "");
 		List<Map<String, String>> vlist = new ArrayList<Map<String, String>>();
@@ -414,12 +424,13 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 		MonthTaskExecution mtsExec = new MonthTaskExecution(regd, taskMonth, new Date(), action);
 		mtExecRepository.save(mtsExec);
 		Date lsTime = mtaskSub.getLastTime();
-		if ((DateUtil.date2String(lsTime)).equals(DateUtil.date2String(new Date()))) {
+		if (!(DateUtil.date2String(lsTime)).equals(DateUtil.date2String(new Date()))) {
 			if (mtaskSub.getGoal() <= mtaskSub.getDone() + 1) {
 				mtaskSub.setFinish(1);
 			} else {
 				mtaskSub.setFinish(0);
 			}
+			mtaskSub.setLastTime(new Date());
 			mtaskSub.setDone(mtaskSub.getDone() + 1);
 		}
 		subTaskRep.save(mtaskSub);

@@ -13,7 +13,7 @@ public class MonthTaskSchedule {
 	@Autowired
 	MonthTaskSubRepository montSubrep;
 
-	@Scheduled(cron = "0 0 20 ? * *")
+	@Scheduled(cron = "10 45 14 ? * *")
 	public void exsitUnpaymentRemarkStatus() {
 		montSubrep.updatebyDelay();
 	}
