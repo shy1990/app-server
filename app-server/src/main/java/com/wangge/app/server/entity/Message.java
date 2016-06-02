@@ -1,7 +1,5 @@
 package com.wangge.app.server.entity;
 
-
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -35,10 +33,9 @@ public class Message implements Serializable {
 			return name;
 		}
 	}
-	
-	
+
 	public enum MessageType {
-		ORDER("下单通知"), SYSTEM("提交审核"), ACTIVE("活动"),CANCELORDER("取消订单通知");
+		ORDER("下单通知"), SYSTEM("提交审核"), ACTIVE("活动"), CANCELORDER("取消订单通知"), SALEAFTER("售后"), MONTHTASK("月任务");
 		private String name;
 
 		private MessageType(String name) {
@@ -63,7 +60,7 @@ public class Message implements Serializable {
 	private String result;
 
 	@Enumerated(EnumType.ORDINAL)
-	@Column(name="MESSAGE_TYPE")
+	@Column(name = "MESSAGE_TYPE")
 	private MessageType type;
 	@Enumerated(EnumType.ORDINAL)
 	private SendChannel channel;

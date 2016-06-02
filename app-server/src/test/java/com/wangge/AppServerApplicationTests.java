@@ -17,12 +17,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.RestTemplate;
 //git.oschina.net/sylarlove/app-server.git
 
+import com.wangge.app.server.monthTask.repository.MonthTaskSubRepository;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = AppServerApplication.class)
 public class AppServerApplicationTests {
 	@Autowired
 //	private RegionRepository rp;
-
+	MonthTaskSubRepository montRep;
 	@Test
 	public void contextLoads() {
 //		RestTemplate rt = new HmacRestTemplet("zhangsan", "zhangsan", HttpClientOption.ENABLE_REDIRECTS);
@@ -49,5 +51,8 @@ public class AppServerApplicationTests {
 	        }   
 	        em.close();   
 	    }
-
+  @Test
+  public void testT(){
+	  montRep.updatebyDelay();
+  }
 }
