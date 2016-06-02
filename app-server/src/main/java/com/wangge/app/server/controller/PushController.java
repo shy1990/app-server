@@ -93,7 +93,7 @@ public class PushController {
       o.setPhoneCount(skuNum);
       o.setOrderStatus(0);
       o.setShopName(ss);
-      o.setUserId(registDataService.getSalesmanId(mobile));
+      o.setUserId(salesmanService.findByMobile(mobile).getId());
       o.setUserPhone(mobile);
       o.setPartsCount(Integer.parseInt(accCount));
       
@@ -133,7 +133,7 @@ public class PushController {
     
     JSONObject json = new JSONObject(msg);
     String send = json.getString("username")+",订单号:"+json.getString("orderNum");
-    op.updateMessageType("3", json.getString("orderNum"));
+    orderSignforService.updateMessageType(1, json.getString("orderNum"));
     String str = "";
     System.out.println(json.getString("mobiles"));
     try {
@@ -282,4 +282,33 @@ public class PushController {
 //    }
 //    return false;
 //  }
+  
+  
+  @RequestMapping(value = { "/pushNewAfterSales"},method = RequestMethod.POST)
+  public boolean pushNewAfterSales(String msg){
+    JSONObject json = new JSONObject(msg);
+    String mobile = json.getString("mobile");
+    String content = json.getString("content");
+    String str = "";
+    try {
+      
+      Message mes = new Message();
+      mes.setChannel(SendChannel.PUSH);
+      mes.setType(MessageType.SHOUHOU);
+      mes.setSendTime(new Date());
+      mes.setContent(content);
+      mes.setReceiver(mobile);
+      mr.save(mes);
+      
+      str = JpushClient.sendSimple("售后通知", content, mobile,mes.getId(),"3");//3代表售后通知
+    } catch (Exception e) {
+      e.printStackTrace();
+      return false;
+    }
+     if(str.contains("发送失败")){
+     //  mr.updateMessageResult(str, mes.getId());
+       return false;
+     }
+       return true;
+  }
 }

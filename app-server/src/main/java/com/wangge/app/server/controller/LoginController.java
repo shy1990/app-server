@@ -52,6 +52,7 @@ public class LoginController {
       if((salesman.getSimId() == null || "".equals(salesman.getSimId()))){
         salesman.setSimId(simId);
         salesmanService.save(salesman);
+        return returnLogSucMsg(json, salesman);
       }else if(salesman.getSimId() != null && !"".equals(salesman.getSimId()) && simId.equals(salesman.getSimId())){
         return returnLogSucMsg(json, salesman);
     
@@ -76,7 +77,8 @@ public class LoginController {
         }
       }
        json.setMsg("登陆成功！");
-       return new ResponseEntity<JsonCustom>(json, HttpStatus.OK);
+       return returnLogSucMsg(json, salesman);
+     //  return new ResponseEntity<JsonCustom>(json, HttpStatus.OK);
   
     }else {
       json.setMsg("用戶名或密码错误！");

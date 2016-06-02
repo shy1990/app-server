@@ -60,7 +60,7 @@ public class MessageService {
   public void updateMessageResult(String result,Long id){
      mr.updateMessageResult(result, id);
   }
-  
+  @Transactional
   public void save(Message mes) {
     mr.save(mes);
   }

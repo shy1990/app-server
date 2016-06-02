@@ -79,6 +79,9 @@ public class Visit implements Serializable {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Temporal(TemporalType.DATE)
 	private Date expiredTime;
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+  @Temporal(TemporalType.TIMESTAMP)
+  private Date finishTime;
 	
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -182,6 +185,14 @@ public class Visit implements Serializable {
 		this.salesman = salesman;
 	}
 
+  public Date getFinishTime() {
+    return finishTime;
+  }
+
+  public void setFinishTime(Date finishTime) {
+    this.finishTime = finishTime;
+  }
+	
   public int getIsPrimaryAccount() {
     return isPrimaryAccount;
   }
@@ -199,7 +210,4 @@ public class Visit implements Serializable {
     this.accountId = accountId;
   }
 
-  
-
-	
 }

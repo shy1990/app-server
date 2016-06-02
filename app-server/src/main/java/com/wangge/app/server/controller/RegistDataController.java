@@ -225,7 +225,6 @@ public class RegistDataController {
 				return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
 			}
 		} catch (NumberFormatException e) {
-			e.printStackTrace();
 			json.setMsg("保存异常!");
 			return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
 		}
