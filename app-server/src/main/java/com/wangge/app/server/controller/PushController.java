@@ -70,6 +70,15 @@ public class PushController {
     int skuNum = Integer.parseInt(json.getString("skuNum"));
     Float amount = Float.parseFloat(json.getString("amount"));
     String orderno = json.getString("orderNum");
+    if(!json.isNull("memberMobile")){
+      String memberMobile=json.getString("memberMobile");
+      RegistData registdata=registDataService.findByPhoneNum(memberMobile);
+      
+      if(null==registdata){
+        return false;
+      }
+    }
+    
     if(ss.contains("市")){
       ss = ss.substring(ss.indexOf("市")+1,ss.length());
     }

@@ -127,5 +127,8 @@ public class RegistDataService {
     return  registDataRepository.findOne(Long.parseLong(registId));
   }
 
-
+  public RegistData findByPhoneNum(String phone){
+    
+    return registDataRepository.findByPhoneNum(phone);
+  }
 }
