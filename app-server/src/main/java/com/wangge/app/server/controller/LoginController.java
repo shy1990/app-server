@@ -75,7 +75,7 @@ public class LoginController {
         return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);
         }
       }
-       json.setMsg("登陆成功！");
+      returnLogSucMsg(json, salesman);
        return new ResponseEntity<JsonCustom>(json, HttpStatus.OK);
   
     }else {

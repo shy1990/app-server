@@ -1,25 +1,26 @@
 package com.wangge;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.wangge.app.server.entity.MonthPunish;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.OilParameters;
-import com.wangge.app.server.service.MonthPunishService;
+import com.wangge.app.server.entity.Salesman;
+import com.wangge.app.server.repositoryimpl.RegionImpl;
 import com.wangge.app.server.service.OilParametersService;
-import com.wangge.app.server.util.DateUtil;
+import com.wangge.app.server.service.RegionService;
+import com.wangge.app.server.service.RegistDataService;
+import com.wangge.app.server.service.SalesmanService;
+import com.wangge.app.server.util.HttpUtil;
+import com.wangge.app.util.ChainageUtil;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -28,62 +29,63 @@ public class OilRecordTest {
   @Resource
   private OilParametersService oilParametersService;
   @Resource
-  private MonthPunishService mps;
+  private RegionService regionService;
+  @Resource
+  private RegionImpl impl;
+  @Resource
+  private SalesmanService salesmanService;
+  @Resource
+  private RegistDataService registDataService;
+  @Test
+  public void testOildCost(){
+    
+    String url ="  http://api.map.baidu.com/direction/v1";
+    String param2 = "mode=driving&origin='42.913345','125.681496'&destination='36.73533570586392','116.99656722742283'&origin_region='天桥区'&destination_region='天桥区'&output=json&ak=Cr4PTLm91KMTG9eeYxxYhHFt";
+    String param = "mode=driving&origin=36.31344,120.485732&destination=36.332946,120.457936&origin_region=青岛市&destination_region=青岛市&output=json&ak=Cr4PTLm91KMTG9eeYxxYhHFt";
+    Float mileage =null;
+    
+    String str = HttpUtil.sendGet(url, param);
+    JSONObject json = (JSONObject) JSONObject.parse(str);
+    String s = json.getString("result");
+    json = (JSONObject) JSONObject.parse(s);
+    String a = json.getString("routes");
+    JSONArray routesA = json.parseArray(a);
+     // json = (JSONObject) JSONObject.parse(routes);
+    
+    json = (JSONObject) routesA.get(0);
+    Float  d = Float.parseFloat(json.getString("distance"));
+    // Float  d = (float)ChainageUtil.GetShortDistance(Double.parseDouble("121.362174") , Double.parseDouble("37.580944"), Double.parseDouble("121.370898"), Double.parseDouble("37.517152"));
+    
+   // Double d = ChainageUtil.GetShortDistance(117.246149,36.754358, 117.237405,36.729324);
+     Float distance = Float.parseFloat(String.format("%.2f", d/1000));
+   //  OilParameters oparam =  oilParametersService.getOilParameters("370689");
+     ;//获取油补系数
+     
+     mileage = mileage != null ? distance + mileage : distance;//将握手点之间的距离叠加起来
+    System.out.println("+++++++j=======++++++++"+mileage);
+    System.out.println("+++++++j=======++++++++"+d);
+  }
   
   @Test
   public void test(){
-   OilParameters oil = oilParametersService.getOilParameters("370105");
-   if(oil != null){
-     System.out.println("===================="+oil.getKmOilSubsidy());
-   }
-   
+    Salesman salesman = salesmanService.findSalesmanbyId("B37018805170");
+    List<String> ids = regionService.findParentIds(salesman.getRegion().getId());
+    System.out.println("size========"+ids.size());
+  }
+  @Test
+  public void testgetUserId(){
+    String userId = salesmanService.findByMobile("15065991531").getId();
+    System.out.println("=========================userId"+userId);
   }
   @Test
   public void test2(){
-     double d =10d;
-     Float c = (float)d;
-     System.out.println("=====>>>>"+c);
+     Map<String, String> map = registDataService.getMap("18769727652");
+     System.out.println("+++++++++++++"+map.get("regionId"));
   }
   @Test
   public void test3(){
-    
-    String moveDate= DateUtil.date2String(DateUtil.moveDate(new Date(),-1));
-    System.out.println(moveDate);
-  }
- 
-  public static void main(String[] args) {
-   // String[] city =  coordinates.split("-");
-    /*String lng = "36.73533570584192";
-    String lat = "116.99656722742283";
-    
-   String url="http://api.map.baidu.com/geocoder/v2/?ak=702632E1add3d4953d0f105f27c294b9&callback=renderReverse&location="+lng+","+lat+"&output=json&pois=1";
-    String jsonString = JWtoAdrssUtil.getdata(url);
-   String jsonstr=jsonString.substring(0,jsonString.length()-1);
-   String address = jsonstr.substring(jsonstr.indexOf("city")+6,jsonstr.indexOf("country")-2);
-   System.out.println("==================="+address);
-   System.out.println("+++++++++++++++++++++++++++++"+jsonstr);*/
-    
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    Calendar calendar = GregorianCalendar.getInstance();
-    try {
-    calendar.setTime(sdf.parse("2004-6-07"));
-    } catch (ParseException e) {
-        System.out.println(e);
-    }     
-    System.out.println(calendar.get(Calendar.DATE));
-    System.out.println(calendar.get(Calendar.MONTH) + 1);
-    System.out.println(calendar.get(Calendar.YEAR));
-    Long a = 3789L;
-    System.out.println("==========="+a/1000);
-  }
-  
-  @Test
-  public void test_(){
-    List<MonthPunish> mpl=mps.findByUserIdAndCreateDate("A37010504010","2016-05-17" );
-    MonthPunish mp= mpl.get(0);
-    System.out.println("test_"+mp.getSeriaNo());
-    System.out.println("test_"+mp.getUserId());
-    
+    Float  d = (float)ChainageUtil.GetShortDistance(Double.parseDouble("120.421") , Double.parseDouble("36.245946"), Double.parseDouble("120.38495"), Double.parseDouble("36.307558"));
+    System.out.println("========>>>>>>>>>>>>>>>>"+d);
   }
 }
 

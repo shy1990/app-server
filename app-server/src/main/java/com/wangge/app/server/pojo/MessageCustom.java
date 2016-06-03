@@ -21,6 +21,8 @@ public class MessageCustom extends message {
   private boolean enable;
   
   private int exception;
+  @JsonInclude(Include.NON_EMPTY)
+  private String status;
   
   public Date getSignTime() {
     return signTime;
@@ -46,8 +48,12 @@ public class MessageCustom extends message {
   public void setException(int exception) {
     this.exception = exception;
   }
-  
-  
+  public String getStatus() {
+    return status;
+  }
+  public void setStatus(String status) {
+    this.status = status;
+  }
   
 
 }
