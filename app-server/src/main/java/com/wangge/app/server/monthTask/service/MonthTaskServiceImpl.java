@@ -1,16 +1,19 @@
 package com.wangge.app.server.monthTask.service;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
@@ -26,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import com.wangge.app.server.entity.Region;
 import com.wangge.app.server.entity.RegistData;
+import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.monthTask.entity.MonthTask;
 import com.wangge.app.server.monthTask.entity.MonthTaskExecution;
 import com.wangge.app.server.monthTask.entity.MonthTaskSub;
@@ -36,6 +40,7 @@ import com.wangge.app.server.monthTask.repository.MonthTaskSubRepository;
 import com.wangge.app.server.monthTask.repository.MonthshopBasDataRepository;
 import com.wangge.app.server.repository.RegionRepository;
 import com.wangge.app.server.repository.RegistDataRepository;
+import com.wangge.app.server.repository.SalesmanRepository;
 import com.wangge.app.server.util.DateUtil;
 
 @Service
@@ -52,6 +57,8 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 	MonthTaskExecutionRepository mtExecRepository;
 	@Autowired
 	RegistDataRepository registRep;
+	@Autowired
+	SalesmanRepository salRep;
 	private Integer[] levels = new Integer[] { 20, 15, 10, 7, 4 };
 
 	@Override
@@ -100,7 +107,6 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 		return new ResponseEntity<Map<String, Object>>(taskmap, HttpStatus.OK);
 	}
 
-	
 	/**
 	 * @param o
 	 * @return
@@ -137,13 +143,7 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 			datamap1.put("id", regionId);
 			datamap1.put("name", "所有区域");
 			dList.add(datamap1);
-			for (Region r : rlist) {
-				Map<String, String> datamap = new HashMap<String, String>();
-				datamap.put("id", r.getId());
-				String name = r.getName().replace("\n", "");
-				datamap.put("name", name);
-				dList.add(datamap);
-			}
+			getMappedSubRegion(rlist, dList);
 
 			taskmap.put("code", 0);
 			taskmap.put("msg", "");
@@ -156,6 +156,28 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 	}
 
 	/**
+	 * 得到一个区域的下级所有区域的名称到集合中
+	 * 
+	 * @param rlist
+	 *            下级区域列表
+	 * @param dList
+	 *            要保存的集合
+	 */
+	private void getMappedSubRegion(Collection<Region> rlist, List<Map<String, String>> dList) {
+		for (Region r : rlist) {
+			Map<String, String> datamap = new HashMap<String, String>();
+			datamap.put("id", r.getId());
+			String name = r.getName().replace("\n", "");
+			datamap.put("name", name);
+			dList.add(datamap);
+			Collection<Region> sublist = r.getChildren();
+			if (null != sublist && sublist.size() > 0) {
+				getMappedSubRegion(sublist, dList);
+			}
+		}
+	}
+
+	/**
 	 * query.where(cb.like(namePath, "%李%"), cb.like(nicknamePath, "%王%"));
 	 *
 	 **/
@@ -164,6 +186,9 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 		String goalstr = params.get("EQ_goal") == null ? "" : params.get("EQ_goal") + "";
 		int goal = !"".equals(goalstr) ? Integer.parseInt(goalstr) : 0;
 		params.remove("EQ_goal");
+		String regionId = params.get("LK_regionId").toString();
+		params.remove("LK_regionId");
+		Set<String> regionSet = getSubShopRegion(regionId);
 		Page<MonthshopBasData> data = monthShopDRep.findAll(new Specification<MonthshopBasData>() {
 			@Override
 			public Predicate toPredicate(Root<MonthshopBasData> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -180,6 +205,7 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 				Join<MonthshopBasData, MonthTaskSub> leftJoin = root
 						.join(root.getModel().getSingularAttribute("monthTaskSub", MonthTaskSub.class), JoinType.LEFT);
 				predicates.add(cb.or(cb.equal(leftJoin.get("goal"), goal), cb.equal(root.get("used"), 0)));
+				predicates.add(root.get("regionId").in(regionSet));
 				createPedicateByMap(params, root, cb, predicates);
 
 				return cb.and(predicates.toArray(new Predicate[] {}));
@@ -212,6 +238,43 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 		dmap.put("totalPages", tal);
 		dmap.put("msg", "");
 		return new ResponseEntity<Map<String, Object>>(dmap, HttpStatus.OK);
+	}
+
+	/**
+	 * 通过区域id,得到其下所有的区域id;
+	 * 
+	 * @param regionId
+	 * @return
+	 */
+	private Set<String> getSubShopRegion(String regionId) {
+		Set<String> regionSet = new HashSet<String>();
+		regionSet.add(regionId);
+		List<Region> rlist = regionRep.findByParentId(regionId);
+		for (Region r : rlist) {
+			regionSet.add(r.getId());
+			getSubRegionId(regionSet, r);
+		}
+
+		return regionSet;
+	}
+
+	/**
+	 * 循环迭代取出单个区域下的所有区域
+	 * 
+	 * @param regionSet
+	 *            要保存的集合
+	 * @param r
+	 *            区域
+	 */
+	private void getSubRegionId(Set<String> regionSet, Region r) {
+		Collection<Region> childC = r.getChildren();
+		if (childC != null && childC.size() > 0) {
+			for (Region r1 : childC) {
+				regionSet.add(r1.getId());
+				getSubRegionId(regionSet, r1);
+			}
+		}
+		return;
 	}
 
 	/**
@@ -256,7 +319,7 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 		 * ,保存需关联的店铺历史fk “CancelId": --没有就不传 [49] 取消需关联的店铺历史fk
 		 */
 		Integer mainTaskId = (int) talMap.get("monthTaskId");
-		MonthTask monthTask = monthTaskrep.getOne((long)mainTaskId);
+		MonthTask monthTask = monthTaskrep.getOne((long) mainTaskId);
 		Class<? extends MonthTask> mclass = monthTask.getClass();
 		Integer goal = (Integer) talMap.get("goal");
 		Integer set = Integer.parseInt(mclass.getDeclaredMethod("getTal" + goal + "set").invoke(monthTask) + "");
@@ -312,26 +375,22 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 
 	@Override
 	public Map<String, Object> findTask(Map<String, Object> params, Pageable pageRequest) throws Exception {
-		Object regionId = params.get("LK_regionId");
 		String month = params.get("EQ_taskMonth") == null ? DateUtil.getPreMonth(new Date(), 0)
 				: params.get("EQ_taskMonth") + "";
-		params.remove("LK_regionId");
 		params.remove("EQ_taskMonth");
+		String regionId = params.get("LK_regionId").toString();
+		params.remove("LK_regionId");
+		Set<String> regionSet = getSubShopRegion(regionId);
 		Page<MonthTaskSub> data = subTaskRep.findAll(new Specification<MonthTaskSub>() {
 			@Override
 			public Predicate toPredicate(Root<MonthTaskSub> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 
 				List<Predicate> predicates = new ArrayList<Predicate>();
-
-				// query.
-				// builder.or(predicates.toArray(new
-				// Predicate[predicates.size()]));
 				Join<MonthTaskSub, MonthshopBasData> leftJoin = root
 						.join(root.getModel().getSingularAttribute("monthsd", MonthshopBasData.class), JoinType.LEFT);
-				predicates.add(cb.like(leftJoin.get("regionId").as(String.class), regionId + "%"));
+				predicates.add(leftJoin.get("regionId").in(regionSet));
 				predicates.add(cb.equal(leftJoin.get("month").as(String.class), month));
 				createPedicateByMap(params, root, cb, predicates);
-
 				return cb.and(predicates.toArray(new Predicate[] {}));
 			}
 		}, pageRequest);
