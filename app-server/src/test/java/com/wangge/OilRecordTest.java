@@ -41,7 +41,7 @@ public class OilRecordTest {
     
     String url ="  http://api.map.baidu.com/direction/v1";
     String param2 = "mode=driving&origin='42.913345','125.681496'&destination='36.73533570586392','116.99656722742283'&origin_region='天桥区'&destination_region='天桥区'&output=json&ak=Cr4PTLm91KMTG9eeYxxYhHFt";
-    String param = "mode=driving&origin=36.31344,120.485732&destination=36.332946,120.457936&origin_region=青岛市&destination_region=青岛市&output=json&ak=Cr4PTLm91KMTG9eeYxxYhHFt";
+    String param = "mode=driving&origin=37.51712,121.370936&destination=37.484823,121.368922&origin_region=青岛市&destination_region=青岛市&output=json&ak=Cr4PTLm91KMTG9eeYxxYhHFt";
     Float mileage =null;
     
     String str = HttpUtil.sendGet(url, param);
