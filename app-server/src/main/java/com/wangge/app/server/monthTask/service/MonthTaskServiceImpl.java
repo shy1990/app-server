@@ -466,7 +466,7 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 		MonthTaskExecution mtsExec = new MonthTaskExecution(regd, taskMonth, new Date(), action);
 		mtExecRepository.save(mtsExec);
 		Date lsTime = mtaskSub.getLastTime();
-		if ((DateUtil.date2String(lsTime)).equals(DateUtil.date2String(new Date()))) {
+		if (!(DateUtil.date2String(lsTime)).equals(DateUtil.date2String(new Date()))) {
 			if (mtaskSub.getGoal() <= mtaskSub.getDone() + 1) {
 				mtaskSub.setFinish(1);
 			} else {
