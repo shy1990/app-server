@@ -1,6 +1,7 @@
 package com.wangge.app.server.controller;
 
 import java.util.Date;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -14,10 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.OrderSignfor;
-import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.pojo.MessageCustom;
 import com.wangge.app.server.pojo.QueryResult;
+import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.repositoryimpl.OrderSignforImpl;
+import com.wangge.app.server.service.OrderService;
 import com.wangge.app.server.service.OrderSignforService;
 import com.wangge.app.server.service.SalesmanService;
 import com.wangge.app.server.util.HttpUtil;
@@ -31,6 +33,10 @@ public class OrderSignforController {
   private OrderSignforService orderSignforService;
   @Resource
   private SalesmanService salesmanService;
+  @Resource
+  private OrderImpl opl ;
+  @Resource
+  private OrderService or;
   
   /*private String userPhone ;
   private String orderNo ;
@@ -170,6 +176,7 @@ public class OrderSignforController {
       }
       
     } catch (Exception e) {
+      e.printStackTrace();
       m.setMsg("false");
       m.setCode(1);
      /* logger.error("OrderSignforController updateOrderSignfor error :"+e);*/
@@ -177,6 +184,7 @@ public class OrderSignforController {
     
    return  new ResponseEntity<MessageCustom>(m, HttpStatus.OK);
   }
+ 
   /**
    * 
   * @Title: customOrderUnSign 
@@ -200,6 +208,7 @@ public class OrderSignforController {
     MessageCustom m = new MessageCustom();
     try {
         orderSignforService.updateOrderSignfor(orderNo, userPhone, remark,signGeoPoint,isPrimaryAccount,userId,childId,storePhone);
+        m = refund(orderNo,m);
         m.setMsg("success");
         m.setCode(0);
     } catch (Exception e) {
@@ -209,6 +218,52 @@ public class OrderSignforController {
     }
     return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
     
+  }
+  
+  /**
+   * 
+  * @Title: refund 
+  * @Description: TODO(拒簽调用退款接口) 
+  * @param @param orderNo
+  * @param @param m
+  * @param @return    设定文件 
+  * @return MessageCustom    返回类型 
+  * @throws
+   */
+  private MessageCustom  refund (String orderNo,MessageCustom m){
+ JSONObject jo = new JSONObject();
+    
+    Map map = opl.checkMoneyBack(orderNo);
+    boolean flag = false;
+    if(map!=null){
+      //判断钱包流水号是否为空,若是则不调用退款接口
+          if(map.get("payNo")!=null && !"".equals(map.get("payNo"))){
+            if("0".equals(map.get("payMent")) ){
+              if(map.get("totalCost").equals(map.get("walletNum"))){
+                 flag = true;
+              }
+            }else{
+                flag = true;
+            }
+          }
+    }
+      if(flag){
+         try {
+           jo.put("state", "success");//调用接口传参
+           String str = or.invokWallet(jo, map.get("payNo").toString());
+           jo.clear();
+           if(str!=null && str.contains("202")){
+             m.setStatus("退款成功,请核实钱包金额");
+           }else{
+             m.setStatus("退款失败,请联系技术人员!");
+           }
+           return m;
+         } catch (Exception e) {
+           e.printStackTrace();
+           m.setStatus(e.getMessage());
+         }
+       }
+    return m;
   }
   /**
    * 

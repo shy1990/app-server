@@ -1,6 +1,5 @@
 package com.wangge.app.server.entity;
 
-
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
@@ -15,6 +14,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToMany;
 import javax.persistence.SecondaryTable;
 import javax.persistence.Table;
@@ -30,8 +32,13 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @Entity
 @Table(name = "SYS_REGION")
 @SecondaryTable(name = "SYS_COORDINATES")
-@JsonIgnoreProperties(value = { "hibernateLazyInitializer" ,"handler"})
+@JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler" })
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+
+@NamedEntityGraph(name = "region.graph", attributeNodes = {
+		@NamedAttributeNode(value = "children", subgraph = "subChild"),
+		@NamedAttributeNode(value = "parent") }, subgraphs = @NamedSubgraph(name = "subChild", attributeNodes = {
+				@NamedAttributeNode(value = "children"), @NamedAttributeNode(value = "parent") }))
 public class Region implements Serializable {
 	private static final long serialVersionUID = 1L;
 

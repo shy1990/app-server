@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wangge.app.server.entity.Message;
@@ -27,7 +26,6 @@ import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.service.MessageService;
 import com.wangge.app.server.service.OrderSignforService;
 import com.wangge.app.server.service.SalesmanService;
-import com.wangge.app.util.JsonUtil;
 import com.wangge.app.server.service.RegistDataService;
 
 @RestController
@@ -102,7 +100,7 @@ public class PushController {
 			o.setPhoneCount(skuNum);
 			o.setOrderStatus(0);
 			o.setShopName(ss);
-			o.setUserId(registDataService.getSalesmanId(mobile));
+			o.setUserId(salesmanService.findByMobile(mobile).getId());
 			o.setUserPhone(mobile);
 			o.setPartsCount(Integer.parseInt(accCount));
 
@@ -302,6 +300,34 @@ public class PushController {
 
 		return true;
 	}
+	/**
+	 * 
+	 * @Description: 拜访通知
+	 * @param @param
+	 *            msg
+	 * @param @param
+	 *            mobiles
+	 * @param @return
+	 * @return boolean
+	 * @throws @author
+	 *             changjun
+	 * @date 2015年11月5日
+	 */
+	// @RequestMapping(value={"/visitTask"},method = RequestMethod.POST)
+	// public boolean visitTask(String msg,String mobile) {
+	// String str = jpush.sendSimple("拜访通知", msg, mobile);
+	// SimpleMessage sm = new SimpleMessage();
+	// sm.setChannel(MessageChannel.JIGUANGPUSH);
+	// sm.setContent(msg);
+	// sm.setCreateTime(new Date());
+	// sm.setReceiver(mobile);
+	// sm.setResult(str);
+	// smr.save(sm);
+	// if(str.contains("发送成功")){
+	// return true;
+	// }
+	// return false;
+	// }
 	//
 	// /**
 	// *

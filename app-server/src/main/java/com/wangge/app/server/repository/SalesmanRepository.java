@@ -15,6 +15,8 @@ public interface SalesmanRepository extends JpaRepository<Salesman, String>  {
 	
 	@Query("select count(*) from Salesman r where r.region.id=?")
 	public int findSaleNum(String regionid);
+	
+	public Salesman findByRegion_Id(String id);
 	public Salesman findByUserUsernameAndUserPassword(String username,String password);
 	
 	public Salesman findByMobile(String mobile);
