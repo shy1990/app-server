@@ -468,17 +468,48 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 		RegistData regd = registRep.findOne(shopId);
 		MonthTaskExecution mtsExec = new MonthTaskExecution(regd, taskMonth, new Date(), action);
 		mtExecRepository.save(mtsExec);
+		/*
+		 *  1.在"注册"的时候添加到店铺历史数据表里 
+		 *  2.在完成任务时更新main表里的记录并更新sub表里记录
+		 */
+		if (action.equals("注册")) {
+			RegistData r = registRep.findOne(shopId);
+			MonthshopBasData shop = new MonthshopBasData(r.getRegion().getId(), 0, 0, taskMonth, 0, r, r.getSalesman());
+			try {
+				monthShopDRep.save(shop);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		if (null != mtaskSub) {
 			Date lsTime = mtaskSub.getLastTime();
 			if (!(DateUtil.date2String(lsTime)).equals(DateUtil.date2String(new Date()))) {
 				if (mtaskSub.getGoal() <= mtaskSub.getDone() + 1) {
 					mtaskSub.setFinish(1);
+					MonthTask mainTask = mtaskSub.getMonthTask();
+					int level = mtaskSub.getGoal();
+					setDone(level, mainTask);
 				} else {
 					mtaskSub.setFinish(0);
 				}
 				mtaskSub.setDone(mtaskSub.getDone() + 1);
+				// mtaskSub.setLastTime(new Date());
+				subTaskRep.save(mtaskSub);
 			}
-			subTaskRep.save(mtaskSub);
+
+		}
+	}
+
+	private void setDone(int level, MonthTask mt) {
+		Class<? extends MonthTask> mclass = mt.getClass();
+		String rate = null;
+		try {
+			Integer sum = getReflectInt(mclass.getDeclaredMethod("getTal" + level + "done").invoke(mt));
+			mclass.getDeclaredMethod("setTal" + level + "done", Integer.class).invoke(mt, ++sum);
+
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException e) {
+			e.printStackTrace();
 		}
 	}
 }
