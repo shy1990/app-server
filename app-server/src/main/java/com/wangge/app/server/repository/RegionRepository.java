@@ -9,11 +9,10 @@ import org.springframework.data.jpa.repository.Query;
 import com.wangge.app.server.entity.Region;
 
 public interface RegionRepository extends JpaRepository<Region, String> {
-	@EntityGraph("region.graph")
+	
 	public Region findById(String regionId);
 
 	public Region findByNameLike(String regionName);
-
+	@EntityGraph("region")
 	public List<Region> findByParentId(String id);
-
 }

@@ -34,11 +34,8 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @SecondaryTable(name = "SYS_COORDINATES")
 @JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler" })
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-
-@NamedEntityGraph(name = "region.graph", attributeNodes = {
-		@NamedAttributeNode(value = "children", subgraph = "subChild"),
-		@NamedAttributeNode(value = "parent") }, subgraphs = @NamedSubgraph(name = "subChild", attributeNodes = {
-				@NamedAttributeNode(value = "children"), @NamedAttributeNode(value = "parent") }))
+@NamedEntityGraph(name = "region", attributeNodes = { @NamedAttributeNode(value = "children"),
+		@NamedAttributeNode(value = "parent")})
 public class Region implements Serializable {
 	private static final long serialVersionUID = 1L;
 
