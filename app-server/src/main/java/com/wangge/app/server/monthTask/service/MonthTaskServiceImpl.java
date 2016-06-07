@@ -71,7 +71,7 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 
 		Map<String, Object> taskmap = new HashMap<String, Object>();
 		if (null == monthTask) {
-			return generateErrorResp(taskmap, "1");
+			return generateErrorResp(taskmap, "0", "没有本月任务,请与上级领导联系");
 		}
 		/*
 		 * "code": 0, "msg": "", “regionId”: ”37001”, //业务所属id,为任务分配准备
@@ -97,15 +97,18 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 				dList.add(datamap);
 			}
 			taskmap.put("obj", dList);
-		} catch (IllegalArgumentException | IllegalAccessException | SecurityException e) {
+		}catch (IllegalArgumentException | IllegalAccessException | SecurityException e) {
 			e.printStackTrace();
-			return generateErrorResp(taskmap, "0");
+			return generateErrorResp(taskmap, "1", "");
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
-			return generateErrorResp(taskmap, "0");
+			return generateErrorResp(taskmap, "1", "");
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
-			return generateErrorResp(taskmap, "0");
+			return generateErrorResp(taskmap, "1", "");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return generateErrorResp(taskmap, "1", "");
 		}
 		return new ResponseEntity<Map<String, Object>>(taskmap, HttpStatus.OK);
 	}
@@ -126,10 +129,18 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 	 *            "0" 程序错误 ,"1",没有数据
 	 * @return
 	 */
-	private ResponseEntity<Map<String, Object>> generateErrorResp(Map<String, Object> taskmap, String flag) {
+	private ResponseEntity<Map<String, Object>> generateErrorResp(Map<String, Object> taskmap, String flag,
+			String msg) {
 		taskmap.clear();
 		taskmap.put("code", flag);
-		return new ResponseEntity<Map<String, Object>>(taskmap, HttpStatus.INTERNAL_SERVER_ERROR);
+		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+		if (flag.equals("1")) {
+			taskmap.put("msg", "数据服务器异常");
+		} else {
+			taskmap.put("msg", msg);
+			status = HttpStatus.NOT_FOUND;
+		}
+		return new ResponseEntity<Map<String, Object>>(taskmap, status);
 	}
 
 	@Override
@@ -138,7 +149,7 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 		try {
 			List<Region> rlist = regionRep.findByParentId(regionId);
 			if (null == rlist || rlist.size() < 1) {
-				return generateErrorResp(taskmap, "1");
+				return generateErrorResp(taskmap, "0", "请联系上级领导划定区域");
 
 			}
 			List<Map<String, String>> dList = new ArrayList<Map<String, String>>();
@@ -153,7 +164,7 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 			taskmap.put("region", dList);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return generateErrorResp(taskmap, "0");
+			return generateErrorResp(taskmap, "1", "");
 		}
 		return new ResponseEntity<Map<String, Object>>(taskmap, HttpStatus.OK);
 	}
