@@ -59,6 +59,9 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 	RegistDataRepository registRep;
 	@Autowired
 	SalesmanRepository salRep;
+	@Autowired
+	MonthTaskSchedule monthSche;
+
 	private Integer[] levels = new Integer[] { 20, 15, 10, 7, 4 };
 
 	@Override
@@ -465,14 +468,16 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 		RegistData regd = registRep.findOne(shopId);
 		MonthTaskExecution mtsExec = new MonthTaskExecution(regd, taskMonth, new Date(), action);
 		mtExecRepository.save(mtsExec);
-		Date lsTime = mtaskSub.getLastTime();
-		if (!(DateUtil.date2String(lsTime)).equals(DateUtil.date2String(new Date()))) {
-			if (mtaskSub.getGoal() <= mtaskSub.getDone() + 1) {
-				mtaskSub.setFinish(1);
-			} else {
-				mtaskSub.setFinish(0);
+		if (null != mtaskSub) {
+			Date lsTime = mtaskSub.getLastTime();
+			if (!(DateUtil.date2String(lsTime)).equals(DateUtil.date2String(new Date()))) {
+				if (mtaskSub.getGoal() <= mtaskSub.getDone() + 1) {
+					mtaskSub.setFinish(1);
+				} else {
+					mtaskSub.setFinish(0);
+				}
+				mtaskSub.setDone(mtaskSub.getDone() + 1);
 			}
-			mtaskSub.setDone(mtaskSub.getDone() + 1);
 		}
 		subTaskRep.save(mtaskSub);
 	}
