@@ -478,8 +478,8 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 				}
 				mtaskSub.setDone(mtaskSub.getDone() + 1);
 			}
+			subTaskRep.save(mtaskSub);
 		}
-		subTaskRep.save(mtaskSub);
 	}
 }
 
