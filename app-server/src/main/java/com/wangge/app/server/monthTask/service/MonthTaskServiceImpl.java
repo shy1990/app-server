@@ -469,8 +469,7 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 		MonthTaskExecution mtsExec = new MonthTaskExecution(regd, taskMonth, new Date(), action);
 		mtExecRepository.save(mtsExec);
 		/*
-		 *  1.在"注册"的时候添加到店铺历史数据表里 
-		 *  2.在完成任务时更新main表里的记录并更新sub表里记录
+		 * 1.在"注册"的时候添加到店铺历史数据表里 2.在完成任务时更新main表里的记录并更新sub表里记录
 		 */
 		if (action.equals("注册")) {
 			RegistData r = registRep.findOne(shopId);
@@ -493,7 +492,7 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 					mtaskSub.setFinish(0);
 				}
 				mtaskSub.setDone(mtaskSub.getDone() + 1);
-				// mtaskSub.setLastTime(new Date());
+				mtaskSub.setLastTime(new Date());
 				subTaskRep.save(mtaskSub);
 			}
 
