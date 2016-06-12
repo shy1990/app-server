@@ -32,27 +32,27 @@ public class MonthOdersData implements Serializable {
 	private long id;
 	private String regionId;
 	private String month;
-	//tal15m1  上月提货量>=15&&<20的店铺的数量
+	// tal15m1 上月提货量>=15&&<20的店铺的数量
 	private int tal15m1;
-	//tal15m3  三月内平均提货量>=15&&<20的店铺的数量
+	// tal15m3 三月内平均提货量>=15&&<20的店铺的数量
 	private int tal15m3;
 	private int tal10m1;
 	private int tal10m3;
 	private int tal7m1;
 	private int tal7m3;
-	//上月月提货量<=4的店铺的数量
+	// 上月月提货量<=4的店铺的数量
 	private int tal4m1;
 	private int tal4m3;
-	//  上月月提货量>20的店铺的数量
+	// 上月月提货量>20的店铺的数量
 	private int tal20m1;
 	private int tal20m3;
-	//上月统计拜访次数为15的店铺数量
+	// 上月统计拜访次数为15的店铺数量
 	private int visitCount15;
 	private int visitCount10;
 	private int visitCount7;
 	private int visitCount4;
 	private int visitCount20;
-	//系统建议拜访次数为15的店铺数量
+	// 系统建议拜访次数为15的店铺数量
 	private int sysgive15;
 	private int sysgive10;
 	private int sysgive7;
@@ -64,40 +64,12 @@ public class MonthOdersData implements Serializable {
 	@JoinColumn(name = "salesman_ID")
 	private Salesman salesman;
 
-	public int gettal15m1() {
-		return tal15m1;
+	public long getId() {
+		return id;
 	}
 
-	public void settal15m1(int tAL15M1) {
-		tal15m1 = tAL15M1;
-	}
-
-	public int gettal15m3() {
-		return tal15m3;
-	}
-
-	public void settal15m3(int tAL15M3) {
-		tal15m3 = tAL15M3;
-	}
-
-	public int gettal10m1() {
-		return tal10m1;
-	}
-
-	public void settal10m1(int tAL10M1) {
-		tal10m1 = tAL10M1;
-	}
-
-	public int gettal10m3() {
-		return tal10m3;
-	}
-
-	public void settal10m3(int tAL10M3) {
-		tal10m3 = tAL10M3;
-	}
-
-	public int gettal7m1() {
-		return tal7m1;
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public String getRegionId() {
@@ -108,48 +80,12 @@ public class MonthOdersData implements Serializable {
 		this.regionId = regionId;
 	}
 
-	public void settal7m1(int tAL7M1) {
-		tal7m1 = tAL7M1;
+	public String getMonth() {
+		return month;
 	}
 
-	public int gettal7m3() {
-		return tal7m3;
-	}
-
-	public void settal7m3(int tAL7M3) {
-		tal7m3 = tAL7M3;
-	}
-
-	public int gettal4m1() {
-		return tal4m1;
-	}
-
-	public void settal4m1(int tAL4M1) {
-		tal4m1 = tAL4M1;
-	}
-
-	public int gettal4m3() {
-		return tal4m3;
-	}
-
-	public void settal4m3(int tAL4M3) {
-		tal4m3 = tAL4M3;
-	}
-
-	public int gettal20m1() {
-		return tal20m1;
-	}
-
-	public void settal20m1(int tAL20M1) {
-		tal20m1 = tAL20M1;
-	}
-
-	public int gettal20m3() {
-		return tal20m3;
-	}
-
-	public void settal20m3(int tAL20M3) {
-		tal20m3 = tAL20M3;
+	public void setMonth(String month) {
+		this.month = month;
 	}
 
 	public int getTal15m1() {
@@ -292,8 +228,40 @@ public class MonthOdersData implements Serializable {
 		return sysgive7;
 	}
 
-	public void setMonth(String month) {
-		this.month = month;
+	public void setSysgive7(int sysgive7) {
+		this.sysgive7 = sysgive7;
+	}
+
+	public int getSysgive4() {
+		return sysgive4;
+	}
+
+	public void setSysgive4(int sysgive4) {
+		this.sysgive4 = sysgive4;
+	}
+
+	public int getSysgive20() {
+		return sysgive20;
+	}
+
+	public void setSysgive20(int sysgive20) {
+		this.sysgive20 = sysgive20;
+	}
+
+	public int getUsed() {
+		return used;
+	}
+
+	public void setUsed(int used) {
+		this.used = used;
+	}
+
+	public Salesman getSalesman() {
+		return salesman;
+	}
+
+	public void setSalesman(Salesman salesman) {
+		this.salesman = salesman;
 	}
 
 	public MonthOdersData() {
@@ -315,56 +283,6 @@ public class MonthOdersData implements Serializable {
 		tal20m1 = tAL20M1;
 		tal20m3 = tAL20M3;
 		this.month = month;
-	}
-
-	public int getUsed() {
-		return used;
-	}
-
-	public void setUsed(int used) {
-		this.used = used;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public String getMonth() {
-		return month;
-	}
-
-	
-
-	public void setSysgive7(int sysgive7) {
-		this.sysgive7 = sysgive7;
-	}
-
-	public int getSysgive4() {
-		return sysgive4;
-	}
-
-	public void setSysgive4(int sysgive4) {
-		this.sysgive4 = sysgive4;
-	}
-
-	public int getSysgive20() {
-		return sysgive20;
-	}
-
-	public void setSysgive20(int sysgive20) {
-		this.sysgive20 = sysgive20;
-	}
-
-	public Salesman getSalesman() {
-		return salesman;
-	}
-
-	public void setSalesman(Salesman salesman) {
-		this.salesman = salesman;
 	}
 
 	public MonthOdersData(String regionId, String month, int tAL15M1, int tAL15M3, int tAL10M1, int tAL10M3, int tAL7M1,

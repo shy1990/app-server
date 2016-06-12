@@ -54,28 +54,12 @@ public class MonthshopBasData implements Serializable {
 	private MonthTaskSub monthTaskSub;
 	private int used;
 
-	public MonthTaskSub getMonthTaskSub() {
-		return monthTaskSub;
-	}
-
-	public void setMonthTaskSub(MonthTaskSub monthTaskSub) {
-		this.monthTaskSub = monthTaskSub;
-	}
-
 	public long getId() {
 		return id;
 	}
 
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	public RegistData getRegistData() {
-		return registData;
-	}
-
-	public void setRegistData(RegistData registData) {
-		this.registData = registData;
 	}
 
 	public String getRegionId() {
@@ -85,14 +69,6 @@ public class MonthshopBasData implements Serializable {
 	public void setRegionId(String regionId) {
 		this.regionId = regionId;
 	}
-
-	// public String getShopid() {
-	// return shopid;
-	// }
-	//
-	// public void setShopid(String shopid) {
-	// this.shopid = shopid;
-	// }
 
 	public int getLastmonthcount() {
 		return lastmonthcount;
@@ -126,24 +102,28 @@ public class MonthshopBasData implements Serializable {
 		this.visitCount = visitCount;
 	}
 
-	// public String getSalemanId() {
-	// return salemanId;
-	// }
-	//
-	// public void setSalemanId(String salemanId) {
-	// this.salemanId = salemanId;
-	// }
-	//
-	// public String getSalemanName() {
-	// return salemanName;
-	// }
-	//
-	// public void setSalemanName(String salemanName) {
-	// this.salemanName = salemanName;
-	// }
+	public RegistData getRegistData() {
+		return registData;
+	}
 
-	public MonthshopBasData() {
-		super();
+	public void setRegistData(RegistData registData) {
+		this.registData = registData;
+	}
+
+	public Salesman getSalesman() {
+		return salesman;
+	}
+
+	public void setSalesman(Salesman salesman) {
+		this.salesman = salesman;
+	}
+
+	public MonthTaskSub getMonthTaskSub() {
+		return monthTaskSub;
+	}
+
+	public void setMonthTaskSub(MonthTaskSub monthTaskSub) {
+		this.monthTaskSub = monthTaskSub;
 	}
 
 	public int getUsed() {
@@ -154,12 +134,8 @@ public class MonthshopBasData implements Serializable {
 		this.used = used;
 	}
 
-	public Salesman getSalesman() {
-		return salesman;
-	}
-
-	public void setSalesman(Salesman salesman) {
-		this.salesman = salesman;
+	public MonthshopBasData() {
+		super();
 	}
 
 	public MonthshopBasData(String regionId, int lastmonthcount, int monthAvg, String month, int visitCount,

@@ -15,8 +15,11 @@ import javax.persistence.NamedEntityGraph;
 import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "sys_monthtask_sub")
@@ -33,7 +36,8 @@ public class MonthTaskSub implements Serializable {
 	private long id;
 	private Integer goal = 0;
 	private Integer done = 0;
-
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastTime = new Date();
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "parentid")

@@ -58,11 +58,11 @@ public class MonthTask implements Serializable {
 		this.id = id;
 	}
 
-	public String getTown() {
+	public String getRegionid() {
 		return regionid;
 	}
 
-	public void setTown(String regionid) {
+	public void setRegionid(String regionid) {
 		this.regionid = regionid;
 	}
 
@@ -74,14 +74,6 @@ public class MonthTask implements Serializable {
 		this.month = month;
 	}
 
-	public String getRegionid() {
-		return regionid;
-	}
-
-	public void setRegionid(String regionid) {
-		this.regionid = regionid;
-	}
-
 	public String getAgentid() {
 		return agentid;
 	}
@@ -90,19 +82,19 @@ public class MonthTask implements Serializable {
 		this.agentid = agentid;
 	}
 
-	public Integer getTal15goal() {
+	public int getTal15goal() {
 		return tal15goal;
 	}
 
-	public void setTal15goal(Integer tal15goal) {
+	public void setTal15goal(int tal15goal) {
 		this.tal15goal = tal15goal;
 	}
 
-	public Integer getTal15done() {
+	public int getTal15done() {
 		return tal15done;
 	}
 
-	public void setTal15done(Integer tal15done) {
+	public void setTal15done(int tal15done) {
 		this.tal15done = tal15done;
 	}
 
@@ -226,6 +218,18 @@ public class MonthTask implements Serializable {
 		this.punishrate = punishrate;
 	}
 
+	public Set<MonthTaskSub> getSubSet() {
+		return subSet;
+	}
+
+	public void setSubSet(Set<MonthTaskSub> subSet) {
+		this.subSet = subSet;
+	}
+
+	public MonthTask() {
+		super();
+	}
+
 	public MonthTask(String regionid, String month, String agentid, Integer tal15goal, Integer tal10goal,
 			Integer tal7goal, Integer tal4goal, Integer tal20goal) {
 		super();
@@ -239,14 +243,4 @@ public class MonthTask implements Serializable {
 		this.tal20goal = tal20goal;
 	}
 
-	public MonthTask() {
-	}
-
-	public Set<MonthTaskSub> getSubSet() {
-		return subSet;
-	}
-
-	public void setSubSet(Set<MonthTaskSub> subSet) {
-		this.subSet = subSet;
-	}
 }
