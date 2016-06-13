@@ -103,15 +103,19 @@ public class WaterOrderService {
       part.setPaid(order.getPaymentMoney());
       part.setTime(DateUtil.date2String(order.getCreateDate(), "yyyy-MM-dd HH:mm"));
       
-      //判断是否有扣罚
+      //判断昨日是否有扣罚
       if(order.getIsPunish()==1){
         //TODO去查询扣罚记录
         List<MonthPunish> mpl=mps.findByUserIdAndCreateDate(order.getUserId(), DateUtil.date2String(DateUtil.moveDate(order.getCreateDate(),-1)));
         if(mpl.size()>0){
-          
-          MonthPunish monthPunish=mpl.get(0);
-          part.setDebt(monthPunish.getDebt());//拖欠
-          part.setAmerce(monthPunish.getAmerce());//扣罚
+          Float debt=new Float(0);
+          Float amerce=new Float(0);
+          for(MonthPunish monthPunish:mpl){
+            debt+=monthPunish.getDebt();
+            amerce+=monthPunish.getAmerce();
+          }
+          part.setDebt(debt+amerce);//拖欠
+          part.setAmerce(amerce);//扣罚
         }
         
         
@@ -157,7 +161,16 @@ public class WaterOrderService {
     }
     return orderPartPage;
   }
-
+  /**
+   * 
+   * @param searchParams
+   * @return
+   */
+  public List<WaterOrderCash> findAll(Map<String, Object> searchParams){
+    Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+    Specification<WaterOrderCash> spec = oilCostSearchFilter(filters.values(), WaterOrderCash.class);
+    return  wocr.findAll(spec);
+  }
   private static <T> Specification<T> oilCostSearchFilter(final Collection<SearchFilter> filters,
       final Class<T> entityClazz) {
 

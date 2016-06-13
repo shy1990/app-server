@@ -1,13 +1,19 @@
 package com.wangge.app.server.controller;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,7 +52,11 @@ public class WaterOrderController {
     //
     JsonResponse<Page<WaterOrderPart>> waterOrderJson=new JsonResponse<>();
     try {
-      
+      List<Order> orders=new ArrayList<>();
+      orders.add(new Order(Direction.ASC,"payStatus"));
+      orders.add(new Order(Direction.DESC,"createDate"));
+      Sort sort=new Sort(orders);
+      pageable=new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), sort);
       Page<WaterOrderPart> cashlist=waterOrderService.findByUserId(userId,pageable);
       if(cashlist.getContent().size()>0){
         waterOrderJson.setResult(cashlist);
