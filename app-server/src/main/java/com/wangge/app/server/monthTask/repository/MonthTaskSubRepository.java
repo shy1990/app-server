@@ -17,7 +17,7 @@ public interface MonthTaskSubRepository
 	@EntityGraph("monthTaskSub.monthsd")
 	MonthTaskSub findFirstByMonthsd_RegistData_IdAndMonthsd_Month(Long shopId, String month);
 
-	/*
+	/*目标数-已完成+3>=本月剩余时间
 	 * 更新数据库中延期的情况
 	 */
 	@Modifying
