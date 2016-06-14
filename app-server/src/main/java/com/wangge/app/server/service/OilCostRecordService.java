@@ -817,8 +817,8 @@ public class OilCostRecordService {
          List<Map<Object, Object>> listChild=new ArrayList<Map<Object,Object>>();
          if(listChildOilCostRecord.size()>0){
            for(OilCostRecord childRecord:listChildOilCostRecord){
-             distance+=orecord.getDistance();
-             oilCost+=orecord.getOilCost();
+             distance+=childRecord.getDistance();
+             oilCost+=childRecord.getOilCost();
              map.put("childContent", JSONArray.parseArray(getChildRecord(childRecord.getOilRecord()))) ;
              listChild.add(map);
            }
