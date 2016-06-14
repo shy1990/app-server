@@ -18,8 +18,6 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.wangge.app.constant.OilRecordConstant;
 import com.wangge.app.server.entity.OilCostRecord;
 import com.wangge.app.server.entity.OilParameters;
 import com.wangge.app.server.entity.Salesman;
@@ -367,80 +365,61 @@ public class OilCostRecordService {
 * @return void    返回类型 
 * @throws
  */
-  public  ResponseEntity<Void> signed(JSONObject jsons) {
-   int isPrimaryAccount = jsons.getIntValue("isPrimary");
-   //String coordinates = jsons.getString("coordinate");
-   String userId = jsons.getString("userId");
-    //int type = jsons.getIntValue("apiType");
-    
-    SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
-    Calendar yestoday    = Calendar.getInstance();
-    yestoday.add(Calendar.DATE,-1);
-   
-     try {
-       Date   dateTime = format.parse(format.format(new Date()));
-       Date   yestodayTime = format.parse(format.format(yestoday.getTime()));
-       OilCostRecord track = trackRepository.findByDateTimeAndUserId(dateTime,userId);
+   public  ResponseEntity<MessageCustom> signed(JSONObject jsons) {
+     int isPrimaryAccount = jsons.getIntValue("isPrimary");
+     String coordinates = jsons.getString("coordinate");
+     String userId = jsons.getString("userId");
+      int type = jsons.getIntValue("apiType");
+      OilCostRecord ocr = new OilCostRecord();
+      MessageCustom m = new MessageCustom();
       
-       SalesmanAddress address = addressService.getAddress(userId);
-      // if(type == 1){
-         if(track == null){
-           OilCostRecord yestodayTrack = trackRepository.findByDateTimeAndUserId(yestodayTime,userId);
-             if(yestodayTrack != null){
-               JSONArray jsonArray = JSONArray.parseArray(yestodayTrack.getOilRecord());
-               // String str = getOilRecord( coordinates,  type);
-               jsonArray.add(getOilRecord(address.getHomePoint(),OilRecordConstant.OILRECORD_ACTIONTYPE_SIGNEDDOWN,userId).get(0));
-               yestodayTrack.setDateTime(yestodayTime);
-               yestodayTrack.setIsPrimaryAccount(isPrimaryAccount);
-              // track.setParentId(userId);
-               yestodayTrack.setOilRecord(jsonArray.toJSONString());
-               Float mileage =  getDistance(address.getHomePoint(),null,yestodayTrack.getDistance(),jsonArray);
-               OilParameters param = getOilParam(userId);
-               Float mileages = mileage * param.getKmRatio();//实际公里数
-               yestodayTrack.setDistance(mileages);
-               yestodayTrack.setOilCost(mileages*param.getKmOilSubsidy());
-               trackRepository.save(yestodayTrack);
-             }
-             OilCostRecord ocr = new OilCostRecord();
+      SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+     
+       try {
+         Date   dateTime = format.parse(format.format(new Date()));
+         OilCostRecord track = trackRepository.findByDateTimeAndUserId(format.parse(format.format(new Date())),userId);
+         if(type == 1){
+           if(track == null){
              ocr.setUserId(userId);
-             ocr.setDateTime(format.parse(format.format(new Date())));
-             ocr.setOilRecord(getOilRecord(address.getHomePoint(),OilRecordConstant.OILRECORD_ACTIONTYPE_SIGNEDUP,userId).toJSONString());
+             ocr.setDateTime(dateTime);
+             ocr.setOilRecord(getOilRecord(coordinates,type,userId).toJSONString());
              ocr.setIsPrimaryAccount(isPrimaryAccount);
                trackRepository.save(ocr);
-               return new ResponseEntity<Void>(HttpStatus.OK);
+               m.setCode(0);
+               m.setMsg("签到成功！");
+               return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
            }
-        // if(track == null){
-          
-       //  }
-        /* m.setCode(0);
-         m.setMsg("已经签到成功！");
-         return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
-       }/*else if(type ==8){
-       
-         if(track != null){
-         JSONArray jsonArray = JSONArray.parseArray(track.getOilRecord());
-         // String str = getOilRecord( coordinates,  type);
-         jsonArray.add(getOilRecord(coordinates,type,userId).get(0));
-         track.setDateTime(dateTime);
-         track.setIsPrimaryAccount(isPrimaryAccount);
-        // track.setParentId(userId);
-         track.setOilRecord(jsonArray.toJSONString());
-         Float mileage =  getDistance(coordinates,null,track.getDistance(),jsonArray);
-         OilParameters param = getOilParam(userId);
-         Float mileages = mileage * param.getKmRatio();//实际公里数
-         track.setDistance(mileages);
-         track.setOilCost(mileages*param.getKmOilSubsidy());
-         trackRepository.save(track);
-         m.setCode(0);
-         m.setMsg("下班签到成功！");
-         return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
-         }
-       }    */  
-    } catch (Exception e) {
-      e.printStackTrace();
+           m.setCode(0);
+           m.setMsg("已经签到成功！");
+           return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
+         }else if(type ==8){
+         
+           if(track != null){
+           JSONArray jsonArray = JSONArray.parseArray(track.getOilRecord());
+           // String str = getOilRecord( coordinates,  type);
+           jsonArray.add(getOilRecord(coordinates,type,userId).get(0));
+           track.setDateTime(dateTime);
+           track.setIsPrimaryAccount(isPrimaryAccount);
+          // track.setParentId(userId);
+           track.setOilRecord(jsonArray.toJSONString());
+           Float mileage =  getDistance(coordinates,null,track.getDistance(),jsonArray);
+           OilParameters param = getOilParam(userId);
+           Float mileages = mileage * param.getKmRatio();//实际公里数
+           track.setDistance(mileages);
+           track.setOilCost(mileages*param.getKmOilSubsidy());
+           trackRepository.save(track);
+           m.setCode(0);
+           m.setMsg("下班签到成功！");
+           return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
+           }
+         }      
+      } catch (Exception e) {
+        e.printStackTrace();
+        m.setCode(1);
+        m.setMsg("签到失败");
+      }
+       return new ResponseEntity<MessageCustom>(m,HttpStatus.BAD_REQUEST);
     }
-    return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
-  }
   /**
    * 
   * @Title: isError 
