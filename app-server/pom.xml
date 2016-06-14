@@ -12,7 +12,7 @@
 	<parent>
 		<groupId>com.wangge</groupId>
 		<artifactId>parent</artifactId>
-		<version>0.2.0-SNAPSHOT</version>
+		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
 	<properties>
@@ -54,8 +54,7 @@
 		<dependency>
 			<groupId>com.oracle</groupId>
 			<artifactId>ojdbc6</artifactId>
-			<scope>runtime</scope>
-		</dependency>
+			</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -104,11 +103,6 @@
 		    <groupId>cn.jpush.api</groupId>
 		    <artifactId>jpush-client</artifactId>
 		    <version>2.3.1</version>
-		</dependency>
-		<dependency>
-		  <groupId>com.qq.xg</groupId>
-		  <artifactId>XingeApp</artifactId>
-		  <version>1.17</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>

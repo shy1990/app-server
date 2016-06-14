@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -264,27 +265,7 @@ public class PushController {
 		List<Message> list = new ArrayList<Message>();
 		Long id = 124567L;
 		try {
-			if (mobiles != null && mobiles.contains(",")) {
-				String[] ss = mobiles.split(",");
-				for (String s : ss) {
-					Message mg = new Message();
-					mg.setType(MessageType.MONTHTASK);
-					mg.setChannel(SendChannel.PUSH);
-					mg.setSendTime(new Date());
-					mg.setContent(json.getString("content"));
-					mg.setReceiver(s);
-					list.add(mg);
-				}
-
-			} else {
-				Message mg = new Message();
-				mg.setType(MessageType.MONTHTASK);
-				mg.setChannel(SendChannel.PUSH);
-				mg.setSendTime(new Date());
-				mg.setContent(msg);
-				mg.setReceiver(mobiles);
-				list.add(mg);
-			}
+			putMessageList(msg, mobiles, json, list,MessageType.MONTHTASK);
 			messageRep.save(list);
 			id = list.get(0).getId();
 			if (list != null && list.size() > 0) {
@@ -355,4 +336,35 @@ public class PushController {
 	// }
 	// return false;
 	// }
+
+	/**
+	 * @param msg
+	 * @param mobiles
+	 * @param json
+	 * @param list
+	 * @throws JSONException
+	 */
+	private void putMessageList(String msg, String mobiles, JSONObject json, List<Message> list,MessageType messgeType) throws JSONException {
+		if (mobiles != null && mobiles.contains(",")) {
+			String[] ss = mobiles.split(",");
+			for (String s : ss) {
+				Message mg = new Message();
+				mg.setType(messgeType);
+				mg.setChannel(SendChannel.PUSH);
+				mg.setSendTime(new Date());
+				mg.setContent(json.getString("content"));
+				mg.setReceiver(s);
+				list.add(mg);
+			}
+
+		} else {
+			Message mg = new Message();
+			mg.setType(messgeType);
+			mg.setChannel(SendChannel.PUSH);
+			mg.setSendTime(new Date());
+			mg.setContent(msg);
+			mg.setReceiver(mobiles);
+			list.add(mg);
+		}
+	}
 }
