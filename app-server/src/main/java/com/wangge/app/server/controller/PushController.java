@@ -88,7 +88,7 @@ public class PushController {
     String str = "";
     try {
       
-      if(orderSignforService.existOrder(orderno)){
+      if(orderSignforService.existOrder(orderno)){//判断订单是否已经存在，不存在保存
         Message mes = new Message();
         mes.setChannel(SendChannel.PUSH);
         mes.setType(MessageType.ORDER);
