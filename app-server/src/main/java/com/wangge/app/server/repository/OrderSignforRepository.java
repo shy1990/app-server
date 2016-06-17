@@ -20,5 +20,7 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
 
   OrderSignfor findByOrderNoAndUserPhone(String orderNo, String userPhone);
 
+  OrderSignfor findByOrderNo(String orderno);
+
 
 }

@@ -159,4 +159,12 @@ public class OrderSignforService {
   public String updateMessageType(int status,String orderNum){
     return osi.updateMessageType(status, orderNum);
   }
+
+  public boolean existOrder(String orderno) {
+        OrderSignfor o = osr.findByOrderNo(orderno);
+        if(o != null){
+           return false;
+        }
+    return true;
+  }
 }

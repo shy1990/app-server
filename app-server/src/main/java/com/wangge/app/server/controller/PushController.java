@@ -88,25 +88,28 @@ public class PushController {
     String str = "";
     try {
       
-      Message mes = new Message();
-      mes.setChannel(SendChannel.PUSH);
-      mes.setType(MessageType.ORDER);
-      mes.setSendTime(new Date());
-      mes.setContent(msg);
-      mes.setReceiver(mobile);
-      mr.save(mes);
-      OrderSignfor o = new OrderSignfor();
-      o.setOrderNo(orderno);
-      o.setCreatTime(new Date());
-      o.setOrderPrice(amount);
-      o.setPhoneCount(skuNum);
-      o.setOrderStatus(0);
-      o.setShopName(ss);
-      o.setUserId(salesmanService.findByMobile(mobile).getId());
-      o.setUserPhone(mobile);
-      o.setPartsCount(Integer.parseInt(accCount));
+      if(orderSignforService.existOrder(orderno)){
+        Message mes = new Message();
+        mes.setChannel(SendChannel.PUSH);
+        mes.setType(MessageType.ORDER);
+        mes.setSendTime(new Date());
+        mes.setContent(msg);
+        mes.setReceiver(mobile);
+        mr.save(mes);
+        OrderSignfor o = new OrderSignfor();
+        o.setOrderNo(orderno);
+        o.setCreatTime(new Date());
+        o.setOrderPrice(amount);
+        o.setPhoneCount(skuNum);
+        o.setOrderStatus(0);
+        o.setShopName(ss);
+        o.setUserId(salesmanService.findByMobile(mobile).getId());
+        o.setUserPhone(mobile);
+        o.setPartsCount(Integer.parseInt(accCount));
+        orderSignforService.saveOrderSignfor(o);
+      }
       
-      orderSignforService.saveOrderSignfor(o);
+     
       
       if(null!=salesmanService.findByMobile(mobile)){
         str = JpushClient.sendOrder("下单通知", send,mobile,json.getString("orderNum"),json.getString("skuNum"),json.getString("accNum"),"0");
