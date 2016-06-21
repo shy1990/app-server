@@ -78,7 +78,7 @@ public class OrderSignforService {
                     }
                     os.setAccountId(accountId);
                     osr.save(os);
-                    opl.updateOrderShipStateByOrderNum(os.getOrderNo(),"2");
+                     opl.updateOrderShipStateByOrderNum(os.getOrderNo(),"2");
                   }
                 ctx.publishEvent(new afterSalesmanSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,5));
                 return date;
