@@ -14,7 +14,7 @@ public class JsonUtil {
      * @param map 集合
      * @return 得到的Map解析的json语句
      */
-    public  static String mapToJson(Map<Object, Object> map) {
+    public  static String mapToJson(Map<?, ?> map) {
         return JSONArray.fromObject(map).toString();
     }
     

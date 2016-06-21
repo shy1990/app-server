@@ -92,8 +92,8 @@ public class MonthTaskController {
 	@RequestMapping(value = "executions/{shopId}", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> findActions(@PathVariable Long shopId) {
 		try {
-			//测试用
-//			monthSevice.saveExecution(shopId, "主动拜访");
+			// 测试用
+			// monthSevice.saveExecution(shopId, "主动拜访");
 			return new ResponseEntity<Map<String, Object>>(monthSevice.findExecution(shopId), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -103,5 +103,24 @@ public class MonthTaskController {
 			smap.put("msg", "数据服务器异常");
 			return new ResponseEntity<Map<String, Object>>(smap, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	@RequestMapping(value = "executions", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> saveActions(@RequestBody Map<String, Object> almap) {
+		Map<String, Object> smap = new HashMap<String, Object>();
+		smap.put("code", "0");
+		try {
+			// 测试用
+			monthSevice.saveExecution(Long.parseLong(almap.get("shopId").toString()), "主动拜访");
+			// return new ResponseEntity<Map<String,
+			// Object>>(monthSevice.findExecution(shopId), HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.debug(e);
+			smap.put("code", "1");
+			smap.put("msg", "数据服务器异常");
+			return new ResponseEntity<Map<String, Object>>(smap, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<Map<String, Object>>(smap, HttpStatus.OK);
 	}
 }

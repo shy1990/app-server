@@ -26,8 +26,10 @@ public class MonthTask implements Serializable {
 	private String regionid;
 	private String month;
 	private String agentid;
-	private Integer tal15goal;
-	private Integer tal15Done;
+	// 业务员任务目标达为15的店铺数
+	private int tal15goal;
+	// 业务员任务中已达到15目标的完成数
+	private int tal15done;
 	private Integer tal10goal;
 	private Integer tal10done;
 	private Integer tal7goal;
@@ -96,12 +98,12 @@ public class MonthTask implements Serializable {
 		this.tal15goal = tal15goal;
 	}
 
-	public Integer getTal15Done() {
-		return tal15Done;
+	public Integer getTal15done() {
+		return tal15done;
 	}
 
-	public void setTal15Done(Integer tal15Done) {
-		this.tal15Done = tal15Done;
+	public void setTal15done(Integer tal15done) {
+		this.tal15done = tal15done;
 	}
 
 	public Integer getTal10goal() {

@@ -1,12 +1,15 @@
 package com.wangge.app.server.controller;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +20,8 @@ import com.wangge.app.server.entity.Message.SendChannel;
 import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.jpush.client.JpushClient;
+import com.wangge.app.server.repository.MessageRepository;
+import com.wangge.app.server.repository.RegistDataRepository;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.service.MessageService;
 import com.wangge.app.server.service.OrderSignforService;
@@ -24,7 +29,7 @@ import com.wangge.app.server.service.SalesmanService;
 import com.wangge.app.server.service.RegistDataService;
 
 @RestController
-@RequestMapping({ "/v1/push"})
+@RequestMapping({ "/v1/push" })
 public class PushController {
   
 //  private static final Logger logger = LoggerFactory.getLogger(PushController.class);
@@ -323,4 +328,5 @@ public class PushController {
      }
        return true;
   }
+
 }
