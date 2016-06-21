@@ -36,6 +36,8 @@ import com.wangge.app.server.repository.WaterOrderDetailRepository;
 import com.wangge.app.server.util.DateUtil;
 import com.wangge.app.util.SearchFilter;
 
+import scala.unchecked;
+
 @Service
 public class WaterOrderService {
 
@@ -115,6 +117,7 @@ public class WaterOrderService {
             amerce+=monthPunish.getAmerce();
           }
           part.setDebt(debt+amerce);//拖欠
+          part.setUnpaid(debt);//未付
           part.setAmerce(amerce);//扣罚
         }
         
