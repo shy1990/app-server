@@ -35,6 +35,8 @@ public class OrderSignforController {
   private SalesmanService salesmanService;
   @Resource
   private OrderImpl opl ;
+  
+  
   @Resource
   private OrderService or;
   
@@ -265,6 +267,8 @@ public class OrderSignforController {
        }
     return m;
   }
+  
+  
   /**
    * 
   * @Title: getOrdersByMailNo 

@@ -73,6 +73,7 @@ public class RegistData implements Serializable {
 	private String memberId;
 	@OneToOne(mappedBy = "registData")
   private SaojieData saojieData;
+	private String coordinate;
 	
 	private String accountId;//业务账号id
 	
@@ -270,6 +271,13 @@ public class RegistData implements Serializable {
     this.memberId = memberId;
   }
 
+  public String getCoordinate() {
+    return coordinate;
+  }
+
+  public void setCoordinate(String coordinate) {
+    this.coordinate = coordinate;
+  }
 
   public String getAccountId() {
     return accountId;
@@ -286,7 +294,5 @@ public class RegistData implements Serializable {
   public void setIsPrimaryAccount(int isPrimaryAccount) {
     this.isPrimaryAccount = isPrimaryAccount;
   }
-  
-  
   
 }

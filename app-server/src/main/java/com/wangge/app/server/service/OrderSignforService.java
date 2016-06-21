@@ -19,6 +19,7 @@ import com.wangge.app.server.monthTask.service.MonthTaskServive;
 import com.wangge.app.server.repository.CashRepository;
 import com.wangge.app.server.repository.OrderSignforRepository;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
+import com.wangge.app.server.repositoryimpl.OrderSignforImpl;
 @Service
 public class OrderSignforService {
   
@@ -31,6 +32,8 @@ public class OrderSignforService {
   @Resource
   private OrderImpl opl ;
   
+  @Resource
+  private OrderSignforImpl osi;
   @Resource
   private ApplicationContext ctx;
   @Resource
@@ -185,4 +188,24 @@ public class OrderSignforService {
      return osr.findByOrderNoAndUserPhone(orderNo,userPhone);  
   }
 
+  public String updateMessageType(int status,String orderNum){
+    return osi.updateMessageType(status, orderNum);
+  }
+
+  /**
+   * 
+  * @Title: existOrder 
+  * @Description: TODO(根据订单判断订单是否已经存在) 
+  * @param @param orderno
+  * @param @return    设定文件 
+  * @return boolean    返回类型 
+  * @throws
+   */
+  public boolean existOrder(String orderno) {
+        OrderSignfor o = osr.findByOrderNo(orderno);
+        if(o != null){
+           return false;
+        }
+    return true;
+  }
 }

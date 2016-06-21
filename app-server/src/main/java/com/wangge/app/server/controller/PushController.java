@@ -17,7 +17,6 @@ import com.wangge.app.server.entity.Message.SendChannel;
 import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.jpush.client.JpushClient;
-import com.wangge.app.server.repository.RegistDataRepository;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.service.MessageService;
 import com.wangge.app.server.service.OrderSignforService;
@@ -70,6 +69,15 @@ public class PushController {
     int skuNum = Integer.parseInt(json.getString("skuNum"));
     Float amount = Float.parseFloat(json.getString("amount"));
     String orderno = json.getString("orderNum");
+    if(!json.isNull("memberMobile")){
+      String memberMobile=json.getString("memberMobile");
+      RegistData registdata=registDataService.findByPhoneNum(memberMobile);
+      
+      if(null==registdata){
+        return false;
+      }
+    }
+    
     if(ss.contains("市")){
       ss = ss.substring(ss.indexOf("市")+1,ss.length());
     }
@@ -79,25 +87,29 @@ public class PushController {
     String str = "";
     try {
       
-      Message mes = new Message();
-      mes.setChannel(SendChannel.PUSH);
-      mes.setType(MessageType.ORDER);
-      mes.setSendTime(new Date());
-      mes.setContent(msg);
-      mes.setReceiver(mobile);
-      mr.save(mes);
-      OrderSignfor o = new OrderSignfor();
-      o.setOrderNo(orderno);
-      o.setCreatTime(new Date());
-      o.setOrderPrice(amount);
-      o.setPhoneCount(skuNum);
-      o.setOrderStatus(0);
-      o.setShopName(ss);
-      o.setUserId(salesmanService.findByMobile(mobile).getId());
-      o.setUserPhone(mobile);
-      o.setPartsCount(Integer.parseInt(accCount));
+
+      if(orderSignforService.existOrder(orderno)){//判断订单是否已经存在，不存在保存
+        Message mes = new Message();
+        mes.setChannel(SendChannel.PUSH);
+        mes.setType(MessageType.ORDER);
+        mes.setSendTime(new Date());
+        mes.setContent(msg);
+        mes.setReceiver(mobile);
+        mr.save(mes);
+        OrderSignfor o = new OrderSignfor();
+        o.setOrderNo(orderno);
+        o.setCreatTime(new Date());
+        o.setOrderPrice(amount);
+        o.setPhoneCount(skuNum);
+        o.setOrderStatus(0);
+        o.setShopName(ss);
+        o.setUserId(salesmanService.findByMobile(mobile).getId());
+        o.setUserPhone(mobile);
+        o.setPartsCount(Integer.parseInt(accCount));
+        orderSignforService.saveOrderSignfor(o);
+      }
       
-      orderSignforService.saveOrderSignfor(o);
+     
       
       if(null!=salesmanService.findByMobile(mobile)){
         str = JpushClient.sendOrder("下单通知", send,mobile,json.getString("orderNum"),json.getString("skuNum"),json.getString("accNum"),"0");
@@ -133,7 +145,7 @@ public class PushController {
     
     JSONObject json = new JSONObject(msg);
     String send = json.getString("username")+",订单号:"+json.getString("orderNum");
-    op.updateMessageType("3", json.getString("orderNum"));
+    orderSignforService.updateMessageType(1, json.getString("orderNum"));
     String str = "";
     System.out.println(json.getString("mobiles"));
     try {
@@ -282,4 +294,33 @@ public class PushController {
 //    }
 //    return false;
 //  }
+  
+  
+  @RequestMapping(value = { "/pushNewAfterSales"},method = RequestMethod.POST)
+  public boolean pushNewAfterSales(String msg){
+    JSONObject json = new JSONObject(msg);
+    String mobile = json.getString("mobile");
+    String content = json.getString("content");
+    String str = "";
+    try {
+      
+      Message mes = new Message();
+      mes.setChannel(SendChannel.PUSH);
+      mes.setType(MessageType.SHOUHOU);
+      mes.setSendTime(new Date());
+      mes.setContent(content);
+      mes.setReceiver(mobile);
+      mr.save(mes);
+      
+      str = JpushClient.sendSimple("售后通知", content, mobile,mes.getId(),"3");//3代表售后通知
+    } catch (Exception e) {
+      e.printStackTrace();
+      return false;
+    }
+     if(str.contains("发送失败")){
+     //  mr.updateMessageResult(str, mes.getId());
+       return false;
+     }
+       return true;
+  }
 }

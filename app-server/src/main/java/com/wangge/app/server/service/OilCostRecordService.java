@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.wangge.app.server.entity.OilCostRecord;
 import com.wangge.app.server.entity.OilParameters;
 import com.wangge.app.server.entity.Salesman;
@@ -365,61 +364,62 @@ public class OilCostRecordService {
 * @return void    返回类型 
 * @throws
  */
-  public  ResponseEntity<MessageCustom> signed(JSONObject jsons) {
-   int isPrimaryAccount = jsons.getIntValue("isPrimary");
-   String coordinates = jsons.getString("coordinate");
-   String userId = jsons.getString("userId");
-    int type = jsons.getIntValue("apiType");
-    OilCostRecord ocr = new OilCostRecord();
-    MessageCustom m = new MessageCustom();
-    
-    SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
-   
-     try {
-       Date   dateTime = format.parse(format.format(new Date()));
-       OilCostRecord track = trackRepository.findByDateTimeAndUserId(format.parse(format.format(new Date())),userId);
-       if(type == 1){
-         if(track == null){
-           ocr.setUserId(userId);
-           ocr.setDateTime(dateTime);
-           ocr.setOilRecord(getOilRecord(coordinates,type,userId).toJSONString());
-           ocr.setIsPrimaryAccount(isPrimaryAccount);
-             trackRepository.save(ocr);
-             m.setCode(0);
-             m.setMsg("签到成功！");
-             return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
-         }
-         m.setCode(0);
-         m.setMsg("已经签到成功！");
-         return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
-       }else if(type ==8){
-       
-         if(track != null){
-         JSONArray jsonArray = JSONArray.parseArray(track.getOilRecord());
-         // String str = getOilRecord( coordinates,  type);
-         jsonArray.add(getOilRecord(coordinates,type,userId).get(0));
-         track.setDateTime(dateTime);
-         track.setIsPrimaryAccount(isPrimaryAccount);
-        // track.setParentId(userId);
-         track.setOilRecord(jsonArray.toJSONString());
-         Float mileage =  getDistance(coordinates,null,track.getDistance(),jsonArray);
-         OilParameters param = getOilParam(userId);
-         Float mileages = mileage * param.getKmRatio();//实际公里数
-         track.setDistance(mileages);
-         track.setOilCost(mileages*param.getKmOilSubsidy());
-         trackRepository.save(track);
-         m.setCode(0);
-         m.setMsg("下班签到成功！");
-         return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
-         }
-       }      
-    } catch (Exception e) {
-      e.printStackTrace();
-      m.setCode(1);
-      m.setMsg("签到失败");
+
+   public  ResponseEntity<MessageCustom> signed(JSONObject jsons) {
+     int isPrimaryAccount = jsons.getIntValue("isPrimary");
+     String coordinates = jsons.getString("coordinate");
+     String userId = jsons.getString("userId");
+      int type = jsons.getIntValue("apiType");
+      OilCostRecord ocr = new OilCostRecord();
+      MessageCustom m = new MessageCustom();
+      
+      SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+     
+       try {
+         Date   dateTime = format.parse(format.format(new Date()));
+         OilCostRecord track = trackRepository.findByDateTimeAndUserId(format.parse(format.format(new Date())),userId);
+         if(type == 1){
+           if(track == null){
+             ocr.setUserId(userId);
+             ocr.setDateTime(dateTime);
+             ocr.setOilRecord(getOilRecord(coordinates,type,userId).toJSONString());
+             ocr.setIsPrimaryAccount(isPrimaryAccount);
+               trackRepository.save(ocr);
+               m.setCode(0);
+               m.setMsg("签到成功！");
+               return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
+           }
+           m.setCode(0);
+           m.setMsg("已经签到成功！");
+           return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
+         }else if(type ==8){
+         
+           if(track != null){
+           JSONArray jsonArray = JSONArray.parseArray(track.getOilRecord());
+           // String str = getOilRecord( coordinates,  type);
+           jsonArray.add(getOilRecord(coordinates,type,userId).get(0));
+           track.setDateTime(dateTime);
+           track.setIsPrimaryAccount(isPrimaryAccount);
+          // track.setParentId(userId);
+           track.setOilRecord(jsonArray.toJSONString());
+           Float mileage =  getDistance(coordinates,null,track.getDistance(),jsonArray);
+           OilParameters param = getOilParam(userId);
+           Float mileages = mileage * param.getKmRatio();//实际公里数
+           track.setDistance(mileages);
+           track.setOilCost(mileages*param.getKmOilSubsidy());
+           trackRepository.save(track);
+           m.setCode(0);
+           m.setMsg("下班签到成功！");
+           return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
+           }
+         }      
+      } catch (Exception e) {
+        e.printStackTrace();
+        m.setCode(1);
+        m.setMsg("签到失败");
+      }
+       return new ResponseEntity<MessageCustom>(m,HttpStatus.BAD_REQUEST);
     }
-     return new ResponseEntity<MessageCustom>(m,HttpStatus.BAD_REQUEST);
-  }
   /**
    * 
   * @Title: isError 
@@ -509,16 +509,13 @@ public class OilCostRecordService {
     String  regionName = null;
     int  regionType;
     int exception ;
-    if (isError(coordinates, userId)) {
-      exception = 1;
-    }else{
-      exception = 0;
-    }
+    
       
     if(type == 1 ){
      String typeName  = "上班";
      regionName = "家";
      regionType = 0;
+      exception = 0;
     j  = new JSONArray();
     
      obj = ChainageUtil.createOilRecord( coordinates, typeName, regionName,regionType, exception);
@@ -529,12 +526,18 @@ public class OilCostRecordService {
     String typeName  = "下班";
     regionName = "家";
     regionType = 3;
+    exception = 0;
     j  = new JSONArray();
     obj = ChainageUtil.createOilRecord(coordinates, typeName, regionName,regionType, exception);
    
     j.add(obj);
    // return j;
   }else if(type == 5){
+    if (isError(coordinates, userId)) {
+      exception = 1;
+    }else{
+      exception = 0;
+    }
     regionType = 1;
     String  typeName  = "业务揽收";
     regionName = getLogistics( coordinates, userId);
@@ -817,8 +820,8 @@ public class OilCostRecordService {
          List<Map<Object, Object>> listChild=new ArrayList<Map<Object,Object>>();
          if(listChildOilCostRecord.size()>0){
            for(OilCostRecord childRecord:listChildOilCostRecord){
-              distance+=childRecord.getDistance();
-              oilCost+=childRecord.getOilCost();
+             distance+=childRecord.getDistance();
+             oilCost+=childRecord.getOilCost();
              map.put("childContent", JSONArray.parseArray(getChildRecord(childRecord.getOilRecord()))) ;
              listChild.add(map);
            }
