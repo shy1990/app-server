@@ -171,7 +171,13 @@ public class CashService {
           List<MonthPunish> mpl=mps.findByUserIdAndCreateDate(userId, DateUtil.date2String(DateUtil.moveDate(woc.getCreateDate(),-1)));
           if(mpl.size()>0){
             woc.setIsPunish(1);
+            //修改扣罚状态确认有对应流水单号。
+            mpl.forEach(mp -> {
+              mp.setStatus(1);
+            });
+            mps.save(mpl);
           }
+          
         }
         
         

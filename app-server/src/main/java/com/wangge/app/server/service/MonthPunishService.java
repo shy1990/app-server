@@ -46,7 +46,10 @@ public class MonthPunishService {
   @Resource
   private MonthPunishRepository mpr;
 
-
+  public void save(List<MonthPunish> monthPunishs){
+    mpr.save(monthPunishs);
+  }
+  
   /**
    * 
    * @param searchParams

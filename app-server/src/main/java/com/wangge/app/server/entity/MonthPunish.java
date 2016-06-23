@@ -50,6 +50,8 @@ public class MonthPunish implements Serializable  {
   @Column(name="WATER_NO")
   private String seriaNo; //流水单号
   
+  private Integer status;
+  
   @Column(name="DEBT_MONEY")
   private Float debt; //欠款金额
   
@@ -71,6 +73,13 @@ public class MonthPunish implements Serializable  {
   }
   public void setSeriaNo(String seriaNo) {
     this.seriaNo = seriaNo;
+  }
+  
+  public Integer getStatus() {
+    return status;
+  }
+  public void setStatus(Integer status) {
+    this.status = status;
   }
   public Float getDebt() {
     return debt;
