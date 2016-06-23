@@ -191,6 +191,7 @@ public class CashService {
       }
     } catch (Exception e) {
       logger.info(e.getMessage());
+      return msg;
     }
     
     return msg;
