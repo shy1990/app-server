@@ -47,6 +47,10 @@ public class DataSaojieService {
 	    dataSaojieNum = getDtaCountBySaojieId(dataSaojie.getSaojie().getId());
 		if(taskValue == dataSaojieNum){
 			dataSaojie.getSaojie().setStatus(SaojieStatus.AGREE);
+			int maxOrder = taskSaojieRepository.getOrderNumById(data.getSaojie().getSalesman().getId());
+      if(dataSaojie.getSaojie().getOrder() == maxOrder){
+        dataSaojie.getSaojie().setFinishStatus(1);//状态为1表示扫街全部完成
+      }
 			Saojie sj2 =  taskSaojieRepository.findByOrderAndSalesman(dataSaojie.getSaojie().getOrder()+1,dataSaojie.getSaojie().getSalesman());
 			if(sj2 != null && !"".equals(sj2)){
 				sj2.setStatus(SaojieStatus.PENDING);
@@ -99,10 +103,9 @@ public class DataSaojieService {
 		}
 	}
 
-/*	public void updateSaojie(Saojie saojie) {
+	public void updateSaojie(Saojie saojie) {
 		taskSaojieRepository.save(saojie);
-		
-	}*/
+	}
 
 	/*public Saojie findByOrderAndSalesman(Integer id, Salesman salesman) {
 		
@@ -122,6 +125,5 @@ public class DataSaojieService {
 	  return dataSaojieRepository.findByRegistData(id);
 	}
 
-	
 }
 

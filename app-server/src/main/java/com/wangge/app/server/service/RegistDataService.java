@@ -83,9 +83,6 @@ public class RegistDataService {
     return registDataRepository.findByLoginAccount(loginAccount);
   }
   
-  public RegistData  findByPhoneNum(String loginAccount){
-    return registDataRepository.findByPhoneNum(loginAccount);
-  }
   
   /**
    * 
@@ -131,6 +128,9 @@ public class RegistDataService {
     return  registDataRepository.findOne(Long.parseLong(registId));
   }
 
-
+  public RegistData findByPhoneNum(String phone){
+    
+    return registDataRepository.findByPhoneNum(phone);
+  }
 }
 
