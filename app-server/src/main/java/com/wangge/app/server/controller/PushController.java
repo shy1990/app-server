@@ -112,13 +112,14 @@ public class PushController {
         o.setUserPhone(mobile);
         o.setPartsCount(Integer.parseInt(accCount));
         orderSignforService.saveOrderSignfor(o);
+        if(null!=salesmanService.findByMobile(mobile)){
+            str = JpushClient.sendOrder("下单通知", send,mobile,json.getString("orderNum"),json.getString("skuNum"),json.getString("accNum"),"0");
+          }
       }
       
      
       
-      if(null!=salesmanService.findByMobile(mobile)){
-        str = JpushClient.sendOrder("下单通知", send,mobile,json.getString("orderNum"),json.getString("skuNum"),json.getString("accNum"),"0");
-      }
+      
       
     } catch (Exception e) {
       e.printStackTrace();
