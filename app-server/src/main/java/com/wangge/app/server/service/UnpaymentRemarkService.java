@@ -51,5 +51,21 @@ public class UnpaymentRemarkService {
   public List<UnpaymentRemark> findByCreateTime(Date date) {
     return upr.findByCreateTime(date);
   }
+  /**
+   * 
+  * @Title: existOrder 
+  * @Description: TODO(验证是否已经报备) 
+  * @param @param orderno
+  * @param @return    设定文件 
+  * @return boolean    返回类型 
+  * @throws
+   */
+  public boolean existOrder(String orderno) {
+    UnpaymentRemark unpaymentRemark = upr.findByorderno(orderno);
+    if(unpaymentRemark != null){
+       return true;
+    }
+    return false;
+  }
 
 }
