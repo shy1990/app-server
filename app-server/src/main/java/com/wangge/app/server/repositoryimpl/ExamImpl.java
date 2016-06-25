@@ -36,7 +36,7 @@ public class ExamImpl {
 	 */
 	public Exam ExamSalesman(String salesId) throws ParseException{
 	  //查询业务考核信息
-	   String sql0 = "select ASSESS_AREA_ZH,ASSESS_STAGE,ASSESS_TIME,ASSESS_CYCLE,ASSESS_ACTIVENUM,ASSESS_ORDERNUM from sj_yewu.BIZ_ASSESS WHERE USER_ID='"+salesId+"'";
+	   String sql0 = "select ASSESS_AREA_ZH,ASSESS_STAGE,ASSESS_TIME,ASSESS_CYCLE,ASSESS_ACTIVENUM,ASSESS_ORDERNUM from SJ_BUZMGT.SYS_ASSESS WHERE USER_ID='"+salesId+"'";
       Query query0 =  em.createNativeQuery(sql0);
       List obj0 = query0.getResultList();
       String areas = null;
@@ -56,7 +56,7 @@ public class ExamImpl {
         }
       }
 	    //指标信息    a.USERNAME=(select USERNAME from SJ_DB.SYS_USER where USER_ID='"+salesId+"' ) 
-		String sql = "select  a.rname as areaName , count(a.rid) as shopNum,sum(a.acount) as count from sj_yewu.BIZ_EXAMINE a where   a.USERNAME=(select USERNAME from SJ_DB.SYS_USER where USER_ID='"+salesId+"' )  and a.rname in("+areas+")  AND a.otype='sku'  group by (a.RID,a.rname)";
+		String sql = "select  a.rname as areaName , count(a.rid) as shopNum,sum(a.acount) as count from SJ_BUZMGT.BIZ_EXAMINE a where   a.USERNAME=(select USERNAME from SYS_USER where USER_ID='"+salesId+"' ) AND a.otype='sku'  group by (a.RID,a.rname)";
 		Query query =  em.createNativeQuery(sql);
 		List obj = query.getResultList();
 	  int shopNum=0; //商家数
