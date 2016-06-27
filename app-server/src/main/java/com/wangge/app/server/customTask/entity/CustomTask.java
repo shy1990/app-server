@@ -15,6 +15,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.wangge.app.server.entity.Salesman;
 
@@ -42,11 +43,14 @@ public class CustomTask {
 	private String content;
 	// 扣罚
 	private int punishCount;
-	@Temporal(TemporalType.DATE)
+
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
 	private Date createTime = new Date();
 	// 推送人员
 	@ManyToMany(fetch = FetchType.LAZY)
 	private Collection<Salesman> salesmanSet;
+	// 回执状态,0未读,1已读,
+	private int status;
 
 	public Long getId() {
 		return id;
@@ -62,6 +66,14 @@ public class CustomTask {
 
 	public void setType(int type) {
 		this.type = type;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 
 	public String getTitle() {

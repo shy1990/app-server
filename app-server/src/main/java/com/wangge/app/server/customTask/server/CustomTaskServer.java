@@ -1,9 +1,12 @@
 package com.wangge.app.server.customTask.server;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
+import com.wangge.app.server.customTask.entity.CustomMessages;
 import com.wangge.app.server.customTask.entity.CustomTask;
 
 public interface CustomTaskServer {
@@ -22,4 +25,28 @@ public interface CustomTaskServer {
 	 * @param customTask
 	 */
 	public void save(CustomTask customTask);
+
+	/**将一个任务设置为已读
+	 * @param customTask
+	 */
+	public void setStatus(CustomTask customTask);
+
+	/**保存一条消息记录
+	 * @param message
+	 */
+	public void saveMessage(CustomMessages message);
+
+	/**查找customTask信息和其相关的消息记录
+	 * @param customTask
+	 * @param salesmanId
+	 * @return
+	 */
+	public Map<String,Object> findCustomTask(CustomTask customTask, String salesmanId);
+
+	/**查找与自定义任务相关的
+	 * @param customTask
+	 * @param salesmanId
+	 * @return
+	 */
+	List<CustomMessages> findMessageList(CustomTask customTask, String salesmanId);
 }

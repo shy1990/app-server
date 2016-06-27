@@ -265,7 +265,7 @@ public class PushController {
 		List<Message> list = new ArrayList<Message>();
 		Long id = 124567L;
 		try {
-			putMessageList(msg, mobiles, json, list,MessageType.MONTHTASK);
+			putMessageList(msg, mobiles, json, list, MessageType.MONTHTASK);
 			messageRep.save(list);
 			id = list.get(0).getId();
 			if (list != null && list.size() > 0) {
@@ -274,6 +274,34 @@ public class PushController {
 			if (id != 0) {
 				JpushClient.sendSimple("月任务提醒", json.getString("title"), mobiles, id, "5");
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			monthmainTask(talMap);
+		}
+
+		return true;
+	}
+
+	/**
+	 * 自定义任务推送
+	 * 
+	 * @param talMap
+	 * @return
+	 */
+	@RequestMapping(value = { "/customTask" }, method = RequestMethod.POST)
+	public boolean customTask(@RequestBody Map<String, Object> talMap) {
+		String msg = talMap.get("msg").toString();
+		String mobiles = talMap.get("mobiles").toString();
+		JSONObject json = new JSONObject();
+		json.put("content", msg);
+		json.put("title", "自定义任务");
+		List<Message> list = new ArrayList<Message>();
+		Long id = Long.parseLong(talMap.get("Id").toString());
+		try {
+			putMessageList(msg, mobiles, json, list, MessageType.MONTHTASK);
+			messageRep.save(list);
+			JpushClient.sendSimple("自定义任务提醒", json.getString("title"), mobiles, id, "6");
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			monthmainTask(talMap);
@@ -344,7 +372,8 @@ public class PushController {
 	 * @param list
 	 * @throws JSONException
 	 */
-	private void putMessageList(String msg, String mobiles, JSONObject json, List<Message> list,MessageType messgeType) throws JSONException {
+	private void putMessageList(String msg, String mobiles, JSONObject json, List<Message> list, MessageType messgeType)
+			throws JSONException {
 		if (mobiles != null && mobiles.contains(",")) {
 			String[] ss = mobiles.split(",");
 			for (String s : ss) {

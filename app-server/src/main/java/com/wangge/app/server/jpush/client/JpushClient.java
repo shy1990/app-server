@@ -120,15 +120,14 @@ public class JpushClient {
 			}
 			return str;
 		}
-		/**
-		 * 
-		 * @Description: 普通通知
-		 * @param @param title
-		 * @param @param msg
-		 * @param @param alias
-		 * @param @return   
-		 * @return String  
-		 * @throws
+	
+		/**@Description: 普通通知
+		 * @param title
+		 * @param msg
+		 * @param alias
+		 * @param msgId 消息主键
+		 * @param type 推送类型
+		 * @return
 		 * @author changjun
 		 * @date 2015年11月13日
 		 */

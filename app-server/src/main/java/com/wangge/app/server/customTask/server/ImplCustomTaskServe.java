@@ -13,7 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.wangge.app.server.customTask.entity.CustomMessages;
 import com.wangge.app.server.customTask.entity.CustomTask;
+import com.wangge.app.server.customTask.repository.CustomMessagesRepository;
 import com.wangge.app.server.customTask.repository.CustomTaskRepository;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.repository.SalesmanRepository;
@@ -24,7 +26,9 @@ public class ImplCustomTaskServe implements CustomTaskServer {
 	CustomTaskRepository customRep;
 	@Autowired
 	SalesmanRepository salesmanRep;
-	private static final String[] TASKTYPEARR = new String[] { "注册", "售后", "扣罚" };
+	@Autowired
+	CustomMessagesRepository messageRep;
+	public static final String[] TASKTYPEARR = new String[] { "注册", "售后", "扣罚" };
 
 	@Override
 	public Map<String, Object> getList(String salesmanId, Pageable page) {
@@ -55,6 +59,42 @@ public class ImplCustomTaskServe implements CustomTaskServer {
 		List<Salesman> newlist = salesmanRep.findAll(idList);
 		customTask.setSalesmanSet(new HashSet<Salesman>(newlist));
 		customRep.save(customTask);
+	}
+
+	@Override
+	public void setStatus(CustomTask customTask) {
+		customTask.setStatus(1);
+		customRep.save(customTask);
+	}
+
+	@Override
+	public void saveMessage(CustomMessages message) {
+		messageRep.save(message);
+	}
+
+	@Override
+	public Map<String, Object> findCustomTask(CustomTask customTask, String salesmanId) {
+		List<CustomMessages> messageList = messageRep.findByCustomtaskIdAndSalesmanIdOrderByTimeAsc(customTask.getId(),
+				salesmanId);
+		for (CustomMessages m : messageList) {
+			m.setCtime();
+		}
+		// Salesman salesman=salesmanRep.findOne(salesmanId);
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		// dataMap.put("salesman", salesman.getTruename());
+		dataMap.put("customTask", customTask);
+		dataMap.put("messageList", messageList);
+		return dataMap;
+	}
+
+	@Override
+	public List<CustomMessages> findMessageList(CustomTask customTask, String salesmanId) {
+		List<CustomMessages> messageList = messageRep.findByCustomtaskIdAndSalesmanIdOrderByTimeAsc(customTask.getId(),
+				salesmanId);
+		for (CustomMessages m : messageList) {
+			m.setCtime();
+		}
+		return messageList;
 	}
 
 }
