@@ -62,9 +62,10 @@ public class ImplCustomTaskServe implements CustomTaskServer {
 	}
 
 	@Override
-	public void setStatus(CustomTask customTask) {
+	public void updateStatus(CustomTask customTask, String salesmanId) {
 		customTask.setStatus(1);
 		customRep.save(customTask);
+		messageRep.updateBySalesmainId(customTask.getId(), salesmanId);
 	}
 
 	@Override

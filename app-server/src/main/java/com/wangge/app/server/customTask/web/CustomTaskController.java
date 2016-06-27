@@ -89,7 +89,7 @@ public class CustomTaskController {
 		model.addAttribute("messageList", sdf);
 		model.addAttribute("messagesCount", sdf.size());
 		model.addAttribute("taskType",ImplCustomTaskServe.TASKTYPEARR[customTask.getType()]);
-		customServ.setStatus(customTask);
+		customServ.updateStatus(customTask,salesmanId);
 		return "customTask/detail";
 	}
 

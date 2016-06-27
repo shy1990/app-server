@@ -28,8 +28,9 @@ public interface CustomTaskServer {
 
 	/**将一个任务设置为已读
 	 * @param customTask
+	 * @param salesmanId 
 	 */
-	public void setStatus(CustomTask customTask);
+	public void updateStatus(CustomTask customTask, String salesmanId);
 
 	/**保存一条消息记录
 	 * @param message
