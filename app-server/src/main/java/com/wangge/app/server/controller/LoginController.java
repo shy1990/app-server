@@ -46,9 +46,12 @@ public class LoginController {
     JsonCustom json = new JsonCustom();
     Salesman salesman =salesmanService.login(username,password);
     
-    
+ 
     if(salesman !=null && !"".equals(salesman.getId())){
-      
+    	  if(salesman.getUser().getStatus().ordinal()!=0){
+    		   json.setMsg("此帐号已被锁定");
+    	        return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);
+    	  }
       if((salesman.getSimId() == null || "".equals(salesman.getSimId()))){
         salesman.setSimId(simId);
         salesmanService.save(salesman);
