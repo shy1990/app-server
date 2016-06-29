@@ -13,7 +13,6 @@ import java.util.Set;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
@@ -29,7 +28,6 @@ import org.springframework.stereotype.Service;
 
 import com.wangge.app.server.entity.Region;
 import com.wangge.app.server.entity.RegistData;
-import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.monthTask.entity.MonthTask;
 import com.wangge.app.server.monthTask.entity.MonthTaskExecution;
 import com.wangge.app.server.monthTask.entity.MonthTaskSub;
@@ -512,7 +510,6 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 
 	private void setDone(int level, MonthTask mt) {
 		Class<? extends MonthTask> mclass = mt.getClass();
-		String rate = null;
 		try {
 			Integer sum = getReflectInt(mclass.getDeclaredMethod("getTal" + level + "done").invoke(mt));
 			mclass.getDeclaredMethod("setTal" + level + "done", Integer.class).invoke(mt, ++sum);

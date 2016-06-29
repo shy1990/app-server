@@ -1,24 +1,18 @@
 package com.wangge.app.server.monthTask.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.wangge.app.server.monthTask.entity.MonthshopBasData;
 import com.wangge.app.server.monthTask.repository.MonthTaskSubRepository;
 import com.wangge.app.server.monthTask.repository.MonthshopBasDataRepository;
 import com.wangge.app.server.repository.RegistDataRepository;
 import com.wangge.app.server.repository.SalesmanRepository;
-import com.wangge.app.server.util.DateUtil;
 
 @Component
 @EnableScheduling

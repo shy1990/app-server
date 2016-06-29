@@ -1,9 +1,5 @@
 package com.wangge.app.server.monthTask.repository;
 
-
-import javax.persistence.NamedEntityGraph;
-import javax.persistence.NamedQuery;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
