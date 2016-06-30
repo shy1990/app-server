@@ -43,7 +43,7 @@ public class UnpaymentRemarkController {
     message message = new message();
     String orderno = jsons.getString("orderno");
    try {
-     if(!urs.existOrder(orderno)){//判断订单是否已经存在
+     if(!urs.existOrderRemark(orderno)){//判断订单是否已经存在报备
     
      UnpaymentRemark ur = new UnpaymentRemark();
      ur.setAboveImgUrl(jsons.getString("aboveImgUrl"));

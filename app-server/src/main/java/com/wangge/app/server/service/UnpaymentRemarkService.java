@@ -60,7 +60,7 @@ public class UnpaymentRemarkService {
   * @return boolean    返回类型 
   * @throws
    */
-  public boolean existOrder(String orderno) {
+  public boolean existOrderRemark(String orderno) {
     UnpaymentRemark unpaymentRemark = upr.findByorderno(orderno);
     if(unpaymentRemark != null){
        return true;
