@@ -78,7 +78,7 @@ public class MineController {
 		
 		 
 		
-		if(order!=null && "2".equals(order.getStatus())){
+		if(order!=null && 2 == order.getStatus().ordinal()){
 		  StringBuffer sb = new StringBuffer();
       int skuNum = 0;
       for (OrderItem item : order.getItems()) {
