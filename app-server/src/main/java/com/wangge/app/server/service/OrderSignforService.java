@@ -108,7 +108,6 @@ public class OrderSignforService {
       String signGeoPoint, int payType, String smsCode,int isPrimaryAccount,String userId,String childId,String  storePhone) throws Exception {
       OrderSignfor orderSignFor =  findOrderSignFor(orderNo,userPhone);
        if(orderSignFor!= null){
-         if(orderSignFor.getOrderStatus() == 3){
            String accountId = null;
            orderSignFor.setCustomSignforTime(new Date());
            orderSignFor.setCustomSignforGeopoint(signGeoPoint);
@@ -143,9 +142,6 @@ public class OrderSignforService {
            }
           
              ctx.publishEvent(new afterSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,6,storePhone));
-         }else{
-           throw new  RuntimeException("该单未揽收!");
-         }
         
        }else{
          throw new  RuntimeException("订单不存在!");
@@ -175,7 +171,6 @@ public class OrderSignforService {
   public void updateOrderSignfor(String orderNo, String userPhone, String remark,String signGeoPoint,int isPrimaryAccount,String userId,String childId,String  storePhone) throws Exception{
     OrderSignfor orderSignFor = findOrderSignFor(orderNo,userPhone);
     if(orderSignFor!= null){
-      if(orderSignFor.getOrderStatus() == 3){
         String accountId = null;
         orderSignFor.setCustomUnSignRemark(remark);
         orderSignFor.setCustomSignforTime(new Date());
@@ -195,9 +190,6 @@ public class OrderSignforService {
            monthTaskServive.saveExecution(registData.getId(), "客户拒签");
          }
            ctx.publishEvent(new afterSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,7,storePhone));
-      }else{
-        throw new  RuntimeException("该单未揽收!");
-      }
      
     }else{
       throw new  RuntimeException("订单不存在!");

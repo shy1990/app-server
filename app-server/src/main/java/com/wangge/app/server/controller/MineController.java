@@ -78,7 +78,7 @@ public class MineController {
 		
 		 
 		
-		if(order!=null){
+		if(order!=null && "2".equals(order.getStatus())){
 		  StringBuffer sb = new StringBuffer();
       int skuNum = 0;
       for (OrderItem item : order.getItems()) {
@@ -119,8 +119,8 @@ public class MineController {
         return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
       }
     }
-    jo.put("state", "未查询相关信息,请重试");
-    return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
+    jo.put("msg", "未查询相关信息或快件未揽收,请重试");
+    return new ResponseEntity<JSONObject>(jo, HttpStatus.BAD_REQUEST);
 
   }
   
