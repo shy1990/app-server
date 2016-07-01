@@ -24,7 +24,7 @@ public interface MonthTaskSubRepository
 	@Transactional
 	@Query(value = 
 	    "update sys_monthtask_sub t\n" +
-	        "   set t.delay = 0  where (t.goal - t.done + 3) >=\n" + 
+	        "   set t.delay = 1  where (t.goal - t.done + 3) >=\n" + 
 	        "       to_char(add_months(to_date(to_char(sysdate, 'yyyy-mm'), 'yyyy-mm'), 1) - sysdate)\n" + 
 	        "   and t.delay = 0    and exists (select 1 \n" + 
 	        "          from sys_monthshop_basdata d \n" + 
