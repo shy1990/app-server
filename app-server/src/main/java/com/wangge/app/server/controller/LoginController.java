@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.ChildAccount;
 import com.wangge.app.server.entity.Salesman;
+import com.wangge.app.server.entity.User.UserStatus;
 import com.wangge.app.server.pojo.JsonCustom;
 import com.wangge.app.server.service.AssessService;
 import com.wangge.app.server.service.ChildAccountService;
@@ -46,45 +47,47 @@ public class LoginController {
     JsonCustom json = new JsonCustom();
     Salesman salesman =salesmanService.login(username,password);
     
- 
-    if(salesman !=null && !"".equals(salesman.getId())){
-    	  if(salesman.getUser().getStatus().ordinal()!=0){
-    		   json.setMsg("此帐号已被锁定");
-    	        return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);
-    	  }
-      if((salesman.getSimId() == null || "".equals(salesman.getSimId()))){
-        salesman.setSimId(simId);
-        salesmanService.save(salesman);
-        return returnLogSucMsg(json, salesman);
-      }else if(salesman.getSimId() != null && !"".equals(salesman.getSimId()) && simId.equals(salesman.getSimId())){
-        return returnLogSucMsg(json, salesman);
-    
-      }else{
-        if(salesman.getIsPrimaryAccount() == 1){
-          List<ChildAccount> childList  =   childAccountService.getChildAccountByParentId(salesman.getId());
-          if(childList!=null && childList.size() > 0){
-            for(ChildAccount chil : childList){
-               if(chil.getSimId() == null || "".equals(chil.getSimId())){
-                 chil.setSimId(simId);
-                 childAccountService.save(chil);
-                 return returnLogSucMsg(json, salesman, chil);
-               }else if(chil.getSimId().equals(simId)){
-                 return returnLogSucMsg(json, salesman, chil);
-               }
-             
-            }
-        }
+    if(UserStatus.NORMAL.equals(salesman.getUser().getStatus())){
+      if(salesman !=null && !"".equals(salesman.getId())){
         
-          json.setMsg("与你上一次登录手机卡不同！");
-        return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);
+        if((salesman.getSimId() == null || "".equals(salesman.getSimId()))){
+          salesman.setSimId(simId);
+          salesmanService.save(salesman);
+          return returnLogSucMsg(json, salesman);
+        }else if(salesman.getSimId() != null && !"".equals(salesman.getSimId()) && simId.equals(salesman.getSimId())){
+          return returnLogSucMsg(json, salesman);
+      
+        }else{
+          if(salesman.getIsPrimaryAccount() == 1){
+            List<ChildAccount> childList  =   childAccountService.getChildAccountByParentId(salesman.getId());
+            if(childList!=null && childList.size() > 0){
+              for(ChildAccount chil : childList){
+                 if(chil.getSimId() == null || "".equals(chil.getSimId())){
+                   chil.setSimId(simId);
+                   childAccountService.save(chil);
+                   return returnLogSucMsg(json, salesman, chil);
+                 }else if(chil.getSimId().equals(simId)){
+                   return returnLogSucMsg(json, salesman, chil);
+                 }
+               
+              }
+          }
+          
+            json.setMsg("与你上一次登录手机卡不同！");
+          return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);
+          }
         }
+         json.setMsg("登陆成功！");
+         return returnLogSucMsg(json, salesman);
+       //  return new ResponseEntity<JsonCustom>(json, HttpStatus.OK);
+    
+      }else {
+        json.setMsg("用戶名或密码错误！");
+        return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);
       }
-      returnLogSucMsg(json, salesman);
-       return new ResponseEntity<JsonCustom>(json, HttpStatus.OK);
 
-  
-    }else {
-      json.setMsg("用戶名或密码错误！");
+    }else{
+      json.setMsg("该账户已被冻结！");
       return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);
     }
   }

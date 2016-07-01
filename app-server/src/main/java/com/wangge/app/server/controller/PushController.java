@@ -3,13 +3,11 @@ package com.wangge.app.server.controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,14 +17,13 @@ import com.wangge.app.server.entity.Message.MessageType;
 import com.wangge.app.server.entity.Message.SendChannel;
 import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.entity.RegistData;
+import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.jpush.client.JpushClient;
-import com.wangge.app.server.repository.MessageRepository;
-import com.wangge.app.server.repository.RegistDataRepository;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.service.MessageService;
 import com.wangge.app.server.service.OrderSignforService;
-import com.wangge.app.server.service.SalesmanService;
 import com.wangge.app.server.service.RegistDataService;
+import com.wangge.app.server.service.SalesmanService;
 
 @RestController
 @RequestMapping({ "/v1/push" })
@@ -74,13 +71,15 @@ public class PushController {
     int skuNum = Integer.parseInt(json.getString("skuNum"));
     Float amount = Float.parseFloat(json.getString("amount"));
     String orderno = json.getString("orderNum");
+    Salesman salesman =new Salesman();
     if(!json.isNull("memberMobile")){
       String memberMobile=json.getString("memberMobile");
       RegistData registdata=registDataService.findByPhoneNum(memberMobile);
-      
       if(null==registdata){
         return false;
       }
+      salesman= salesmanService.findSaleamanByRegionId(registdata.getRegion().getParent().getId());//通过注册客户信息找到关联区域的业务员。正确推送步骤需要1.业务后台注册数据要和区域统一
+      mobile=salesman.getMobile();
     }
     
     if(ss.contains("市")){
@@ -108,7 +107,7 @@ public class PushController {
         o.setPhoneCount(skuNum);
         o.setOrderStatus(0);
         o.setShopName(ss);
-        o.setUserId(salesmanService.findByMobile(mobile).getId());
+        o.setUserId(salesman.getId());
         o.setUserPhone(mobile);
         o.setPartsCount(Integer.parseInt(accCount));
         orderSignforService.saveOrderSignfor(o);
