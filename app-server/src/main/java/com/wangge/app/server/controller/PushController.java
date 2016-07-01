@@ -112,6 +112,7 @@ public class PushController {
         o.setPartsCount(Integer.parseInt(accCount));
         orderSignforService.saveOrderSignfor(o);
         if(null!=salesmanService.findByMobile(mobile)){
+        	System.out.println("***************"+"是否两条"+"××××××××××××××××××××××××××××××××××××××××××××××××××××××");
             str = JpushClient.sendOrder("下单通知", send,mobile,json.getString("orderNum"),json.getString("skuNum"),json.getString("accNum"),"0");
           }
       }
