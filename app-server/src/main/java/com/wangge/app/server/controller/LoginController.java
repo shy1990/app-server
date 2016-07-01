@@ -1,5 +1,6 @@
 package com.wangge.app.server.controller;
 
+import java.util.Calendar;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -14,10 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.ChildAccount;
+import com.wangge.app.server.entity.Salary;
 import com.wangge.app.server.entity.Salesman;
+import com.wangge.app.server.entity.User.UserStatus;
 import com.wangge.app.server.pojo.JsonCustom;
 import com.wangge.app.server.service.AssessService;
 import com.wangge.app.server.service.ChildAccountService;
+import com.wangge.app.server.service.SalaryService;
 import com.wangge.app.server.service.SalesmanService;
 
 @RestController
@@ -32,6 +36,8 @@ public class LoginController {
   private AssessService assessService;
 	@Resource
 	private ChildAccountService childAccountService;
+	@Resource
+	private SalaryService salaryService;
 	/**
 	 * 登录 
 	 * @param json
@@ -46,41 +52,47 @@ public class LoginController {
     JsonCustom json = new JsonCustom();
     Salesman salesman =salesmanService.login(username,password);
     
-    
+   
     if(salesman !=null && !"".equals(salesman.getId())){
+      if(UserStatus.NORMAL.equals(salesman.getUser().getStatus())){
+        if((salesman.getSimId() == null || "".equals(salesman.getSimId()))){
+          salesman.setSimId(simId);
+          salesmanService.save(salesman);
+          return returnLogSucMsg(json, salesman);
+        }else if(salesman.getSimId() != null && !"".equals(salesman.getSimId()) && simId.equals(salesman.getSimId())){
+          return returnLogSucMsg(json, salesman);
       
-      if((salesman.getSimId() == null || "".equals(salesman.getSimId()))){
-        salesman.setSimId(simId);
-        salesmanService.save(salesman);
-        return returnLogSucMsg(json, salesman);
-      }else if(salesman.getSimId() != null && !"".equals(salesman.getSimId()) && simId.equals(salesman.getSimId())){
-        return returnLogSucMsg(json, salesman);
+        }else{
+          if(salesman.getIsPrimaryAccount() == 1){
+            List<ChildAccount> childList  =   childAccountService.getChildAccountByParentId(salesman.getId());
+            if(childList!=null && childList.size() > 0){
+              for(ChildAccount chil : childList){
+                 if(chil.getSimId() == null || "".equals(chil.getSimId())){
+                   chil.setSimId(simId);
+                   childAccountService.save(chil);
+                   return returnLogSucMsg(json, salesman, chil);
+                 }else if(chil.getSimId().equals(simId)){
+                   return returnLogSucMsg(json, salesman, chil);
+                 }
+               
+              }
+          }
+          
+            json.setMsg("与你上一次登录手机卡不同！");
+          return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);
+          }
+        }
+         json.setMsg("登陆成功！");
+         return returnLogSucMsg(json, salesman);
+       //  return new ResponseEntity<JsonCustom>(json, HttpStatus.OK);
     
-      }else{
-        if(salesman.getIsPrimaryAccount() == 1){
-          List<ChildAccount> childList  =   childAccountService.getChildAccountByParentId(salesman.getId());
-          if(childList!=null && childList.size() > 0){
-            for(ChildAccount chil : childList){
-               if(chil.getSimId() == null || "".equals(chil.getSimId())){
-                 chil.setSimId(simId);
-                 childAccountService.save(chil);
-                 return returnLogSucMsg(json, salesman, chil);
-               }else if(chil.getSimId().equals(simId)){
-                 return returnLogSucMsg(json, salesman, chil);
-               }
-             
-            }
-        }
-        
-          json.setMsg("与你上一次登录手机卡不同！");
+      }else {
+       
+        json.setMsg("该账户已被冻结！");
         return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);
-        }
       }
-      returnLogSucMsg(json, salesman);
-       return new ResponseEntity<JsonCustom>(json, HttpStatus.OK);
 
-  
-    }else {
+    }else{
       json.setMsg("用戶名或密码错误！");
       return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);
     }
@@ -109,6 +121,19 @@ public class LoginController {
 		json.setIsPrimaryAccount(0);
 		json.setMsg("登陆成功！");
 		json.setStage(salesman.getAssessStage());
+		if(null!=salesman.getMobile()&&!"".equals(salesman)){
+			Calendar calendar=Calendar.getInstance();
+			int month=calendar.get(Calendar.MONTH);//上个月
+			Salary salary=salaryService.findSalary(salesman.getMobile().trim(),month+"");
+			if(null!=salary){
+				json.setSalay(salary.getSalary()+"");
+			}else{
+				json.setSalay("");
+			}
+		}else{
+			json.setSalay("");
+		}
+		
 		return new ResponseEntity<JsonCustom>(json, HttpStatus.OK);
 	}
 	
@@ -140,6 +165,18 @@ public class LoginController {
 	    json.setIsPrimaryAccount(1);
 	    json.setMsg("登陆成功！");
 	    json.setStage(salesman.getAssessStage());
+	    if(null!=salesman.getMobile()&&!"".equals(salesman)){
+			Calendar calendar=Calendar.getInstance();
+			int month=calendar.get(Calendar.MONTH);//上个月
+			Salary salary=salaryService.findSalary(salesman.getMobile().trim(),month+"");
+			if(null!=salary){
+				json.setSalay(salary.getSalary()+"");
+			}else{
+				json.setSalay("");
+			}
+		}else{
+			json.setSalay("");
+		}
 	    return new ResponseEntity<JsonCustom>(json, HttpStatus.OK);
 	  }
 	  

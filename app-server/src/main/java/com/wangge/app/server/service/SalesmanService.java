@@ -67,4 +67,9 @@ public class SalesmanService {
     }
     return null;
   }
+  
+  
+  public Salesman findSaleamanByRegionId(String regionId){
+	 return  salesmanRepository.findSaleamanByRegionId(regionId);
+  }
 }
