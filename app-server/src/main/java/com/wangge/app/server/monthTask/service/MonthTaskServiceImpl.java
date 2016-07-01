@@ -487,8 +487,10 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 				monthShopDRep.save(shop);
 			} catch (Exception e) {
 				e.printStackTrace();
+				throw e;
 			}
 		}
+		
 		if (null != mtaskSub) {
 			Date lsTime = mtaskSub.getLastTime();
 			if (!(DateUtil.date2String(lsTime)).equals(DateUtil.date2String(new Date()))) {
