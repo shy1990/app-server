@@ -178,8 +178,7 @@ public class OrderSignforController {
       }
       
     } catch (Exception e) {
-      e.printStackTrace();
-      m.setMsg("false");
+      m.setMsg(e.getMessage());
       m.setCode(1);
      /* logger.error("OrderSignforController updateOrderSignfor error :"+e);*/
     }
@@ -214,7 +213,7 @@ public class OrderSignforController {
         m.setMsg("success");
         m.setCode(0);
     } catch (Exception e) {
-      m.setMsg("false");
+      m.setMsg(e.getMessage());
       m.setCode(1);
      /* logger.error("OrderSignforController customOrderUnSign() error :"+e);*/
     }

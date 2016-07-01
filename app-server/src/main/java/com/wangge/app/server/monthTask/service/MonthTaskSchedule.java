@@ -34,7 +34,10 @@ public class MonthTaskSchedule {
 	@Autowired
 	RegistDataRepository registRep;
 
-	@Scheduled(cron = "0 0 20 ? * *")
+	/**
+	 * 每天凌晨执行,进行提醒
+	 */
+	@Scheduled(cron = "0 0 1 ? * *")
 	public void exsitUnpaymentRemarkStatus() {
 		montSubrep.updatebyDelay();
 	}
