@@ -47,9 +47,9 @@ public class LoginController {
     JsonCustom json = new JsonCustom();
     Salesman salesman =salesmanService.login(username,password);
     
-    if(UserStatus.NORMAL.equals(salesman.getUser().getStatus())){
-      if(salesman !=null && !"".equals(salesman.getId())){
-        
+   
+    if(salesman !=null && !"".equals(salesman.getId())){
+      if(UserStatus.NORMAL.equals(salesman.getUser().getStatus())){
         if((salesman.getSimId() == null || "".equals(salesman.getSimId()))){
           salesman.setSimId(simId);
           salesmanService.save(salesman);
@@ -82,12 +82,13 @@ public class LoginController {
        //  return new ResponseEntity<JsonCustom>(json, HttpStatus.OK);
     
       }else {
-        json.setMsg("用戶名或密码错误！");
+       
+        json.setMsg("该账户已被冻结！");
         return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);
       }
 
     }else{
-      json.setMsg("该账户已被冻结！");
+      json.setMsg("用戶名或密码错误！");
       return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);
     }
   }
