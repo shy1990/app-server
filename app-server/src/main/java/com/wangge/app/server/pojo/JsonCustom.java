@@ -16,7 +16,8 @@ public class JsonCustom extends Json{
   private String childId;
   
   private String nickName;
-
+  
+  private String salay;
 
   public String getChildName() {
     return childName;
@@ -49,6 +50,14 @@ public class JsonCustom extends Json{
   public void setNickName(String nickName) {
     this.nickName = nickName;
   }
+
+public String getSalay() {
+	return salay;
+}
+
+public void setSalay(String salay) {
+	this.salay = salay;
+}
 
   
 

@@ -1,5 +1,6 @@
 package com.wangge.app.server.controller;
 
+import java.util.Calendar;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -14,11 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.ChildAccount;
+import com.wangge.app.server.entity.Salary;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.User.UserStatus;
 import com.wangge.app.server.pojo.JsonCustom;
 import com.wangge.app.server.service.AssessService;
 import com.wangge.app.server.service.ChildAccountService;
+import com.wangge.app.server.service.SalaryService;
 import com.wangge.app.server.service.SalesmanService;
 
 @RestController
@@ -33,6 +36,8 @@ public class LoginController {
   private AssessService assessService;
 	@Resource
 	private ChildAccountService childAccountService;
+	@Resource
+	private SalaryService salaryService;
 	/**
 	 * 登录 
 	 * @param json
@@ -116,6 +121,19 @@ public class LoginController {
 		json.setIsPrimaryAccount(0);
 		json.setMsg("登陆成功！");
 		json.setStage(salesman.getAssessStage());
+		if(null!=salesman.getMobile()&&!"".equals(salesman)){
+			Calendar calendar=Calendar.getInstance();
+			int month=calendar.get(Calendar.MONTH);//上个月
+			Salary salary=salaryService.findSalary(salesman.getMobile().trim(),month+"");
+			if(null!=salary){
+				json.setSalay(salary.getSalary()+"");
+			}else{
+				json.setSalay("");
+			}
+		}else{
+			json.setSalay("");
+		}
+		
 		return new ResponseEntity<JsonCustom>(json, HttpStatus.OK);
 	}
 	
@@ -147,6 +165,18 @@ public class LoginController {
 	    json.setIsPrimaryAccount(1);
 	    json.setMsg("登陆成功！");
 	    json.setStage(salesman.getAssessStage());
+	    if(null!=salesman.getMobile()&&!"".equals(salesman)){
+			Calendar calendar=Calendar.getInstance();
+			int month=calendar.get(Calendar.MONTH);//上个月
+			Salary salary=salaryService.findSalary(salesman.getMobile().trim(),month+"");
+			if(null!=salary){
+				json.setSalay(salary.getSalary()+"");
+			}else{
+				json.setSalay("");
+			}
+		}else{
+			json.setSalay("");
+		}
 	    return new ResponseEntity<JsonCustom>(json, HttpStatus.OK);
 	  }
 	  
