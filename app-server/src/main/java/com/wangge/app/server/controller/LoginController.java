@@ -126,12 +126,12 @@ public class LoginController {
 			int month=calendar.get(Calendar.MONTH);//上个月
 			Salary salary=salaryService.findSalary(salesman.getMobile().trim(),month+"");
 			if(null!=salary){
-				json.setSalay(salary.getSalary()+"");
+				json.setSalary(salary.getSalary()+"");
 			}else{
-				json.setSalay("");
+				json.setSalary("");
 			}
 		}else{
-			json.setSalay("");
+			json.setSalary("");
 		}
 		
 		return new ResponseEntity<JsonCustom>(json, HttpStatus.OK);
@@ -170,12 +170,12 @@ public class LoginController {
 			int month=calendar.get(Calendar.MONTH);//上个月
 			Salary salary=salaryService.findSalary(salesman.getMobile().trim(),month+"");
 			if(null!=salary){
-				json.setSalay(salary.getSalary()+"");
+				json.setSalary(salary.getSalary()+"");
 			}else{
-				json.setSalay("");
+				json.setSalary("");
 			}
 		}else{
-			json.setSalay("");
+			json.setSalary("");
 		}
 	    return new ResponseEntity<JsonCustom>(json, HttpStatus.OK);
 	  }
