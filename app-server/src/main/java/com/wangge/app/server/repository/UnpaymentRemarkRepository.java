@@ -26,6 +26,8 @@ public interface UnpaymentRemarkRepository extends PagingAndSortingRepository<Un
   
   @Query("select t from UnpaymentRemark t where t.createTime < ?1 and t.createTime > ( ?1-1)")
   List<UnpaymentRemark> findByCreateTime(Date date);
+
+  UnpaymentRemark findByorderno(String orderno);
   
 
 

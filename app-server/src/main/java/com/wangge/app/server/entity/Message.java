@@ -35,7 +35,7 @@ public class Message implements Serializable {
 	}
 
 	public enum MessageType {
-		ORDER("下单通知"), SYSTEM("提交审核"), ACTIVE("活动"), CANCELORDER("取消订单通知"), SALEAFTER("售后"), MONTHTASK("月任务");
+		ORDER("下单通知"), SYSTEM("提交审核"), ACTIVE("活动"),CANCELORDER("取消订单通知"),SHOUHOU("售后");
 		private String name;
 
 		private MessageType(String name) {

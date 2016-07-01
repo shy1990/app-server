@@ -78,7 +78,7 @@ public class MineController {
 		
 		 
 		
-		if(order!=null){
+		if(order!=null && order.getStatus().ordinal() >= 2){
 		  StringBuffer sb = new StringBuffer();
       int skuNum = 0;
       for (OrderItem item : order.getItems()) {
@@ -119,8 +119,8 @@ public class MineController {
         return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
       }
     }
-    jo.put("state", "未查询相关信息,请重试");
-    return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
+    jo.put("msg", "未查询相关信息或快件未揽收,请重试");
+    return new ResponseEntity<JSONObject>(jo, HttpStatus.BAD_REQUEST);
 
   }
   
@@ -187,31 +187,31 @@ public class MineController {
     boolean flag = false;
     if(map!=null){
       //判断钱包流水号是否为空,若是则不调用退款接口
-          if(map.get("payNo")!=null && !"".equals(map.get("payNo"))){
-            if("0".equals(map.get("payMent")) ){
-              if(map.get("totalCost").equals(map.get("walletNum"))){
-                 flag = true;
-              }
-            }else{
-                flag = true;
-            }
+      if (map.get("payNo") != null && !"".equals(map.get("payNo"))) {
+        if ("0".equals(map.get("payMent"))) {
+          if (map.get("totalCost").equals(map.get("walletNum"))) {
+            flag = true;
           }
+        } else {
+          flag = true;
+        }
+      }
     }
-      if(flag){
-         try {
-           jo.put("state", "success");//调用接口传参
-           String str = or.invokWallet(jo, map.get("payNo").toString());
-           jo.clear();
-           if(str!=null && str.contains("202")){
-             jo.put("status", "退款成功,请核实钱包金额");
-           }else{
-             jo.put("status", "退款失败,请联系技术人员!");
-           }
-           return new ResponseEntity<JSONObject>( jo, HttpStatus.OK);
-         } catch (Exception e) {
-           e.printStackTrace();
-         }
-       }
+    if (flag) {
+      try {
+        jo.put("state", "success");// 调用接口传参
+        String str = or.invokWallet(jo, map.get("payNo").toString());
+        jo.clear();
+        if (str != null && str.contains("202")) {
+          jo.put("status", "退款成功,请核实钱包金额");
+        } else {
+          jo.put("status", "退款失败,请联系技术人员!");
+        }
+        return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
   		jo.put("status", "拒签成功");
 		return new ResponseEntity<JSONObject>( jo, HttpStatus.OK);
 	}

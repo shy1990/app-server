@@ -3,7 +3,9 @@ package com.wangge.app.server.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.wangge.app.server.entity.Cash;
+import com.wangge.app.server.entity.MonthPunish;
 import com.wangge.app.server.entity.OrderItem;
 import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.entity.WaterOrderCash;
@@ -24,11 +27,17 @@ import com.wangge.app.server.repository.CashRepository;
 import com.wangge.app.server.repository.OrderItemRepository;
 import com.wangge.app.server.repository.WaterOrderCashRepository;
 import com.wangge.app.server.repository.WaterOrderDetailRepository;
+import com.wangge.app.server.util.DateUtil;
 @Service
 public class CashService {
   
   private Logger logger=Logger.getLogger(CashService.class);
   
+  @Resource
+  private MonthPunishService mps;
+  
+  @Resource
+  private WaterOrderService wos;
   @Resource
   private CashRepository cr;
   @Resource
@@ -150,6 +159,28 @@ public class CashService {
         woc.setCashMoney(totalPrice);
         woc.setIsPunish(0);
         woc.setPayStatus(0);
+
+        //查询是否已经处理扣罚
+        Map<String, Object> spec=new HashMap<>();
+        spec.put("EQ_createDate", DateUtil.date2String(woc.getCreateDate()));
+        spec.put("EQ_isPunish", 1);
+        spec.put("EQ_userId", userId);
+        List<WaterOrderCash> orderCashs=wos.findAll(spec);
+        if(orderCashs==null||orderCashs.size()==0){
+          //检查是否有扣罚
+          List<MonthPunish> mpl=mps.findByUserIdAndCreateDate(userId, DateUtil.date2String(DateUtil.moveDate(woc.getCreateDate(),-1)));
+          if(mpl.size()>0){
+            woc.setIsPunish(1);
+            //修改扣罚状态确认有对应流水单号。
+            mpl.forEach(mp -> {
+              mp.setStatus(1);
+            });
+            mps.save(mpl);
+          }
+          
+        }
+        
+        
         //保存流水单
         woc = wocr.save(woc);
         //保存流水单详情列表
@@ -160,6 +191,7 @@ public class CashService {
       }
     } catch (Exception e) {
       logger.info(e.getMessage());
+      return msg;
     }
     
     return msg;

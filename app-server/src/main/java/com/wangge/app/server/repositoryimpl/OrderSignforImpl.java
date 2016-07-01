@@ -11,6 +11,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
 
@@ -170,4 +171,21 @@ public class OrderSignforImpl {
   return  orderSignforList;
   }
 
+  /**
+   * 
+   * @Description: 客户取消订单修改信息表类型
+   * @param @param MessageType mt
+   * @param @param String orderNum
+   * @param @return   
+   * @return String  
+   * @throws
+   * @author changjun
+   * @date 2015年12月1日
+   */
+  @Transactional
+  public String updateMessageType(int status,String orderNum){
+    String sql = "update BIZ_ORDER_SIGNFOR set order_status= "+status+" where order_no = '"+orderNum+"'";
+    Query query =  em.createNativeQuery(sql);
+    return query.executeUpdate()>0?"suc":"false";
+  }
 }

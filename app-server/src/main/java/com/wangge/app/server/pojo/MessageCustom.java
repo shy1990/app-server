@@ -16,7 +16,6 @@ public class MessageCustom extends message {
   private static final long serialVersionUID = 1L;
   @JsonFormat(pattern="MM.dd HH:mm",timezone = "GMT+8")
   private Date signTime;
-  private int code;
   @JsonInclude(Include.NON_DEFAULT)
   private boolean enable;
   
@@ -29,12 +28,6 @@ public class MessageCustom extends message {
   }
   public void setSignTime(Date signTime) {
     this.signTime = signTime;
-  }
-  public int getCode() {
-    return code;
-  }
-  public void setCode(int code) {
-    this.code = code;
   }
   public boolean isEnable() {
     return enable;

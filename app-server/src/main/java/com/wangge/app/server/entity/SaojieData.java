@@ -19,6 +19,7 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wangge.app.server.pojo.Color;
 
 /**
@@ -58,6 +59,10 @@ public class SaojieData implements Serializable {
 //@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date saojieDate;
+	@JsonIgnore
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "USER_ID")
+  private Salesman salesman;
 	@Transient
 	private Long registId;
 	@Transient
@@ -198,5 +203,12 @@ public class SaojieData implements Serializable {
     this.accountId = accountId;
   }
 
+  public Salesman getSalesman() {
+    return salesman;
+  }
+
+  public void setSalesman(Salesman salesman) {
+    this.salesman = salesman;
+  }
   
 }

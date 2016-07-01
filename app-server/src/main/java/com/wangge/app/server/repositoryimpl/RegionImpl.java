@@ -18,6 +18,7 @@ public class RegionImpl {
     // o.ship_status !=0  and 
     String sql = "select t.region_id from (select region_id from SYS_REGION START WITH region_id='"+regionId+"' CONNECT BY PRIOR   parent_id=region_id) t where t.region_id not in ('"+regionId+"')";
     Query query = em.createNativeQuery(sql);
+
     List<?> obj = query.getResultList();
     List<String> ids =new  ArrayList<String>();
     if(obj!=null && obj.size()>0){

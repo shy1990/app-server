@@ -14,8 +14,9 @@ public class WaterOrderPart implements Serializable{
   
   private String seriaNo;//流水号
   private Float cash=new Float(0);//现金
-  private Float debt=new Float(0);//拖欠
   private Float amerce=new Float(0);//扣罚
+  private Float unpaid=new Float(0);//未付
+  private Float debt=new Float(0);//拖欠=未付+扣罚
   private Float payable;//应付=现金+拖欠+扣罚
   private Float paid=new Float(0);//实付
   private Float nopay;//待付=应付-实付。
@@ -55,9 +56,17 @@ public class WaterOrderPart implements Serializable{
   public void setAmerce(Float amerce) {
     this.amerce = amerce==null?new Float(0):amerce;
   }
+  
+  public Float getUnpaid() {
+    return unpaid;
+  }
+
+  public void setUnpaid(Float unpaid) {
+    this.unpaid = unpaid==null?new Float(0):unpaid;
+  }
 
   public Float getPayable() {
-    payable=cash+debt+amerce;
+    payable=cash+unpaid+amerce;
     return payable;
   }
 

@@ -15,11 +15,11 @@ public interface SaojieRepository extends JpaRepository<Saojie, Long> {
 	@Query("select s.id,s.name,s.description,s.expiredTime,s.salesman.user.nickname,s.status,s.minValue from Saojie s where s.parent.id is not null")
 	List<Saojie> findAllSaojie();
 	
-
 	Saojie findByOrderAndSalesman(Integer id, Salesman salesman);
 
-	@Query("from Saojie s where s.salesman.id =? and s.order=?")
+	@Query("from Saojie s where s.salesman.id =?1 and s.order=?2")
 	Saojie fingSaojie(String id,Integer order);
   Saojie findByRegionAndSalesman(Region region, Salesman salesman);
-
+  @Query("select max(s.order) from Saojie s where s.salesman.id=?1")
+  int getOrderNumById(String id);
 }
