@@ -3,11 +3,14 @@ package com.wangge.app.server.controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +22,7 @@ import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.jpush.client.JpushClient;
+import com.wangge.app.server.repository.MessageRepository;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.service.MessageService;
 import com.wangge.app.server.service.OrderSignforService;
@@ -42,6 +46,9 @@ public class PushController {
   
   @Resource
   private RegistDataService registDataService;
+  
+  @Resource
+  private MessageRepository messageRep;
   /** 
    * 
    * @Description: 新订单推送
@@ -311,7 +318,7 @@ public class PushController {
       
       Message mes = new Message();
       mes.setChannel(SendChannel.PUSH);
-      mes.setType(MessageType.SHOUHOU);
+      mes.setType(MessageType.SALEAFTER);
       mes.setSendTime(new Date());
       mes.setContent(content);
       mes.setReceiver(mobile);
@@ -328,5 +335,92 @@ public class PushController {
      }
        return true;
   }
+  
+  /**
+	 * 月任务推送
+	 * 
+	 * @param talMap
+	 * @author yangqc
+	 * @return
+	 */
+	@RequestMapping(value = { "/mainMonthTask" }, method = RequestMethod.POST)
+	public boolean monthmainTask(@RequestBody Map<String, Object> talMap) {
+		String msg = talMap.get("msg").toString();
+		String mobiles = talMap.get("mobiles").toString();
+		JSONObject json = new JSONObject();
+		json.put("content", msg);
+		json.put("title", "完成下月月任务设置");
+		List<Message> list = new ArrayList<Message>();
+		Long id = 124567L;
+		try {
+			putMessageList(msg, mobiles, json, list, MessageType.MONTHTASK);
+			messageRep.save(list);
+			id = list.get(0).getId();
+			if (list != null && list.size() > 0) {
+				id = op.addActivityMsg(list);
+			}
+			if (id != 0) {
+				JpushClient.sendSimple("月任务提醒", json.getString("title"), mobiles, id, "5");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			monthmainTask(talMap);
+		}
+
+		return true;
+	}
+
+	/**
+	 * 自定义任务推送
+	 * 
+	 * @param talMap
+	 * @return
+	 */
+	@RequestMapping(value = { "/customTask" }, method = RequestMethod.POST)
+	public boolean customTask(@RequestBody Map<String, Object> talMap) {
+		String msg = talMap.get("msg").toString();
+		String mobiles = talMap.get("mobiles").toString();
+		JSONObject json = new JSONObject();
+		json.put("content", msg);
+		json.put("title", "自定义任务");
+		List<Message> list = new ArrayList<Message>();
+		Long id = Long.parseLong(talMap.get("Id").toString());
+		try {
+			putMessageList(msg, mobiles, json, list, MessageType.MONTHTASK);
+			messageRep.save(list);
+			JpushClient.sendSimple("自定义任务提醒", json.getString("title"), mobiles, id, "6");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			monthmainTask(talMap);
+		}
+
+		return true;
+	}
+  
+	private void putMessageList(String msg, String mobiles, JSONObject json, List<Message> list, MessageType messgeType)
+			throws JSONException {
+		if (mobiles != null && mobiles.contains(",")) {
+			String[] ss = mobiles.split(",");
+			for (String s : ss) {
+				Message mg = new Message();
+				mg.setType(messgeType);
+				mg.setChannel(SendChannel.PUSH);
+				mg.setSendTime(new Date());
+				mg.setContent(json.getString("content"));
+				mg.setReceiver(s);
+				list.add(mg);
+			}
+
+		} else {
+			Message mg = new Message();
+			mg.setType(messgeType);
+			mg.setChannel(SendChannel.PUSH);
+			mg.setSendTime(new Date());
+			mg.setContent(msg);
+			mg.setReceiver(mobiles);
+			list.add(mg);
+		}
+	}
 
 }

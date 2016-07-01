@@ -1,6 +1,5 @@
 package com.wangge.app.server.monthTask.repository;
 
-import javax.persistence.NamedEntityGraph;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
