@@ -13,12 +13,12 @@ public class WaterOrderPart implements Serializable{
   private static final long serialVersionUID = 1L;
   
   private String seriaNo;//流水号
-  private Float cash=new Float(0);//现金
-  private Float amerce=new Float(0);//扣罚
-  private Float unpaid=new Float(0);//未付
-  private Float debt=new Float(0);//拖欠=未付+扣罚
+  private Float cash=0.0f;//现金
+  private Float amerce=0.0f;//扣罚
+  private Float unpaid=0.0f;//未付
+  private Float debt=0.0f;//拖欠=未付+扣罚
   private Float payable;//应付=现金+拖欠+扣罚
-  private Float paid=new Float(0);//实付
+  private Float paid=0.0f;//实付
   private Float nopay;//待付=应付-实付。
   private Integer status;//状态：0-未审核，1-已审核
   private String time;//创建日期
@@ -38,7 +38,7 @@ public class WaterOrderPart implements Serializable{
   }
 
   public void setCash(Float cash) {
-    this.cash = cash==null? new Float(0):cash;
+    this.cash = cash==null? 0.0f:cash;
   }
 
   public Float getDebt() {
@@ -46,7 +46,7 @@ public class WaterOrderPart implements Serializable{
   }
 
   public void setDebt(Float debt) {
-    this.debt = debt==null?new Float(0):debt;
+    this.debt = debt==null?0.0f:debt;
   }
 
   public Float getAmerce() {
@@ -54,7 +54,7 @@ public class WaterOrderPart implements Serializable{
   }
 
   public void setAmerce(Float amerce) {
-    this.amerce = amerce==null?new Float(0):amerce;
+    this.amerce = amerce==null?0.0f:amerce;
   }
   
   public Float getUnpaid() {
@@ -62,7 +62,7 @@ public class WaterOrderPart implements Serializable{
   }
 
   public void setUnpaid(Float unpaid) {
-    this.unpaid = unpaid==null?new Float(0):unpaid;
+    this.unpaid = unpaid==null?0.0f:unpaid;
   }
 
   public Float getPayable() {
@@ -71,7 +71,7 @@ public class WaterOrderPart implements Serializable{
   }
 
   public void setPayable(Float payable) {
-    this.payable = payable==null?new Float(0):payable;
+    this.payable = payable==null?0.0f:payable;
   }
 
   public Float getPaid() {
@@ -79,7 +79,7 @@ public class WaterOrderPart implements Serializable{
   }
 
   public void setPaid(Float paid) {
-    this.paid = paid==null?new Float(0) :paid;
+    this.paid = paid==null?0.0f :paid;
   }
 
   public Float getNopay() {

@@ -110,8 +110,8 @@ public class WaterOrderService {
         //TODO去查询扣罚记录
         List<MonthPunish> mpl=mps.findByUserIdAndCreateDate(order.getUserId(), DateUtil.date2String(DateUtil.moveDate(order.getCreateDate(),-1)));
         if(mpl.size()>0){
-          Float debt=new Float(0);
-          Float amerce=new Float(0);
+          Float debt=0.0f;
+          Float amerce=0.0f;
           for(MonthPunish monthPunish:mpl){
             debt+=monthPunish.getDebt();
             amerce+=monthPunish.getAmerce();

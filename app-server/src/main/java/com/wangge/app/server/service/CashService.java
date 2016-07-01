@@ -134,7 +134,7 @@ public class CashService {
       //生成流水单号 
       String serialNo=createSerialNo();
       
-      Float totalPrice = new Float(0);
+      Float totalPrice = 0.0f;
       if(cashlist.size()>0){
         for(Cash cash:cashlist){
           //计算流水单号收现金金额
