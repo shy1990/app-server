@@ -222,4 +222,11 @@ public class OrderSignforService {
         }
     return true;
   }
+  
+  
+  public OrderSignfor findbyOrderNum(String orderno){
+	  
+	  return osr.findByOrderNo(orderno);
+  }
+  
 }

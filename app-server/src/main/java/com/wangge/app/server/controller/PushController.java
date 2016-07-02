@@ -59,7 +59,7 @@ public class PushController {
    * @author changjun
    * @date 2015年11月5日
    */
-  @RequestMapping(value = { "/pushNewOrder"},method = RequestMethod.POST)
+//  @RequestMapping(value = { "/pushNewOrder"},method = RequestMethod.POST)
   public boolean pushNewOrder(String msg){
 //    StringBuffer mobiles  = new StringBuffer();
     
@@ -183,7 +183,7 @@ public class PushController {
    */
   @RequestMapping(value={ "/pushNews" },method = RequestMethod.POST)
   public boolean pushNews(String msg) {
-    //msg={\"title\":\"天桥区扫街任务\",\"content\":\"天桥区可以开始扫啦啦啦啦!!!\",\"mobile\":\"18764157959\"}    
+    //msg={'title':'天桥区扫街任务','content':'天桥区可以开始扫啦啦啦啦!!!','mobile':'18764157959'}    
      JSONObject json = new JSONObject(msg);
      Message mes = new Message();
      mes.setContent(msg);
@@ -422,5 +422,4 @@ public class PushController {
 			list.add(mg);
 		}
 	}
-
 }

@@ -21,6 +21,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.ApplyPrice;
 import com.wangge.app.server.entity.Order;
 import com.wangge.app.server.entity.OrderItem;
+import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.repository.RegionRepository;
 import com.wangge.app.server.repositoryimpl.ExamImpl;
@@ -28,6 +29,7 @@ import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.service.ApplyPriceService;
 import com.wangge.app.server.service.MessageService;
 import com.wangge.app.server.service.OrderService;
+import com.wangge.app.server.service.OrderSignforService;
 import com.wangge.app.server.service.RegistDataService;
 import com.wangge.app.server.util.HttpUtil;
 import com.wangge.app.server.util.SortUtil;
@@ -57,6 +59,9 @@ public class MineController {
 	private ApplyPriceService aps;
 	@Resource
 	private RegistDataService rds;
+	
+	@Resource
+	private OrderSignforService osf;
 	/**
 	 * 
 	 * @Description: 根据业务手机号订单号判断该订单是否属于该业务员并返回订单详情
@@ -76,9 +81,9 @@ public class MineController {
 		JSONObject jo = new JSONObject();
 		Order order = or.findOne(ordernum);
 		
-		 
+		OrderSignfor orderSignfor = osf.findbyOrderNum(ordernum);
 		
-		if(order!=null && order.getStatus().ordinal() >= 2){
+		if(orderSignfor!=null && orderSignfor.getOrderStatus()>= 2){
 		  StringBuffer sb = new StringBuffer();
       int skuNum = 0;
       for (OrderItem item : order.getItems()) {
