@@ -11,6 +11,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -43,6 +45,7 @@ public class CustomTask {
 	private int punishCount;
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+	@Temporal(TemporalType.DATE)
 	private Date createTime = new Date();
 	// 推送人员
 	@ManyToMany(fetch = FetchType.LAZY)
