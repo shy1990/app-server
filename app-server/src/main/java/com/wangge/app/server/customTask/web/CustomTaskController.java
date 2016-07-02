@@ -1,5 +1,6 @@
 package com.wangge.app.server.customTask.web;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import com.wangge.app.server.customTask.entity.CustomMessages;
 import com.wangge.app.server.customTask.entity.CustomTask;
 import com.wangge.app.server.customTask.server.CustomTaskServer;
 import com.wangge.app.server.customTask.server.ImplCustomTaskServe;
+import com.wangge.app.server.util.DateUtil;
 
 @Controller
 @RequestMapping(value = "/v1/customTask")
@@ -50,27 +52,6 @@ public class CustomTaskController {
 	}
 
 	/**
-	 * 查询单个任务详情数据
-	 * 
-	 * @param customTask
-	 * @return
-	 */
-	@RequestMapping(value = "/details/{id}/{salesmanId}", method = RequestMethod.GET)
-	public ResponseEntity<Object> pointdetail(@PathVariable("id") CustomTask customTask,
-			@PathVariable("salesmanId") String salesmanId, HttpServletRequest request) {
-		Map<String, Object> repMap = new HashMap<String, Object>();
-		try {
-			return new ResponseEntity<Object>(customServ.findCustomTask(customTask, salesmanId), HttpStatus.OK);
-		} catch (Exception e) {
-			e.printStackTrace();
-			repMap.put("code", "0");
-			repMap.put("msg", "数据服务器错误");
-			log.debug(e.getStackTrace());
-			return new ResponseEntity<Object>(repMap, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	/**
 	 * 跳转单条记录详情
 	 * 
 	 * @param customTask
@@ -82,6 +63,7 @@ public class CustomTaskController {
 	public String detail(@PathVariable("id") CustomTask customTask, @PathVariable("salesmanId") String salesmanId,
 			HttpServletRequest request, Model model) {
 		model.addAttribute("task", customTask);
+		model.addAttribute("taskTime",DateUtil.date2String(customTask.getCreateTime(), "MM-dd HH:mm"));
 		model.addAttribute("taskId", customTask.getId());
 		model.addAttribute("salesmanId", salesmanId);
 		List<CustomMessages> sdf= customServ.findMessageList(customTask, salesmanId);

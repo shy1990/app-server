@@ -31,7 +31,7 @@
 						<h5>
 							类型：${taskType} &nbsp; &nbsp;&nbsp;<span class="text-red"
 								id="punish">扣罚：${task.punishCount}元</span> <span
-								class="text-right">${task.createTime}</span>
+								class="text-right">${taskTime}</span>
 						</h5>
 					</div>
 					<hr class="htrr">
