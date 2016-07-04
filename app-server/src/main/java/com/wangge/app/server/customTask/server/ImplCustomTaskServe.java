@@ -27,7 +27,7 @@ public class ImplCustomTaskServe implements CustomTaskServer {
 	SalesmanRepository salesmanRep;
 	@Autowired
 	CustomMessagesRepository messageRep;
-	public static final String[] TASKTYPEARR = new String[] { "注册", "售后", "扣罚" };
+	public static final String[] TASKTYPEARR = new String[] { "注册", "售后", "扣罚","拜访"};
 
 	@Override
 	public Map<String, Object> getList(String salesmanId, Pageable page) {
