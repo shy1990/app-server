@@ -59,6 +59,7 @@ public class MineController {
 	private ApplyPriceService aps;
 	@Resource
 	private RegistDataService rds;
+
 	
 	/**
 	 * 

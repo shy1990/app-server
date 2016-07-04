@@ -199,7 +199,7 @@ public class OrderImpl {
 	@Transactional
 	public void updateOrderShipStateByOrderNum(String ordernum, String status) {
 		String sql = "update SJZAIXIAN.SJ_TB_ORDER set ship_status=" + status
-				+ " ,custom_signfor_time=sysdate,signfortime = sysdate where order_num=" + ordernum+ " ";
+				+ " ,custom_signfor_time=sysdate,signfortime = sysdate where order_num=" + ordernum+ "";
 		Query query = em.createNativeQuery(sql);
 		query.executeUpdate();
 	}
