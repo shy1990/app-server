@@ -60,8 +60,6 @@ public class MineController {
 	@Resource
 	private RegistDataService rds;
 	
-	@Resource
-	private OrderSignforService osf;
 	/**
 	 * 
 	 * @Description: 根据业务手机号订单号判断该订单是否属于该业务员并返回订单详情
@@ -81,9 +79,8 @@ public class MineController {
 		JSONObject jo = new JSONObject();
 		Order order = or.findOne(ordernum);
 		
-		OrderSignfor orderSignfor = osf.findbyOrderNum(ordernum);
 		
-		if(orderSignfor!=null && orderSignfor.getOrderStatus()>= 2){
+		if(order!=null && order.getStatus().ordinal()>= 2){
 		  StringBuffer sb = new StringBuffer();
       int skuNum = 0;
       for (OrderItem item : order.getItems()) {
