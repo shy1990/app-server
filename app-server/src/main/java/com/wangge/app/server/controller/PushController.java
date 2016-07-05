@@ -59,7 +59,7 @@ public class PushController {
    * @author changjun
    * @date 2015年11月5日
    */
-//  @RequestMapping(value = { "/pushNewOrder"},method = RequestMethod.POST)
+  @RequestMapping(value = { "/pushNewOrder"},method = RequestMethod.POST)
   public boolean pushNewOrder(String msg){
 //    StringBuffer mobiles  = new StringBuffer();
     
@@ -71,6 +71,7 @@ public class PushController {
      *{"orderNum":"222222222222222","mobiles":"1561069 62989","amount":"10.0","username":"天桥魅族店"}
      */
     
+	 msg="{'orderNum':'222222222222222','mobiles':'156106962989','amount':'10.0','username':'天桥魅族店','skuNum':'333333','accNum':'444444','memberMobile':'18353852456'}";
     JSONObject json = new JSONObject(msg);
     String mobile = json.getString("mobiles");
     String accCount = json.getString("accNum");
@@ -79,6 +80,7 @@ public class PushController {
     Float amount = Float.parseFloat(json.getString("amount"));
     String orderno = json.getString("orderNum");
     Salesman salesman =new Salesman();
+    String userId=null;
     if(!json.isNull("memberMobile")){
       String memberMobile=json.getString("memberMobile");
       RegistData registdata=registDataService.findByPhoneNum(memberMobile);
@@ -87,6 +89,7 @@ public class PushController {
       }
       salesman= salesmanService.findSaleamanByRegionId(registdata.getRegion().getParent().getId());//通过注册客户信息找到关联区域的业务员。正确推送步骤需要1.业务后台注册数据要和区域统一
       mobile=salesman.getMobile();
+      userId=salesman.getId();
     }
     
     if(ss.contains("市")){
@@ -114,7 +117,7 @@ public class PushController {
         o.setPhoneCount(skuNum);
         o.setOrderStatus(0);
         o.setShopName(ss);
-        o.setUserId(salesman.getId());
+        o.setUserId(userId);
         o.setUserPhone(mobile);
         o.setPartsCount(Integer.parseInt(accCount));
         orderSignforService.saveOrderSignfor(o);
