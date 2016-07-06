@@ -37,7 +37,7 @@ public class MonthTarget implements Serializable{
   @JoinColumn(name = "USER_ID")
   private Salesman salesman;
   
-  private String managerId;//区域经理id
+  private String managerRegion;//区域经理regionid
   
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "REGION_ID")
@@ -156,12 +156,12 @@ public class MonthTarget implements Serializable{
     this.targetCycle = targetCycle;
   }
 
-  public String getManagerId() {
-    return managerId;
+  public String getManagerRegion() {
+    return managerRegion;
   }
 
-  public void setManagerId(String managerId) {
-    this.managerId = managerId;
+  public void setManagerRegion(String managerRegion) {
+    this.managerRegion = managerRegion;
   }
 
   public Integer getMatureAll() {
