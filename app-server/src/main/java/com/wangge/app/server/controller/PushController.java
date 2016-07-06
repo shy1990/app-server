@@ -71,7 +71,7 @@ public class PushController {
      *{"orderNum":"222222222222222","mobiles":"1561069 62989","amount":"10.0","username":"天桥魅族店"}
      */
     
-	 msg="{'orderNum':'222222222222222','mobiles':'156106962989','amount':'10.0','username':'天桥魅族店','skuNum':'333333','accNum':'444444','memberMobile':'18353852456'}";
+	// msg="{'orderNum':'222222222222222','mobiles':'156106962989','amount':'10.0','username':'天桥魅族店','skuNum':'333333','accNum':'444444','memberMobile':'18700000001'}";
     JSONObject json = new JSONObject(msg);
     String mobile = json.getString("mobiles");
     String accCount = json.getString("accNum");
@@ -87,7 +87,13 @@ public class PushController {
       if(null==registdata){
         return false;
       }
-      salesman= salesmanService.findSaleamanByRegionId(registdata.getRegion().getParent().getId());//通过注册客户信息找到关联区域的业务员。正确推送步骤需要1.业务后台注册数据要和区域统一
+      List<Salesman> listSalesman= salesmanService.findSaleamanByRegionId(registdata.getRegion().getParent().getId());//通过注册客户信息找到关联区域的业务员。正确推送步骤需要1.业务后台注册数据要和区域统一
+      for(Salesman man:listSalesman){
+    	 if(man.getUser().getStatus().ordinal()!=0){
+    		 return false;
+    	 }
+    	 salesman=man;//一个区域需要把那些没有正在用的帐号关掉
+      }
       mobile=salesman.getMobile();
       userId=salesman.getId();
     }
