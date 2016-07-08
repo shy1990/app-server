@@ -94,7 +94,7 @@ public class MineController {
       jo.put("username", order.getShopName());
       jo.put("createTime", order.getCreateTime());
       jo.put("orderNum", order.getId());
-      jo.put("shipStatus", order.getStatus().getName());
+      jo.put("shipStatus", order.getStatus().ordinal());
       jo.put("amount", order.getAmount());
       jo.put("mobile", order.getMobile());
       jo.put("skuNum", skuNum);

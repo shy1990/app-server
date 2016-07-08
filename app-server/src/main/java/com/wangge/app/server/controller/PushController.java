@@ -71,7 +71,7 @@ public class PushController {
      *{"orderNum":"222222222222222","mobiles":"1561069 62989","amount":"10.0","username":"天桥魅族店"}
      */
     
-	// msg="{'orderNum':'222222222222222','mobiles':'156106962989','amount':'10.0','username':'天桥魅族店','skuNum':'333333','accNum':'444444','memberMobile':'18700000001'}";
+	// msg="{'orderNum':'4334434dfddf343','mobiles':'156106962989','amount':'10.0','username':'测试店铺','skuNum':'333333','accNum':'444444','memberMobile':'13406391876'}";
     JSONObject json = new JSONObject(msg);
     String mobile = json.getString("mobiles");
     String accCount = json.getString("accNum");
@@ -81,6 +81,13 @@ public class PushController {
     String orderno = json.getString("orderNum");
     Salesman salesman =new Salesman();
     String userId=null;
+    Message mes = new Message();
+    mes.setChannel(SendChannel.PUSH);
+    mes.setType(MessageType.ORDER);
+    mes.setSendTime(new Date());
+    mes.setContent(msg);
+    mes.setReceiver(mobile);
+    mr.save(mes);
     if(!json.isNull("memberMobile")){
       String memberMobile=json.getString("memberMobile");
       RegistData registdata=registDataService.findByPhoneNum(memberMobile);
@@ -89,10 +96,9 @@ public class PushController {
       }
       List<Salesman> listSalesman= salesmanService.findSaleamanByRegionId(registdata.getRegion().getParent().getId());//通过注册客户信息找到关联区域的业务员。正确推送步骤需要1.业务后台注册数据要和区域统一
       for(Salesman man:listSalesman){
-    	 if(man.getUser().getStatus().ordinal()!=0){
-    		 return false;
+    	 if(man.getUser().getStatus().ordinal()==0){
+    		 salesman=man;
     	 }
-    	 salesman=man;//一个区域需要把那些没有正在用的帐号关掉
       }
       mobile=salesman.getMobile();
       userId=salesman.getId();
@@ -109,13 +115,6 @@ public class PushController {
       
 
       if(orderSignforService.existOrder(orderno)){//判断订单是否已经存在，不存在保存
-        Message mes = new Message();
-        mes.setChannel(SendChannel.PUSH);
-        mes.setType(MessageType.ORDER);
-        mes.setSendTime(new Date());
-        mes.setContent(msg);
-        mes.setReceiver(mobile);
-        mr.save(mes);
         OrderSignfor o = new OrderSignfor();
         o.setOrderNo(orderno);
         o.setCreatTime(new Date());
