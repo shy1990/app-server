@@ -104,9 +104,9 @@ public class PushController {
       userId=salesman.getId();
     }
     
-    if(ss.contains("市")){
+//    if(ss.contains("市")){
       ss = ss.substring(ss.indexOf("市")+1,ss.length());
-    }
+//    }
     String send = ss+",数量:"+skuNum+",金额:"+amount+",订单号:"+orderno;
   
    
