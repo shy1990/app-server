@@ -21,16 +21,17 @@ import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.ApplyPrice;
 import com.wangge.app.server.entity.Order;
 import com.wangge.app.server.entity.OrderItem;
-import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.entity.RegistData;
+import com.wangge.app.server.entity.Salesman;
+import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.repository.RegionRepository;
 import com.wangge.app.server.repositoryimpl.ExamImpl;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.service.ApplyPriceService;
 import com.wangge.app.server.service.MessageService;
 import com.wangge.app.server.service.OrderService;
-import com.wangge.app.server.service.OrderSignforService;
 import com.wangge.app.server.service.RegistDataService;
+import com.wangge.app.server.service.SalesmanService;
 import com.wangge.app.server.util.HttpUtil;
 import com.wangge.app.server.util.SortUtil;
 import com.wangge.app.server.vo.Apply;
@@ -59,8 +60,8 @@ public class MineController {
 	private ApplyPriceService aps;
 	@Resource
 	private RegistDataService rds;
-
-	
+	@Resource
+	private SalesmanService salesmanService;
 	/**
 	 * 
 	 * @Description: 根据业务手机号订单号判断该订单是否属于该业务员并返回订单详情
@@ -93,7 +94,7 @@ public class MineController {
       jo.put("username", order.getShopName());
       jo.put("createTime", order.getCreateTime());
       jo.put("orderNum", order.getId());
-      jo.put("shipStatus", order.getStatus().getName());
+      jo.put("shipStatus", order.getStatus().ordinal());
       jo.put("amount", order.getAmount());
       jo.put("mobile", order.getMobile());
       jo.put("skuNum", skuNum);
@@ -323,6 +324,21 @@ public class MineController {
 		Exam  ex = epl.ExamSalesman(saleId);
 		return new ResponseEntity<Exam>(ex, HttpStatus.OK);
 	}
+
+	/**
+	 * 月指标统计查询
+	 * @param json
+	 * @return
+	 * @throws ParseException
+     */
+	@RequestMapping(value = "/monthTarget",method = RequestMethod.POST)
+	public ResponseEntity<Json> getMonthTarget(@RequestBody	JSONObject json) throws ParseException{
+		String saleId = json.getString("salesmanId");
+		Salesman salesman = salesmanService.findSalesmanbyId(saleId);
+		Json  jsonObject = epl.getMonthTarget(salesman);
+		return new ResponseEntity<Json>(jsonObject, HttpStatus.OK);
+	}
+
 	/**
 	 * 
 	 * @Description: 根据区域名查看该区域二次提货商家详情

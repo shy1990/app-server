@@ -69,7 +69,7 @@ public class SalesmanService {
   }
   
   
-  public Salesman findSaleamanByRegionId(String regionId){
+  public List<Salesman> findSaleamanByRegionId(String regionId){
 	 return  salesmanRepository.findSaleamanByRegionId(regionId);
   }
 }

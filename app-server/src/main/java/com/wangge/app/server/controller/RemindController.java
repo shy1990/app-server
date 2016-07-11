@@ -78,7 +78,7 @@ public class RemindController {
       jo.put("amount", order.getAmount());
       jo.put("createTime", order.getCreateTime());
       jo.put("orderNum", order.getId());
-      jo.put("shipStatus", order.getStatus().getName());
+      jo.put("shipStatus", order.getStatus().ordinal());
       jo.put("goods", sb);
       jo.put("skuNum", skuNum);
       jo.put("itemOtherNum", accNum);

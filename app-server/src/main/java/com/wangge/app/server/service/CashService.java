@@ -230,5 +230,10 @@ public class CashService {
   public void saveWaterOrderDetail(WaterOrderDetail wod){
     wodr.save(wod);
   }
+  
+  @Transactional
+  public Cash save(Cash cash){
+    return cr.save(cash);
+  }
 //  public List<Cash> findByOrderIdIn()
 }

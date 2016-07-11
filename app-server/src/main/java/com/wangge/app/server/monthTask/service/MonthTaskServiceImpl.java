@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import com.wangge.app.server.entity.Region;
 import com.wangge.app.server.entity.RegistData;
+import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.monthTask.entity.MonthTask;
 import com.wangge.app.server.monthTask.entity.MonthTaskExecution;
 import com.wangge.app.server.monthTask.entity.MonthTaskSub;
@@ -200,6 +201,8 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 		params.remove("EQ_goal");
 		String regionId = params.get("LK_regionId").toString();
 		params.remove("LK_regionId");
+		String salesmanId=params.get("EQ_salesmanId").toString();
+		params.remove("EQ_salesmanId");
 		Set<String> regionSet = getSubShopRegion(regionId);
 		Page<MonthshopBasData> data = monthShopDRep.findAll(new Specification<MonthshopBasData>() {
 			@Override
@@ -216,6 +219,9 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 				}
 				Join<MonthshopBasData, MonthTaskSub> leftJoin = root
 						.join(root.getModel().getSingularAttribute("monthTaskSub", MonthTaskSub.class), JoinType.LEFT);
+				Join<MonthshopBasData, Salesman> saleJoin = root
+            .join(root.getModel().getSingularAttribute("salesman", Salesman.class), JoinType.LEFT);
+				predicates.add(cb.equal(saleJoin.get("id"),salesmanId));
 				predicates.add(cb.or(cb.equal(leftJoin.get("goal"), goal), cb.equal(root.get("used"), 0)));
 				predicates.add(root.get("regionId").in(regionSet));
 				createPedicateByMap(params, root, cb, predicates);
@@ -393,6 +399,8 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 		String regionId = params.get("LK_regionId").toString();
 		params.remove("LK_regionId");
 		Set<String> regionSet = getSubShopRegion(regionId);
+		String salesmanId=params.get("EQ_salesmanId").toString();
+    params.remove("EQ_salesmanId");
 		Page<MonthTaskSub> data = subTaskRep.findAll(new Specification<MonthTaskSub>() {
 			@Override
 			public Predicate toPredicate(Root<MonthTaskSub> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -400,7 +408,11 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 				List<Predicate> predicates = new ArrayList<Predicate>();
 				Join<MonthTaskSub, MonthshopBasData> leftJoin = root
 						.join(root.getModel().getSingularAttribute("monthsd", MonthshopBasData.class), JoinType.LEFT);
-				predicates.add(leftJoin.get("regionId").in(regionSet));
+				/* TODO 多重链接
+				 * */
+				Join<MonthshopBasData, Salesman> saleJoin = leftJoin.join("salesman", JoinType.LEFT);
+        predicates.add(cb.equal(saleJoin.get("id"),salesmanId));
+				predicates.add(leftJoin.get("regionId").in(regionSet));				
 				predicates.add(cb.equal(leftJoin.get("month").as(String.class), month));
 				createPedicateByMap(params, root, cb, predicates);
 				return cb.and(predicates.toArray(new Predicate[] {}));

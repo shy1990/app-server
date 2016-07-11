@@ -21,5 +21,5 @@ public interface SalesmanRepository extends JpaRepository<Salesman, String>  {
 	
 	public Salesman findByMobile(String mobile);
 	
-	Salesman findSaleamanByRegionId(String regionId);
+	List<Salesman> findSaleamanByRegionId(String regionId);
 }
