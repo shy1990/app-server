@@ -59,7 +59,7 @@ public class PushController {
    * @author changjun
    * @date 2015年11月5日
    */
-//  @RequestMapping(value = { "/pushNewOrder"},method = RequestMethod.POST)
+  @RequestMapping(value = { "/pushNewOrder"},method = RequestMethod.POST)
   public boolean pushNewOrder(String msg){
 //    StringBuffer mobiles  = new StringBuffer();
     
@@ -71,6 +71,7 @@ public class PushController {
      *{"orderNum":"222222222222222","mobiles":"1561069 62989","amount":"10.0","username":"天桥魅族店"}
      */
     
+	// msg="{'orderNum':'4334434dfddf343','mobiles':'156106962989','amount':'10.0','username':'测试店铺','skuNum':'333333','accNum':'444444','memberMobile':'13406391876'}";
     JSONObject json = new JSONObject(msg);
     String mobile = json.getString("mobiles");
     String accCount = json.getString("accNum");
@@ -79,19 +80,33 @@ public class PushController {
     Float amount = Float.parseFloat(json.getString("amount"));
     String orderno = json.getString("orderNum");
     Salesman salesman =new Salesman();
+    String userId=null;
+    Message mes = new Message();
+    mes.setChannel(SendChannel.PUSH);
+    mes.setType(MessageType.ORDER);
+    mes.setSendTime(new Date());
+    mes.setContent(msg);
+    mes.setReceiver(mobile);
+    mr.save(mes);
     if(!json.isNull("memberMobile")){
       String memberMobile=json.getString("memberMobile");
       RegistData registdata=registDataService.findByPhoneNum(memberMobile);
       if(null==registdata){
         return false;
       }
-      salesman= salesmanService.findSaleamanByRegionId(registdata.getRegion().getParent().getId());//通过注册客户信息找到关联区域的业务员。正确推送步骤需要1.业务后台注册数据要和区域统一
+      List<Salesman> listSalesman= salesmanService.findSaleamanByRegionId(registdata.getRegion().getParent().getId());//通过注册客户信息找到关联区域的业务员。正确推送步骤需要1.业务后台注册数据要和区域统一
+      for(Salesman man:listSalesman){
+    	 if(man.getUser().getStatus().ordinal()==0){
+    		 salesman=man;
+    	 }
+      }
       mobile=salesman.getMobile();
+      userId=salesman.getId();
     }
     
-    if(ss.contains("市")){
+//    if(ss.contains("市")){
       ss = ss.substring(ss.indexOf("市")+1,ss.length());
-    }
+//    }
     String send = ss+",数量:"+skuNum+",金额:"+amount+",订单号:"+orderno;
   
    
@@ -100,13 +115,6 @@ public class PushController {
       
 
       if(orderSignforService.existOrder(orderno)){//判断订单是否已经存在，不存在保存
-        Message mes = new Message();
-        mes.setChannel(SendChannel.PUSH);
-        mes.setType(MessageType.ORDER);
-        mes.setSendTime(new Date());
-        mes.setContent(msg);
-        mes.setReceiver(mobile);
-        mr.save(mes);
         OrderSignfor o = new OrderSignfor();
         o.setOrderNo(orderno);
         o.setCreatTime(new Date());
@@ -114,7 +122,7 @@ public class PushController {
         o.setPhoneCount(skuNum);
         o.setOrderStatus(0);
         o.setShopName(ss);
-        o.setUserId(salesman.getId());
+        o.setUserId(userId);
         o.setUserPhone(mobile);
         o.setPartsCount(Integer.parseInt(accCount));
         orderSignforService.saveOrderSignfor(o);

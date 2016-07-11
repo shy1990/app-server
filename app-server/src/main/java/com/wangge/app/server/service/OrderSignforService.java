@@ -27,7 +27,7 @@ public class OrderSignforService {
   @Resource
   private OrderSignforRepository osr;
   @Resource
-  private CashRepository cr;
+  private CashService cs;
   
   @Resource
   private OrderImpl opl ;
@@ -130,10 +130,10 @@ public class OrderSignforService {
            try {
              if(2 == payType){
                Cash cash= new Cash(orderSignFor.getId(),userId);
-               cr.save(cash);
+               cs.save(cash);
              }
           } catch (Exception e) {
-            logger.info(e.getMessage());
+            logger.info("客户签收---->收现金--->bug:"+e.getMessage());
           }
             opl.updateOrderShipStateByOrderNum(orderNo,"3");
            RegistData registData = registDataService.findByPhoneNum(storePhone);
