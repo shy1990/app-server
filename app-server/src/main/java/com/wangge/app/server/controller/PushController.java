@@ -105,7 +105,7 @@ public class PushController {
     }
     
 //    if(ss.contains("市")){
-      ss = ss.substring(ss.indexOf("市")+1,ss.length());
+ //     ss = ss.substring(ss.indexOf("市")+1,ss.length());
 //    }
     String send = ss+",数量:"+skuNum+",金额:"+amount+",订单号:"+orderno;
   
