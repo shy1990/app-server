@@ -43,7 +43,7 @@ public class UnpaymentRemarkController {
     message message = new message();
     String orderno = jsons.getString("orderno");
    try {
-     if(!urs.existOrderRemark(orderno)){//判断订单是否已经存在报备
+   //  if(!urs.existOrderRemark(orderno)){//判断订单是否已经存在报备
     
      UnpaymentRemark ur = new UnpaymentRemark();
      ur.setAboveImgUrl(jsons.getString("aboveImgUrl"));
@@ -57,11 +57,10 @@ public class UnpaymentRemarkController {
       urs.saveUnpaymentRemark(ur);
       message.setMsg("保存成功！");
       return new ResponseEntity<message>(message,HttpStatus.CREATED);
-     }
-     message.setMsg("此订单已报备！");
-     return new ResponseEntity<message>(message,HttpStatus.INTERNAL_SERVER_ERROR);
+   //  }
+   //  message.setMsg("此订单已报备！");
+   //  return new ResponseEntity<message>(message,HttpStatus.INTERNAL_SERVER_ERROR);
   } catch (Exception e) {
-     e.printStackTrace();
      logger.error("createUnpaymentRemark eeror .",e);
     message.setMsg("保存失败！");
     return new ResponseEntity<message>(message,HttpStatus.INTERNAL_SERVER_ERROR);
