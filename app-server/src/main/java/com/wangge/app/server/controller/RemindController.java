@@ -65,14 +65,19 @@ public class RemindController {
   @RequestMapping(value = "/selOrderDetail",method = RequestMethod.POST)
   public ResponseEntity<JSONObject> selOrderDetail(@RequestBody  JSONObject json){
     String orderNum = json.getString("orderNum");
-    int skuNum = Integer.parseInt(json.getString("skuNum"));
-    int accNum = Integer.parseInt(json.getString("accNum"));
+    int skuNum = 0;
+    int giftNum = 0;
     Order order = or.findOne(orderNum);
     JSONObject jo = new JSONObject();
     if(order!=null && !"".equals(order.getId())){
       StringBuffer sb = new StringBuffer();
       for (OrderItem item : order.getItems()) {
         sb.append(item.getName()+" ");
+        if("sku".equals(item.getType())){
+          skuNum+=item.getNums();
+        }else if("gift".equals(item.getType())){
+          giftNum+=item.getNums();
+        }
       }
       jo.put("username", order.getShopName());
       jo.put("amount", order.getAmount());
@@ -81,7 +86,7 @@ public class RemindController {
       jo.put("shipStatus", order.getStatus().ordinal());
       jo.put("goods", sb);
       jo.put("skuNum", skuNum);
-      jo.put("itemOtherNum", accNum);
+      jo.put("itemOtherNum", giftNum);
       jo.put("customMobile", order.getMobile());
       jo.put("state", "正常订单");
       return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
