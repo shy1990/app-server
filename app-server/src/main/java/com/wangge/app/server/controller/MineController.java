@@ -84,11 +84,14 @@ public class MineController {
 		
 		if(order!=null && order.getStatus().ordinal()>= 2){
 		  StringBuffer sb = new StringBuffer();
-      int skuNum = 0;
+      int skuNum = 0;  
+      int giftNum = 0;
       for (OrderItem item : order.getItems()) {
         sb.append(item.getName()+" ");
         if("sku".equals(item.getType())){
-          skuNum+=1;
+          skuNum+=item.getNums();
+        }else if("gift".equals(item.getType())){
+          giftNum+=item.getNums();
         }
       }
       jo.put("username", order.getShopName());
@@ -98,7 +101,7 @@ public class MineController {
       jo.put("amount", order.getAmount());
       jo.put("mobile", order.getMobile());
       jo.put("skuNum", skuNum);
-      jo.put("itemOtherNum", order.getItems().size()-skuNum);
+      jo.put("itemOtherNum", giftNum);
       jo.put("goods", sb);
       jo.put("payType", order.getPayMent().getName());
       RegistData rd = rds.findByMemberId(order.getMemberId());
