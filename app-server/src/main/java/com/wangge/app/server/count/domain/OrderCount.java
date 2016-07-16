@@ -80,8 +80,8 @@ public class OrderCount  {
   private OrderCount getOrderCount(Object[] count) {
     Long sum0 = count[0] == null ? 0 : Long.valueOf(count[0].toString());
     Long sum1 = count[1] == null ? 0 : Long.valueOf(count[1].toString());
-    Long sum2 = count[2] == null ? 0 : Long.valueOf(count[2].toString());
-    Long sum3 = count[3] == null ? 0 : Long.valueOf(count[3].toString());
+    Long sum2 = count[2] == null ? 0 : Long.valueOf(count[3].toString());
+    Long sum3 = count[3] == null ? 0 : Long.valueOf(count[2].toString());
     return new OrderCount(sum0, sum1, sum2, sum3);
   }
   
