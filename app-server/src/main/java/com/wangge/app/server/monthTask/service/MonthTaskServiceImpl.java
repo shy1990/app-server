@@ -18,6 +18,8 @@ import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -62,7 +64,8 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 	MonthTaskSchedule monthSche;
 
 	private Integer[] levels = new Integer[] { 20, 15, 10, 7, 4 };
-
+	
+	private Log log = LogFactory.getLog(this.getClass());
 	@Override
 	public ResponseEntity<Map<String, Object>> findTask(String userid) {
 		String month = DateUtil.getPreMonth(new Date(), 1);
@@ -98,15 +101,19 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 			taskmap.put("obj", dList);
 		}catch (IllegalArgumentException | IllegalAccessException | SecurityException e) {
 			e.printStackTrace();
+			log.debug(e);
 			return generateErrorResp(taskmap, "1", "");
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
+			log.debug(e);
 			return generateErrorResp(taskmap, "1", "");
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
+			log.debug(e);
 			return generateErrorResp(taskmap, "1", "");
 		} catch (Exception e) {
 			e.printStackTrace();
+			log.debug(e);
 			return generateErrorResp(taskmap, "1", "");
 		}
 		return new ResponseEntity<Map<String, Object>>(taskmap, HttpStatus.OK);
@@ -163,6 +170,7 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 			taskmap.put("region", dList);
 		} catch (Exception e) {
 			e.printStackTrace();
+			log.debug(e);
 			return generateErrorResp(taskmap, "1", "");
 		}
 		return new ResponseEntity<Map<String, Object>>(taskmap, HttpStatus.OK);
@@ -499,6 +507,7 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
 				monthShopDRep.save(shop);
 			} catch (Exception e) {
 				e.printStackTrace();
+				log.debug(e);
 				throw e;
 			}
 		}
