@@ -77,13 +77,11 @@ public class LoginController {
                
               }
           }
-          
-            json.setMsg("与你上一次登录手机卡不同！");
-          return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);
           }
+          
         }
-         json.setMsg("登陆成功！");
-         return returnLogSucMsg(json, salesman);
+        json.setMsg("与你上一次登录手机卡不同！");
+        return new ResponseEntity<JsonCustom>(json, HttpStatus.UNAUTHORIZED);
        //  return new ResponseEntity<JsonCustom>(json, HttpStatus.OK);
     
       }else {

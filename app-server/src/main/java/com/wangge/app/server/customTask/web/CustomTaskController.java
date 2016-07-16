@@ -1,6 +1,5 @@
 package com.wangge.app.server.customTask.web;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,7 +68,7 @@ public class CustomTaskController {
 		List<CustomMessages> sdf= customServ.findMessageList(customTask, salesmanId);
 		model.addAttribute("messageList", sdf);
 		model.addAttribute("messagesCount", sdf.size());
-		model.addAttribute("taskType",ImplCustomTaskServe.TASKTYPEARR[customTask.getType()]);
+		model.addAttribute("taskType",ImplCustomTaskServe.TASKTYPEDETAILARR[customTask.getType()]);
 		customServ.updateStatus(customTask,salesmanId);
 		return "customTask/detail";
 	}
