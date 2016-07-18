@@ -30,11 +30,11 @@ public class OrderCountController {
   public ResponseEntity<Map<String, Object>> getOderCount(@PathVariable String userId, HttpServletRequest request) {
     Map<String, Object> countMap = new HashMap<>();
     try {
-      Long t1 = System.nanoTime();
+//      Long t1 = System.nanoTime();
       String day = request.getParameter("countDay") == null ? "" : request.getParameter("countDay");
       countMap = orderServer.getOderCount(userId, day);
-      long consumer = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - t1);
-      System.out.println(String.format("search  took %d ms", consumer));
+//      long consumer = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - t1);
+//      System.out.println(String.format("search  took %d ms", consumer));
     } catch (Exception e) {
       e.printStackTrace();
       log.debug(e);
