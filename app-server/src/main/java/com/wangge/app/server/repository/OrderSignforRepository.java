@@ -27,12 +27,13 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
    */
   @Query(value = " select count(1), count(distinct s.shop_Name),\n"
       + "       sum(s.parts_Count), sum(s.phone_Count),  'dayCount'\n" + "  from biz_order_signfor s\n"
-      + " where s.order_status != 1\n" + "   and s.user_id = ?1 \n" + "   and to_char(s.creat_time, 'yyyy-mm-dd') = ?2\n"
-      + "union\n" + "select count(1), count(distinct s.shop_Name),  sum(s.parts_Count),\n"
-      + "       sum(s.phone_Count), 'cancleCount'\n" + "  from biz_order_signfor s\n" + " where s.order_status = 1\n"
-      + "   and s.user_id = ?1 \n" + "   and to_char(s.creat_time, 'yyyy-mm-dd') = ?2 \n" + "union\n"
+      + " where s.order_status not in (1,4) \n" + "   and s.user_id = ?1 \n" + "   and to_char(s.creat_time, 'yyyy-mm-dd') = ?2\n"
+      + " union select count(1), count(distinct s.shop_Name),  sum(s.parts_Count),\n"
+      + "       sum(s.phone_Count), 'cancleCount'\n" + "  from biz_order_signfor s\n" + " where s.order_status in (1,4) \n"
+      + "   and s.user_id = ?1 \n" + "   and to_char(s.creat_time, 'yyyy-mm-dd') = ?2  union \n"
       + "select count(1),count(distinct s.shop_Name),\n" + "       sum(s.parts_Count),sum(s.phone_Count),'monthCount'\n"
-      + "  from biz_order_signfor s\n" + " where s.order_status !=1\n" + "   and s.user_id = ?1 \n"
+      + "  from biz_order_signfor s\n" + " where s.order_status not in (1,4) "
+          + "   and s.user_id = ?1 \n"
       + "   and to_char(s.creat_time, 'yyyy-mm') = ?3 ", nativeQuery = true)
   List<Object> countByuserAndDayAndMonth(String userId, String day, String month);
   
@@ -47,9 +48,9 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
    */
   @Query(value = " select count(1), count(distinct s.shop_Name),\n"
       + "       sum(s.parts_Count), sum(s.phone_Count),  'dayCount'\n" + "  from biz_order_signfor s\n"
-      + " where s.order_status !=1\n" + "   and s.user_id = ?1 \n" + "   and to_char(s.creat_time, 'yyyy-mm-dd') = ?2\n"
+      + " where s.order_status not in (1,4) \n" + "   and s.user_id = ?1 \n" + "   and to_char(s.creat_time, 'yyyy-mm-dd') = ?2\n"
       + "union\n" + "select count(1), count(distinct s.shop_Name),  sum(s.parts_Count),\n"
-      + "       sum(s.phone_Count), 'cancleCount'\n" + "  from biz_order_signfor s\n" + " where s.order_status = 1\n"
+      + "       sum(s.phone_Count), 'cancleCount'\n" + "  from biz_order_signfor s\n" + " where s.order_status in (1,4) \n"
       + "   and s.user_id = ?1 \n" + "   and to_char(s.creat_time, 'yyyy-mm-dd') = ?2 \n", nativeQuery = true)
   List<Object> countByuserAndDay(String userId, String day);
 }
