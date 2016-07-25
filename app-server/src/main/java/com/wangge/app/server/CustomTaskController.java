@@ -34,7 +34,6 @@ import com.wangge.app.util.RestTemplateUtil;
 public class CustomTaskController {
   RestTemplate restTemplate = new RestTemplate();
   private String url = AppInterface.url + "customTask/";
-  private Log log = LogFactory.getLog(this.getClass());
   
   // 查询月任务详情
   @RequestMapping(value = "/{salesmanId}", method = RequestMethod.GET)
@@ -52,8 +51,14 @@ public class CustomTaskController {
    * @return
    */
   @RequestMapping(value = "/detail/{id}/{salesmanId}", method = RequestMethod.GET)
-  public String detail(@PathVariable("id") CustomTask customTask, @PathVariable("salesmanId") String salesmanId,
+  public String detail(@PathVariable("id") String customTaskId, @PathVariable("salesmanId") String salesmanId,
       HttpServletRequest request, Model model) {
+    ResponseEntity<Map<String, Object>> rEntity = handleResult(
+        sendRest("detail/" + customTaskId + "/" + salesmanId, "get", null));
+    if (!rEntity.getStatusCode().equals(HttpStatus.OK)) {
+      return "远程服务器出错,请与管理员联系";
+    }
+    model.addAllAttributes(rEntity.getBody());
     return "customTask/detail";
   }
   
@@ -64,12 +69,8 @@ public class CustomTaskController {
    * @return
    */
   @RequestMapping(value = "/message", method = RequestMethod.POST)
-  public ResponseEntity<Map<String, Object>> createSub(@RequestBody CustomMessages message) {
-    Map<String, Object> repMap = new HashMap<String, Object>();
-    repMap.put("code", "1");
-    
-    return new ResponseEntity<Map<String, Object>>(repMap, HttpStatus.OK);
-    
+  public ResponseEntity<Map<String, Object>> createSub(@RequestBody Map<String, Object> params) {
+    return handleResult(sendRest("message", "post", params));
   }
   
   /**
