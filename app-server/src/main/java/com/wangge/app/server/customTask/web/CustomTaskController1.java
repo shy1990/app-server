@@ -27,7 +27,7 @@ import com.wangge.app.server.util.DateUtil;
 
 @Controller
 @RequestMapping(value = "/v1/customTask")
-public class CustomTaskController {
+public class CustomTaskController1 {
 	@Autowired
 	CustomTaskServer customServ;
 
