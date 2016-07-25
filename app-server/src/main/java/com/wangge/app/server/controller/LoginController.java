@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.wangge.app.constant.AppInterface;
 import com.wangge.app.util.LogUtil;
+import com.wangge.app.util.RestTemplateUtil;
 
 
 @RestController
