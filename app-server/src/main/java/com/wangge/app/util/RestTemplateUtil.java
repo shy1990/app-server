@@ -36,17 +36,15 @@ public class RestTemplateUtil {
     return restTemplate.postForEntity(url , params, classMap.get(returnType));
   }
   
-  @SuppressWarnings("unchecked")
-  public static ResponseEntity<Map<String,Object>> sendRestForMap(RestTemplate restTemplate, String restType,String url,Map<String,Object>params)throws Exception{
-    if(restType.equals("get")){
-      if(null==params){
-        return (ResponseEntity<Map<String, Object>>) restTemplate.getForEntity(url, classMap.get("map"));
-      }  
-      return (ResponseEntity<Map<String, Object>>) restTemplate.getForEntity(url+"?"+StringUtil.joinMap(params, "&"), classMap.get("map"));
-    }
-    return (ResponseEntity<Map<String, Object>>) restTemplate.postForEntity(url , params, classMap.get("map"));
-  }
-  
+  /**
+   * 
+   * 
+   * @param methodUrl
+   * @param restType
+   * @param params
+   * @param url
+   * @return
+   */
   public static  ResponseEntity<Map<String, Object>> sendRest(String methodUrl, String restType, Map<String, Object> params,String url)  {
 	    try {
 	      return RestTemplateUtil.sendRestForMap(new RestTemplate(), restType, url + methodUrl, params);
@@ -58,23 +56,28 @@ public class RestTemplateUtil {
 	      return new ResponseEntity<Map<String, Object>>(repMap, HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
 	  }
+  
+  /**
+   * 
+   * @param restTemplate
+   * @param restType
+   * @param url
+   * @param params
+   * @return
+   * @throws Exception
+   */
+  @SuppressWarnings("unchecked")
+  public static ResponseEntity<Map<String,Object>> sendRestForMap(RestTemplate restTemplate, String restType,String url,Map<String,Object>params)throws Exception{
+    if(restType.equals("get")){
+      if(null==params){
+        return (ResponseEntity<Map<String, Object>>) restTemplate.getForEntity(url, classMap.get("map"));
+      }  
+      return (ResponseEntity<Map<String, Object>>) restTemplate.getForEntity(url+"?"+StringUtil.joinMap(params, "&"), classMap.get("map"));
+    }
+    return (ResponseEntity<Map<String, Object>>) restTemplate.postForEntity(url , params, classMap.get("map"));
+  }
+  
+  
 	
-	  /**
-	   * handleResult:处理返回结果中包含错误信息的情况. <br/>
-	   * 
-	   * @author yangqc
-	   * @param responseEntitu
-	   * @return
-	   * @since JDK 1.8
-	   */
-	  public static ResponseEntity<Map<String, Object>> handleResult(ResponseEntity<Map<String, Object>> responseEntitu) {
-	    Map<String, Object> remap = responseEntitu.getBody();
-	    if (null != remap.get("error")) {
-	      if ("1".equals(remap.get("code"))) {
-	        return new ResponseEntity<Map<String, Object>>(remap, HttpStatus.INTERNAL_SERVER_ERROR);
-	      }
-	      return new ResponseEntity<Map<String, Object>>(remap, HttpStatus.NOT_FOUND);
-	    }
-	    return responseEntitu;
-	  }
+	  
 }
