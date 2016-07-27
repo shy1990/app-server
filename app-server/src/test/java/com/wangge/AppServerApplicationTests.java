@@ -18,6 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.RestTemplate;
 //git.oschina.net/sylarlove/app-server.git
 
+import com.wangge.app.server.AppServerApplication;
 import com.wangge.app.server.monthTask.repository.MonthTaskSubRepository;
 import com.wangge.app.server.repository.OrderSignforRepository;
 

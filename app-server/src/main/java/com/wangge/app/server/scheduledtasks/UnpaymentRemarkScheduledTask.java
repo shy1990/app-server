@@ -1,4 +1,4 @@
-package com.wangge.appserver.scheduledtasks;
+package com.wangge.app.server.scheduledtasks;
 
 
 

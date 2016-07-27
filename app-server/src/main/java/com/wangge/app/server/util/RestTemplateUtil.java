@@ -1,4 +1,4 @@
-package com.wangge.app.util;
+package com.wangge.app.server.util;
 
 import java.util.HashMap;
 import java.util.Map;

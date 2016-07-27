@@ -1,4 +1,4 @@
-package com.wangge.app.constant;
+package com.wangge.app.server.constant;
 
 public class OrderShipStatusConstant {
   

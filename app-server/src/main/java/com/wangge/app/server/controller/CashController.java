@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.wangge.app.server.entity.Cash;
 import com.wangge.app.server.pojo.CashPart;
 import com.wangge.app.server.service.CashService;
-import com.wangge.app.util.JsonResponse;
-import com.wangge.app.util.JsonResponse.Status;
+import com.wangge.app.server.util.JsonResponse;
+import com.wangge.app.server.util.JsonResponse.Status;
 
 @RestController
 @RequestMapping("/v1/cash")

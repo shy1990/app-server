@@ -1,4 +1,4 @@
-package com.wangge.buzmgt.exception;
+package com.wangge.app.server.exception;
 /**
  * 
  * 功能: 自定义异常

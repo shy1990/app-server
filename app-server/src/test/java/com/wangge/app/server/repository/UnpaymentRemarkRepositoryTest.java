@@ -14,7 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.wangge.AppServerApplication;
+import com.wangge.app.server.AppServerApplication;
 import com.wangge.app.server.entity.ApplyPrice;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.SalesmanAddress;
