@@ -51,6 +51,7 @@ public class RestTemplateUtil {
 	    try {
 	      return RestTemplateUtil.sendRestForMap(new RestTemplate(), restType, url + methodUrl, params);
 	    } catch (Exception e) {
+	    	e.getMessage();
 	      LogUtil.error("路径"+url + methodUrl+"---请求方法:"+restType, e);
 	      Map<String,Object> repMap=new HashMap<>();
 	      repMap.put("msg", "数据服务器异常");

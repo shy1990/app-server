@@ -3,21 +3,21 @@ package com.wangge.app.server.controller;
 
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.wangge.app.constant.AppInterface;
 import com.wangge.app.util.RestTemplateUtil;
 
 
 @RestController
 @RequestMapping(value = "/v1")
 public class LoginController {
-	
-	  private String url = AppInterface.url + "login/";
+	 @Value("${app-interface.url}")
+	  private String url;
 	/**
 	 * 登录 
 	 * @param json
@@ -26,7 +26,10 @@ public class LoginController {
 	@RequestMapping(value = "/login",method = RequestMethod.POST)
 
   public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, Object> talMap){
-		 return RestTemplateUtil.handleResult(RestTemplateUtil.sendRest("MonthTaskSubs", "post", talMap,url));
+		System.out.println(RestTemplateUtil.handleResult(RestTemplateUtil.sendRest("login", "post", talMap,url)).getStatusCode().value());
+			Map<String, Object> talMapp= RestTemplateUtil.handleResult(RestTemplateUtil.sendRest("login", "post", talMap,url)).getBody();
+			System.out.println(talMapp);
+		 return RestTemplateUtil.handleResult(RestTemplateUtil.sendRest("login", "post", talMap,url));
   }
 	
 	
