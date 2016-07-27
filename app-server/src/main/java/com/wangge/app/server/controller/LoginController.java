@@ -1,7 +1,6 @@
 package com.wangge.app.server.controller;
 
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -11,9 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
-import com.wangge.app.util.LogUtil;
 import com.wangge.app.util.RestTemplateUtil;
 
 
@@ -32,7 +29,7 @@ public class LoginController {
   public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, Object> talMap){
 		
 		
-		 return handleResult(sendRest("login", "post", talMap,url));
+	return handleResult(RestTemplateUtil.sendRest("login", "post", talMap,url));
   }
 	
 	
