@@ -1,4 +1,4 @@
-package com.wangge.app.constant;
+package com.wangge.app.server.constant;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

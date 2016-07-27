@@ -1,7 +1,8 @@
 package com.wangge.app.server.config.http;
 
 import com.alibaba.fastjson.JSONObject;
-import com.wangge.app.util.LogUtil;
+import com.wangge.app.server.util.LogUtil;
+
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;

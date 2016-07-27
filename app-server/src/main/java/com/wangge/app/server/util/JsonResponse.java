@@ -1,4 +1,4 @@
-package com.wangge.app.util;
+package com.wangge.app.server.util;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonValue;

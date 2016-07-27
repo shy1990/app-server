@@ -1,4 +1,4 @@
-package com.wangge.app.util;
+package com.wangge.app.server.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -7,7 +7,6 @@ import java.util.List;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.OilCostRecord;
-import com.wangge.app.server.util.HttpUtil;
 
 public class ChainageUtil {
   static double DEF_PI = 3.14159265359; // PI  

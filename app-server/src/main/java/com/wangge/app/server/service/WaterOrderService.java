@@ -34,7 +34,7 @@ import com.wangge.app.server.repository.OrderItemRepository;
 import com.wangge.app.server.repository.WaterOrderCashRepository;
 import com.wangge.app.server.repository.WaterOrderDetailRepository;
 import com.wangge.app.server.util.DateUtil;
-import com.wangge.app.util.SearchFilter;
+import com.wangge.app.server.util.SearchFilter;
 
 import scala.unchecked;
 
