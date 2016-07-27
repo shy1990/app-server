@@ -30,9 +30,8 @@ public class LoginController {
 	@RequestMapping(value = "/login",method = RequestMethod.POST)
 
   public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, Object> talMap){
-		System.out.println(handleResult(sendRest("login", "post", talMap,url)).getStatusCode().value());
-			Map<String, Object> talMapp= handleResult(sendRest("login", "post", talMap,url)).getBody();
-			System.out.println(talMapp);
+		
+		
 		 return handleResult(sendRest("login", "post", talMap,url));
   }
 	
