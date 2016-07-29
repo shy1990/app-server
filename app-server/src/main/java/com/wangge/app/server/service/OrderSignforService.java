@@ -19,7 +19,7 @@ import com.wangge.app.server.monthTask.service.MonthTaskServive;
 import com.wangge.app.server.repository.CashRepository;
 import com.wangge.app.server.repository.OrderSignforRepository;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
-import com.wangge.app.vo.OrderSignforImpl;
+import com.wangge.app.server.repositoryimpl.OrderSignforImpl;
 @Service
 public class OrderSignforService {
   
