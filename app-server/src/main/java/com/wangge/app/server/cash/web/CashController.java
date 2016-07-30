@@ -1,12 +1,13 @@
-package com.wangge.app.server.controller;
+package com.wangge.app.server.cash.web;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,18 +17,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.wangge.app.server.entity.Cash;
+import com.wangge.app.server.config.http.HttpRequestHandler;
 import com.wangge.app.server.pojo.CashPart;
 import com.wangge.app.server.service.CashService;
 import com.wangge.app.server.util.JsonResponse;
-import com.wangge.app.server.util.JsonResponse.Status;
+import com.wangge.app.server.util.LogUtil;
 
 @RestController
 @RequestMapping("/v1/cash")
 public class CashController {
+ 
+  @Autowired
+  private HttpRequestHandler hrh;
   
-  private static final Logger logger = Logger.getLogger(CashController.class);
-  @Resource
+  @Value("${app-interface.url}")
+  private String APP_INTERFACE_URL;
+  
+  @Autowired
   private CashService cashService;
  
   /**
@@ -43,9 +49,11 @@ public class CashController {
     //
     JsonResponse<List<CashPart>> cashJson=new JsonResponse<>();
     try {
+      ResponseEntity<Object> json= hrh.get(APP_INTERFACE_URL+"cash/{userId}", userId);
       
-      List<CashPart> cashlist=cashService.findByUserId(userId);
-      if(cashlist.size()>0){
+      List<CashPart> cashlist = new ArrayList<>();
+          cashService.findByUserId(userId);
+      if(CollectionUtils.isNotEmpty(cashlist)){
         cashJson.setResult(cashlist);
         cashJson.setSuccessMsg("操作成功");
       }else{
@@ -53,7 +61,7 @@ public class CashController {
         cashJson.setSuccessMsg("未查到相关记录");
       }
     } catch (Exception e) {
-      logger.info(e.getMessage());
+      LogUtil.info(e.getMessage());
     }
     return new ResponseEntity<>(cashJson,HttpStatus.OK);
   }

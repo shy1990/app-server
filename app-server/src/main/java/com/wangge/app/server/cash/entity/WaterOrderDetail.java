@@ -1,4 +1,4 @@
-package com.wangge.app.server.entity;
+package com.wangge.app.server.cash.entity;
 
 import java.io.Serializable;
 
