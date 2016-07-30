@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wangge.app.server.pojo.WaterOrderPart;
 import com.wangge.app.server.service.WaterOrderService;
-import com.wangge.app.util.JsonResponse;
+import com.wangge.app.server.util.JsonResponse;
 
 @RestController
 @RequestMapping("/v1/waterOrder")

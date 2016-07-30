@@ -1,7 +1,8 @@
 package com.wangge.app.server.config.http;
 
 import com.alibaba.fastjson.JSONObject;
-import com.wangge.app.util.LogUtil;
+import com.wangge.app.server.util.LogUtil;
+
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -204,6 +205,7 @@ public class HttpRequestHandler implements InitializingBean {
       MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
       Map<String, ?> _body = (Map<String, ?>) body;
       for (String key : _body.keySet()) {
+    	  System.out.println(MapUtils.getString(_body, key));
         multiValueMap.add(key, MapUtils.getString(_body, key));
       }
 

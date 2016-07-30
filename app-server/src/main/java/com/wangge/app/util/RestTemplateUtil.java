@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import com.wangge.app.server.util.LogUtil;
+import com.wangge.app.server.util.StringUtil;
+
 public class RestTemplateUtil {
   @SuppressWarnings("unchecked")
   private static Class<? extends HashMap<String, Object>> mapClassz = (Class<? extends HashMap<String, Object>>) new HashMap<String, Object>()

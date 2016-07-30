@@ -9,7 +9,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.data.domain.Page;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.wangge.AppServerApplication;
+import com.wangge.app.server.AppServerApplication;
 import com.wangge.app.server.entity.Order;
 import com.wangge.app.server.entity.OrderItem;
 

@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.wangge.app.server.AppServerApplication;
 import com.wangge.app.server.entity.OilParameters;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.repositoryimpl.RegionImpl;
@@ -19,8 +20,8 @@ import com.wangge.app.server.service.OilParametersService;
 import com.wangge.app.server.service.RegionService;
 import com.wangge.app.server.service.RegistDataService;
 import com.wangge.app.server.service.SalesmanService;
+import com.wangge.app.server.util.ChainageUtil;
 import com.wangge.app.server.util.HttpUtil;
-import com.wangge.app.util.ChainageUtil;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)

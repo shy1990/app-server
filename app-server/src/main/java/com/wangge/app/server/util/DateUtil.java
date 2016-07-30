@@ -18,7 +18,7 @@ import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 
-import com.wangge.buzmgt.exception.MyRuntimeException;
+import com.wangge.app.server.exception.MyRuntimeException;
 
 
 
