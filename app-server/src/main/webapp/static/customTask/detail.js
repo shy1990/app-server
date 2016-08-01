@@ -13,6 +13,7 @@ function sendMessage() {
 		"content" : content,
 		"roletype" : 1
 	};
+	$('#repButton').attr({"disabled":"disabled"});
 	$.ajax({
 		url : '/v1/customTask/message',
 		type : 'post',
@@ -22,11 +23,13 @@ function sendMessage() {
 			request.setRequestHeader("Content-Type", "application/json");
 		},
 		success : function(data) {
-			alert("已成功回复");
+//			alert("已成功回复");
 			location.reload();
+			$('#repButton').removeAttr("disabled");
 		},
 		error : function() {
 			alert("系统异常，请稍后重试或联系管理员！");
+			$('#repButton').removeAttr("disabled");
 		}
 	});
 }
