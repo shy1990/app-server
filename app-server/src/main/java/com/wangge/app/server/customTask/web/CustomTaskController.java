@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.wangge.app.server.customTask.entity.CustomMessages;
 import com.wangge.app.server.customTask.entity.CustomTask;
 import com.wangge.app.server.customTask.server.CustomTaskServer;
-import com.wangge.app.server.customTask.server.ImplCustomTaskServe;
+import com.wangge.app.server.customTask.server.CustomTaskServiceImpl;
 import com.wangge.app.server.util.DateUtil;
 
 @Controller
@@ -68,7 +68,7 @@ public class CustomTaskController {
 		List<CustomMessages> sdf= customServ.findMessageList(customTask, salesmanId);
 		model.addAttribute("messageList", sdf);
 		model.addAttribute("messagesCount", sdf.size());
-		model.addAttribute("taskType",ImplCustomTaskServe.TASKTYPEDETAILARR[customTask.getType()]);
+		model.addAttribute("taskType",CustomTaskServiceImpl.TASKTYPEDETAILARR[customTask.getType()]);
 		customServ.updateStatus(customTask,salesmanId);
 		return "customTask/detail";
 	}

@@ -30,7 +30,6 @@ public class CustomMessages {
 	private String content;
 	// 0:消息发起者;1业务员
 	private int roletype;
-	@Temporal(TemporalType.TIMESTAMP)
 	private Date time=new Date();
 	// 信息读取状态,0未读,1已读
 	private int status;
