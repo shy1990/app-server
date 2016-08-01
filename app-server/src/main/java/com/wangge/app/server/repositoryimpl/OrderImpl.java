@@ -311,8 +311,13 @@ public class OrderImpl {
 		String sql = "select PAY_STATUS from SJZAIXIAN.sj_tb_order where ORDER_NUM=" + orderno + "";
 		Query query = em.createNativeQuery(sql);
 		Map<String, String> map = new HashMap<String, String>();
-		Object o = query.getSingleResult();
-		map.put("payStatus", o + "");
+		try {
+			Object o = query.getSingleResult();
+			map.put("payStatus", o + "");
+		} catch (Exception e) {
+			LOG.info(e);
+		}
+		
 		return map;
 	}
 }
