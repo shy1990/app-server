@@ -1,35 +1,28 @@
 package com.wangge.app.server.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.List;
-
 import javax.annotation.Resource;
 
-import org.springframework.http.HttpStatus;
+import net.sf.json.JSONObject;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.wangge.app.server.entity.Saojie;
-import com.wangge.app.server.entity.Saojie.SaojieStatus;
-import com.wangge.app.server.service.RegionService;
-import com.wangge.app.server.service.SalesmanService;
-import com.wangge.app.server.service.SaojieService;
+import com.wangge.app.server.config.http.HttpRequestHandler;
 
 @RestController
 @RequestMapping(value = "/v1")
 public class SaojieController {
-	SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");//
-	@Resource
-	private SalesmanService salesmanService;
-	@Resource
-	private RegionService regionService;
-	@Resource
-	private SaojieService saojieService;
+	
+  public static final String methodUrl = "saojie/";
+  
+  
+  @Resource
+  private HttpRequestHandler requestHandler;
 
-	@RequestMapping(value = "/addSaojie", method = RequestMethod.POST)
+	/*@RequestMapping(value = "/addSaojie", method = RequestMethod.POST)
 	public ResponseEntity<String> addTask(String taskName,String salesmanid,String regionid,
 			String taskStart,String taskEnd,String taskCount,String taskDes,String userName ) {
 			Saojie entity = new Saojie();
@@ -57,14 +50,40 @@ public class SaojieController {
 			}
 			saojieService.saveSaojie(entity);
 		return new ResponseEntity<String>("SUCCESS",HttpStatus.OK);
-	}
+	}*/
 	
-	@RequestMapping(value = "/findAllSaojie", method = RequestMethod.POST)
+	/*@RequestMapping(value = "/findAllSaojie", method = RequestMethod.POST)
 	public ResponseEntity<List<Saojie>> findAllSaojie(String userName){
 		List<Saojie> listTaskSaojie=saojieService.findAllSaojie();
 		
 		return new ResponseEntity<List<Saojie>>(listTaskSaojie,HttpStatus.OK);
 	}
+	*/
+  
+
+  @RequestMapping(value = "/addSaojie", method = RequestMethod.POST)
+  public ResponseEntity<Object> addTask(String taskName,String salesmanid,String regionid,
+      String taskStart,String taskEnd,String taskCount,String taskDes,String userName) {
+    JSONObject jsonObject  = new JSONObject();
+    jsonObject.put("taskName", taskName);
+    jsonObject.put("salesmanid", salesmanid);
+    jsonObject.put("regionid", regionid);
+    jsonObject.put("taskStart", taskStart);
+    jsonObject.put("taskEnd", taskEnd);
+    jsonObject.put("taskCount", taskCount);
+    jsonObject.put("taskDes", taskDes);
+    jsonObject.put("userName", userName);
+    Assert.notNull(userName, "userName不能为空！");
+  //  return requestHandler.get("/addSaojie", jsonObject);
+    return null;
+  }
+	
+	@RequestMapping(value = "/findAllSaojie", method = RequestMethod.GET)
+  public ResponseEntity<Object> findAllSaojie(){
+    
+    return requestHandler.get("/findAllSaojie", "");
+    
+  }
 	
 	
 }
