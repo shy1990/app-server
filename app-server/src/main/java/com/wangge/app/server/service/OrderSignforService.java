@@ -60,7 +60,7 @@ public class OrderSignforService {
   * @return Date    返回类型 
   * @throws
    */
-  @Transactional(readOnly=false)
+  @Transactional(readOnly=false,rollbackFor=Exception.class)
   public Date updateOrderSignforList(String fastMailNo,String userPhone,String signGeoPoint, int isPrimaryAccount,String userId,String childId) {
     Date date = new Date();
     String accountId = null;
@@ -103,7 +103,7 @@ public class OrderSignforService {
   * @return void    返回类型 
   * @throws
    */
-  @Transactional(readOnly=false)
+  @Transactional(readOnly=false,rollbackFor=Exception.class)
   public void updateOrderSignfor(String orderNo, String userPhone,
       String signGeoPoint, int payType, String smsCode,int isPrimaryAccount,String userId,String childId,String  storePhone) throws Exception {
       OrderSignfor orderSignFor =  findOrderSignFor(orderNo,userPhone);
@@ -167,7 +167,7 @@ public class OrderSignforService {
   * @return void    返回类型 
   * @throws
    */
-  @Transactional(readOnly=false)
+  @Transactional(readOnly=false,rollbackFor=Exception.class)
   public void updateOrderSignfor(String orderNo, String userPhone, String remark,String signGeoPoint,int isPrimaryAccount,String userId,String childId,String  storePhone) throws Exception{
     OrderSignfor orderSignFor = findOrderSignFor(orderNo,userPhone);
     if(orderSignFor!= null){
