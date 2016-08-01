@@ -31,12 +31,15 @@ public class UnpaymentRemarkScheduledTask {
      if(remarkList != null && remarkList.size() > 0){
        for(UnpaymentRemark u : remarkList){
          Map<String,String> map = orderImpl.findOrderPayStatusByOrderNum(u.getOrderno());
-         if("1".equals(map.get("payStatus"))){
-           u.setStatus(1);
-          
-         }else{
-           u.setStatus(2);
+         if(map.get("payStatus") != null){
+        	 if("1".equals(map.get("payStatus"))){
+                 u.setStatus(1);
+                
+               }else{
+                 u.setStatus(2);
+               } 
          }
+         
          urs.saveUnpaymentRemark(u);
        }
      
