@@ -46,9 +46,9 @@ public class HttpRequestHandler implements InitializingBean {
    * 则解析的url为api/1/2，使用Map参数时，遵循按key匹配
    * @return ResponseEntity
    */
-  public ResponseEntity<Object> get(String url, Object... urlVariables) throws
+  public ResponseEntity<Object> get(String url,HttpMethod method, Object... urlVariables) throws
    RuntimeException {
-    return this.exchange(url, HttpMethod.GET, null, Object.class, urlVariables);
+    return this.exchange(url, method, null, Object.class, urlVariables);
   }
 
   /**
@@ -59,10 +59,10 @@ public class HttpRequestHandler implements InitializingBean {
    * 则解析的url为api/1/2，使用Map参数时，遵循按key匹配
    * @return ResponseEntity
    */
-  public ResponseEntity<Object> get(String url, HttpHeaders headers, Object... urlVariables)
+  public ResponseEntity<Object> get(String url,HttpMethod method, HttpHeaders headers, Object... urlVariables)
    throws RuntimeException {
 //        System.out.println(headers);
-    return this.exchange(url, HttpMethod.GET, headers, Object.class, urlVariables);
+    return this.exchange(url, method, headers, Object.class, urlVariables);
   }
 
   /**

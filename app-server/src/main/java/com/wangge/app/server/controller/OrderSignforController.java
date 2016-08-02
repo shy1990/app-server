@@ -5,8 +5,11 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wangge.app.server.config.http.HttpRequestHandler;
 import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.pojo.MessageCustom;
 import com.wangge.app.server.pojo.QueryResult;
@@ -52,6 +56,12 @@ public class OrderSignforController {
   
   @Resource
   private OrderSignforImpl osi;
+  
+  @Value("${app-interface.url}")
+  private String interfaceUrl;
+  
+  @Resource
+  private HttpRequestHandler requestHandler;
  
   /**
    * @throws ParseException 
@@ -67,13 +77,16 @@ public class OrderSignforController {
   * @throws
    */
   @RequestMapping(value = "/getBussOrderList" ,method = RequestMethod.POST)
-  @ResponseBody
-  public ResponseEntity<QueryResult<OrderSignfor>> getOrderSignforList(@RequestBody JSONObject jsons){
-	  int pageNo = jsons.getIntValue("pageNumber");
+  public ResponseEntity<Object> getOrderSignforList(@RequestBody JSONObject jsons){
+	 /* int pageNo = jsons.getIntValue("pageNumber");
 	  int pageSize = jsons.getIntValue("pageSize");
     String userPhone = jsons.getString("userPhone") ;
     QueryResult<OrderSignfor> qr = osi.getOrderSignforList(userPhone, pageNo > 0 ? pageNo-1 : 0,pageSize > 0 ? pageSize : 10);   
-    return new ResponseEntity<QueryResult<OrderSignfor>>(qr,HttpStatus.OK);
+    return new ResponseEntity<QueryResult<OrderSignfor>>(qr,HttpStatus.OK);*/
+    String userPhone = jsons.getString("userPhone") ;
+    Assert.notNull(userPhone, "不能为空");
+    return requestHandler.get(interfaceUrl+"remind/"+userPhone+"/getBussOrderList",HttpMethod.GET, jsons);
+     
   }
   /**
    * 

@@ -2,8 +2,8 @@ package com.wangge.app.server.controller;
 
 import javax.annotation.Resource;
 
-import net.sf.json.JSONObject;
-
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +17,9 @@ import com.wangge.app.server.config.http.HttpRequestHandler;
 public class SaojieController {
 	
   public static final String methodUrl = "saojie/";
+  
+  @Value("${app-interface.url}")
+  private String interfaceUrl;
   
   
   @Resource
@@ -64,24 +67,14 @@ public class SaojieController {
   @RequestMapping(value = "/addSaojie", method = RequestMethod.POST)
   public ResponseEntity<Object> addTask(String taskName,String salesmanid,String regionid,
       String taskStart,String taskEnd,String taskCount,String taskDes,String userName) {
-    JSONObject jsonObject  = new JSONObject();
-    jsonObject.put("taskName", taskName);
-    jsonObject.put("salesmanid", salesmanid);
-    jsonObject.put("regionid", regionid);
-    jsonObject.put("taskStart", taskStart);
-    jsonObject.put("taskEnd", taskEnd);
-    jsonObject.put("taskCount", taskCount);
-    jsonObject.put("taskDes", taskDes);
-    jsonObject.put("userName", userName);
     Assert.notNull(userName, "userName不能为空！");
-  //  return requestHandler.get("/addSaojie", jsonObject);
-    return null;
+    return requestHandler.get(interfaceUrl+"/addSaojie", HttpMethod.POST,taskName,salesmanid,regionid,taskStart,taskEnd,taskCount,taskDes,userName);
   }
 	
 	@RequestMapping(value = "/findAllSaojie", method = RequestMethod.GET)
   public ResponseEntity<Object> findAllSaojie(){
     
-    return requestHandler.get("/findAllSaojie", "");
+    return requestHandler.get(interfaceUrl+"/findAllSaojie",HttpMethod.GET, "");
     
   }
 	
