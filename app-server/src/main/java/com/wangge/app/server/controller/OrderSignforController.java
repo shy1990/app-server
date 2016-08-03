@@ -85,7 +85,7 @@ public class OrderSignforController {
     return new ResponseEntity<QueryResult<OrderSignfor>>(qr,HttpStatus.OK);*/
     String userPhone = jsons.getString("userPhone") ;
     Assert.notNull(userPhone, "不能为空");
-    return requestHandler.get(interfaceUrl+"remind/"+userPhone+"/getBussOrderList",HttpMethod.GET, jsons);
+    return requestHandler.get(interfaceUrl+"remind/"+userPhone+"/getBussOrderList",HttpMethod.GET,jsons);
      
   }
   /**

@@ -18,6 +18,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+
 import java.lang.reflect.Field;
 import java.text.MessageFormat;
 import java.util.Collection;
@@ -46,6 +47,7 @@ public class HttpRequestHandler implements InitializingBean {
    * 则解析的url为api/1/2，使用Map参数时，遵循按key匹配
    * @return ResponseEntity
    */
+ 
   public ResponseEntity<Object> get(String url,HttpMethod method, Object... urlVariables) throws
    RuntimeException {
     return this.exchange(url, method, null, Object.class, urlVariables);
@@ -164,21 +166,8 @@ public class HttpRequestHandler implements InitializingBean {
 
       requestEntity = convert(requestEntity);
 
-      if (uriVariables.length == 1 && uriVariables[0] instanceof Map) {
-
-        Map<String, ?> _uriVariables = (Map<String, ?>) uriVariables[0];
-
-        ResponseEntity<Object> re = restTemplate.exchange(url, method, requestEntity,
-         Object.class, _uriVariables);
-
-        printInfoLog(null, null, re.getBody());
-
-        return re;
-
-      }
-
       ResponseEntity<Object> re = restTemplate.exchange(url, method, requestEntity, Object
-       .class, uriVariables);
+       .class,  getParam(body,uriVariables));
 
       printInfoLog(null, null, re.getBody());
 
@@ -188,6 +177,37 @@ public class HttpRequestHandler implements InitializingBean {
        "(使用返回ResponseEntity(Object)的exchange方法):", e);
     }
 
+  }
+
+  private Object getParam(Object body, Object... uriVariables) {
+     Object _uriVariables = null;
+    if (uriVariables.length == 1 ) {
+      
+      if(body.getClass().isInstance(Map.class) ){
+         _uriVariables = (Map<String, ?>) uriVariables[0];
+      }
+
+      if(body.getClass().isInstance(JSONObject.class) ){
+        _uriVariables = (JSONObject) uriVariables[0];
+      }
+      
+      if(body.getClass().isInstance(String[].class)){
+        _uriVariables = (String[]) uriVariables[0];
+      }
+      
+      /*if(uriVariables[0] instanceof net.sf.json.JSONObject){
+        _uriVariables = (net.sf.json.JSONObject) uriVariables[0];
+      }*/
+
+     /* ResponseEntity<Object> re = restTemplate.exchange(url, method, requestEntity,
+       Object.class, _uriVariables);
+
+      printInfoLog(null, null, re.getBody());
+
+      return re;*/
+
+    }
+    return _uriVariables;
   }
 
   /**
