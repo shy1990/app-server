@@ -10,7 +10,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.wangge.app.server.entity.Cash;
+import com.wangge.app.server.cash.entity.Cash;
 import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.event.afterSalesmanSignforEvent;
@@ -224,8 +224,8 @@ public class OrderSignforService {
   
   
   public OrderSignfor findbyOrderNum(String orderno){
-	  
-	  return osr.findByOrderNo(orderno);
+    
+    return osr.findByOrderNo(orderno);
   }
   
 }

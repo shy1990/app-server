@@ -1,4 +1,4 @@
-package com.wangge.app.server.entity;
+package com.wangge.app.server.cash.entity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -21,6 +21,8 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.wangge.app.server.entity.OrderItem;
+import com.wangge.app.server.entity.OrderSignfor;
 
 
 
