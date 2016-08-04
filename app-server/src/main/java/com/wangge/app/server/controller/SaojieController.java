@@ -68,7 +68,7 @@ public class SaojieController {
   public ResponseEntity<Object> addTask(String taskName,String salesmanid,String regionid,
       String taskStart,String taskEnd,String taskCount,String taskDes,String userName) {
     Assert.notNull(userName, "userName不能为空！");
-    return requestHandler.get(interfaceUrl+"/addSaojie", HttpMethod.POST,taskName,salesmanid,regionid,taskStart,taskEnd,taskCount,taskDes,userName);
+    return requestHandler.get(interfaceUrl+"/addSaojie",taskName,salesmanid,regionid,taskStart,taskEnd,taskCount,taskDes,userName);
   }
 	
 	@RequestMapping(value = "/findAllSaojie", method = RequestMethod.GET)

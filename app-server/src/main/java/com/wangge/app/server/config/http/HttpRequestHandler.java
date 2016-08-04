@@ -1,28 +1,30 @@
 package com.wangge.app.server.config.http;
 
-import com.alibaba.fastjson.JSONObject;
-import com.wangge.app.server.util.LogUtil;
+import java.lang.reflect.Field;
+import java.text.MessageFormat;
+import java.util.Collection;
+import java.util.Map;
+
+import javax.annotation.Resource;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.Resource;
-
-import java.lang.reflect.Field;
-import java.text.MessageFormat;
-import java.util.Collection;
-import java.util.Map;
+import com.alibaba.fastjson.JSONObject;
+import com.wangge.app.server.util.LogUtil;
 
 @Configuration
 public class HttpRequestHandler implements InitializingBean {
@@ -47,10 +49,9 @@ public class HttpRequestHandler implements InitializingBean {
    * 则解析的url为api/1/2，使用Map参数时，遵循按key匹配
    * @return ResponseEntity
    */
- 
-  public ResponseEntity<Object> get(String url,HttpMethod method, Object... urlVariables) throws
+  public ResponseEntity<Object> get(String url,Object... urlVariables) throws
    RuntimeException {
-    return this.exchange(url, method, null, Object.class, urlVariables);
+    return this.exchange(url, HttpMethod.GET, null, Object.class, urlVariables);
   }
 
   /**
@@ -61,10 +62,10 @@ public class HttpRequestHandler implements InitializingBean {
    * 则解析的url为api/1/2，使用Map参数时，遵循按key匹配
    * @return ResponseEntity
    */
-  public ResponseEntity<Object> get(String url,HttpMethod method, HttpHeaders headers, Object... urlVariables)
+  public ResponseEntity<Object> get(String url, HttpHeaders headers, Object... urlVariables)
    throws RuntimeException {
 //        System.out.println(headers);
-    return this.exchange(url, method, headers, Object.class, urlVariables);
+    return this.exchange(url, HttpMethod.GET, headers, Object.class, urlVariables);
   }
 
   /**
@@ -166,8 +167,21 @@ public class HttpRequestHandler implements InitializingBean {
 
       requestEntity = convert(requestEntity);
 
+      if (uriVariables.length == 1 && uriVariables[0] instanceof Map) {
+
+        Map<String, ?> _uriVariables = (Map<String, ?>) uriVariables[0];
+
+        ResponseEntity<Object> re = restTemplate.exchange(url, method, requestEntity,
+         Object.class, _uriVariables);
+
+        printInfoLog(null, null, re.getBody());
+
+        return re;
+
+      }
+
       ResponseEntity<Object> re = restTemplate.exchange(url, method, requestEntity, Object
-       .class,  getParam(body,uriVariables));
+       .class, uriVariables);
 
       printInfoLog(null, null, re.getBody());
 
@@ -177,37 +191,6 @@ public class HttpRequestHandler implements InitializingBean {
        "(使用返回ResponseEntity(Object)的exchange方法):", e);
     }
 
-  }
-
-  private Object getParam(Object body, Object... uriVariables) {
-     Object _uriVariables = null;
-    if (uriVariables.length == 1 ) {
-      
-      if(body.getClass().isInstance(Map.class) ){
-         _uriVariables = (Map<String, ?>) uriVariables[0];
-      }
-
-      if(body.getClass().isInstance(JSONObject.class) ){
-        _uriVariables = (JSONObject) uriVariables[0];
-      }
-      
-      if(body.getClass().isInstance(String[].class)){
-        _uriVariables = (String[]) uriVariables[0];
-      }
-      
-      /*if(uriVariables[0] instanceof net.sf.json.JSONObject){
-        _uriVariables = (net.sf.json.JSONObject) uriVariables[0];
-      }*/
-
-     /* ResponseEntity<Object> re = restTemplate.exchange(url, method, requestEntity,
-       Object.class, _uriVariables);
-
-      printInfoLog(null, null, re.getBody());
-
-      return re;*/
-
-    }
-    return _uriVariables;
   }
 
   /**

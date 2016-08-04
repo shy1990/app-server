@@ -100,8 +100,8 @@ public class OrderSignforController {
    */
   @RequestMapping(value = "/bussOrderSignFor", method = RequestMethod.POST)
   @ResponseBody
-  public ResponseEntity<MessageCustom> bussOrderSignFor(@RequestBody JSONObject jsons){
-      String fastMailNo = jsons.getString("fastmailNo");
+  public ResponseEntity<Object> bussOrderSignFor(@RequestBody JSONObject jsons){
+ /*     String fastMailNo = jsons.getString("fastmailNo");
       String userPhone = jsons.getString("userPhone");
       String signGeoPoint = jsons.getString("signGeoPoint");
       int isPrimaryAccount = jsons.getIntValue("isPrimary");
@@ -128,6 +128,8 @@ public class OrderSignforController {
         m.setCode(1);
         return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
       }
+      */
+      return requestHandler.get(interfaceUrl+"remind/bussOrderSignFor",HttpMethod.POST,jsons);
   }
   /**
    * @throws ParseException 
@@ -142,14 +144,15 @@ public class OrderSignforController {
    */
   @RequestMapping(value = "/getOrderList", method = RequestMethod.POST)
   @ResponseBody
-  public ResponseEntity<QueryResult<OrderSignfor>> getOrderList(@RequestBody JSONObject jsons){
-                String userPhone = jsons.getString("userPhone");
+  public ResponseEntity<Object> getOrderList(@RequestBody JSONObject jsons){
+               /* String userPhone = jsons.getString("userPhone");
                 String type = jsons.getString("type");
                 int pageNo = jsons.getIntValue("pageNumber");
                 int pageSize = jsons.getIntValue("pageSize");
                QueryResult<OrderSignfor> qr = osi.getOrderList(userPhone, type, pageNo > 0 ? pageNo-1 : 0,pageSize > 0 ? pageSize : 10);
          //       QueryResult<OrderSignfor> qr = osi.getOrderList(userPhone, type, pageNo-1,pageSize != 0 ? pageSize: 10);
-    return new ResponseEntity<QueryResult<OrderSignfor>>(qr,HttpStatus.OK);
+    return new ResponseEntity<QueryResult<OrderSignfor>>(qr,HttpStatus.OK);*/
+    return requestHandler.get(interfaceUrl+"remind/getOrderList",HttpMethod.POST,jsons);
   }
   /**
    * 
@@ -163,8 +166,8 @@ public class OrderSignforController {
    */
   @RequestMapping(value ="/customOrderSign", method = RequestMethod.POST)
   @ResponseBody
-  public ResponseEntity<MessageCustom> customOrderSign(@RequestBody JSONObject jsons){
-    String userPhone = jsons.getString("userPhone");
+  public ResponseEntity<Object> customOrderSign(@RequestBody JSONObject jsons){
+   /* String userPhone = jsons.getString("userPhone");
      String orderNo = jsons.getString("orderNo");
      String smsCode = jsons.getString("smsCode");
      int payType =  jsons.getIntValue("payType");
@@ -193,10 +196,11 @@ public class OrderSignforController {
     } catch (Exception e) {
       m.setMsg(e.getMessage());
       m.setCode(1);
-     /* logger.error("OrderSignforController updateOrderSignfor error :"+e);*/
+      logger.error("OrderSignforController updateOrderSignfor error :"+e);
     }
     
-   return  new ResponseEntity<MessageCustom>(m, HttpStatus.OK);
+   return  new ResponseEntity<MessageCustom>(m, HttpStatus.OK);*/
+    return requestHandler.get(interfaceUrl+"remind/customOrderSign",HttpMethod.POST,jsons);
   }
  
   /**
@@ -210,8 +214,8 @@ public class OrderSignforController {
    */
   @RequestMapping(value = "/customOrderUnSign", method = RequestMethod.POST)
   @ResponseBody
-  public ResponseEntity<MessageCustom> customOrderUnSign(@RequestBody JSONObject jsons){
-    String userPhone = jsons.getString("userPhone");
+  public ResponseEntity<Object> customOrderUnSign(@RequestBody JSONObject jsons){
+   /* String userPhone = jsons.getString("userPhone");
      String orderNo = jsons.getString("orderNo");
      String  remark = jsons.getString("remark");
     String signGeoPoint = jsons.getString("signGeoPoint");
@@ -228,57 +232,13 @@ public class OrderSignforController {
     } catch (Exception e) {
       m.setMsg(e.getMessage());
       m.setCode(1);
-     /* logger.error("OrderSignforController customOrderUnSign() error :"+e);*/
+      logger.error("OrderSignforController customOrderUnSign() error :"+e);
     }
-    return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
-    
+    return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);*/
+    return requestHandler.get(interfaceUrl+"remind/customOrderUnSign",HttpMethod.POST,jsons);
   }
   
-  /**
-   * 
-  * @Title: refund 
-  * @Description: TODO(拒簽调用退款接口) 
-  * @param @param orderNo
-  * @param @param m
-  * @param @return    设定文件 
-  * @return MessageCustom    返回类型 
-  * @throws
-   */
-  private MessageCustom  refund (String orderNo,MessageCustom m){
- JSONObject jo = new JSONObject();
-    
-    Map map = opl.checkMoneyBack(orderNo);
-    boolean flag = false;
-    if(map!=null){
-      //判断钱包流水号是否为空,若是则不调用退款接口
-          if(map.get("payNo")!=null && !"".equals(map.get("payNo"))){
-            if("0".equals(map.get("payMent")) ){
-              if(map.get("totalCost").equals(map.get("walletNum"))){
-                 flag = true;
-              }
-            }else{
-                flag = true;
-            }
-          }
-    }
-      if(flag){
-         try {
-           jo.put("state", "success");//调用接口传参
-           String str = or.invokWallet(jo, map.get("payNo").toString());
-           jo.clear();
-           if(str!=null && str.contains("202")){
-             m.setStatus("退款成功,请核实钱包金额");
-           }else{
-             m.setStatus("退款失败,请联系技术人员!");
-           }
-           return m;
-         } catch (Exception e) {
-           e.printStackTrace();
-           m.setStatus(e.getMessage());
-         }
-       }
-    return m;
-  }
+ 
   
   
   /**
@@ -291,13 +251,14 @@ public class OrderSignforController {
   * @throws
    */
   @RequestMapping(value = "/getOrdersByMailNo", method = RequestMethod.POST)
-  public ResponseEntity<QueryResult<OrderSignfor>> getOrdersByMailNo(@RequestBody JSONObject jsons){
-        String fastmailNo = jsons.getString("fastmailNo");
+  public ResponseEntity<Object> getOrdersByMailNo(@RequestBody JSONObject jsons){
+      /*  String fastmailNo = jsons.getString("fastmailNo");
         String userPhone = jsons.getString("userPhone");
         int pageNo = jsons.getIntValue("pageNumber");
         int pageSize = jsons.getIntValue("pageSize");
         QueryResult<OrderSignfor> qr = osi.getOrdersByMailNo(fastmailNo,userPhone, pageNo > 0 ? pageNo-1 : 0,pageSize > 0 ? pageSize : 10);   
-        return new ResponseEntity<QueryResult<OrderSignfor>>(qr,HttpStatus.OK);
+        return new ResponseEntity<QueryResult<OrderSignfor>>(qr,HttpStatus.OK);*/
+    return requestHandler.get(interfaceUrl+"remind/getOrdersByMailNo",HttpMethod.POST,jsons);
   }
   
 
