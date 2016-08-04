@@ -47,9 +47,9 @@ public class SaojieDataController {
 	private ApplicationContext cxt;
 	
 	// private static String url="http://192.168.2.247/uploadfile/"; 内网测试
-	// private static String url="http://imagetest.3j168.cn/uploadfile/";
+	 private static String url="http://imagetest.3j168.cn/uploadfile/";
 	// //外网测试环境
-	private static String url = "http://image.3j1688.com/uploadfile/"; // 外网正式环境
+//	private static String url = "http://image.3j1688.com/uploadfile/"; // 外网正式环境
 
 	/**
 	 * 获取指定业务扫街数据
