@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import com.wangge.app.server.entity.WaterOrderCash;
+import com.wangge.app.server.cash.entity.WaterOrderCash;
 
 public interface WaterOrderCashRepository extends JpaRepository<WaterOrderCash, String>,
 JpaSpecificationExecutor<WaterOrderCash>{

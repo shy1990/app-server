@@ -1,6 +1,7 @@
 package com.wangge;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -17,7 +18,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.RestTemplate;
 //git.oschina.net/sylarlove/app-server.git
 
+import com.wangge.app.server.AppServerApplication;
 import com.wangge.app.server.monthTask.repository.MonthTaskSubRepository;
+import com.wangge.app.server.repository.OrderSignforRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = AppServerApplication.class)
@@ -25,6 +28,9 @@ public class AppServerApplicationTests {
 	@Autowired
 //	private RegionRepository rp;
 	MonthTaskSubRepository montRep;
+	@Autowired
+	OrderSignforRepository orderRep;
+	
 	@Test
 	public void contextLoads() {
 //		RestTemplate rt = new HmacRestTemplet("zhangsan", "zhangsan", HttpClientOption.ENABLE_REDIRECTS);
@@ -53,6 +59,9 @@ public class AppServerApplicationTests {
 	    }
   @Test
   public void testT(){
-	  montRep.updatebyDelay();
+//    Object  daycount=  orderRep.countByuserAndDay("A37172304120", "2016-07-14",1);
+//   System.out.println(daycount.toString());
+//   Object monthcount=  orderRep.countByuserAndMonth("A37172304120", "2016-07");
+//   System.out.println(monthcount.toString());
   }
 }
