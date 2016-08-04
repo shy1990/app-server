@@ -53,7 +53,7 @@ public class RejectionController {
     /**
      * 客户拒收提交保存
      *
-     * @param rejection
+     * @param jsonObject
      * @return
      */
     @ApiOperation(value = "拒收保存接口", notes = "保存一条提交的拒收信息")
@@ -83,9 +83,11 @@ public class RejectionController {
                 orderSignfor.setOrderStatus(4);//更改订单签收表的订单状态为已拒收
                 orderSignforService.saveOrderSignfor(orderSignfor);
 
-                String rejectPoint = jsonObject.getString("signGeoPoint");
-                String childId = jsonObject.getString("childId");
-                ctx.publishEvent(new afterSignforEvent( rejection.getSalesmanId(), rejectPoint,  salesman.getIsPrimaryAccount(), childId,7,orderSignfor.getUserPhone()));
+                String rejectPoint = jsonObject.getString("signGeoPoint");//坐标点
+                String childId = jsonObject.getString("childId");//子帐号
+                String storePhone = jsonObject.getString("storePhone");//店铺手机号
+                int isPrimary = Integer.parseInt(jsonObject.getString("isPrimary"));//是否主账号
+                ctx.publishEvent(new afterSignforEvent( rejection.getSalesmanId(), rejectPoint,  isPrimary, childId,7,storePhone));
 
                 json.setSuccessMsg("提交成功!");
                 return new ResponseEntity<JsonResponse<String>>(json, HttpStatus.OK);
