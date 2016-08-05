@@ -46,7 +46,7 @@ public class JpushClient {
 		 */
 		private static long timeToLive =  60 * 60 * 24;  
 
-		public static void main(String[] args) {
+		public static void test(String[] args) {
 			/*
 			 * Example1: 初始化,默认发送给android和ios，同时设置离线消息存活时间
 			 * jpush = new JPushClient(masterSecret, appKey, timeToLive);
