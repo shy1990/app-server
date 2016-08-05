@@ -3,6 +3,7 @@ package com.wangge.app.server.rejection.web;
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.entity.Salesman;
+import com.wangge.app.server.event.afterSignforEvent;
 import com.wangge.app.server.rejection.entity.RejectStatusEnum;
 import com.wangge.app.server.rejection.entity.Rejection;
 import com.wangge.app.server.rejection.service.RejectionServive;
@@ -14,6 +15,8 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.ObjectUtils;
+import org.neo4j.cypher.internal.compiler.v2_1.functions.Str;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,11 +47,13 @@ public class RejectionController {
     private SalesmanService salesmanService;
     @Resource
     private OrderSignforService orderSignforService;
+    @Resource
+    private ApplicationContext ctx;
 
     /**
      * 客户拒收提交保存
      *
-     * @param rejection
+     * @param jsonObject
      * @return
      */
     @ApiOperation(value = "拒收保存接口", notes = "保存一条提交的拒收信息")
@@ -61,7 +66,8 @@ public class RejectionController {
             @ApiImplicitParam(name = "createTime", value = "拒收时间", required = false, dataType = "Date")})
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<JsonResponse<String>> save(@RequestBody Rejection rejection) {
+    public ResponseEntity<JsonResponse<String>> save(@RequestBody JSONObject jsonObject) {
+        Rejection rejection = jsonObject.getObject("rejection",Rejection.class);
         JsonResponse<String> json = new JsonResponse<>();
         String orderno = rejection.getOrderno();
         try {
@@ -76,6 +82,12 @@ public class RejectionController {
                 OrderSignfor orderSignfor = orderSignforService.findbyOrderNum(orderno);
                 orderSignfor.setOrderStatus(4);//更改订单签收表的订单状态为已拒收
                 orderSignforService.saveOrderSignfor(orderSignfor);
+
+                String rejectPoint = jsonObject.getString("signGeoPoint");//坐标点
+                String childId = jsonObject.getString("childId");//子帐号
+                String storePhone = jsonObject.getString("storePhone");//店铺手机号
+                int isPrimary = Integer.parseInt(jsonObject.getString("isPrimary"));//是否主账号
+                ctx.publishEvent(new afterSignforEvent( rejection.getSalesmanId(), rejectPoint,  isPrimary, childId,7,storePhone));
 
                 json.setSuccessMsg("提交成功!");
                 return new ResponseEntity<JsonResponse<String>>(json, HttpStatus.OK);
