@@ -90,7 +90,7 @@ public class MineController {
         sb.append(item.getName()+" ");
         if("sku".equals(item.getType())){
           skuNum+=item.getNums();
-        }else if("gift".equals(item.getType())){
+        }else if("gift".equals(item.getType())  || "accessories".equals(item.getType())){
           giftNum+=item.getNums();
         }
       }
