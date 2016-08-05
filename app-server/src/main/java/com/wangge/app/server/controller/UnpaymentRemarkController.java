@@ -2,11 +2,13 @@ package com.wangge.app.server.controller;
 
 
 import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.alibaba.fastjson.JSONObject;
+import com.wangge.app.server.config.http.HttpRequestHandler;
 import com.wangge.app.server.entity.UnpaymentRemark;
 import com.wangge.app.server.pojo.message;
 import com.wangge.app.server.service.SalesmanService;
@@ -24,10 +28,13 @@ import com.wangge.app.server.service.UnpaymentRemarkService;
 @RequestMapping("/v1/ur")
 public class UnpaymentRemarkController {
   private static Logger logger = Logger.getLogger(UnpaymentRemarkController.class);
-  @Resource
+  /*@Resource
   private UnpaymentRemarkService urs;
   @Resource
-  private SalesmanService ss;
+  private SalesmanService ss;*/
+  
+  @Resource
+  private HttpRequestHandler requestHandler;
   
   /**
    * 
@@ -39,8 +46,8 @@ public class UnpaymentRemarkController {
   * @throws
    */
   @RequestMapping(value = "/createRemark",method = RequestMethod.POST)
-  public  ResponseEntity<message> createUnpaymentRemark(@RequestBody JSONObject jsons){
-    message message = new message();
+  public  ResponseEntity<Object> createUnpaymentRemark(@RequestBody JSONObject jsons){
+  /*  message message = new message();
     String orderno = jsons.getString("orderno");
    try {
    //  if(!urs.existOrderRemark(orderno)){//判断订单是否已经存在报备
@@ -64,7 +71,8 @@ public class UnpaymentRemarkController {
      logger.error("createUnpaymentRemark eeror .",e);
     message.setMsg("保存失败！");
     return new ResponseEntity<message>(message,HttpStatus.INTERNAL_SERVER_ERROR);
-  }
+  }*/
+    return requestHandler.get("ur/createRemark",HttpMethod.POST,jsons);
    
   }
   
@@ -81,12 +89,13 @@ public class UnpaymentRemarkController {
    */
   @RequestMapping(value = "/getRemarkList",method = RequestMethod.POST)
   @ResponseBody
-  public  ResponseEntity<Page<UnpaymentRemark>> getRemarkListBySalesmanId(@RequestBody JSONObject jsons){
-    String pageNo = jsons.getString("pageNum");
+  public  ResponseEntity<Object> getRemarkListBySalesmanId(@RequestBody JSONObject jsons){
+  /*  String pageNo = jsons.getString("pageNum");
     String pageSize = jsons.getString("pageSize") ;
     
    Page<UnpaymentRemark> pages = urs.findListBySalesmanId(jsons.getString("salesmanId"), new PageRequest(pageNo != null ?Integer.parseInt(pageNo)-1:0,pageSize != null ? Integer.parseInt(pageSize) : 10,new Sort(Direction.DESC, "id")));
-    return  new ResponseEntity<Page<UnpaymentRemark>>(pages,HttpStatus.OK);
+    return  new ResponseEntity<Page<UnpaymentRemark>>(pages,HttpStatus.OK);*/
+    return requestHandler.get("ur/getRemarkList",HttpMethod.POST,jsons);
   }
 
 }

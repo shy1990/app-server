@@ -5,6 +5,7 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wangge.app.server.config.http.HttpRequestHandler;
 import com.wangge.app.server.pojo.HistoryDestOilRecord;
 import com.wangge.app.server.pojo.MessageCustom;
 import com.wangge.app.server.pojo.TodayOilRecord;
@@ -36,6 +38,9 @@ public class OilCostRecordController {
   @Resource
   private OilCostRecordService trackService;
   
+  @Resource
+  private HttpRequestHandler requestHandler;
+  
   
   @RequestMapping(value = "/workCheck", method = RequestMethod.POST)
   public ResponseEntity<MessageCustom> signed(@RequestBody JSONObject jsons){
@@ -52,8 +57,8 @@ public class OilCostRecordController {
   * @throws
    */
   @RequestMapping(value = "/getYesterydayOilRecord",method = RequestMethod.POST)
- public ResponseEntity<MessageCustom> yesterdayOilRecord(@RequestBody JSONObject jsons){
-    MessageCustom m = new MessageCustom();
+ public ResponseEntity<Object> yesterdayOilRecord(@RequestBody JSONObject jsons){
+   /* MessageCustom m = new MessageCustom();
     JSONObject object =  trackService.getYesterydayOilRecord(jsons);
     if(object != null){
        m.setObj(object);
@@ -63,7 +68,8 @@ public class OilCostRecordController {
       m.setCode(1);
       return new ResponseEntity<MessageCustom>(m,HttpStatus.BAD_REQUEST);
     }
-    
+    */
+    return requestHandler.get("oilCostRecord/getYesterydayOilRecord",HttpMethod.POST,jsons);
    
  }
   /**
@@ -75,8 +81,9 @@ public class OilCostRecordController {
   * @throws
    */
   @RequestMapping(value ="/getHistoryOilRecord", method = RequestMethod.POST)
-  public ResponseEntity<MessageCustom>  getHistoryOilRecord(@RequestBody JSONObject jsons){
-    return trackService.getHistoryOilRecord(jsons);
+  public ResponseEntity<Object>  getHistoryOilRecord(@RequestBody JSONObject jsons){
+   // return trackService.getHistoryOilRecord(jsons);
+    return requestHandler.get("oilCostRecord/getHistoryOilRecord",HttpMethod.POST,jsons);
   }
 
   /**
@@ -88,8 +95,8 @@ public class OilCostRecordController {
     * @since JDK 1.8
    */
   @RequestMapping(value = "/getTodayOilRecord", method = RequestMethod.POST)
-  public ResponseEntity<TodayOilRecord> getTodayOilRecord(@RequestBody JSONObject jsons){
-      String isPrimary=jsons.getString("isPrimary");//0-主账号 1-子账号
+  public ResponseEntity<Object> getTodayOilRecord(@RequestBody JSONObject jsons){
+     /* String isPrimary=jsons.getString("isPrimary");//0-主账号 1-子账号
       String  userId  =jsons.getString("userId");//业务员id
       String childId  =jsons.getString("childId");//子账号id
       
@@ -101,7 +108,8 @@ public class OilCostRecordController {
         oildRecord.setCode(1);
         oildRecord.setMsg("服务器异常");
         return new ResponseEntity<TodayOilRecord>(oildRecord,HttpStatus.BAD_REQUEST);
-      }
+      }*/
+    return requestHandler.get("oilCostRecord/getTodayOilRecord",HttpMethod.POST,jsons);
       
   }
   
@@ -115,8 +123,8 @@ public class OilCostRecordController {
     * @since JDK 1.8
    */
   @RequestMapping(value = "/getHistoryDestOilRecord", method = RequestMethod.POST)
-  public ResponseEntity<HistoryDestOilRecord> getHistoryDestOilRecord(@RequestBody JSONObject jsons){
-      String  userId  =jsons.getString("userId");//业务员id
+  public ResponseEntity<Object> getHistoryDestOilRecord(@RequestBody JSONObject jsons){
+    /*  String  userId  =jsons.getString("userId");//业务员id
       int dateYear    =jsons.getIntValue("dateYear");//日期-年
       int dateMonth   =jsons.getIntValue("dateMonth");//日期-月份
       
@@ -130,8 +138,8 @@ public class OilCostRecordController {
         historyDestOilRecord.setMsg("服务器异常");
         return new ResponseEntity<HistoryDestOilRecord>(historyDestOilRecord,HttpStatus.BAD_REQUEST);
       }
-      
-      
+      */
+    return requestHandler.get("oilCostRecord/getHistoryDestOilRecord",HttpMethod.POST,jsons);
   }
   
 }

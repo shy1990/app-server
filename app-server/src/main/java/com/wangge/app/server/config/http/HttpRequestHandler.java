@@ -11,6 +11,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -41,6 +42,10 @@ public class HttpRequestHandler implements InitializingBean {
       this.restTemplate = restTemplate;
     }
   }
+  
+  @Value("${app-interface.url}")
+  private String interfaceUrl;
+  
 
   /**
    * test passed
@@ -49,9 +54,9 @@ public class HttpRequestHandler implements InitializingBean {
    * 则解析的url为api/1/2，使用Map参数时，遵循按key匹配
    * @return ResponseEntity
    */
-  public ResponseEntity<Object> get(String url,Object... urlVariables) throws
+  public ResponseEntity<Object> get(String url, HttpMethod method, Object... urlVariables) throws
    RuntimeException {
-    return this.exchange(url, HttpMethod.GET, null, Object.class, urlVariables);
+    return this.exchange(interfaceUrl+url, method, null, Object.class, urlVariables);
   }
 
   /**

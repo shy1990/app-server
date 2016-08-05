@@ -33,7 +33,7 @@ import com.wangge.app.server.util.HttpUtil;
 public class OrderSignforController {
   
   //private static final Logger logger = LoggerFactory.getLogger(OrderSignforController.class);
-  @Resource
+ /* @Resource
   private OrderSignforService orderSignforService;
   @Resource
   private SalesmanService salesmanService;
@@ -42,7 +42,7 @@ public class OrderSignforController {
   
   
   @Resource
-  private OrderService or;
+  private OrderService or;*/
   
   /*private String userPhone ;
   private String orderNo ;
