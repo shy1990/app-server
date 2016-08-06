@@ -171,8 +171,8 @@ public class MineController {
     return new ResponseEntity<JSONObject>( jo, HttpStatus.OK);
   }
   
-  ///////////////////     V2
-  /**
+  /*///////////////////     V2
+  *//**
    * 
    * @Description: 客户拒签
    * @param @param json
@@ -181,7 +181,7 @@ public class MineController {
    * @throws
    * @author changjun
    * @date 2015年12月1日
-   */
+   *//*
   @RequestMapping(value = "/custNotSignFor",method = RequestMethod.POST)
   public ResponseEntity<JSONObject> custNotSignFor(@RequestBody  JSONObject json){
     String orderNum = json.getString("ordernum");
@@ -221,7 +221,7 @@ public class MineController {
     }
   		jo.put("status", "拒签成功");
 		return new ResponseEntity<JSONObject>( jo, HttpStatus.OK);
-	}
+	}*/
 	/**
 	 * 
 	 * @Description: 客户签收

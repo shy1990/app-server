@@ -54,9 +54,9 @@ public class OrderSignforController {
   private OrderSignforImpl osi;
  
   /**
-   * @throws ParseException 
+   * @throws
    * @throws NumberFormatException 
-   * @throws ParseException 
+   * @throws
    * @throws NumberFormatException 
    * 
   * @Title: getOrderSignforList 
@@ -117,7 +117,7 @@ public class OrderSignforController {
       }
   }
   /**
-   * @throws ParseException 
+   * @throws
    * @throws NumberFormatException 
    * 
   * @Title: getOrderList 
@@ -209,7 +209,7 @@ public class OrderSignforController {
     MessageCustom m = new MessageCustom();
     try {
         orderSignforService.updateOrderSignfor(orderNo, userPhone, remark,signGeoPoint,isPrimaryAccount,userId,childId,storePhone);
-        m = refund(orderNo,m);
+//        m = refund(orderNo,m);
         m.setMsg("success");
         m.setCode(0);
     } catch (Exception e) {
@@ -231,7 +231,7 @@ public class OrderSignforController {
   * @return MessageCustom    返回类型 
   * @throws
    */
-  private MessageCustom  refund (String orderNo,MessageCustom m){
+  /*private MessageCustom  refund (String orderNo,MessageCustom m){
  JSONObject jo = new JSONObject();
     
     Map map = opl.checkMoneyBack(orderNo);
@@ -265,7 +265,7 @@ public class OrderSignforController {
          }
        }
     return m;
-  }
+  }*/
   
   
   /**

@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -56,6 +57,9 @@ public class VisitTaskController {
 	private ApplicationContext cxt;
 	@Resource
 	private MonthTaskServive monthTaskServive;
+
+	@Value("${app-interface.url}")
+	private String url;
 	
 	Json json = new Json();
 	
@@ -96,7 +100,7 @@ public class VisitTaskController {
 	 * @date 2015年12月11日
 	 * @version V2.0
 	 * 添加拜访任务
-	 * @param S
+	 * @param
 	 * @return 店铺名，图片链接，坐标，备注，摆放时间,状态(待定)
 	 */
 	@RequestMapping(value = "/task/addVisit",method = RequestMethod.POST)
@@ -121,7 +125,7 @@ public class VisitTaskController {
 	
 	/**
 	 * 根据用户选择的拜访或已拜访进行处理
-	 * @param 状态，任务id,
+	 * @param visitId
 	 * @return 
 	 */
 	@RequestMapping(value = "/task/{visitId}/infoVisit",method = RequestMethod.GET)
