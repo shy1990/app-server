@@ -43,9 +43,6 @@ public class HttpRequestHandler implements InitializingBean {
     }
   }
   
-  @Value("${app-interface.url}")
-  private String interfaceUrl;
-  
 
   /**
    * test passed
@@ -56,7 +53,7 @@ public class HttpRequestHandler implements InitializingBean {
    */
   public ResponseEntity<Object> get(String url, HttpMethod method, Object... urlVariables) throws
    RuntimeException {
-    return this.exchange(interfaceUrl+url, method, null, Object.class, urlVariables);
+    return this.exchange(url, method, null, Object.class, urlVariables);
   }
 
   /**

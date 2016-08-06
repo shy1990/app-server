@@ -4,6 +4,7 @@ package com.wangge.app.server.controller;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -32,6 +33,9 @@ public class UnpaymentRemarkController {
   private UnpaymentRemarkService urs;
   @Resource
   private SalesmanService ss;*/
+  
+  @Value("${app-interface.url}")
+  private String interfaceUrl;
   
   @Resource
   private HttpRequestHandler requestHandler;
@@ -72,7 +76,7 @@ public class UnpaymentRemarkController {
     message.setMsg("保存失败！");
     return new ResponseEntity<message>(message,HttpStatus.INTERNAL_SERVER_ERROR);
   }*/
-    return requestHandler.get("ur/createRemark",HttpMethod.POST,jsons);
+    return requestHandler.get(interfaceUrl+"ur/createRemark",HttpMethod.POST,jsons);
    
   }
   
@@ -95,7 +99,7 @@ public class UnpaymentRemarkController {
     
    Page<UnpaymentRemark> pages = urs.findListBySalesmanId(jsons.getString("salesmanId"), new PageRequest(pageNo != null ?Integer.parseInt(pageNo)-1:0,pageSize != null ? Integer.parseInt(pageSize) : 10,new Sort(Direction.DESC, "id")));
     return  new ResponseEntity<Page<UnpaymentRemark>>(pages,HttpStatus.OK);*/
-    return requestHandler.get("ur/getRemarkList",HttpMethod.POST,jsons);
+    return requestHandler.get(interfaceUrl+"ur/getRemarkList",HttpMethod.POST,jsons);
   }
 
 }
