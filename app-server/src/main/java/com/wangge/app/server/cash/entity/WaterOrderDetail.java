@@ -14,8 +14,6 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
-
-
 /**
  * 
  * @author thor
@@ -68,9 +66,5 @@ public class WaterOrderDetail implements Serializable  {
   public void setCash(Cash cash) {
     this.cash = cash;
   }
-  
-  
-
-  
 
 }

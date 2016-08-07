@@ -106,8 +106,4 @@ public class MonthPunish implements Serializable  {
     this.createDate = createDate;
   }
 
-  
-  
-  
-
 }
