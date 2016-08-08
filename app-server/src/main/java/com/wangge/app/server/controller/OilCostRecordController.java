@@ -1,12 +1,15 @@
 package com.wangge.app.server.controller;
 
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
+
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,10 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.config.http.HttpRequestHandler;
-import com.wangge.app.server.pojo.HistoryDestOilRecord;
-import com.wangge.app.server.pojo.MessageCustom;
-import com.wangge.app.server.pojo.TodayOilRecord;
-import com.wangge.app.server.service.OilCostRecordService;
+import com.wangge.app.server.util.LogUtil;
 
 
 /**
@@ -35,17 +35,18 @@ import com.wangge.app.server.service.OilCostRecordService;
 public class OilCostRecordController {
   
   private static final Logger logger =  LoggerFactory.getLogger(OilCostRecordController.class); // NOPMD by Administrator on 16-3-30 下午5:43
-  @Resource
-  private OilCostRecordService trackService;
-  
-  @Resource
-  private HttpRequestHandler requestHandler;
-  
-  
-  @RequestMapping(value = "/workCheck", method = RequestMethod.POST)
-  public ResponseEntity<MessageCustom> signed(@RequestBody JSONObject jsons){
+  @Value("${app-interface.url}")
+  private String interfaceUrl;
     
-    return trackService.signed(jsons);
+  @Resource
+  private HttpRequestHandler httpRequestHandler;
+  
+  @ApiOperation(value="代理商上班签到", notes="上班签到")
+  @ApiImplicitParam(name="jsons",value="jsons",required=true,dataType="JSONObject")
+  @RequestMapping(value = "/workCheck", method = RequestMethod.POST)
+  public ResponseEntity<Object> signed(@RequestBody JSONObject jsons){
+    LogUtil.info("代理商 上班签到, jsons="+jsons.toJSONString());
+   return httpRequestHandler.exchange(interfaceUrl+"oilCostRecord/workCheck", HttpMethod.POST, null, jsons);
   }
   /**
    * 
@@ -56,20 +57,12 @@ public class OilCostRecordController {
   * @return ResponseEntity<JsonCustom>    返回类型 
   * @throws
    */
+  @ApiOperation(value="获取昨日油补记录", notes="昨日油补记录")
+  @ApiImplicitParam(name="jsons",value="jsons",required=true,dataType="JSONObject")
   @RequestMapping(value = "/getYesterydayOilRecord",method = RequestMethod.POST)
  public ResponseEntity<Object> yesterdayOilRecord(@RequestBody JSONObject jsons){
-   /* MessageCustom m = new MessageCustom();
-    JSONObject object =  trackService.getYesterydayOilRecord(jsons);
-    if(object != null){
-       m.setObj(object);
-       return new ResponseEntity<MessageCustom>(m,HttpStatus.OK);
-    }else{
-      m.setMsg("无昨日油补！");
-      m.setCode(1);
-      return new ResponseEntity<MessageCustom>(m,HttpStatus.BAD_REQUEST);
-    }
-    */
-    return requestHandler.get("oilCostRecord/getYesterydayOilRecord",HttpMethod.POST,jsons);
+    LogUtil.info("获取昨日油补记录, jsons="+jsons.toJSONString());
+    return httpRequestHandler.exchange(interfaceUrl+"oilCostRecord/getYesterydayOilRecord",HttpMethod.POST,null, jsons);
    
  }
   /**
@@ -80,10 +73,12 @@ public class OilCostRecordController {
   * @return void    返回类型 
   * @throws
    */
+  @ApiOperation(value="历史油补累计", notes="历史油补累计")
+  @ApiImplicitParam(name="jsons",value="jsons",required=true,dataType="JSONObject")
   @RequestMapping(value ="/getHistoryOilRecord", method = RequestMethod.POST)
   public ResponseEntity<Object>  getHistoryOilRecord(@RequestBody JSONObject jsons){
-   // return trackService.getHistoryOilRecord(jsons);
-    return requestHandler.get("oilCostRecord/getHistoryOilRecord",HttpMethod.POST,jsons);
+    LogUtil.info("历史油补累计, jsons="+jsons.toJSONString());
+    return httpRequestHandler.exchange(interfaceUrl+"oilCostRecord/getHistoryOilRecord",HttpMethod.POST,null, jsons);
   }
 
   /**
@@ -94,22 +89,12 @@ public class OilCostRecordController {
     * @return 
     * @since JDK 1.8
    */
+  @ApiOperation(value="当日油补记录", notes="当日油补记录")
+  @ApiImplicitParam(name="jsons",value="jsons",required=true,dataType="JSONObject")
   @RequestMapping(value = "/getTodayOilRecord", method = RequestMethod.POST)
   public ResponseEntity<Object> getTodayOilRecord(@RequestBody JSONObject jsons){
-     /* String isPrimary=jsons.getString("isPrimary");//0-主账号 1-子账号
-      String  userId  =jsons.getString("userId");//业务员id
-      String childId  =jsons.getString("childId");//子账号id
-      
-      TodayOilRecord oildRecord=new TodayOilRecord();
-      try {
-        oildRecord = trackService.getTodayOilRecord(isPrimary,userId,childId);
-        return new ResponseEntity<TodayOilRecord>(oildRecord,HttpStatus.OK);
-      } catch (Exception e) {
-        oildRecord.setCode(1);
-        oildRecord.setMsg("服务器异常");
-        return new ResponseEntity<TodayOilRecord>(oildRecord,HttpStatus.BAD_REQUEST);
-      }*/
-    return requestHandler.get("oilCostRecord/getTodayOilRecord",HttpMethod.POST,jsons);
+    LogUtil.info("当日油补记录, jsons="+jsons.toJSONString());
+    return httpRequestHandler.exchange(interfaceUrl+"oilCostRecord/getTodayOilRecord",HttpMethod.POST,null, jsons);
       
   }
   
@@ -122,24 +107,12 @@ public class OilCostRecordController {
     * @return 
     * @since JDK 1.8
    */
+  @ApiOperation(value="历史油补详情", notes="历史油补详情")
+  @ApiImplicitParam(name="jsons",value="jsons",required=true,dataType="JSONObject")
   @RequestMapping(value = "/getHistoryDestOilRecord", method = RequestMethod.POST)
   public ResponseEntity<Object> getHistoryDestOilRecord(@RequestBody JSONObject jsons){
-    /*  String  userId  =jsons.getString("userId");//业务员id
-      int dateYear    =jsons.getIntValue("dateYear");//日期-年
-      int dateMonth   =jsons.getIntValue("dateMonth");//日期-月份
-      
-      HistoryDestOilRecord historyDestOilRecord=new HistoryDestOilRecord();
-      
-      try {
-        historyDestOilRecord=trackService.getMonthOilRecord(userId, dateYear, dateMonth) ;
-        return new ResponseEntity<HistoryDestOilRecord>(historyDestOilRecord,HttpStatus.OK);
-      } catch (Exception e) {
-        historyDestOilRecord.setCode(1);
-        historyDestOilRecord.setMsg("服务器异常");
-        return new ResponseEntity<HistoryDestOilRecord>(historyDestOilRecord,HttpStatus.BAD_REQUEST);
-      }
-      */
-    return requestHandler.get("oilCostRecord/getHistoryDestOilRecord",HttpMethod.POST,jsons);
+    LogUtil.info("历史油补详情, jsons="+jsons.toJSONString());
+    return httpRequestHandler.exchange(interfaceUrl+"oilCostRecord/getHistoryDestOilRecord",HttpMethod.POST,null, jsons);
   }
   
 }
