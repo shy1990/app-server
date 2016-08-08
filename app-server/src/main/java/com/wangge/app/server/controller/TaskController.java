@@ -26,12 +26,7 @@ import com.wangge.app.server.service.SaojieService;
 @RestController
 @RequestMapping(value = "/v1/task/")
 public class TaskController {
-//
-//	private static final Logger logger = Logger
-//			.getLogger(TaskController.class);
-//	SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");//
-//	@Resource
-//	private SalesmanService salesmanService;
+
 	@Resource
 	private SalesmanService sms;
 	@Resource

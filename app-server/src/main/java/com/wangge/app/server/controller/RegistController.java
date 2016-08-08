@@ -10,6 +10,9 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.wangge.app.server.config.http.HttpRequestHandler;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,29 +44,28 @@ public class RegistController {
   private AssessService assessService;
 	@Resource
 	private RegionService regionService;
+	@Resource
+	private HttpRequestHandler httpRequestHandler;
+	@Value("${app-interface.url}")
+	private String url;
 	/**
 	 * 
 	 * @Description: 业务人员注册区域
-	 * @param @param salesman
+	 * @param @param userId
 	 * @return ResponseEntity<Map<String,List<RegionVo>>>
 	 * @author peter
 	 * @date 2015年12月1日
 	 * @version V2.0
 	 */
 	@RequestMapping(value="/{id}/regist",method=RequestMethod.GET)
-	public ResponseEntity<List<RegistAreaVo>> salesmanRegions(@PathVariable("id") Salesman salesman){
-
-	   //  Map<String, List<RegionVo>>   regionMap = assessService.getRegistRegion(salesman);
-	     
-	     List<RegistAreaVo> voList = assessService.getRegistRegions(salesman);
-	   
-		return new ResponseEntity<List<RegistAreaVo>>(voList,HttpStatus.OK);
+	public ResponseEntity<Object> salesmanRegions(@PathVariable("id") String userId){
+		return httpRequestHandler.exchange(url + "/{id}/regist", HttpMethod.GET,null,null,List.class,userId);
 	}
 	
 	/**
    * 
    * @Description: 查询开发数量
-   * @param @param salesman
+   * @param @param userId
    * @param @return
    * @return ResponseEntity<Map<String,Integer>>
    * @author peter
@@ -71,11 +73,8 @@ public class RegistController {
    * @version V2.0
    */
   @RequestMapping(value="/{id}/registNum",method=RequestMethod.GET)
-  public ResponseEntity<Map<String,Integer>> registNum(@PathVariable("id") Salesman salesman){
-    
-       Map<String, Integer>   regionMap = registService.getRegistNum(salesman);
-     
-    return new ResponseEntity<Map<String,Integer>>(regionMap,HttpStatus.OK);
+  public ResponseEntity<Object> registNum(@PathVariable("id") String userId){
+		return httpRequestHandler.exchange(url + "/{id}/registNum", HttpMethod.GET,null,null,Map.class,userId);
   }
 	
 		/**
@@ -88,32 +87,8 @@ public class RegistController {
 		 *
 		 */
 		@RequestMapping(value = "/addRegist", method = RequestMethod.POST)
-		public ResponseEntity<String> addRegist(String registName,String salesmanid,String regionid,String registStart,String registEnd,String registCount,String registDes,String userName ) {
-			
-			Regist regist = new Regist();
-			regist.setDescription(registDes);
-			try {
-				regist.setExpiredTime(sdf.parse(registEnd));
-				regist.setBeginTime(sdf.parse(registStart));
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-			regist.setName(registName);
-			regist.setSalesman(salesmanService.findSalesmanbyId(salesmanid));
-			regist.setRegion(regionService.findRegion(regionid));
-			regist.setMinValue(Integer.parseInt(registCount));
-			List<Regist> listSaojie= registService.findBySalesman(salesmanService.findSalesmanbyId(salesmanid));
-			if(listSaojie.size()>0){
-				regist.setOrder(listSaojie.size()-1);
-				regist.setParent(listSaojie.get(0));
-				if(listSaojie.size()==1){
-					regist.setStatus(RegistStatus.PENDING);
-				}
-			}else{
-				regist.setOrder(0);
-			}
-			registService.saveRegist(regist);
-			return new ResponseEntity<String>("SUCCESS",HttpStatus.OK);
+		public ResponseEntity<Object> addRegist(String registName,String salesmanid,String regionid,String registStart,String registEnd,String registCount,String registDes,String userName ) {
+			return httpRequestHandler.exchange(url + "/addRegist", HttpMethod.POST,null,registName,salesmanid,regionid,registStart,registEnd,registCount,registDes,userName,String.class,null);
 	}
 		
 		
