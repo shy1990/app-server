@@ -46,7 +46,7 @@ public class OrderSignforController {
   @RequestMapping(value = "/getBussOrderList" ,method = RequestMethod.POST)
   public ResponseEntity<Object> getOrderSignforList(@RequestBody JSONObject jsons){
     LogUtil.info("获取物流单号列表, josns="+jsons.toJSONString());
-    return httpRequestHandler.exchange(interfaceUrl+"remind/getBussOrderList",HttpMethod.POST,null,JSONObject.class,jsons);
+    return httpRequestHandler.exchange(interfaceUrl+"remind/getBussOrderList",HttpMethod.POST,null,jsons);
      
   }
   /**
