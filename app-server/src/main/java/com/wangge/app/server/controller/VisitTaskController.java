@@ -1,24 +1,5 @@
 package com.wangge.app.server.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import javax.annotation.Resource;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.entity.Salesman;
@@ -35,6 +16,18 @@ import com.wangge.app.server.service.SalesmanService;
 import com.wangge.app.server.service.TaskVisitService;
 import com.wangge.app.server.util.SortUtil;
 import com.wangge.app.server.vo.VisitVo;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @RestController
 @RequestMapping(value = "/v1")
@@ -58,9 +51,6 @@ public class VisitTaskController {
 	@Resource
 	private MonthTaskServive monthTaskServive;
 
-	@Value("${app-interface.url}")
-	private String url;
-	
 	Json json = new Json();
 	
 	/**
