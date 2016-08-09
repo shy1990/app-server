@@ -15,6 +15,7 @@ import com.wangge.app.server.util.DateUtil;
 import com.wangge.app.util.JsonResponse;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -72,11 +73,11 @@ public class RejectionServiceImpl implements RejectionServive {
                 ctx.publishEvent(new afterSignforEvent(rejection.getSalesmanId(), rejectPoint, isPrimary, childId, 7, storePhone));
 
                 //钱包调用处理
-                Map map = opl.checkMoneyBack(orderno);
+                Map<String, String> map = opl.checkMoneyBack(orderno);
                 boolean flag = false;
                 if (map != null) {
                     //判断钱包流水号是否为空,若是则不调用退款接口
-                    if (map.get("payNo") != null && !"".equals(map.get("payNo"))) {
+                    if (StringUtils.isNotBlank(map.get("payNo"))) {
                         if ("0".equals(map.get("payMent"))) {
                             if (map.get("totalCost").equals(map.get("walletNum"))) {
                                 flag = true;
@@ -91,7 +92,7 @@ public class RejectionServiceImpl implements RejectionServive {
                     if (str != null && str.contains("202")) {
                         json.setSuccessMsg("退款成功,请核实钱包金额!");
                     } else {
-                        json.setErrorMsg("退款失败,请稍后重试!");
+                        json.setErrorMsg("退款失败,请联系技术人员!");
                     }
                     return new ResponseEntity<JsonResponse<String>>(json, HttpStatus.OK);
                 }

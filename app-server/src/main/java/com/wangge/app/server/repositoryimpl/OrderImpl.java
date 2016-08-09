@@ -271,7 +271,7 @@ public class OrderImpl {
 				Object[] o = (Object[]) it.next();
 				map.put("payMent", o[0] + "");
 				map.put("totalCost", o[1] + "");
-				map.put("payNo", o[2] + "");
+				map.put("payNo", (String) o[2]);
 				map.put("walletNum", o[3] + "");
 			}
 		}
