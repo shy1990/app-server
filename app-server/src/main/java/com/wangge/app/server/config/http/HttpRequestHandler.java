@@ -81,7 +81,7 @@ public class HttpRequestHandler implements InitializingBean {
    */
   public <T> T get(String url, ParameterizedTypeReference<T> responseType, HttpHeaders headers,
                    Object... urlVariables) throws RuntimeException {
-    return this.exchange(url, HttpMethod.GET, headers, null, responseType, urlVariables);
+    return this.exchangeForResponseType(url, HttpMethod.GET, headers, null, responseType, urlVariables);
   }
 
   /**
@@ -94,7 +94,7 @@ public class HttpRequestHandler implements InitializingBean {
    */
   public <T> T get(String url, ParameterizedTypeReference<T> responseType, Object...
    urlVariables) throws RuntimeException {
-    return this.exchange(url, HttpMethod.GET, null, null, responseType, urlVariables);
+    return this.exchangeForResponseType(url, HttpMethod.GET, null, null, responseType, urlVariables);
   }
 
   /**
@@ -108,7 +108,7 @@ public class HttpRequestHandler implements InitializingBean {
    * 则解析的url为api/1/2，使用Map参数时，遵循按key匹配
    * @return 根据responseType 转化后的结果对象。不包含HTTP请求的其他信息。
    */
-  public <T> T exchange(String url, HttpMethod method, HttpHeaders headers, Object body,
+  public <T> T exchangeForResponseType(String url, HttpMethod method, HttpHeaders headers, Object body,
                         ParameterizedTypeReference<T> responseType, Object... uriVariables)
    throws RuntimeException {
 
@@ -118,7 +118,9 @@ public class HttpRequestHandler implements InitializingBean {
     printInfoLog(url, uriVariables, null);
 
     try {
-      HttpEntity<?> requestEntity = new HttpEntity<>(body, headers);
+      HttpEntity<?> requestEntity = new HttpEntity<>(body,  getHeaders(headers));
+      
+     
 
       requestEntity = convert(requestEntity);
 
@@ -146,6 +148,23 @@ public class HttpRequestHandler implements InitializingBean {
   }
 
   /**
+   * 
+    * getHeaders:(获取headers). <br/> 
+    * 
+    * @author Administrator 
+    * @param headers
+    * @return 
+    * @since JDK 1.8
+   */
+  private HttpHeaders getHeaders(HttpHeaders headers) {
+    if(headers == null){
+      headers =  new HttpHeaders();
+      headers.setContentType(MediaType.APPLICATION_JSON);
+    }
+    return headers;
+  }
+
+  /**
    * 没有responseType
    * @param url 请求地址
    * @param method 请求方式
@@ -165,7 +184,7 @@ public class HttpRequestHandler implements InitializingBean {
     printInfoLog(url, uriVariables, null);
 
     try {
-      HttpEntity<?> requestEntity = new HttpEntity<>(body, headers);
+      HttpEntity<?> requestEntity = new HttpEntity<>(body, getHeaders(headers));
 
       requestEntity = convert(requestEntity);
 
@@ -205,6 +224,15 @@ public class HttpRequestHandler implements InitializingBean {
     if (body == null) {
       return requestEntity;
     }
+    
+    if(body instanceof JSONObject){
+      return requestEntity;
+    }
+    
+    
+    if(body instanceof net.sf.json.JSONObject){
+      return requestEntity;
+    }
 
     if (body instanceof Map) {
       MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
@@ -220,7 +248,7 @@ public class HttpRequestHandler implements InitializingBean {
      .getContentType())) {
       return requestEntity;
     }
-
+    
     if (body instanceof String) {
       return requestEntity;
     }
