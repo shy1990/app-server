@@ -84,7 +84,7 @@ public class WaterOrderController {
         WaterOrderPart part = disposeWop(order, false);
         list.add(part);
       });
-      Page<WaterOrderPart> partPage = new PageImpl<>(list, pageable, cashlist.get(0).getTotal());
+      Page<WaterOrderPart> partPage = new PageImpl<WaterOrderPart>(list, pageable, cashlist.get(0).getTotal());
       if (CollectionUtils.isNotEmpty(cashlist)) {
         waterOrderJson.setResult(partPage);
         waterOrderJson.setSuccessMsg("操作成功");

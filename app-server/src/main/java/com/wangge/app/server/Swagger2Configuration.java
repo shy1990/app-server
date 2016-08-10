@@ -21,11 +21,11 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * 版本: 1.0
  * JDK: since 1.8
  */
-@Configuration
-@EnableSwagger2
-@Profile({"dev", "test"})
+//@Configuration
+//@EnableSwagger2
+//@Profile({"dev", "test"})
 public class Swagger2Configuration {
-  private ApiInfo apiInfo() {
+  /*private ApiInfo apiInfo() {
     return new ApiInfoBuilder()
      .title("APP-SERVER应用接口文档")
      .description("APP-SERVER应用接口文档 1.0版本")
@@ -41,5 +41,5 @@ public class Swagger2Configuration {
      .apis(RequestHandlerSelectors.basePackage("com.wangge.app"))
      .paths(PathSelectors.any())
      .build();
-  }
+  }*/
 }
