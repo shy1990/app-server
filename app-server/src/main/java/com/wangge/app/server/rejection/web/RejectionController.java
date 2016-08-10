@@ -1,22 +1,13 @@
 package com.wangge.app.server.rejection.web;
 
 import com.alibaba.fastjson.JSONObject;
-import com.wangge.app.server.entity.OrderSignfor;
-import com.wangge.app.server.entity.Salesman;
-import com.wangge.app.server.event.afterSignforEvent;
-import com.wangge.app.server.rejection.entity.RejectStatusEnum;
 import com.wangge.app.server.rejection.entity.Rejection;
 import com.wangge.app.server.rejection.service.RejectionServive;
-import com.wangge.app.server.service.OrderSignforService;
-import com.wangge.app.server.service.SalesmanService;
-import com.wangge.app.server.util.DateUtil;
-import com.wangge.app.util.JsonResponse;
+import com.wangge.app.server.util.JsonResponse;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.ObjectUtils;
-import org.neo4j.cypher.internal.compiler.v2_1.functions.Str;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

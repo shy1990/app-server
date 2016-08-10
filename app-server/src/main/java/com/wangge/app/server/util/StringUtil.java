@@ -1,10 +1,8 @@
 package com.wangge.app.server.util;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Test;
+
+import java.util.Map;
 
 /**
  * 描述: TODO: 包名: com.wangge.app.util. 作者: barton. 日期: 16-7-23. 项目名称:
