@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -103,8 +104,8 @@ public class OrderImpl {
 	 * @date 2015年11月12日
 	 */
 	public boolean checkByOrderNum(String ordernum) {
-		String sql = "select  o.id  from SJZAIXIAN.SJ_TB_ORDER o  where o.order_num=" + ordernum
-				+ " and (o.YEWU_SIGNFOR_TIME is null or o.ship_status='2')";
+		String sql = "select  o.id  from SJZAIXIAN.SJ_TB_ORDER o  where o.order_num='" + ordernum
+				+ "' and (o.YEWU_SIGNFOR_TIME is null or o.ship_status='2')";
 		Query query = em.createNativeQuery(sql);
 		return query.getResultList().size() > 0 ? true : false;
 	}
@@ -171,11 +172,11 @@ public class OrderImpl {
 		// }
 		String sql = "";
 		if (1 == type) {
-			sql = "update SJZAIXIAN.SJ_TB_ORDER set ship_status=" + status
-					+ " ,yewu_signfor_time=sysdate where order_num=" + ordernum + "";
+			sql = "update SJZAIXIAN.SJ_TB_ORDER set ship_status='" + status
+					+ "' ,yewu_signfor_time=sysdate where order_num='" + ordernum + "'";
 		} else {
-			sql = "update SJZAIXIAN.SJ_TB_ORDER set PAY_MENT=" + paytype + ",CUSTOM_SIGNFOR_ADDRESS='" + point
-					+ "',ship_status=" + status + " ,custom_signfor_time=sysdate where order_num=" + ordernum + "";
+			sql = "update SJZAIXIAN.SJ_TB_ORDER set PAY_MENT='" + paytype + "',CUSTOM_SIGNFOR_ADDRESS='" + point
+					+ "',ship_status='" + status + "' ,custom_signfor_time=sysdate where order_num='" + ordernum + "'";
 		}
 
 		Query query = em.createNativeQuery(sql);
@@ -183,6 +184,7 @@ public class OrderImpl {
 	}
 
 	/**
+	 * 
 	 * 
 	 * @Description: 修改订单状态及客户签收时间
 	 * @param @param
@@ -198,8 +200,8 @@ public class OrderImpl {
 
 	@Transactional
 	public void updateOrderShipStateByOrderNum(String ordernum, String status) {
-		String sql = "update SJZAIXIAN.SJ_TB_ORDER set ship_status=" + status
-				+ " ,custom_signfor_time=sysdate,signfortime = sysdate where order_num=" + ordernum+ "";
+		String sql = "update SJZAIXIAN.SJ_TB_ORDER set ship_status='" + status
+				+ "' ,custom_signfor_time=sysdate,signfortime = sysdate where order_num='" + ordernum+ "'";
 		Query query = em.createNativeQuery(sql);
 		query.executeUpdate();
 	}
@@ -219,8 +221,8 @@ public class OrderImpl {
 	 */
 	@Transactional
 	public void saveRefuseReason(String ordernum, String reason) {
-		String sql = "update SJZAIXIAN.SJ_TB_ORDER set ship_status=4,refuse_reason='" + reason + "' where order_num="
-				+ ordernum + "";
+		String sql = "update SJZAIXIAN.SJ_TB_ORDER set ship_status=4,refuse_reason='" + reason + "' where order_num='"
+				+ ordernum + "'";
 		Query query = em.createNativeQuery(sql);
 		query.executeUpdate();
 	}
@@ -240,7 +242,7 @@ public class OrderImpl {
 	 */
 	@Transactional
 	public String updateMessageType(String state, String orderNum) {
-		String sql = "update SJ_YEWU.sys_message set message_type= " + state + " where content like '%" + orderNum
+		String sql = "update SJ_YEWU.sys_message set message_type= '" + state + "' where content like '%" + orderNum
 				+ "%'";
 		Query query = em.createNativeQuery(sql);
 		return query.executeUpdate() > 0 ? "suc" : "false";
@@ -258,8 +260,8 @@ public class OrderImpl {
 	 * @date 2016年1月18日
 	 */
 	public Map checkMoneyBack(String orderNum) {
-		String sql = "select PAY_MENT,TOTAL_COST,WALLET_PAY_NO,WALLET_NUM from SJZAIXIAN.sj_tb_order where ORDER_NUM="
-				+ orderNum + "";
+		String sql = "select PAY_MENT,TOTAL_COST,WALLET_PAY_NO,WALLET_NUM from SJZAIXIAN.sj_tb_order where ORDER_NUM='"
+				+ orderNum + "'";
 		Query query = em.createNativeQuery(sql);
 		Map<String, String> map = new HashMap<String, String>();
 		List obj = query.getResultList();
@@ -269,7 +271,7 @@ public class OrderImpl {
 				Object[] o = (Object[]) it.next();
 				map.put("payMent", o[0] + "");
 				map.put("totalCost", o[1] + "");
-				map.put("payNo", o[2] + "");
+				map.put("payNo", (String) o[2]);
 				map.put("walletNum", o[3] + "");
 			}
 		}
@@ -308,11 +310,16 @@ public class OrderImpl {
 	}
 
 	public Map findOrderPayStatusByOrderNum(String orderno) {
-		String sql = "select PAY_STATUS from SJZAIXIAN.sj_tb_order where ORDER_NUM=" + orderno + "";
+		String sql = "select PAY_STATUS from SJZAIXIAN.sj_tb_order where ORDER_NUM='" + orderno + "'";
 		Query query = em.createNativeQuery(sql);
 		Map<String, String> map = new HashMap<String, String>();
-		Object o = query.getSingleResult();
-		map.put("payStatus", o + "");
+		try {
+			Object o = query.getSingleResult();
+			map.put("payStatus", o + "");
+		} catch (Exception e) {
+			LOG.info(e);
+		}
+		
 		return map;
 	}
 }

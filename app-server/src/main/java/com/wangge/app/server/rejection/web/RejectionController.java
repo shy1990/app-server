@@ -3,6 +3,7 @@ package com.wangge.app.server.rejection.web;
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.entity.Salesman;
+import com.wangge.app.server.event.afterSignforEvent;
 import com.wangge.app.server.rejection.entity.RejectStatusEnum;
 import com.wangge.app.server.rejection.entity.Rejection;
 import com.wangge.app.server.rejection.service.RejectionServive;
@@ -14,6 +15,8 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.ObjectUtils;
+import org.neo4j.cypher.internal.compiler.v2_1.functions.Str;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,15 +43,11 @@ import javax.annotation.Resource;
 public class RejectionController {
     @Resource
     private RejectionServive rejectionServive;
-    @Resource
-    private SalesmanService salesmanService;
-    @Resource
-    private OrderSignforService orderSignforService;
 
     /**
      * 客户拒收提交保存
      *
-     * @param rejection
+     * @param jsonObject
      * @return
      */
     @ApiOperation(value = "拒收保存接口", notes = "保存一条提交的拒收信息")
@@ -61,33 +60,10 @@ public class RejectionController {
             @ApiImplicitParam(name = "createTime", value = "拒收时间", required = false, dataType = "Date")})
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<JsonResponse<String>> save(@RequestBody Rejection rejection) {
-        JsonResponse<String> json = new JsonResponse<>();
-        String orderno = rejection.getOrderno();
-        try {
-            Rejection rj = rejectionServive.findByOrderno(orderno);
-            if (!ObjectUtils.notEqual(rj,null)) {
-                rejection.setArriveTime(DateUtil.moveDate(rejection.getCreateTime(), 2));
-                Salesman salesman = salesmanService.findSalesmanbyId(rejection.getSalesmanId());
-                rejection.setSalesMan(salesman);
-                rejection.setStatus(RejectStatusEnum.sendBack);
-                rejectionServive.save(rejection);
-
-                OrderSignfor orderSignfor = orderSignforService.findbyOrderNum(orderno);
-                orderSignfor.setOrderStatus(4);//更改订单签收表的订单状态为已拒收
-                orderSignforService.saveOrderSignfor(orderSignfor);
-
-                json.setSuccessMsg("提交成功!");
-                return new ResponseEntity<JsonResponse<String>>(json, HttpStatus.OK);
-            } else {
-                json.setSuccessMsg("该订单已拒收!");
-                return new ResponseEntity<JsonResponse<String>>(json, HttpStatus.OK);
-            }
-        } catch (Exception e) {
-            json.setErrorMsg("系统异常,请稍候重试!");
-            json.setStatus(JsonResponse.Status.ERROR);
-            return new ResponseEntity<>(json, HttpStatus.UNAUTHORIZED);
-        }
+    public ResponseEntity<JsonResponse<String>> save(@RequestBody JSONObject jsonObject) {
+        Rejection rejection = jsonObject.getObject("rejection",Rejection.class);
+        ResponseEntity<JsonResponse<String>> jsonResponse = rejectionServive.save(rejection,jsonObject);
+        return jsonResponse;
     }
 
     /**
@@ -117,6 +93,28 @@ public class RejectionController {
             return new ResponseEntity<>(json, HttpStatus.UNAUTHORIZED);
         }
     }
+
+    /**
+     * 获取拒收详情
+     *
+     * @param rejection
+     * @return
+     */
+    /*@ApiOperation(value = "获取拒收详情", notes = "根据拒收ID查询拒收详情")
+    @ApiImplicitParams({@ApiImplicitParam(name = "rejectId", value = "拒收Id", required = true, dataType = "Long")})
+    @RequestMapping(value = "/{rejectId}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<JsonResponse<Rejection>> getRejection(@PathVariable("rejectId") Rejection rejection) {
+        JsonResponse<Rejection> json = new JsonResponse<>();
+        try {
+            json.setResult(rejection);
+            return new ResponseEntity<JsonResponse<Rejection>>(json, HttpStatus.OK);
+        } catch (Exception e) {
+            json.setErrorMsg("系统异常,请稍候重试!");
+            json.setStatus(JsonResponse.Status.ERROR);
+            return new ResponseEntity<>(json, HttpStatus.UNAUTHORIZED);
+        }
+    }*/
 
     /**
      * 获取拒收列表

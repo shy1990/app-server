@@ -516,18 +516,17 @@ public class MonthTaskServiceImpl implements MonthTaskServive {
     if (null != mtaskSub) {
       Date lsTime = mtaskSub.getLastTime();
       if (!(DateUtil.date2String(lsTime)).equals(DateUtil.date2String(new Date()))) {
-        if (mtaskSub.getGoal() <= mtaskSub.getDone() + 1) {
+        int level = mtaskSub.getGoal();
+        int done = mtaskSub.getDone() + 1;
+        mtaskSub.setFinish(0);
+        // 只有当标记为目标数和实现数相等时;主任务完成+1
+        if (done == level) {
           MonthTask mainTask = mtaskSub.getMonthTask();
-          int level = mtaskSub.getGoal();
-          //只有当标记为未完成时才向主任务添加任务完成+1的操作;
-          if (mtaskSub.getFinish()==0) {
-            setDone(level, mainTask);
-          }
+          
+          setDone(level, mainTask);
           mtaskSub.setFinish(1);
-        } else {
-          mtaskSub.setFinish(0);
         }
-        mtaskSub.setDone(mtaskSub.getDone() + 1);
+        mtaskSub.setDone(done);
         mtaskSub.setLastTime(new Date());
         subTaskRep.save(mtaskSub);
       }

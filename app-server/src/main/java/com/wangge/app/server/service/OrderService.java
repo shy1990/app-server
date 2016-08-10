@@ -65,7 +65,7 @@ public class OrderService {
    * @author changjun
    * @date 2016年1月7日
    */
-  public static String invokWallet(JSONObject jo,String walletNo) throws Exception {
+  public static String invokWallet(String walletNo) throws Exception {
 //    String url = "http://115.28.87.182:58081/v1/"; 线上  线下//http://115.28.92.73:58080/v1/
     String url = "http://115.28.87.182:58081/v1/"+walletNo+"/status";
     RestTemplate rest = new RestTemplate();
