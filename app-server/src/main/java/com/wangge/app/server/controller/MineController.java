@@ -2,6 +2,7 @@ package com.wangge.app.server.controller;
 
 
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 import java.text.ParseException;
@@ -91,7 +92,7 @@ public class MineController {
 	@RequestMapping(value = "/checkByOrderNum",method = RequestMethod.POST)
 	public JSONObject checkByOrderNum(@RequestBody  JSONObject json) throws Exception{
 	    LogUtil.info("根据业务手机号订单号判断该订单是否属于该业务员并返回订单详情， json="+json.toJSONString());
-      return this.httpRequestHandler.exchangeForResponseType(interfaceUrl+"/checkByOrderNum", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+      return httpRequestHandler.exchange(interfaceUrl+"/checkByOrderNum", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
       });
   }
   
@@ -106,14 +107,13 @@ public class MineController {
    * @author changjun
    * @date 2015年11月11日
    */
+  @ApiOperation(value="根据业务手机号查询所属订单的派送状态",notes="根据业务手机号查询所属订单的派送状态")
+  @ApiImplicitParam(name="json",value="json",required=true,dataType="JSONObject")
   @RequestMapping(value = "/orderStatusList",method = RequestMethod.POST)
-  public ResponseEntity<List<OrderPub>> orderStatusList(@RequestBody  JSONObject json){
-//    String regionId = json.getString("regionId");
-    String username = json.getString("username");
-    PageRequest pageRequest = SortUtil.buildPageRequest(json.getInteger("pageNumber"), json.getInteger("pageSize"),"order");
-//    List<OrderPub> list = or.findByRegion(rr.findById(regionId), pageRequest);
-    List<OrderPub> list =opl.selOrderSignforStatus(username, json.getInteger("pageNumber"),pageRequest);
-    return new ResponseEntity<List<OrderPub>>(list , HttpStatus.OK);
+  public JSONObject orderStatusList(@RequestBody  JSONObject json){
+    LogUtil.info("根据业务手机号查询所属订单的派送状态， json="+json.toJSONString());
+    return httpRequestHandler.exchange(interfaceUrl+"/orderStatusList", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    });
   }
   
   
@@ -127,12 +127,13 @@ public class MineController {
    * @author changjun
    * @date 2015年11月21日
    */
+  @ApiOperation(value="业务签收后更新订单状态",notes="业务签收后更新订单状态")
+  @ApiImplicitParam(name="json",value="json",required=true,dataType="JSONObject")
   @RequestMapping(value = "/updateOrderStatus",method = RequestMethod.POST)
-  public ResponseEntity<JSONObject> updateOrderStatus(@RequestBody  JSONObject json){
-    String status =  opl.updateOrderShipStateByOrderNum(json.getString("ordernum"), null,null,"2",1);
-    JSONObject jo = new JSONObject();
-    jo.put("state", status);
-    return new ResponseEntity<JSONObject>( jo, HttpStatus.OK);
+  public JSONObject updateOrderStatus(@RequestBody  JSONObject json){
+    LogUtil.info("业务签收后更新订单状态， json="+json.toJSONString());
+    return httpRequestHandler.exchange(interfaceUrl+"/orderStatusList", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    });
   }
   
   ///////////////////     V2
@@ -146,45 +147,13 @@ public class MineController {
    * @author changjun
    * @date 2015年12月1日
    */
+  @ApiOperation(value="客户拒签",notes="客户拒签")
+  @ApiImplicitParam(name="json",value="json",required=true,dataType="JSONObject")
   @RequestMapping(value = "/custNotSignFor",method = RequestMethod.POST)
-  public ResponseEntity<JSONObject> custNotSignFor(@RequestBody  JSONObject json){
-    String orderNum = json.getString("ordernum");
-    String reason = json.getString("reason");
-    JSONObject jo = new JSONObject();
-    
-    opl.saveRefuseReason(orderNum, reason);//保存拒签原因
-    
-    Map map = opl.checkMoneyBack(orderNum);
-    boolean flag = false;
-    if(map!=null){
-      //判断钱包流水号是否为空,若是则不调用退款接口
-      if (map.get("payNo") != null && !"".equals(map.get("payNo"))) {
-        if ("0".equals(map.get("payMent"))) {
-          if (map.get("totalCost").equals(map.get("walletNum"))) {
-            flag = true;
-          }
-        } else {
-          flag = true;
-        }
-      }
-    }
-    if (flag) {
-      try {
-        jo.put("state", "success");// 调用接口传参
-        String str = or.invokWallet(jo, map.get("payNo").toString());
-        jo.clear();
-        if (str != null && str.contains("202")) {
-          jo.put("status", "退款成功,请核实钱包金额");
-        } else {
-          jo.put("status", "退款失败,请联系技术人员!");
-        }
-        return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
-  		jo.put("status", "拒签成功");
-		return new ResponseEntity<JSONObject>( jo, HttpStatus.OK);
+  public JSONObject custNotSignFor(@RequestBody  JSONObject json){
+    LogUtil.info("客户拒签， json="+json.toJSONString());
+    return httpRequestHandler.exchange(interfaceUrl+"/custNotSignFor", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    });
 	}
 	/**
 	 * 
@@ -196,34 +165,13 @@ public class MineController {
 	 * @author changjun
 	 * @date 2015年12月1日
 	 */
+  @ApiOperation(value="客户签收",notes="客户签收")
+  @ApiImplicitParam(name="json",value="json",required=true,dataType="JSONObject")
 	@RequestMapping(value = "/custSignFor",method = RequestMethod.POST)
-	public ResponseEntity<JSONObject> custSignFor(@RequestBody  JSONObject json){
-	  String status = "";
-	  //收款方式
-	    String paytype = json.getString("paytype");
-	  //纬度
-//	  String latitude = json.getString("latitude");
-	  //经度
-//	  String longitude = json.getString("longitude");
-	  
-	    String point = json.getString("longitude") +"-"+  json.getString("latitude");
-		  String mobile = json.getString("mobile");
-		  String code = json.getString("code");
-		  JSONObject jo = new JSONObject();
-		  if(code != null && !"".equals(code)){
-		    String str = this.validateCode(mobile,code);
-	     
-	      if("suc".equals(str)){
-	         status =  opl.updateOrderShipStateByOrderNum(json.getString("ordernum"),paytype, point,"3",2);
-	      }else{
-	        status = str;
-	      }
-		  }else{
-		    status =  opl.updateOrderShipStateByOrderNum(json.getString("ordernum"),paytype, point,"3",2);
-		  }
-			
-			jo.put("state", status);
-			return new ResponseEntity<JSONObject>( jo, HttpStatus.OK);
+	public JSONObject custSignFor(@RequestBody  JSONObject json){
+    LogUtil.info("客户签收， json="+json.toJSONString());
+    return httpRequestHandler.exchange(interfaceUrl+"/custSignFor", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    });
 	}
 	/**
 	 * 
@@ -235,19 +183,13 @@ public class MineController {
 	 * @author changjun
 	 * @date 2015年12月1日
 	 */
+  @ApiOperation(value="发送验证码",notes="发送验证码")
+  @ApiImplicitParam(name="json",value="json",required=true,dataType="JSONObject")
 	@RequestMapping(value = "/sendCode",method = RequestMethod.POST)
-	public ResponseEntity<JSONObject> sendCode(@RequestBody  JSONObject json){
-		String mobile = json.getString("mobile");
-		//192.168.2.252:80
-		String msg = HttpUtil.sendPost("http://www.3j1688.com/member/getValidateCode/"+mobile+".html","");
-		System.out.println("msg==="+msg);
-		JSONObject jo = new JSONObject();
-		if(msg!=null && msg.contains("true")){
-			jo.put("state", true);
-			return new ResponseEntity<JSONObject>( jo, HttpStatus.OK);
-		}
-		jo.put("state", false);
-		return new ResponseEntity<JSONObject>( jo, HttpStatus.OK);
+	public JSONObject sendCode(@RequestBody  JSONObject json){
+    LogUtil.info("发送验证码， json="+json.toJSONString());
+    return httpRequestHandler.exchange(interfaceUrl+"/sendCode", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    });
 	}
 	/**
 	 * 
@@ -260,17 +202,18 @@ public class MineController {
 	 * @author changjun
 	 * @date 2015年12月19日
 	 */
+  @ApiOperation(value="验证码验证",notes="验证码验证")
+  @ApiImplicitParams({
+    @ApiImplicitParam(name="mobile",value="mobile",required=true,dataType="String"),
+    @ApiImplicitParam(name="code",value="code",required=true,dataType="String")
+  })
 	public String validateCode(String mobile,String code){
-		String msg = HttpUtil.sendPost("http://www.3j1688.com/member/existMobileCode/"+mobile+"_"+code+".html","");
-		if(msg!=null && msg.contains("true")){
-			return "suc";
-		}else{
-			if(msg.contains("手机验证码超时")){
-				return "手机验证码超时";
-			}else{
-				return "手机验证码不正确";
-			}
-		}
+    LogUtil.info("验证码验证， mobile="+mobile+"code"+code);
+    JSONObject json = new JSONObject();
+    json.put("mobile", mobile);
+    json.put("code", code);
+    return httpRequestHandler.exchange(interfaceUrl+"/sendCode", HttpMethod.POST, null, json, new ParameterizedTypeReference<String>() {
+    });
 	}
 	
 	
@@ -285,11 +228,13 @@ public class MineController {
 	 * @author changjun
 	 * @date 2015年10月21日
 	 */
+  @ApiOperation(value="考核状态",notes="考核状态")
+  @ApiImplicitParam(name="json",value="json",required=true,dataType="JSONObject")
 	@RequestMapping(value = "/examStatus",method = RequestMethod.POST)
-	public ResponseEntity<Exam> examStatus(@RequestBody	JSONObject json) throws ParseException{
-		String saleId = json.getString("salesmanId");
-		Exam  ex = epl.ExamSalesman(saleId);
-		return new ResponseEntity<Exam>(ex, HttpStatus.OK);
+	public JSONObject examStatus(@RequestBody	JSONObject json) throws ParseException{
+    LogUtil.info("客户签收， json="+json.toJSONString());
+    return httpRequestHandler.exchange(interfaceUrl+"/examStatus", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    });
 	}
 
 	/**
@@ -298,12 +243,13 @@ public class MineController {
 	 * @return
 	 * @throws ParseException
      */
+  @ApiOperation(value="月指标统计查询",notes="月指标统计查询")
+  @ApiImplicitParam(name="json",value="json",required=true,dataType="JSONObject")
 	@RequestMapping(value = "/monthTarget",method = RequestMethod.POST)
-	public ResponseEntity<Json> getMonthTarget(@RequestBody	JSONObject json) throws ParseException{
-		String saleId = json.getString("salesmanId");
-		Salesman salesman = salesmanService.findSalesmanbyId(saleId);
-		Json  jsonObject = epl.getMonthTarget(salesman);
-		return new ResponseEntity<Json>(jsonObject, HttpStatus.OK);
+	public JSONObject getMonthTarget(@RequestBody	JSONObject json) throws ParseException{
+    LogUtil.info("月指标统计查询， json="+json.toJSONString());
+    return httpRequestHandler.exchange(interfaceUrl+"/monthTarget", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    });
 	}
 
 	/**
@@ -316,12 +262,13 @@ public class MineController {
 	 * @author changjun
 	 * @date 2015年12月7日
 	 */
+  @ApiOperation(value="根据区域名查看该区域二次提货商家详情",notes="根据区域名查看该区域二次提货商家详情")
+  @ApiImplicitParam(name="json",value="json",required=true,dataType="JSONObject")
 	@RequestMapping(value = "/examDetail",method = RequestMethod.POST)
-	public ResponseEntity<Map> examDetail(@RequestBody	JSONObject json){
-		String saleId = json.getString("salesmanId");
-		String areaName = json.getString("areaName");
-		Map map  = epl.examDetail(saleId, areaName);
-		return new ResponseEntity<Map>(map, HttpStatus.OK);
+	public JSONObject examDetail(@RequestBody	JSONObject json){
+    LogUtil.info("根据区域名查看该区域二次提货商家详情， json="+json.toJSONString());
+    return httpRequestHandler.exchange(interfaceUrl+"/examDetail", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    });
 	}
 	
 	
@@ -335,10 +282,13 @@ public class MineController {
 	 * @author changjun
 	 * @date 2015年11月3日
 	 */
+  @ApiOperation(value="我的收益",notes="我的收益")
+  @ApiImplicitParam(name="json",value="json",required=true,dataType="JSONObject")
 	@RequestMapping(value = "/myEarn",method = RequestMethod.POST)
-	public ResponseEntity<Object> myEarn(@RequestBody JSONObject json){
-		
-		return new ResponseEntity<Object>(null,HttpStatus.OK);
+	public JSONObject myEarn(@RequestBody JSONObject json){
+    LogUtil.info("我的收益， json="+json.toJSONString());
+    return httpRequestHandler.exchange(interfaceUrl+"/myEarn", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    });
 	}
 	/**
 	 * 
@@ -350,19 +300,13 @@ public class MineController {
 	 * @author changjun
 	 * @date 2015年10月21日
 	 */
+  @ApiOperation(value="任务-收货款",notes="任务-收货款")
+  @ApiImplicitParam(name="json",value="json",required=true,dataType="JSONObject")
 	@RequestMapping(value = "/takeGoodsMoney",method = RequestMethod.POST)
-	public ResponseEntity<List<OrderPub>> takeGoodsMoney(@RequestBody  JSONObject json){
-		String username = json.getString("username");
-		//dao查询未收款订单
-		List<OrderPub> list = new ArrayList<OrderPub>();
-//		OrderPub order = new OrderPub();
-//		order.setOrderNum("123456789");
-//		order.setUsername(username);
-//		order.setAddress("大桥镇");
-//		order.setCreateTime(new Date());
-//		order.setPayState("未支付");
-//		list.add(order);
-		return new ResponseEntity<List<OrderPub>>(list, HttpStatus.OK);
+	public JSONObject takeGoodsMoney(@RequestBody  JSONObject json){
+    LogUtil.info("我的收益， json="+json.toJSONString());
+    return httpRequestHandler.exchange(interfaceUrl+"/myEarn", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    });
 	}
 	/**
 	 * 
@@ -376,13 +320,13 @@ public class MineController {
 	 * @author changjun
 	 * @date 2015年10月21日
 	 */
+  @ApiOperation(value="未收款报备",notes="未收款报备")
+  @ApiImplicitParam(name="json",value="json",required=true,dataType="JSONObject")
 	@RequestMapping(value = "/noTaskMoneyRemark",method = RequestMethod.POST)
-	public ResponseEntity<Void> noTaskMoneyRemark(@RequestBody  JSONObject json){
-		String username = json.getString("username");
-		String orderNum = json.getString("orderNum");
-		String reason = json.getString("reason");
-		System.out.println(username+":"+orderNum+":"+reason);
-		return new ResponseEntity<Void>(HttpStatus.OK);
+	public JSONObject noTaskMoneyRemark(@RequestBody  JSONObject json){
+    LogUtil.info("我的收益， json="+json.toJSONString());
+    return httpRequestHandler.exchange(interfaceUrl+"/myEarn", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    });
 	}
 	/**
 	 * 
@@ -399,21 +343,13 @@ public class MineController {
 	 * @date 2015年10月21日
 	 */
 	//{"salesmanId":"C37010511230","regionId":"370105","applyReason":"增加竞争力","range":"-100","skuName":"红米2A"}
-	 
+  @ApiOperation(value="申请调价",notes="申请调价")
+  @ApiImplicitParam(name="json",value="json",required=true,dataType="JSONObject")
 	@RequestMapping(value = "/applyChangePrice",method = RequestMethod.POST)
-	public ResponseEntity<JSONObject> applyChangePrice(@RequestBody  JSONObject json){
-		String regionId = json.getString("regionId");
-		String salesmanId = json.getString("salesmanId");
-		ApplyPrice ap = new ApplyPrice();
-		ap.setApplyReason(json.getString("applyReason"));
-		ap.setApplyTime(new Date());
-		ap.setPriceRange(json.getDouble("range"));
-		ap.setProductName(json.getString("skuName"));
-		ap.setStatus("0");
-		String str = aps.saveApply(ap,salesmanId,regionId);
-		JSONObject jo = new JSONObject();
-		jo.put("state", str);
-		return new ResponseEntity<JSONObject>( jo,HttpStatus.OK);
+	public JSONObject applyChangePrice(@RequestBody  JSONObject json){
+    LogUtil.info("我的收益， json="+json.toJSONString());
+    return httpRequestHandler.exchange(interfaceUrl+"/myEarn", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    });
 	}
 	/**
 	 * 
@@ -426,12 +362,13 @@ public class MineController {
 	 * @date 2015年10月21日
 	 */
 	//{"salesmanId":"C37010511230","pageNumber":"1","pageSize":"10"}
+  @ApiOperation(value="申请调价列表",notes="申请调价列表")
+  @ApiImplicitParam(name="json",value="json",required=true,dataType="JSONObject")
 	@RequestMapping(value = "/applyPriceList",method = RequestMethod.POST)
-	public ResponseEntity<List<Apply>> applyPriceList(@RequestBody  JSONObject json){
-		String sid = json.getString("salesmanId");
-		PageRequest pageRequest = SortUtil.buildPageRequest(json.getInteger("pageNumber"), json.getInteger("pageSize"),"apply");
-		List<Apply> list = aps.getList(sid, pageRequest);
-		return new ResponseEntity<List<Apply>>(list, HttpStatus.OK);
+	public JSONObject applyPriceList(@RequestBody  JSONObject json){
+    LogUtil.info("我的收益， json="+json.toJSONString());
+    return httpRequestHandler.exchange(interfaceUrl+"/myEarn", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    });
 	}
 	/**
 	 * 
@@ -444,10 +381,12 @@ public class MineController {
 	 * @date 2015年12月3日
 	 */
 	//{"id":"6"}
+  @ApiOperation(value="根据id查看申请详情",notes="根据id查看申请详情")
+  @ApiImplicitParam(name="json",value="json",required=true,dataType="JSONObject")
 	@RequestMapping(value = "/findApplyById",method = RequestMethod.POST)
-	public ResponseEntity<ApplyPrice> findApplyById(@RequestBody  JSONObject json){
-		Long id = json.getLong("id");
-		ApplyPrice ap = aps.selApplyById(id);
-		return new ResponseEntity<ApplyPrice>(ap, HttpStatus.OK);
+	public JSONObject findApplyById(@RequestBody  JSONObject json){
+    LogUtil.info("我的收益， json="+json.toJSONString());
+    return httpRequestHandler.exchange(interfaceUrl+"/myEarn", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    });
 	}
 }

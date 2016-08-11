@@ -47,7 +47,7 @@ public class OrderSignforController {
   @RequestMapping(value = "/getBussOrderList" ,method = RequestMethod.POST)
   public JSONObject getOrderSignforList(@RequestBody JSONObject jsons){
     LogUtil.info("获取物流单号列表, josns="+jsons.toJSONString());
-    return httpRequestHandler.exchangeForResponseType(interfaceUrl+"remind/getBussOrderList", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
+    return httpRequestHandler.exchange(interfaceUrl+"remind/getBussOrderList", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
     });
      
   }
@@ -67,7 +67,7 @@ public class OrderSignforController {
   public JSONObject bussOrderSignFor(@RequestBody JSONObject jsons){
      LogUtil.info("代理商揽收快件, jsons="+jsons.toJSONString());
       //return httpRequestHandler.exchange(interfaceUrl+"remind/bussOrderSignFor",HttpMethod.POST,null,JSONObject.class,jsons);
-      return httpRequestHandler.exchangeForResponseType(interfaceUrl+"remind/bussOrderSignFor", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
+      return httpRequestHandler.exchange(interfaceUrl+"remind/bussOrderSignFor", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
       });
   }
   /**
@@ -86,7 +86,7 @@ public class OrderSignforController {
   @RequestMapping(value = "/getOrderList", method = RequestMethod.POST)
   public JSONObject getOrderList(@RequestBody JSONObject jsons){
     LogUtil.info("获取订单列表, jsons="+jsons.toJSONString());
-    return httpRequestHandler.exchangeForResponseType(interfaceUrl+"remind/getOrderList", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
+    return httpRequestHandler.exchange(interfaceUrl+"remind/getOrderList", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
     });
   }
   /**
@@ -104,7 +104,7 @@ public class OrderSignforController {
   @RequestMapping(value ="/customOrderSign", method = RequestMethod.POST)
   public JSONObject customOrderSign(@RequestBody JSONObject jsons){
     LogUtil.info("客户签收订单, jsons="+jsons.toJSONString());
-    return httpRequestHandler.exchangeForResponseType(interfaceUrl+"remind/customOrderSign", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
+    return httpRequestHandler.exchange(interfaceUrl+"remind/customOrderSign", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
     });
   }
  
@@ -122,7 +122,7 @@ public class OrderSignforController {
   @RequestMapping(value = "/customOrderUnSign", method = RequestMethod.POST)
   public JSONObject customOrderUnSign(@RequestBody JSONObject jsons){
     LogUtil.info("客户拒签订单, jsons="+jsons.toJSONString());
-    return httpRequestHandler.exchangeForResponseType(interfaceUrl+"remind/customOrderUnSign", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
+    return httpRequestHandler.exchange(interfaceUrl+"remind/customOrderUnSign", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
     });
   }
   
@@ -143,7 +143,7 @@ public class OrderSignforController {
   @RequestMapping(value = "/getOrdersByMailNo", method = RequestMethod.POST)
   public JSONObject getOrdersByMailNo(@RequestBody JSONObject jsons){
     LogUtil.info("根据物流单号获取订单列表, jsons="+jsons.toJSONString());
-    return httpRequestHandler.exchangeForResponseType(interfaceUrl+"remind/getOrdersByMailNo", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
+    return httpRequestHandler.exchange(interfaceUrl+"remind/getOrdersByMailNo", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
     });
   }
   

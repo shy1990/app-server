@@ -55,7 +55,7 @@ public class UnpaymentRemarkController {
   @RequestMapping(value = "/createRemark",method = RequestMethod.POST)
   public JSONObject createUnpaymentRemark(@RequestBody JSONObject jsons){
     LogUtil.info("创建未收款报备记录, jsons="+jsons.toJSONString());
-    return httpRequestHandler.exchangeForResponseType(interfaceUrl+"ur/createRemark", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
+    return httpRequestHandler.exchange(interfaceUrl+"ur/createRemark", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
     });
    
   }
@@ -76,7 +76,7 @@ public class UnpaymentRemarkController {
   @RequestMapping(value = "/getRemarkList",method = RequestMethod.POST)
   public  JSONObject getRemarkListBySalesmanId(@RequestBody JSONObject jsons){
     LogUtil.info("根据业务员id查询此业务员的报备列表, jsons="+jsons.toJSONString());
-    return httpRequestHandler.exchangeForResponseType(interfaceUrl+"ur/getRemarkList", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
+    return httpRequestHandler.exchange(interfaceUrl+"ur/getRemarkList", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
     });
   }
 

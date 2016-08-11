@@ -93,7 +93,7 @@ public class CashController {
     try {
 //       ResponseEntity<Object> =hrh.exchange(APP_INTERFACE_URL+"cash/{userId}",
 //       HttpMethod.POST, null, null, userId);
-      boolean msg = hrh.exchangeForResponseType(APP_INTERFACE_URL+"cash/{userId}", HttpMethod.POST, null, null, new ParameterizedTypeReference<Boolean>(){}, userId);
+      boolean msg = hrh.exchange(APP_INTERFACE_URL+"cash/{userId}", HttpMethod.POST, null, null, new ParameterizedTypeReference<Boolean>(){}, userId);
 
 //      boolean msg = cashService.cashToWaterOrder(userId);
       if (msg) {

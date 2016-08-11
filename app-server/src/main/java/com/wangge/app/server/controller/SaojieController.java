@@ -55,7 +55,7 @@ public class SaojieController {
     json.put("taskDes", taskDes);
     json.put("userName", userName);
     Assert.notNull(userName, "userName不能为空！");
-    return httpRequestHandler.exchangeForResponseType(interfaceUrl+"/addSaojie", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {});
+    return httpRequestHandler.exchange(interfaceUrl+"/addSaojie", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {});
   }
   
 	@ApiOperation(value="获取扫街",notes="获取扫街")
@@ -63,7 +63,7 @@ public class SaojieController {
 	@RequestMapping(value = "/findAllSaojie", method = RequestMethod.GET)
   public JSONObject findAllSaojie(String userName){
     
-    return httpRequestHandler.exchangeForResponseType(interfaceUrl+"/findAllSaojie", HttpMethod.GET, null, userName,new ParameterizedTypeReference<JSONObject>() {});
+    return httpRequestHandler.exchange(interfaceUrl+"/findAllSaojie", HttpMethod.GET, null, userName,new ParameterizedTypeReference<JSONObject>() {});
     
   }
 	

@@ -47,7 +47,7 @@ public class OilCostRecordController {
   @RequestMapping(value = "/workCheck", method = RequestMethod.POST)
   public JSONObject signed(@RequestBody JSONObject jsons){
     LogUtil.info("代理商 上班签到, jsons="+jsons.toJSONString());
-   return httpRequestHandler.exchangeForResponseType(interfaceUrl+"oilCostRecord/workCheck", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
+   return httpRequestHandler.exchange(interfaceUrl+"oilCostRecord/workCheck", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
   });
   }
   /**
@@ -64,7 +64,7 @@ public class OilCostRecordController {
   @RequestMapping(value = "/getYesterydayOilRecord",method = RequestMethod.POST)
  public JSONObject yesterdayOilRecord(@RequestBody JSONObject jsons){
     LogUtil.info("获取昨日油补记录, jsons="+jsons.toJSONString());
-    return httpRequestHandler.exchangeForResponseType(interfaceUrl+"oilCostRecord/getYesterydayOilRecord", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
+    return httpRequestHandler.exchange(interfaceUrl+"oilCostRecord/getYesterydayOilRecord", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
     });
    
  }
@@ -81,7 +81,7 @@ public class OilCostRecordController {
   @RequestMapping(value ="/getHistoryOilRecord", method = RequestMethod.POST)
   public JSONObject  getHistoryOilRecord(@RequestBody JSONObject jsons){
     LogUtil.info("历史油补累计, jsons="+jsons.toJSONString());
-    return httpRequestHandler.exchangeForResponseType(interfaceUrl+"oilCostRecord/getHistoryOilRecord", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
+    return httpRequestHandler.exchange(interfaceUrl+"oilCostRecord/getHistoryOilRecord", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
     });
   }
 
@@ -98,7 +98,7 @@ public class OilCostRecordController {
   @RequestMapping(value = "/getTodayOilRecord", method = RequestMethod.POST)
   public JSONObject getTodayOilRecord(@RequestBody JSONObject jsons){
     LogUtil.info("当日油补记录, jsons="+jsons.toJSONString());
-    return httpRequestHandler.exchangeForResponseType(interfaceUrl+"oilCostRecord/getTodayOilRecord", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
+    return httpRequestHandler.exchange(interfaceUrl+"oilCostRecord/getTodayOilRecord", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
     });
       
   }
@@ -117,7 +117,7 @@ public class OilCostRecordController {
   @RequestMapping(value = "/getHistoryDestOilRecord", method = RequestMethod.POST)
   public JSONObject getHistoryDestOilRecord(@RequestBody JSONObject jsons){
     LogUtil.info("历史油补详情, jsons="+jsons.toJSONString());
-    return httpRequestHandler.exchangeForResponseType(interfaceUrl+"oilCostRecord/getHistoryDestOilRecord", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
+    return httpRequestHandler.exchange(interfaceUrl+"oilCostRecord/getHistoryDestOilRecord", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
     });
   }
   
