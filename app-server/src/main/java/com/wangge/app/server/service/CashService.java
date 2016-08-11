@@ -15,12 +15,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.wangge.app.server.entity.Cash;
-import com.wangge.app.server.entity.MonthPunish;
+import com.wangge.app.server.cash.entity.Cash;
+import com.wangge.app.server.cash.entity.MonthPunish;
+import com.wangge.app.server.cash.entity.WaterOrderCash;
+import com.wangge.app.server.cash.entity.WaterOrderDetail;
 import com.wangge.app.server.entity.OrderItem;
 import com.wangge.app.server.entity.OrderSignfor;
-import com.wangge.app.server.entity.WaterOrderCash;
-import com.wangge.app.server.entity.WaterOrderDetail;
 import com.wangge.app.server.pojo.CashPart;
 import com.wangge.app.server.pojo.OrderDetailPart;
 import com.wangge.app.server.repository.CashRepository;
@@ -235,5 +235,4 @@ public class CashService {
   public Cash save(Cash cash){
     return cr.save(cash);
   }
-//  public List<Cash> findByOrderIdIn()
 }

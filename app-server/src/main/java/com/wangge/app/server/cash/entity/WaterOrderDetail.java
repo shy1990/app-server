@@ -1,4 +1,4 @@
-package com.wangge.app.server.entity;
+package com.wangge.app.server.cash.entity;
 
 import java.io.Serializable;
 
@@ -13,8 +13,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
-
-
 
 /**
  * 
@@ -68,9 +66,5 @@ public class WaterOrderDetail implements Serializable  {
   public void setCash(Cash cash) {
     this.cash = cash;
   }
-  
-  
-
-  
 
 }

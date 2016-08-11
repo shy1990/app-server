@@ -1,4 +1,4 @@
-package com.wangge.app.server.entity;
+package com.wangge.app.server.cash.entity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -105,9 +105,5 @@ public class MonthPunish implements Serializable  {
   public void setCreateDate(Date createDate) {
     this.createDate = createDate;
   }
-
-  
-  
-  
 
 }

@@ -10,13 +10,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.wangge.app.server.entity.Cash;
+import com.wangge.app.server.cash.entity.Cash;
 import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.event.afterSalesmanSignforEvent;
 import com.wangge.app.server.event.afterSignforEvent;
 import com.wangge.app.server.monthTask.service.MonthTaskServive;
-import com.wangge.app.server.repository.CashRepository;
 import com.wangge.app.server.repository.OrderSignforRepository;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.repositoryimpl.OrderSignforImpl;
@@ -60,7 +59,7 @@ public class OrderSignforService {
   * @return Date    返回类型 
   * @throws
    */
-  @Transactional(readOnly=false)
+  @Transactional(readOnly=false,rollbackFor=Exception.class)
   public Date updateOrderSignforList(String fastMailNo,String userPhone,String signGeoPoint, int isPrimaryAccount,String userId,String childId) {
     Date date = new Date();
     String accountId = null;
@@ -103,7 +102,7 @@ public class OrderSignforService {
   * @return void    返回类型 
   * @throws
    */
-  @Transactional(readOnly=false)
+  @Transactional(readOnly=false,rollbackFor=Exception.class)
   public void updateOrderSignfor(String orderNo, String userPhone,
       String signGeoPoint, int payType, String smsCode,int isPrimaryAccount,String userId,String childId,String  storePhone) throws Exception {
       OrderSignfor orderSignFor =  findOrderSignFor(orderNo,userPhone);
@@ -167,7 +166,7 @@ public class OrderSignforService {
   * @return void    返回类型 
   * @throws
    */
-  @Transactional(readOnly=false)
+  @Transactional(readOnly=false,rollbackFor=Exception.class)
   public void updateOrderSignfor(String orderNo, String userPhone, String remark,String signGeoPoint,int isPrimaryAccount,String userId,String childId,String  storePhone) throws Exception{
     OrderSignfor orderSignFor = findOrderSignFor(orderNo,userPhone);
     if(orderSignFor!= null){
@@ -225,8 +224,8 @@ public class OrderSignforService {
   
   
   public OrderSignfor findbyOrderNum(String orderno){
-	  
-	  return osr.findByOrderNo(orderno);
+    
+    return osr.findByOrderNo(orderno);
   }
   
 }

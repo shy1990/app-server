@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -171,11 +172,11 @@ public class OrderImpl {
 		// }
 		String sql = "";
 		if (1 == type) {
-			sql = "update SJZAIXIAN.SJ_TB_ORDER set ship_status=" + status
-					+ " ,yewu_signfor_time=sysdate where order_num='" + ordernum + "'";
+			sql = "update SJZAIXIAN.SJ_TB_ORDER set ship_status='" + status
+					+ "' ,yewu_signfor_time=sysdate where order_num='" + ordernum + "'";
 		} else {
-			sql = "update SJZAIXIAN.SJ_TB_ORDER set PAY_MENT=" + paytype + ",CUSTOM_SIGNFOR_ADDRESS='" + point
-					+ "',ship_status=" + status + " ,custom_signfor_time=sysdate where order_num='" + ordernum + "'";
+			sql = "update SJZAIXIAN.SJ_TB_ORDER set PAY_MENT='" + paytype + "',CUSTOM_SIGNFOR_ADDRESS='" + point
+					+ "',ship_status='" + status + "' ,custom_signfor_time=sysdate where order_num='" + ordernum + "'";
 		}
 
 		Query query = em.createNativeQuery(sql);
@@ -183,6 +184,7 @@ public class OrderImpl {
 	}
 
 	/**
+	 * 
 	 * 
 	 * @Description: 修改订单状态及客户签收时间
 	 * @param @param
@@ -198,8 +200,8 @@ public class OrderImpl {
 
 	@Transactional
 	public void updateOrderShipStateByOrderNum(String ordernum, String status) {
-		String sql = "update SJZAIXIAN.SJ_TB_ORDER set ship_status=" + status
-				+ " ,custom_signfor_time=sysdate,signfortime = sysdate where order_num='" + ordernum+ "'";
+		String sql = "update SJZAIXIAN.SJ_TB_ORDER set ship_status='" + status
+				+ "' ,custom_signfor_time=sysdate,signfortime = sysdate where order_num='" + ordernum+ "'";
 		Query query = em.createNativeQuery(sql);
 		query.executeUpdate();
 	}
@@ -240,7 +242,7 @@ public class OrderImpl {
 	 */
 	@Transactional
 	public String updateMessageType(String state, String orderNum) {
-		String sql = "update SJ_YEWU.sys_message set message_type= " + state + " where content like '%" + orderNum
+		String sql = "update SJ_YEWU.sys_message set message_type= '" + state + "' where content like '%" + orderNum
 				+ "%'";
 		Query query = em.createNativeQuery(sql);
 		return query.executeUpdate() > 0 ? "suc" : "false";
@@ -269,7 +271,7 @@ public class OrderImpl {
 				Object[] o = (Object[]) it.next();
 				map.put("payMent", o[0] + "");
 				map.put("totalCost", o[1] + "");
-				map.put("payNo", o[2] + "");
+				map.put("payNo", (String) o[2]);
 				map.put("walletNum", o[3] + "");
 			}
 		}
@@ -311,8 +313,13 @@ public class OrderImpl {
 		String sql = "select PAY_STATUS from SJZAIXIAN.sj_tb_order where ORDER_NUM='" + orderno + "'";
 		Query query = em.createNativeQuery(sql);
 		Map<String, String> map = new HashMap<String, String>();
-		Object o = query.getSingleResult();
-		map.put("payStatus", o + "");
+		try {
+			Object o = query.getSingleResult();
+			map.put("payStatus", o + "");
+		} catch (Exception e) {
+			LOG.info(e);
+		}
+		
 		return map;
 	}
 }

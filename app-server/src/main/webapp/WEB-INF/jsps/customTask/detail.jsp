@@ -108,7 +108,7 @@
 				<p class="text-white-w">
 					可以输入 <span class="text-orage">2000</span> 个字符
 				</p>
-				<button class="btn btn-fab fr" onclick="sendMessage();">发布回执</button>
+				<button id="repButton" class="btn btn-fab fr" onclick="sendMessage();">发布回执</button>
 
 			</div>
 			<div class="col-xs-1"></div>

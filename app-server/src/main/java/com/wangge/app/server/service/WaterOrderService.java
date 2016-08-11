@@ -23,10 +23,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.wangge.app.server.entity.MonthPunish;
+import com.wangge.app.server.cash.entity.MonthPunish;
+import com.wangge.app.server.cash.entity.WaterOrderCash;
+import com.wangge.app.server.cash.entity.WaterOrderDetail;
 import com.wangge.app.server.entity.OrderSignfor;
-import com.wangge.app.server.entity.WaterOrderCash;
-import com.wangge.app.server.entity.WaterOrderDetail;
 import com.wangge.app.server.pojo.OrderDetailPart;
 import com.wangge.app.server.pojo.WaterOrderPart;
 import com.wangge.app.server.repository.CashRepository;
@@ -65,85 +65,88 @@ public class WaterOrderService {
     List<WaterOrderPart> orderList = new ArrayList<>();
     try {
       Page<WaterOrderCash> orderPage = wocr.findByUserId(userId, pageable);
-      
-      orderPage.getContent().forEach(order->{
-        //处理数据
-        WaterOrderPart part=disposeWop(order,false);
+
+      orderPage.getContent().forEach(order -> {
+        // 处理数据
+        WaterOrderPart part = disposeWop(order, false);
         orderList.add(part);
       });
-      
-      
-      
       orderPartPage = new PageImpl<WaterOrderPart>(orderList, pageable, orderPage.getTotalElements());
     } catch (Exception e) {
       logger.info(e.getMessage());
     }
     return orderPartPage;
   }
+
   /**
    * 查询流水单号详情
+   * 
    * @param serailNo
    * @return
    */
-  public WaterOrderPart findBySerailNo(String serailNo){
-    WaterOrderCash order=wocr.findOne(serailNo);
-    return disposeWop(order,true);
+  public WaterOrderPart findBySerailNo(String serailNo) {
+    WaterOrderCash order = wocr.findOne(serailNo);
+    return disposeWop(order, true);
   }
+
   /**
    * 将waterOrderCash数据包装成需要数据
+   * 
    * @param order
-   * @param isDetail 是否是查询顶订单详情
+   * @param isDetail
+   *          是否是查询顶订单详情
    * @return
    */
-  public WaterOrderPart disposeWop(WaterOrderCash order,boolean isDetail) {
-    WaterOrderPart part=null;
-    if(order!=null){
-      part=new WaterOrderPart();
+  public WaterOrderPart disposeWop(WaterOrderCash order, boolean isDetail) {
+    WaterOrderPart part = null;
+    if (order != null) {
+      part = new WaterOrderPart();
       part.setSeriaNo(order.getSerialNo());
       part.setCash(order.getCashMoney());
       part.setStatus(order.getPayStatus());
       part.setPaid(order.getPaymentMoney());
       part.setTime(DateUtil.date2String(order.getCreateDate(), "yyyy-MM-dd HH:mm"));
-      
-      //判断昨日是否有扣罚
-      if(order.getIsPunish()==1){
-        //TODO去查询扣罚记录
-        List<MonthPunish> mpl=mps.findByUserIdAndCreateDate(order.getUserId(), DateUtil.date2String(DateUtil.moveDate(order.getCreateDate(),-1)));
-        if(mpl.size()>0){
-          Float debt=0.0f;
-          Float amerce=0.0f;
-          for(MonthPunish monthPunish:mpl){
-            debt+=monthPunish.getDebt();
-            amerce+=monthPunish.getAmerce();
+
+      // 判断昨日是否有扣罚
+      if (order.getIsPunish() == 1) {
+        // TODO去查询扣罚记录
+        List<MonthPunish> mpl = mps.findByUserIdAndCreateDate(order.getUserId(),
+            DateUtil.date2String(DateUtil.moveDate(order.getCreateDate(), -1)));
+        if (mpl.size() > 0) {
+          Float debt = 0.0f;
+          Float amerce = 0.0f;
+          for (MonthPunish monthPunish : mpl) {
+            debt += monthPunish.getDebt();
+            amerce += monthPunish.getAmerce();
           }
-          part.setDebt(debt+amerce);//拖欠
-          part.setUnpaid(debt);//未付
-          part.setAmerce(amerce);//扣罚
+          part.setDebt(debt + amerce);// 拖欠
+          part.setUnpaid(debt);// 未付
+          part.setAmerce(amerce);// 扣罚
         }
-        
-        
+
       }
-      if(isDetail){
-        //组装数据详情列表
-        List<OrderDetailPart> orderItem=new ArrayList<>();
-        //获取流水单号详情列表
-        List<WaterOrderDetail> wodL=order.getOrderDetailList();
-        
-        wodL.forEach(wod->{
-          OrderDetailPart odp=new OrderDetailPart();
-          OrderSignfor osf= wod.getCash().getOrder();
+      if (isDetail) {
+        // 组装数据详情列表
+        List<OrderDetailPart> orderItem = new ArrayList<>();
+        // 获取流水单号详情列表
+        List<WaterOrderDetail> wodL = order.getOrderDetailList();
+
+        wodL.forEach(wod -> {
+          OrderDetailPart odp = new OrderDetailPart();
+          OrderSignfor osf = wod.getCash().getOrder();
           odp.setNum(osf.getOrderNo());
           odp.setAmount(osf.getOrderPrice());
-          
+
           orderItem.add(odp);
         });
         part.setOrder(orderItem);
-        
+
       }
-      
+
     }
     return part;
   }
+
   /**
    * 
    * @param searchParams
@@ -155,8 +158,8 @@ public class WaterOrderService {
     Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
     Specification<WaterOrderCash> spec = oilCostSearchFilter(filters.values(), WaterOrderCash.class);
     try {
-      
-      Page<WaterOrderCash> orderPage = wocr.findAll(spec,pageable);
+
+      Page<WaterOrderCash> orderPage = wocr.findAll(spec, pageable);
       List<WaterOrderPart> orderList = new ArrayList<>();
       orderPartPage = new PageImpl<WaterOrderPart>(orderList, pageable, orderPage.getTotalElements());
     } catch (Exception e) {
@@ -164,16 +167,18 @@ public class WaterOrderService {
     }
     return orderPartPage;
   }
+
   /**
    * 
    * @param searchParams
    * @return
    */
-  public List<WaterOrderCash> findAll(Map<String, Object> searchParams){
+  public List<WaterOrderCash> findAll(Map<String, Object> searchParams) {
     Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
     Specification<WaterOrderCash> spec = oilCostSearchFilter(filters.values(), WaterOrderCash.class);
-    return  wocr.findAll(spec);
+    return wocr.findAll(spec);
   }
+
   private static <T> Specification<T> oilCostSearchFilter(final Collection<SearchFilter> filters,
       final Class<T> entityClazz) {
 
@@ -348,7 +353,5 @@ public class WaterOrderService {
       }
     };
   }
- 
-  
-  
+
 }

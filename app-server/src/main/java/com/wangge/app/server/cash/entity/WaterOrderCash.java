@@ -1,4 +1,4 @@
-package com.wangge.app.server.entity;
+package com.wangge.app.server.cash.entity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -24,8 +24,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-
-
 /**
  * 
  * @author thor
@@ -40,7 +38,6 @@ public class WaterOrderCash implements Serializable  {
    */
   private static final long serialVersionUID = 1L;
   
-  
   @Id
   @Column(name="SERIAL_NO")
   private String serialNo ; //流水单号
@@ -49,6 +46,9 @@ public class WaterOrderCash implements Serializable  {
   private Float cashMoney  ;//收现金额
   private Float paymentMoney ;//支付金额
   private Integer isPunish ;//是否扣罚
+  
+  @Transient
+  private MonthPunish monthPunish;
   
   @OneToMany(cascade = CascadeType.ALL,fetch=FetchType.LAZY)
   @JoinColumn(name="SERIAL_NO",insertable=false,updatable=false)
@@ -61,6 +61,8 @@ public class WaterOrderCash implements Serializable  {
   @JsonFormat(pattern="MM.dd HH:mm",timezone = "GMT+8")  
   private Date payDate  ;//支付时间
   
+  @Transient
+  private Integer total;//分页总条数
   
   public List<WaterOrderDetail> getOrderDetailList() {
     return orderDetailList;
@@ -116,7 +118,17 @@ public class WaterOrderCash implements Serializable  {
   public void setPayDate(Date payDate) {
     this.payDate = payDate;
   }
-
-  
+  public MonthPunish getMonthPunish() {
+    return monthPunish;
+  }
+  public void setMonthPunish(MonthPunish monthPunish) {
+    this.monthPunish = monthPunish;
+  }
+  public Integer getTotal() {
+    return total;
+  }
+  public void setTotal(Integer total) {
+    this.total = total;
+  }
 
 }
