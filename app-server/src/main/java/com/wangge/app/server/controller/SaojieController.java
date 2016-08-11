@@ -4,15 +4,11 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,7 +38,7 @@ public class SaojieController {
       @ApiImplicitParam(name="regionid",value="regionid",required=true,dataType="String"), @ApiImplicitParam(name="taskStart",value="taskStart",required=true,dataType="String"), @ApiImplicitParam(name="taskEnd",value="taskEnd",required=true,dataType="String"),
       @ApiImplicitParam(name="taskCount",value="taskCount",required=true,dataType="Stirng"), @ApiImplicitParam(name="taskDes",value="taskDes",required=true,dataType="String"), @ApiImplicitParam(name="userName",value="userName",required=true,dataType="String") })
   @RequestMapping(value = "/addSaojie", method = RequestMethod.POST)
-  public JSONObject addTask(String taskName,String salesmanid,String regionid,
+  public String addTask(String taskName,String salesmanid,String regionid,
       String taskStart,String taskEnd,String taskCount,String taskDes,String userName) {
     JSONObject json = new JSONObject();
     json.put("taskName", taskName);
@@ -53,8 +49,7 @@ public class SaojieController {
     json.put("taskCount", taskCount);
     json.put("taskDes", taskDes);
     json.put("userName", userName);
-    Assert.notNull(userName, "userName不能为空！");
-    return httpRequestHandler.exchange(interfaceUrl+"/addSaojie", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {});
+    return httpRequestHandler.exchange(interfaceUrl+"addSaojie", HttpMethod.POST, null, json, new ParameterizedTypeReference<String>() {});
   }
   
 	@ApiOperation(value="获取扫街",notes="获取扫街")

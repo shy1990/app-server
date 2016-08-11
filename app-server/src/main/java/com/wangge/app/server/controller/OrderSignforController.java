@@ -8,7 +8,6 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -65,9 +64,9 @@ public class OrderSignforController {
   @ApiImplicitParam(name="jsons",value="jsons",required=true,dataType="JSONObject")
   @RequestMapping(value = "/bussOrderSignFor", method = RequestMethod.POST)
   public JSONObject bussOrderSignFor(@RequestBody JSONObject jsons){
-     LogUtil.info("代理商揽收快件, jsons="+jsons.toJSONString());
       //return httpRequestHandler.exchange(interfaceUrl+"remind/bussOrderSignFor",HttpMethod.POST,null,JSONObject.class,jsons);
-      return httpRequestHandler.exchange(interfaceUrl+"remind/bussOrderSignFor", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
+     LogUtil.info("代理商揽收快件, json="+jsons.toJSONString()); 
+     return httpRequestHandler.exchange(interfaceUrl+"remind/bussOrderSignFor", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
       });
   }
   /**

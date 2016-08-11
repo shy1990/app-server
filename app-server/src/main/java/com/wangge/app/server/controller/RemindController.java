@@ -3,19 +3,13 @@ package com.wangge.app.server.controller;
 
 
 import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 import javax.annotation.Resource;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,15 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.config.http.HttpRequestHandler;
-import com.wangge.app.server.entity.Message;
-import com.wangge.app.server.entity.OrderItem;
-import com.wangge.app.server.entity.Message.MessageType;
-import com.wangge.app.server.entity.Message.SendChannel;
-import com.wangge.app.server.entity.Order;
-import com.wangge.app.server.repository.OrderRepository;
-import com.wangge.app.server.service.MessageService;
 import com.wangge.app.server.util.LogUtil;
-import com.wangge.app.server.util.SortUtil;
 
 @RestController
 @RequestMapping({"/v1/remind"})

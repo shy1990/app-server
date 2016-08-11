@@ -1,20 +1,18 @@
 package com.wangge.app.server.controller;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
-import org.neo4j.cypher.internal.compiler.v2_0.repeat;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.config.http.HttpRequestHandler;
 import com.wangge.app.server.util.LogUtil;
@@ -54,7 +51,11 @@ public class SaojieDataController {
 	}
 
 	@ApiOperation(value="添加扫街数据",notes="添加扫街数据")
-  @ApiImplicitParam(name="regionId,userId,jsons",value="regionId,userId,jsons",required=true,dataType="String,JSONObject")
+	@ApiImplicitParams({
+    @ApiImplicitParam(name="regionId",value="regionId",required=true,dataType="String"),
+    @ApiImplicitParam(name="userId",value="userId",required=true,dataType="String"),
+    @ApiImplicitParam(name="jsons",value="jsons",required=true,dataType="JSONObject"),
+  })
 	@RequestMapping(value = "/{regionId}/{userId}/saojie_data", method = RequestMethod.POST)
 	public JSONObject add(@PathVariable("regionId") String regionId,@PathVariable("userId") String userId, @RequestBody JSONObject jsons) {
 	  LogUtil.info("添加扫街数据, regionId="+regionId+"userId="+userId+"jsons="+jsons.toJSONString());
