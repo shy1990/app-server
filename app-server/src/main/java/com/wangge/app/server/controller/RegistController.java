@@ -1,49 +1,22 @@
 package com.wangge.app.server.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
 import com.wangge.app.server.config.http.HttpRequestHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.wangge.app.server.entity.Regist;
-import com.wangge.app.server.entity.Regist.RegistStatus;
-import com.wangge.app.server.entity.RegistData;
-import com.wangge.app.server.entity.Salesman;
-import com.wangge.app.server.service.AssessService;
-import com.wangge.app.server.service.RegionService;
-import com.wangge.app.server.service.RegistService;
-import com.wangge.app.server.service.SalesmanService;
-import com.wangge.app.server.vo.RegionVo;
-import com.wangge.app.server.vo.RegistAreaVo;
+import javax.annotation.Resource;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/v1")
 public class RegistController {
 
-	SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");//
-	@Resource
-	private SalesmanService salesmanService;
-	@Resource
-	private RegistService registService;
-	@Resource
-  private AssessService assessService;
-	@Resource
-	private RegionService regionService;
 	@Resource
 	private HttpRequestHandler httpRequestHandler;
 	@Value("${app-interface.url}")
@@ -59,7 +32,7 @@ public class RegistController {
 	 */
 	@RequestMapping(value="/{id}/regist",method=RequestMethod.GET)
 	public ResponseEntity<Object> salesmanRegions(@PathVariable("id") String userId){
-		return httpRequestHandler.exchange(url + "/{id}/regist", HttpMethod.GET,null,null,List.class,userId);
+		return httpRequestHandler.exchange(url + "/{id}/regist", HttpMethod.GET,null,null,userId);
 	}
 	
 	/**
@@ -74,7 +47,7 @@ public class RegistController {
    */
   @RequestMapping(value="/{id}/registNum",method=RequestMethod.GET)
   public ResponseEntity<Object> registNum(@PathVariable("id") String userId){
-		return httpRequestHandler.exchange(url + "/{id}/registNum", HttpMethod.GET,null,null,Map.class,userId);
+		return httpRequestHandler.exchange(url + "/{id}/registNum", HttpMethod.GET,null,null,userId);
   }
 	
 		/**
@@ -88,7 +61,7 @@ public class RegistController {
 		 */
 		@RequestMapping(value = "/addRegist", method = RequestMethod.POST)
 		public ResponseEntity<Object> addRegist(String registName,String salesmanid,String regionid,String registStart,String registEnd,String registCount,String registDes,String userName ) {
-			return httpRequestHandler.exchange(url + "/addRegist", HttpMethod.POST,null,registName,salesmanid,regionid,registStart,registEnd,registCount,registDes,userName,String.class,null);
+			return httpRequestHandler.exchange(url + "/addRegist", HttpMethod.POST,null,registName,salesmanid,regionid,registStart,registEnd,registCount,registDes,userName,null);
 	}
 		
 		

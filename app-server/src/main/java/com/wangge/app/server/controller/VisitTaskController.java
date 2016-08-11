@@ -2,8 +2,6 @@ package com.wangge.app.server.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.config.http.HttpRequestHandler;
-import com.wangge.app.server.pojo.Json;
-import com.wangge.app.server.vo.VisitVo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +28,7 @@ public class VisitTaskController {
    */
   @RequestMapping(value = "/task/{userId}/visitList", method = RequestMethod.POST)
   public ResponseEntity<Object> visitList(@PathVariable("userId") String userId, @RequestBody JSONObject jsons) {
-    return httpRequestHandler.exchange(url + "/task/{userId}/visitList", HttpMethod.POST, null, jsons, Json.class, userId);
+    return httpRequestHandler.exchange(url + "/task/{userId}/visitList", HttpMethod.POST, null, jsons, userId);
   }
 
   /**
@@ -46,7 +44,7 @@ public class VisitTaskController {
    */
   @RequestMapping(value = "/task/addVisit", method = RequestMethod.POST)
   public ResponseEntity<Object> addVisit(String taskStart, String taskEnd, String rdid, String userid) {
-    return httpRequestHandler.exchange(url + "/task/addVisit", HttpMethod.POST, null, taskStart, taskEnd, rdid, userid, String.class, null);
+    return httpRequestHandler.exchange(url + "/task/addVisit", HttpMethod.POST, null, taskStart, taskEnd, rdid, userid, null);
   }
 
 
@@ -58,7 +56,7 @@ public class VisitTaskController {
    */
   @RequestMapping(value = "/task/{visitId}/infoVisit", method = RequestMethod.GET)
   public ResponseEntity<Object> visitInfo(@PathVariable("visitId") String visitId) {
-    return httpRequestHandler.exchange(url + "/task/{visitId}/infoVisit", HttpMethod.GET, null, null, VisitVo.class, visitId);
+    return httpRequestHandler.exchange(url + "/task/{visitId}/infoVisit", HttpMethod.GET, null, null, visitId);
   }
 
   /**
@@ -72,7 +70,7 @@ public class VisitTaskController {
    */
   @RequestMapping(value = "/task/{userId}/addVisit", method = RequestMethod.POST)
   public ResponseEntity<Object> addVisit(@PathVariable("userId") String userId, @RequestBody JSONObject jsons) {
-    return httpRequestHandler.exchange(url + "/task/{userId}/addVisit", HttpMethod.POST, null, jsons, Json.class, userId);
+    return httpRequestHandler.exchange(url + "/task/{userId}/addVisit", HttpMethod.POST, null, jsons, userId);
   }
 
 }

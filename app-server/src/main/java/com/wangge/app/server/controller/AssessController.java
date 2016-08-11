@@ -20,12 +20,12 @@ public class AssessController {
 
 	@RequestMapping(value = "/findAllAssess", method = RequestMethod.POST)
 	public ResponseEntity<Object> findAllTask(String userid){
-		return httpRequestHandler.exchange(url + "/assess/findAllAssess", HttpMethod.POST,null,userid,Object.class,null);
+		return httpRequestHandler.exchange(url + "/assess/findAllAssess", HttpMethod.POST,null,userid,null);
 	}
 	
 	@RequestMapping(value = "/addAssess", method = RequestMethod.POST)
 	public ResponseEntity<Object> addAssess(String salesmanid,String assessStage,String assessActivenum,String assessOrdernum,String assessCycle,String accessTime,String regionid,String regionzh,String taskid){
-		return httpRequestHandler.exchange(url + "/assess/addAssess", HttpMethod.POST,null,salesmanid,assessStage,assessActivenum,assessOrdernum,assessCycle,accessTime,regionid,regionzh,taskid,String.class,null);
+		return httpRequestHandler.exchange(url + "/assess/addAssess", HttpMethod.POST,null,salesmanid,assessStage,assessActivenum,assessOrdernum,assessCycle,accessTime,regionid,regionzh,taskid,null);
 	}
 	
 	
