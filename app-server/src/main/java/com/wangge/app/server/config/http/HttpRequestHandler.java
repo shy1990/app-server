@@ -1,27 +1,31 @@
 package com.wangge.app.server.config.http;
 
-import com.alibaba.fastjson.JSONObject;
-import com.wangge.app.server.util.LogUtil;
+import java.lang.reflect.Field;
+import java.text.MessageFormat;
+import java.util.Collection;
+import java.util.Map;
+
+import javax.annotation.Resource;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.collections.ListUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.Resource;
-import java.lang.reflect.Field;
-import java.text.MessageFormat;
-import java.util.Collection;
-import java.util.Map;
+import com.alibaba.fastjson.JSONObject;
+import com.wangge.app.server.util.LogUtil;
 
 @Configuration
 public class HttpRequestHandler implements InitializingBean {
@@ -208,7 +212,6 @@ public class HttpRequestHandler implements InitializingBean {
     	  System.out.println(MapUtils.getString(_body, key));
         multiValueMap.add(key, MapUtils.getString(_body, key));
       }
-
       requestEntity = new HttpEntity<>(multiValueMap, headers);
     }
 

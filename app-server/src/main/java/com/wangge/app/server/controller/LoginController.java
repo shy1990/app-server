@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -18,13 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.config.http.HttpRequestHandler;
 import com.wangge.app.server.constant.AppInterface;
-import com.wangge.app.util.RestTemplateUtil;
 
 
 @RestController
 @RequestMapping(value = "/v1")
 public class LoginController {
-  private String url= AppInterface.url;;
+  private String url= AppInterface.url+"login";;
   @Resource
   private HttpRequestHandler httpRequestHandler;
 	/**
@@ -34,33 +35,15 @@ public class LoginController {
 	 */
 	@RequestMapping(value = "/login",method = RequestMethod.POST)
 
-  public ResponseEntity<Map<String, Object>> login(@RequestBody JSONObject talMap){
+  public ResponseEntity<Object> login(@RequestBody JSONObject talMap){
 	HttpHeaders headers = new HttpHeaders(); 
 	headers.setContentType(MediaType.APPLICATION_JSON);
-	httpRequestHandler.exchange(url+"login", HttpMethod.POST, headers, talMap, "");
-	return handleResult(RestTemplateUtil.sendRest("login", "post", talMap,url));
+	ResponseEntity<Object> object=httpRequestHandler.exchange(url, HttpMethod.POST, headers, talMap,new ParameterizedTypeReference<Bean>(){}, talMap);
+	Map<String, ?> map=(Map<String, ?>)object.getBody();
+	if(map.get("errMsg").equals("1")){
+		return  new ResponseEntity<Object>(object.getBody(), HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	return  new ResponseEntity<Object>(object.getBody(), HttpStatus.OK);
   }
-	
-	
-	  /**
-	   * 
-	   * 
-	   * handleResult:处理返回结果中包含错误信息的情况. <br/>
-	   * 
-	   * @author yangqc
-	   * @param responseEntitu
-	   * @return
-	   * @since JDK 1.8
-	   */
-	  public static ResponseEntity<Map<String, Object>> handleResult(ResponseEntity<Map<String, Object>> responseEntitu) {
-	    Map<String, Object> remap = responseEntitu.getBody();
-	    if (null != remap.get("error")) {
-	      if ("1".equals(remap.get("code"))) {
-	        return new ResponseEntity<Map<String, Object>>(remap, HttpStatus.INTERNAL_SERVER_ERROR);
-	      }
-	      return new ResponseEntity<Map<String, Object>>(remap, HttpStatus.NOT_FOUND);
-	    }
-	    return responseEntitu;
-	  }
 }
 
