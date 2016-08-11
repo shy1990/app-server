@@ -65,7 +65,7 @@ public class httpTest {
         HttpMethod.POST, jsonObject);*/
     /*JSONObject responseEntity = requestHandler.exchange("http://192.168.2.153:8080/v1/remind/getBussOrderList", HttpMethod.POST, null, jsonObject, JSONObject.class,"");*/
     
-    JSONObject responseEntitys = requestHandler.exchange("http://192.168.2.153:8080/v1/remind/getBussOrderList", HttpMethod.POST, null, jsonObject, new ParameterizedTypeReference<JSONObject>(){});
+    JSONObject responseEntitys = requestHandler.exchange("http://192.168.2.151:8080/v1/remind/getBussOrderList", HttpMethod.POST, null, jsonObject, new ParameterizedTypeReference<JSONObject>(){});
   
     System.out.println(".........>>>>>>>>>>"+responseEntitys.toJSONString());
   
