@@ -90,10 +90,69 @@ public class MineController {
   @ApiOperation(value="根据业务手机号订单号判断该订单是否属于该业务员并返回订单详情",notes="获取详情")
   @ApiImplicitParam(name="json",value="json",required=true,dataType="JSONObject")
 	@RequestMapping(value = "/checkByOrderNum",method = RequestMethod.POST)
+<<<<<<< HEAD
 	public JSONObject checkByOrderNum(@RequestBody  JSONObject json) throws Exception{
 	    LogUtil.info("根据业务手机号订单号判断该订单是否属于该业务员并返回订单详情， json="+json.toJSONString());
       return httpRequestHandler.exchange(interfaceUrl+"/checkByOrderNum", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
       });
+=======
+	public ResponseEntity<JSONObject> checkByOrderNum(@RequestBody  JSONObject json) throws Exception{
+//		String mobile = json.getString("mobile");
+		String ordernum = json.getString("ordernum");
+		String regionId = json.getString("regionId");
+		
+		JSONObject jo = new JSONObject();
+		Order order = or.findOne(ordernum);
+		
+		
+		if(order!=null && order.getStatus().ordinal()>= 2){
+		  StringBuffer sb = new StringBuffer();
+      int skuNum = 0;  
+      int giftNum = 0;
+      for (OrderItem item : order.getItems()) {
+        sb.append(item.getName()+" ");
+        if("sku".equals(item.getType())){
+          skuNum+=item.getNums();
+        }else if("gift".equals(item.getType()) || "accessories".equals(item.getType())){
+          giftNum+=item.getNums();
+        }
+      }
+      jo.put("username", order.getShopName());
+      jo.put("createTime", order.getCreateTime());
+      jo.put("orderNum", order.getId());
+      jo.put("shipStatus", order.getStatus().ordinal());
+      jo.put("amount", order.getAmount());
+      jo.put("mobile", order.getMobile());
+      jo.put("skuNum", skuNum);
+      jo.put("itemOtherNum", giftNum);
+      jo.put("goods", sb);
+      jo.put("payType", order.getPayMent().getName());
+      RegistData rd = rds.findByMemberId(order.getMemberId());
+      if(rd != null){
+        String Coordinate =rd.getSaojieData().getCoordinate();
+        jo.put("point",Coordinate);
+      }else{
+        jo.put("point","");
+      }
+     
+			if(regionId.equals(order.getRegion().getId())){
+				if(opl.checkByOrderNum(ordernum)){
+				  jo.put("state", "正常订单");
+				  return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
+				}else{
+					jo.put("state", "该订单已签收,请核实");
+					return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
+				}
+			}else{
+
+        jo.put("state", "该订单不属于此地区,请核实");
+        return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
+      }
+    }
+    jo.put("msg", "未查询相关信息或快件未揽收,请重试");
+    return new ResponseEntity<JSONObject>(jo, HttpStatus.BAD_REQUEST);
+
+>>>>>>> branch 'dev' of https://git.oschina.net/wgtechnology/app-server.git
   }
   
   
@@ -136,8 +195,8 @@ public class MineController {
     });
   }
   
-  ///////////////////     V2
-  /**
+  /*///////////////////     V2
+  *//**
    * 
    * @Description: 客户拒签
    * @param @param json
@@ -146,6 +205,7 @@ public class MineController {
    * @throws
    * @author changjun
    * @date 2015年12月1日
+<<<<<<< HEAD
    */
   @ApiOperation(value="客户拒签",notes="客户拒签")
   @ApiImplicitParam(name="json",value="json",required=true,dataType="JSONObject")

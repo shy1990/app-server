@@ -18,12 +18,7 @@ public interface CustomTaskServer {
 	 */
 	public Map<String, Object> getList(String salesmanId, Pageable page);
 
-	/**
-	 * 保存自定义任务
-	 * 
-	 * @param customTask
-	 */
-	public void save(CustomTask customTask);
+
 
 	/**将一个任务设置为已读
 	 * @param customTask
