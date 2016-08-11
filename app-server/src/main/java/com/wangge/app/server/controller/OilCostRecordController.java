@@ -35,7 +35,6 @@ import com.wangge.app.server.util.LogUtil;
 @RequestMapping("/v1/oilCostRecord")
 public class OilCostRecordController {
   
-  private static final Logger logger =  LoggerFactory.getLogger(OilCostRecordController.class); // NOPMD by Administrator on 16-3-30 下午5:43
   @Value("${app-interface.url}")
   private String interfaceUrl;
     

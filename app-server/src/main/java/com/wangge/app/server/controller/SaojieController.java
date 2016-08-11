@@ -25,7 +25,6 @@ import com.wangge.app.server.config.http.HttpRequestHandler;
 @RequestMapping(value = "/v1")
 public class SaojieController {
 	
-  public static final String methodUrl = "saojie/";
   
   @Value("${app-interface.url}")
   private String interfaceUrl;

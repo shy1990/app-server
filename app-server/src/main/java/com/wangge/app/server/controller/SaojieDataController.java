@@ -32,8 +32,6 @@ import com.wangge.app.server.util.LogUtil;
 @RequestMapping(value = "/v1")
 public class SaojieDataController {
 
-	private static final Logger logger = Logger.getLogger(SaojieDataController.class);
-	
 	
 	 @Value("${app-interface.url}")
 	  private String interfaceUrl;
@@ -52,7 +50,7 @@ public class SaojieDataController {
 	@RequestMapping(value = "/{regionId}/saojie_data", method = RequestMethod.GET)
 	public JSONObject list(@PathVariable("regionId") String regionId) {
 	  LogUtil.info("根据区域获取代理商扫街数据, regionId="+regionId);
-	  return httpRequestHandler.exchange(interfaceUrl+"/{regionId}/saojie_data", HttpMethod.GET, null, null, new ParameterizedTypeReference<JSONObject>() {}, regionId);
+	  return httpRequestHandler.exchange(interfaceUrl+"{regionId}/saojie_data", HttpMethod.GET, null, null, new ParameterizedTypeReference<JSONObject>() {}, regionId);
 	}
 
 	@ApiOperation(value="添加扫街数据",notes="添加扫街数据")
@@ -64,7 +62,7 @@ public class SaojieDataController {
     urlParam.put("regionId",regionId);
     urlParam.put("userId",userId);
     
-	  return httpRequestHandler.exchange(interfaceUrl+"/{regionId}/{userId}/saojie_data", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
+	  return httpRequestHandler.exchange(interfaceUrl+"{regionId}/{userId}/saojie_data", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
     }, urlParam);
 	}
   /**
@@ -85,7 +83,7 @@ public class SaojieDataController {
 	    JSONObject jsons = new JSONObject();
 	    jsons.put("file", file);
 	    jsons.put("id", id);
-	    return httpRequestHandler.exchange(interfaceUrl+"/images/upload", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
+	    return httpRequestHandler.exchange(interfaceUrl+"images/upload", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
       });
 
 	}

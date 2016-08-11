@@ -33,7 +33,6 @@ import com.wangge.app.server.util.LogUtil;
 @RestController
 @RequestMapping("/v1/ur")
 public class UnpaymentRemarkController {
-  private static Logger logger = Logger.getLogger(UnpaymentRemarkController.class);
   
   @Value("${app-interface.url}")
   private String interfaceUrl;

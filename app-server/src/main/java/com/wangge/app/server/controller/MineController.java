@@ -12,8 +12,6 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,43 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.config.http.HttpRequestHandler;
-import com.wangge.app.server.entity.Order;
-import com.wangge.app.server.entity.OrderItem;
-import com.wangge.app.server.entity.RegistData;
-import com.wangge.app.server.repository.RegionRepository;
-import com.wangge.app.server.repositoryimpl.ExamImpl;
-import com.wangge.app.server.repositoryimpl.OrderImpl;
-import com.wangge.app.server.service.ApplyPriceService;
-import com.wangge.app.server.service.MessageService;
-import com.wangge.app.server.service.OrderService;
-import com.wangge.app.server.service.RegistDataService;
-import com.wangge.app.server.service.SalesmanService;
 import com.wangge.app.server.util.LogUtil;
 
 @RestController
 @RequestMapping(value = "/v1/mine")
 public class MineController {
 	
-//	private static final Logger LOG = LoggerFactory.getLogger(MineController.class);
-	
-  @Resource
-  private OrderImpl opl;
-  @Resource
-  private MessageService mr;
-  @Resource
-  private ExamImpl epl;
-
-  @Resource
-  private OrderService or;
-  @Resource
-  private RegionRepository rr;
-
-  @Resource
-  private ApplyPriceService aps;
-  @Resource
-  private RegistDataService rds;
-  @Resource
-  private SalesmanService salesmanService;
 
   @Value("${app-interface.url}")
   private String interfaceUrl;
@@ -79,7 +46,7 @@ public class MineController {
 	@RequestMapping(value = "/checkByOrderNum",method = RequestMethod.POST)
 	public JSONObject checkByOrderNum(@RequestBody  JSONObject json) throws Exception{
     LogUtil.info("业务签收后更新订单状态， json="+json.toJSONString());
-    return httpRequestHandler.exchange(interfaceUrl+"checkByOrderNum", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    return httpRequestHandler.exchange(interfaceUrl+"mine/checkByOrderNum", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
     });
   }
   
@@ -99,7 +66,7 @@ public class MineController {
   @RequestMapping(value = "/orderStatusList",method = RequestMethod.POST)
   public JSONObject orderStatusList(@RequestBody  JSONObject json){
     LogUtil.info("根据业务手机号查询所属订单的派送状态， json="+json.toJSONString());
-    return httpRequestHandler.exchange(interfaceUrl+"orderStatusList", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    return httpRequestHandler.exchange(interfaceUrl+"mine/orderStatusList", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
     });
   }
   
@@ -119,7 +86,7 @@ public class MineController {
   @RequestMapping(value = "/updateOrderStatus",method = RequestMethod.POST)
   public JSONObject updateOrderStatus(@RequestBody  JSONObject json){
     LogUtil.info("业务签收后更新订单状态， json="+json.toJSONString());
-    return httpRequestHandler.exchange(interfaceUrl+"updateOrderStatus", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    return httpRequestHandler.exchange(interfaceUrl+"mine/updateOrderStatus", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
     });
   }
   
@@ -139,7 +106,7 @@ public class MineController {
   @RequestMapping(value = "/custNotSignFor",method = RequestMethod.POST)
   public JSONObject custNotSignFor(@RequestBody  JSONObject json){
     LogUtil.info("客户拒签， json="+json.toJSONString());
-    return httpRequestHandler.exchange(interfaceUrl+"custNotSignFor", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    return httpRequestHandler.exchange(interfaceUrl+"mine/custNotSignFor", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
     });
 	}
 	/**
@@ -157,7 +124,7 @@ public class MineController {
 	@RequestMapping(value = "/custSignFor",method = RequestMethod.POST)
 	public JSONObject custSignFor(@RequestBody  JSONObject json){
     LogUtil.info("客户签收， json="+json.toJSONString());
-    return httpRequestHandler.exchange(interfaceUrl+"custSignFor", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    return httpRequestHandler.exchange(interfaceUrl+"mine/custSignFor", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
     });
 	}
 	/**
@@ -175,7 +142,7 @@ public class MineController {
 	@RequestMapping(value = "/sendCode",method = RequestMethod.POST)
 	public JSONObject sendCode(@RequestBody  JSONObject json){
     LogUtil.info("发送验证码， json="+json.toJSONString());
-    return httpRequestHandler.exchange(interfaceUrl+"sendCode", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    return httpRequestHandler.exchange(interfaceUrl+"mine/sendCode", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
     });
 	}
 	/**
@@ -218,7 +185,7 @@ public class MineController {
 	@RequestMapping(value = "/examStatus",method = RequestMethod.POST)
 	public JSONObject examStatus(@RequestBody	JSONObject json) throws ParseException{
     LogUtil.info("客户签收， json="+json.toJSONString());
-    return httpRequestHandler.exchange(interfaceUrl+"examStatus", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    return httpRequestHandler.exchange(interfaceUrl+"mine/examStatus", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
     });
 	}
 
@@ -233,7 +200,7 @@ public class MineController {
 	@RequestMapping(value = "/monthTarget",method = RequestMethod.POST)
 	public JSONObject getMonthTarget(@RequestBody	JSONObject json) throws ParseException{
     LogUtil.info("月指标统计查询， json="+json.toJSONString());
-    return httpRequestHandler.exchange(interfaceUrl+"monthTarget", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    return httpRequestHandler.exchange(interfaceUrl+"mine/monthTarget", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
     });
 	}
 
@@ -252,7 +219,7 @@ public class MineController {
 	@RequestMapping(value = "/examDetail",method = RequestMethod.POST)
 	public JSONObject examDetail(@RequestBody	JSONObject json){
     LogUtil.info("根据区域名查看该区域二次提货商家详情， json="+json.toJSONString());
-    return httpRequestHandler.exchange(interfaceUrl+"examDetail", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    return httpRequestHandler.exchange(interfaceUrl+"mine/examDetail", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
     });
 	}
 	
@@ -272,7 +239,7 @@ public class MineController {
 	@RequestMapping(value = "/myEarn",method = RequestMethod.POST)
 	public JSONObject myEarn(@RequestBody JSONObject json){
     LogUtil.info("我的收益， json="+json.toJSONString());
-    return httpRequestHandler.exchange(interfaceUrl+"myEarn", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    return httpRequestHandler.exchange(interfaceUrl+"mine/myEarn", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
     });
 	}
 	/**
@@ -290,7 +257,7 @@ public class MineController {
 	@RequestMapping(value = "/takeGoodsMoney",method = RequestMethod.POST)
 	public JSONObject takeGoodsMoney(@RequestBody  JSONObject json){
     LogUtil.info("我的收益， json="+json.toJSONString());
-    return httpRequestHandler.exchange(interfaceUrl+"takeGoodsMoney", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    return httpRequestHandler.exchange(interfaceUrl+"mine/takeGoodsMoney", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
     });
 	}
 	/**
@@ -310,7 +277,7 @@ public class MineController {
 	@RequestMapping(value = "/noTaskMoneyRemark",method = RequestMethod.POST)
 	public JSONObject noTaskMoneyRemark(@RequestBody  JSONObject json){
     LogUtil.info("我的收益， json="+json.toJSONString());
-    return httpRequestHandler.exchange(interfaceUrl+"noTaskMoneyRemark", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    return httpRequestHandler.exchange(interfaceUrl+"mine/noTaskMoneyRemark", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
     });
 	}
 	/**
@@ -333,7 +300,7 @@ public class MineController {
 	@RequestMapping(value = "/applyChangePrice",method = RequestMethod.POST)
 	public JSONObject applyChangePrice(@RequestBody  JSONObject json){
     LogUtil.info("我的收益， json="+json.toJSONString());
-    return httpRequestHandler.exchange(interfaceUrl+"applyChangePrice", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    return httpRequestHandler.exchange(interfaceUrl+"mine/applyChangePrice", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
     });
 	}
 	/**
@@ -352,7 +319,7 @@ public class MineController {
 	@RequestMapping(value = "/applyPriceList",method = RequestMethod.POST)
 	public JSONObject applyPriceList(@RequestBody  JSONObject json){
     LogUtil.info("我的收益， json="+json.toJSONString());
-    return httpRequestHandler.exchange(interfaceUrl+"applyPriceList", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    return httpRequestHandler.exchange(interfaceUrl+"mine/applyPriceList", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
     });
 	}
 	/**
@@ -371,7 +338,7 @@ public class MineController {
 	@RequestMapping(value = "/findApplyById",method = RequestMethod.POST)
 	public JSONObject findApplyById(@RequestBody  JSONObject json){
     LogUtil.info("我的收益， json="+json.toJSONString());
-    return httpRequestHandler.exchange(interfaceUrl+"findApplyById", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    return httpRequestHandler.exchange(interfaceUrl+"mine/findApplyById", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
     });
 	}
 }

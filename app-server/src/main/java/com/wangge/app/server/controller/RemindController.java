@@ -37,12 +37,6 @@ import com.wangge.app.server.util.SortUtil;
 @RequestMapping({"/v1/remind"})
 public class RemindController {
   
-//  private static final Logger logger = LoggerFactory.getLogger(RemindController.class);
-  
-  @Resource
-  private MessageService mr ;
-  @Resource
-  private OrderRepository or;
   
   @Value("${app-interface.url}")
   private String interfaceUrl;
@@ -64,7 +58,7 @@ public class RemindController {
   @RequestMapping(value = "/orderList",method = RequestMethod.POST)
   public JSONObject orderList(@RequestBody  JSONObject json){
     LogUtil.info("订单列表, json="+json.toJSONString());
-    return httpRequestHandler.exchange(interfaceUrl+"/orderList", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    return httpRequestHandler.exchange(interfaceUrl+"remind/orderList", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
     });
   }
   /**
@@ -82,7 +76,7 @@ public class RemindController {
   @RequestMapping(value = "/selOrderDetail",method = RequestMethod.POST)
   public JSONObject selOrderDetail(@RequestBody  JSONObject json){
       LogUtil.info("根据订单号查看订单详情, json="+json.toJSONString());
-      return httpRequestHandler.exchange(interfaceUrl+"/selOrderDetail", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+      return httpRequestHandler.exchange(interfaceUrl+"remind/selOrderDetail", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
       });
   }
   /**
@@ -100,7 +94,7 @@ public class RemindController {
   @RequestMapping(value = "/newsRemindList",method = RequestMethod.POST)
   public JSONObject newsRemindList(@RequestBody  JSONObject json){
     LogUtil.info("消息通知列表, json="+json.toJSONString());
-    return httpRequestHandler.exchange(interfaceUrl+"/newsRemindList", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    return httpRequestHandler.exchange(interfaceUrl+"remind/newsRemindList", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
     });
   }
   /**
@@ -118,7 +112,7 @@ public class RemindController {
   @RequestMapping(value = "/newsDetail",method = RequestMethod.POST)
   public JSONObject newsDetail(@RequestBody  JSONObject json){
     LogUtil.info("消息详情, json="+json.toJSONString());
-    return httpRequestHandler.exchange(interfaceUrl+"/newsDetail", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    return httpRequestHandler.exchange(interfaceUrl+"remind/newsDetail", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
     });
   }
   /**
@@ -136,7 +130,7 @@ public class RemindController {
   public JSONObject activiRemind(@RequestBody  JSONObject json){
     //查询正在进行中的活动  不区分已读未读 活动 type=2
       LogUtil.info("活动通知, json="+json.toJSONString());
-      return httpRequestHandler.exchange(interfaceUrl+"/activiList", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+      return httpRequestHandler.exchange(interfaceUrl+"remind/activiList", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
       });
   }
   /**
