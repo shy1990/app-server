@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiOperation;
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,9 +45,10 @@ public class OrderSignforController {
   @ApiOperation(value="获取物流单号列表", notes="获取物流单号列表")
   @ApiImplicitParam(name="jsons",value="jsons",required=true,dataType="JSONObject")
   @RequestMapping(value = "/getBussOrderList" ,method = RequestMethod.POST)
-  public ResponseEntity<Object> getOrderSignforList(@RequestBody JSONObject jsons){
+  public JSONObject getOrderSignforList(@RequestBody JSONObject jsons){
     LogUtil.info("获取物流单号列表, josns="+jsons.toJSONString());
-    return httpRequestHandler.exchange(interfaceUrl+"remind/getBussOrderList",HttpMethod.POST,null,jsons);
+    return httpRequestHandler.exchangeForResponseType(interfaceUrl+"remind/getBussOrderList", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
+    });
      
   }
   /**
@@ -62,10 +64,11 @@ public class OrderSignforController {
   @ApiOperation(value="代理商揽收快件", notes="代理商揽收快件")
   @ApiImplicitParam(name="jsons",value="jsons",required=true,dataType="JSONObject")
   @RequestMapping(value = "/bussOrderSignFor", method = RequestMethod.POST)
-  public ResponseEntity<Object> bussOrderSignFor(@RequestBody JSONObject jsons){
+  public JSONObject bussOrderSignFor(@RequestBody JSONObject jsons){
      LogUtil.info("代理商揽收快件, jsons="+jsons.toJSONString());
       //return httpRequestHandler.exchange(interfaceUrl+"remind/bussOrderSignFor",HttpMethod.POST,null,JSONObject.class,jsons);
-      return httpRequestHandler.exchange(interfaceUrl+"remind/bussOrderSignFor", HttpMethod.POST, null, jsons);
+      return httpRequestHandler.exchangeForResponseType(interfaceUrl+"remind/bussOrderSignFor", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
+      });
   }
   /**
    * @throws ParseException 
@@ -81,9 +84,10 @@ public class OrderSignforController {
   @ApiOperation(value="获取订单列表", notes="获取订单列表")
   @ApiImplicitParam(name="jsons",value="jsons",required=true,dataType="JSONObject")
   @RequestMapping(value = "/getOrderList", method = RequestMethod.POST)
-  public ResponseEntity<Object> getOrderList(@RequestBody JSONObject jsons){
+  public JSONObject getOrderList(@RequestBody JSONObject jsons){
     LogUtil.info("获取订单列表, jsons="+jsons.toJSONString());
-    return httpRequestHandler.exchange(interfaceUrl+"remind/getOrderList",HttpMethod.POST,null,jsons);
+    return httpRequestHandler.exchangeForResponseType(interfaceUrl+"remind/getOrderList", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
+    });
   }
   /**
    * 
@@ -98,9 +102,10 @@ public class OrderSignforController {
   @ApiOperation(value="客户签收订单", notes="客户签收订单")
   @ApiImplicitParam(name="jsons",value="jsons",required=true,dataType="JSONObject")
   @RequestMapping(value ="/customOrderSign", method = RequestMethod.POST)
-  public ResponseEntity<Object> customOrderSign(@RequestBody JSONObject jsons){
+  public JSONObject customOrderSign(@RequestBody JSONObject jsons){
     LogUtil.info("客户签收订单, jsons="+jsons.toJSONString());
-    return httpRequestHandler.exchange(interfaceUrl+"remind/customOrderSign",HttpMethod.POST,null,jsons);
+    return httpRequestHandler.exchangeForResponseType(interfaceUrl+"remind/customOrderSign", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
+    });
   }
  
   /**
@@ -115,9 +120,10 @@ public class OrderSignforController {
   @ApiOperation(value="客户拒签订单", notes="客户拒签订单")
   @ApiImplicitParam(name="jsons",value="jsons",required=true,dataType="JSONObject")
   @RequestMapping(value = "/customOrderUnSign", method = RequestMethod.POST)
-  public ResponseEntity<Object> customOrderUnSign(@RequestBody JSONObject jsons){
+  public JSONObject customOrderUnSign(@RequestBody JSONObject jsons){
     LogUtil.info("客户拒签订单, jsons="+jsons.toJSONString());
-    return httpRequestHandler.exchange(interfaceUrl+"remind/customOrderUnSign",HttpMethod.POST,null, jsons);
+    return httpRequestHandler.exchangeForResponseType(interfaceUrl+"remind/customOrderUnSign", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
+    });
   }
   
  
@@ -135,9 +141,10 @@ public class OrderSignforController {
   @ApiOperation(value="根据物流单号获取订单列表", notes="根据物流单号获取订单列表")
   @ApiImplicitParam(name="jsons",value="jsons",required=true,dataType="JSONObject")
   @RequestMapping(value = "/getOrdersByMailNo", method = RequestMethod.POST)
-  public ResponseEntity<Object> getOrdersByMailNo(@RequestBody JSONObject jsons){
+  public JSONObject getOrdersByMailNo(@RequestBody JSONObject jsons){
     LogUtil.info("根据物流单号获取订单列表, jsons="+jsons.toJSONString());
-    return httpRequestHandler.exchange(interfaceUrl+"remind/getOrdersByMailNo",HttpMethod.POST,null, jsons);
+    return httpRequestHandler.exchangeForResponseType(interfaceUrl+"remind/getOrdersByMailNo", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
+    });
   }
   
 

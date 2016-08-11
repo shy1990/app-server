@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -52,9 +53,10 @@ public class UnpaymentRemarkController {
   @ApiOperation(value="创建未收款报备记录", notes="创建未收款报备记录")
   @ApiImplicitParam(name="jsons",value="jsons",required=true,dataType="JSONObject")
   @RequestMapping(value = "/createRemark",method = RequestMethod.POST)
-  public  ResponseEntity<Object> createUnpaymentRemark(@RequestBody JSONObject jsons){
+  public JSONObject createUnpaymentRemark(@RequestBody JSONObject jsons){
     LogUtil.info("创建未收款报备记录, jsons="+jsons.toJSONString());
-    return httpRequestHandler.exchange(interfaceUrl+"ur/createRemark", HttpMethod.POST, null, jsons);
+    return httpRequestHandler.exchangeForResponseType(interfaceUrl+"ur/createRemark", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
+    });
    
   }
   
@@ -72,9 +74,10 @@ public class UnpaymentRemarkController {
   @ApiOperation(value="根据业务员id查询此业务员的报备列表", notes="根据业务员id查询此业务员的报备列表")
   @ApiImplicitParam(name="jsons",value="jsons",required=true,dataType="JSONObject")
   @RequestMapping(value = "/getRemarkList",method = RequestMethod.POST)
-  public  ResponseEntity<Object> getRemarkListBySalesmanId(@RequestBody JSONObject jsons){
+  public  JSONObject getRemarkListBySalesmanId(@RequestBody JSONObject jsons){
     LogUtil.info("根据业务员id查询此业务员的报备列表, jsons="+jsons.toJSONString());
-    return httpRequestHandler.exchange(interfaceUrl+"ur/getRemarkList", HttpMethod.POST, null, jsons);
+    return httpRequestHandler.exchangeForResponseType(interfaceUrl+"ur/getRemarkList", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
+    });
   }
 
 }

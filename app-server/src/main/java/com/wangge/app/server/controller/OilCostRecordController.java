@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,9 +45,10 @@ public class OilCostRecordController {
   @ApiOperation(value="代理商上班签到", notes="上班签到")
   @ApiImplicitParam(name="jsons",value="jsons",required=true,dataType="JSONObject")
   @RequestMapping(value = "/workCheck", method = RequestMethod.POST)
-  public ResponseEntity<Object> signed(@RequestBody JSONObject jsons){
+  public JSONObject signed(@RequestBody JSONObject jsons){
     LogUtil.info("代理商 上班签到, jsons="+jsons.toJSONString());
-   return httpRequestHandler.exchange(interfaceUrl+"oilCostRecord/workCheck", HttpMethod.POST, null, jsons);
+   return httpRequestHandler.exchangeForResponseType(interfaceUrl+"oilCostRecord/workCheck", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
+  });
   }
   /**
    * 
@@ -60,9 +62,10 @@ public class OilCostRecordController {
   @ApiOperation(value="获取昨日油补记录", notes="昨日油补记录")
   @ApiImplicitParam(name="jsons",value="jsons",required=true,dataType="JSONObject")
   @RequestMapping(value = "/getYesterydayOilRecord",method = RequestMethod.POST)
- public ResponseEntity<Object> yesterdayOilRecord(@RequestBody JSONObject jsons){
+ public JSONObject yesterdayOilRecord(@RequestBody JSONObject jsons){
     LogUtil.info("获取昨日油补记录, jsons="+jsons.toJSONString());
-    return httpRequestHandler.exchange(interfaceUrl+"oilCostRecord/getYesterydayOilRecord",HttpMethod.POST,null, jsons);
+    return httpRequestHandler.exchangeForResponseType(interfaceUrl+"oilCostRecord/getYesterydayOilRecord", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
+    });
    
  }
   /**
@@ -76,9 +79,10 @@ public class OilCostRecordController {
   @ApiOperation(value="历史油补累计", notes="历史油补累计")
   @ApiImplicitParam(name="jsons",value="jsons",required=true,dataType="JSONObject")
   @RequestMapping(value ="/getHistoryOilRecord", method = RequestMethod.POST)
-  public ResponseEntity<Object>  getHistoryOilRecord(@RequestBody JSONObject jsons){
+  public JSONObject  getHistoryOilRecord(@RequestBody JSONObject jsons){
     LogUtil.info("历史油补累计, jsons="+jsons.toJSONString());
-    return httpRequestHandler.exchange(interfaceUrl+"oilCostRecord/getHistoryOilRecord",HttpMethod.POST,null, jsons);
+    return httpRequestHandler.exchangeForResponseType(interfaceUrl+"oilCostRecord/getHistoryOilRecord", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
+    });
   }
 
   /**
@@ -92,9 +96,10 @@ public class OilCostRecordController {
   @ApiOperation(value="当日油补记录", notes="当日油补记录")
   @ApiImplicitParam(name="jsons",value="jsons",required=true,dataType="JSONObject")
   @RequestMapping(value = "/getTodayOilRecord", method = RequestMethod.POST)
-  public ResponseEntity<Object> getTodayOilRecord(@RequestBody JSONObject jsons){
+  public JSONObject getTodayOilRecord(@RequestBody JSONObject jsons){
     LogUtil.info("当日油补记录, jsons="+jsons.toJSONString());
-    return httpRequestHandler.exchange(interfaceUrl+"oilCostRecord/getTodayOilRecord",HttpMethod.POST,null, jsons);
+    return httpRequestHandler.exchangeForResponseType(interfaceUrl+"oilCostRecord/getTodayOilRecord", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
+    });
       
   }
   
@@ -110,9 +115,10 @@ public class OilCostRecordController {
   @ApiOperation(value="历史油补详情", notes="历史油补详情")
   @ApiImplicitParam(name="jsons",value="jsons",required=true,dataType="JSONObject")
   @RequestMapping(value = "/getHistoryDestOilRecord", method = RequestMethod.POST)
-  public ResponseEntity<Object> getHistoryDestOilRecord(@RequestBody JSONObject jsons){
+  public JSONObject getHistoryDestOilRecord(@RequestBody JSONObject jsons){
     LogUtil.info("历史油补详情, jsons="+jsons.toJSONString());
-    return httpRequestHandler.exchange(interfaceUrl+"oilCostRecord/getHistoryDestOilRecord",HttpMethod.POST,null, jsons);
+    return httpRequestHandler.exchangeForResponseType(interfaceUrl+"oilCostRecord/getHistoryDestOilRecord", HttpMethod.POST, null, jsons, new ParameterizedTypeReference<JSONObject>() {
+    });
   }
   
 }

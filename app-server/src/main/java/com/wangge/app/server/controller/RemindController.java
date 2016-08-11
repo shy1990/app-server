@@ -2,12 +2,18 @@ package com.wangge.app.server.controller;
 
 
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+
 import javax.annotation.Resource;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wangge.app.server.config.http.HttpRequestHandler;
 import com.wangge.app.server.entity.Message;
 import com.wangge.app.server.entity.OrderItem;
 import com.wangge.app.server.entity.Message.MessageType;
@@ -23,6 +30,7 @@ import com.wangge.app.server.entity.Message.SendChannel;
 import com.wangge.app.server.entity.Order;
 import com.wangge.app.server.repository.OrderRepository;
 import com.wangge.app.server.service.MessageService;
+import com.wangge.app.server.util.LogUtil;
 import com.wangge.app.server.util.SortUtil;
 
 @RestController
@@ -35,6 +43,12 @@ public class RemindController {
   private MessageService mr ;
   @Resource
   private OrderRepository or;
+  
+  @Value("${app-interface.url}")
+  private String interfaceUrl;
+
+  @Resource
+  private HttpRequestHandler httpRequestHandler;
   /**
    * 
    * @Description: 订单列表
@@ -45,12 +59,13 @@ public class RemindController {
    * @author changjun
    * @date 2015年10月21日
    */
+  @ApiOperation(value="订单列表",notes="订单列表")
+  @ApiImplicitParam(name="json",value="json",required=true,dataType="JSONObject")
   @RequestMapping(value = "/orderList",method = RequestMethod.POST)
-  public ResponseEntity<Page<Message>> orderList(@RequestBody  JSONObject json){
-    String receiver = json.getString("mobile");
-    PageRequest pageRequest = SortUtil.buildPageRequest(json.getInteger("pageNumber"), json.getInteger("pageSize"), "push");
-    Page<Message> list = mr.findByChannelAndTypeAndReceiverContaining(SendChannel.PUSH,receiver,"orderNum", pageRequest);
-    return new ResponseEntity<Page<Message>>(list, HttpStatus.OK);
+  public JSONObject orderList(@RequestBody  JSONObject json){
+    LogUtil.info("订单列表, json="+json.toJSONString());
+    return httpRequestHandler.exchangeForResponseType(interfaceUrl+"/orderList", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    });
   }
   /**
    * 
@@ -62,37 +77,13 @@ public class RemindController {
    * @author changjun
    * @date 2015年10月29日
    */
+  @ApiOperation(value="根据订单号查看订单详情",notes="根据订单号查看订单详情")
+  @ApiImplicitParam(name="json",value="json",required=true,dataType="JSONObject")
   @RequestMapping(value = "/selOrderDetail",method = RequestMethod.POST)
-  public ResponseEntity<JSONObject> selOrderDetail(@RequestBody  JSONObject json){
-    String orderNum = json.getString("orderNum");
-    int skuNum = 0;
-    int giftNum = 0;
-    Order order = or.findOne(orderNum);
-    JSONObject jo = new JSONObject();
-    if(order!=null && !"".equals(order.getId())){
-      StringBuffer sb = new StringBuffer();
-      for (OrderItem item : order.getItems()) {
-        sb.append(item.getName()+" ");
-        if("sku".equals(item.getType())){
-          skuNum+=item.getNums();
-        }else if("gift".equals(item.getType())){
-          giftNum+=item.getNums();
-        }
-      }
-      jo.put("username", order.getShopName());
-      jo.put("amount", order.getAmount());
-      jo.put("createTime", order.getCreateTime());
-      jo.put("orderNum", order.getId());
-      jo.put("shipStatus", order.getStatus().ordinal());
-      jo.put("goods", sb);
-      jo.put("skuNum", skuNum);
-      jo.put("itemOtherNum", giftNum);
-      jo.put("customMobile", order.getMobile());
-      jo.put("state", "正常订单");
-      return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
-    }
-      jo.put("state", "未查询相关信息");
-      return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
+  public JSONObject selOrderDetail(@RequestBody  JSONObject json){
+      LogUtil.info("根据订单号查看订单详情, json="+json.toJSONString());
+      return httpRequestHandler.exchangeForResponseType(interfaceUrl+"/selOrderDetail", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+      });
   }
   /**
    * 
@@ -104,12 +95,13 @@ public class RemindController {
    * @author changjun
    * @date 2015年10月21日
    */
+  @ApiOperation(value="消息通知列表",notes="消息通知列表")
+  @ApiImplicitParam(name="json",value="json",required=true,dataType="JSONObject")
   @RequestMapping(value = "/newsRemindList",method = RequestMethod.POST)
-  public ResponseEntity<Page<Message>> newsRemindList(@RequestBody  JSONObject json){
-    String receiver = json.getString("mobile"); 
-    PageRequest pageRequest = SortUtil.buildPageRequest(json.getInteger("pageNumber"), json.getInteger("pageSize"), "push");
-    Page<Message> list = mr.findMessageByReceiver(receiver, pageRequest);
-    return new ResponseEntity<Page<Message>>(list, HttpStatus.OK);
+  public JSONObject newsRemindList(@RequestBody  JSONObject json){
+    LogUtil.info("消息通知列表, json="+json.toJSONString());
+    return httpRequestHandler.exchangeForResponseType(interfaceUrl+"/newsRemindList", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    });
   }
   /**
    * 
@@ -121,12 +113,13 @@ public class RemindController {
    * @author changjun
    * @date 2015年10月29日
    */
-  
+  @ApiOperation(value="消息详情",notes="消息详情")
+  @ApiImplicitParam(name="json",value="json",required=true,dataType="JSONObject")
   @RequestMapping(value = "/newsDetail",method = RequestMethod.POST)
-  public ResponseEntity<Message> newsDetail(@RequestBody  JSONObject json){
-//    String newsId  = json.getString("id");
-    Message sm = mr.findOne(json.getLong("id"));
-    return new ResponseEntity<Message>(sm, HttpStatus.OK);
+  public JSONObject newsDetail(@RequestBody  JSONObject json){
+    LogUtil.info("消息详情, json="+json.toJSONString());
+    return httpRequestHandler.exchangeForResponseType(interfaceUrl+"/newsDetail", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+    });
   }
   /**
    * 
@@ -137,12 +130,14 @@ public class RemindController {
    * @author changjun
    * @date 2015年10月21日
    */
+  @ApiOperation(value="活动通知",notes="活动通知")
+  @ApiImplicitParam(name="json",value="json",required=true,dataType="JSONObject")
   @RequestMapping(value = "/activiList",method = RequestMethod.POST)
-  public ResponseEntity<Page<Message>> activiRemind(@RequestBody  JSONObject json){
+  public JSONObject activiRemind(@RequestBody  JSONObject json){
     //查询正在进行中的活动  不区分已读未读 活动 type=2
-    PageRequest pageRequest = SortUtil.buildPageRequest(json.getInteger("pageNumber"), json.getInteger("pageSize"), "push");
-    Page<Message> list = mr.findMessageByType(MessageType.ACTIVE, pageRequest);
-    return new ResponseEntity<Page<Message>>(list, HttpStatus.OK);
+      LogUtil.info("活动通知, json="+json.toJSONString());
+      return httpRequestHandler.exchangeForResponseType(interfaceUrl+"/activiList", HttpMethod.POST, null, json, new ParameterizedTypeReference<JSONObject>() {
+      });
   }
   /**
    * 
