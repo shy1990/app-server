@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -64,8 +65,10 @@ public class httpTest {
    /* requestHandler.get("http://192.168.2.153:8080/v1/remind/getBussOrderList",
         HttpMethod.POST, jsonObject);*/
     /*JSONObject responseEntity = requestHandler.exchange("http://192.168.2.153:8080/v1/remind/getBussOrderList", HttpMethod.POST, null, jsonObject, JSONObject.class,"");*/
-    
-    JSONObject responseEntitys = requestHandler.exchange("http://192.168.2.151:8080/v1/remind/getBussOrderList", HttpMethod.POST, null, jsonObject, new ParameterizedTypeReference<JSONObject>(){});
+    HttpHeaders headers = new HttpHeaders(); 
+	headers.setContentType(MediaType.APPLICATION_JSON);
+    JSONObject responseEntitys = requestHandler.exchange("http://192.168.2.151:8080/v1/remind/getBussOrderList", HttpMethod.POST, headers, param,new ParameterizedTypeReference<JSONObject>(){}, param);
+   // JSONObject rs=		requestHandler.exchange("http://192.168.2.151:8080/v1/remind/getBussOrderList", HttpMethod.POST, null, jsonObject, new ParameterizedTypeReference<JSONObject>(){});
   
     System.out.println(".........>>>>>>>>>>"+responseEntitys.toJSONString());
   
