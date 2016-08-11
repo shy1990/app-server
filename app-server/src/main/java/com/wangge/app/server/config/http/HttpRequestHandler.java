@@ -118,7 +118,7 @@ public class HttpRequestHandler implements InitializingBean {
     printInfoLog(url, uriVariables, null);
 
     try {
-      HttpEntity<?> requestEntity = new HttpEntity<>(body, getHeader(headers));
+      HttpEntity<?> requestEntity = new HttpEntity<>(body, headers);
       
       
       requestEntity = convert(requestEntity);
@@ -145,25 +145,6 @@ public class HttpRequestHandler implements InitializingBean {
        "(使用返回<T> T 的exchange方法):", e);
     }
   }
-
-  /**
-   * 
-    * getHeader:(获取headers，默认ContentType 为 MediaType.APPLICATION_JSON). <br/> 
-    * 
-    * @author Administrator 
-    * @param headers
-    * @return 
-    * @since JDK 1.8
-   */
-  private HttpHeaders getHeader(HttpHeaders headers) {
-    if(headers == null){
-      headers = new HttpHeaders();
-      headers.setContentType(MediaType.APPLICATION_JSON);
-    }
-    return headers;
-  }
-  
- 
 
   /**
    * 没有responseType
