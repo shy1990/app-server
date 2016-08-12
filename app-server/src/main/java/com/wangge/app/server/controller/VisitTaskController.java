@@ -44,7 +44,7 @@ public class VisitTaskController {
    */
   @RequestMapping(value = "/task/addVisit", method = RequestMethod.POST)
   public ResponseEntity<Object> addVisit(String taskStart, String taskEnd, String rdid, String userid) {
-    return httpRequestHandler.exchange(url + "/task/addVisit", HttpMethod.POST, null, taskStart, taskEnd, rdid, userid, null);
+    return httpRequestHandler.exchange(url + "/task/addVisit", HttpMethod.POST, null, taskStart, taskEnd, rdid, userid);
   }
 
 
