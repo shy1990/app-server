@@ -21,17 +21,17 @@ public class TaskController {
 
   @RequestMapping(value = "/findAllSaojie", method = RequestMethod.POST)
   public ResponseEntity<Object> findAllTask(String userid) {
-    return httpRequestHandler.exchange(url + "/findAllSaojie", HttpMethod.POST, null, null, userid);
+    return httpRequestHandler.exchange(url + "/findAllSaojie", HttpMethod.POST, null, userid);
   }
 
   @RequestMapping(value = "/findTaskByUserId", method = RequestMethod.POST)
   public ResponseEntity<Object> findTaskByUserId(String userid) {
-    return httpRequestHandler.exchange(url + "/findTaskByUserId", HttpMethod.POST, null, null, userid);
+    return httpRequestHandler.exchange(url + "/findTaskByUserId", HttpMethod.POST, null, userid);
   }
 
   @RequestMapping(value = "/upstatus", method = RequestMethod.POST)
   public ResponseEntity<Object> upstatus(String taskid) {
-    return httpRequestHandler.exchange(url + "/upstatus", HttpMethod.POST, null, null, taskid);
+    return httpRequestHandler.exchange(url + "/upstatus", HttpMethod.POST, null, taskid);
   }
 
 }
