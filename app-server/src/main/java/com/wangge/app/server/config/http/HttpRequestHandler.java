@@ -209,7 +209,6 @@ public class HttpRequestHandler implements InitializingBean {
       MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
       Map<String, ?> _body = (Map<String, ?>) body;
       for (String key : _body.keySet()) {
-    	  System.out.println(MapUtils.getString(_body, key));
         multiValueMap.add(key, MapUtils.getString(_body, key));
       }
       requestEntity = new HttpEntity<>(multiValueMap, headers);
