@@ -88,5 +88,8 @@ public class OilRecordTest {
     Float  d = (float)ChainageUtil.GetShortDistance(Double.parseDouble("120.421") , Double.parseDouble("36.245946"), Double.parseDouble("120.38495"), Double.parseDouble("36.307558"));
     System.out.println("========>>>>>>>>>>>>>>>>"+d);
   }
+  
+  
+  
 }
 

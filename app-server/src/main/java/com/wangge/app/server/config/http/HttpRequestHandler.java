@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.collections.ListUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
@@ -222,7 +223,6 @@ public class HttpRequestHandler implements InitializingBean {
       for (String key : _body.keySet()) {
         multiValueMap.add(key, MapUtils.getString(_body, key));
       }
-
       requestEntity = new HttpEntity<>(multiValueMap, headers);
     }
 
