@@ -85,7 +85,6 @@ public class RejectionController {
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<Object> findAll(HttpServletRequest request) {
         Map<String, Object> params = WebUtils.getParametersStartingWith(request, "");
-//        return RestTemplateUtil.sendRestForObject(restTemplate,"GET",url + "/rejection" ,searchParams);
         return httpRequestHandler.exchange(url + "/rejection" + "?" + StringUtil.joinMap(params, "&"), HttpMethod.GET, null, null);
     }
 }
