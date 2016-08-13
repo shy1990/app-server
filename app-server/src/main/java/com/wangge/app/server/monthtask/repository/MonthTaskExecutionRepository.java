@@ -1,11 +1,11 @@
-package com.wangge.app.server.monthTask.repository;
+package com.wangge.app.server.monthtask.repository;
 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.wangge.app.server.monthTask.entity.MonthTaskExecution;
+import com.wangge.app.server.monthtask.entity.MonthTaskExecution;
 
 
 public interface MonthTaskExecutionRepository

@@ -1,4 +1,4 @@
-package com.wangge.app.server.monthTask.service;
+package com.wangge.app.server.monthtask.service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -31,14 +31,14 @@ import org.springframework.stereotype.Service;
 import com.wangge.app.server.entity.Region;
 import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.entity.Salesman;
-import com.wangge.app.server.monthTask.entity.MonthTask;
-import com.wangge.app.server.monthTask.entity.MonthTaskExecution;
-import com.wangge.app.server.monthTask.entity.MonthTaskSub;
-import com.wangge.app.server.monthTask.entity.MonthshopBasData;
-import com.wangge.app.server.monthTask.repository.MonthTaskExecutionRepository;
-import com.wangge.app.server.monthTask.repository.MonthTaskRepository;
-import com.wangge.app.server.monthTask.repository.MonthTaskSubRepository;
-import com.wangge.app.server.monthTask.repository.MonthshopBasDataRepository;
+import com.wangge.app.server.monthtask.entity.MonthTask;
+import com.wangge.app.server.monthtask.entity.MonthTaskExecution;
+import com.wangge.app.server.monthtask.entity.MonthTaskSub;
+import com.wangge.app.server.monthtask.entity.MonthshopBasData;
+import com.wangge.app.server.monthtask.repository.MonthTaskExecutionRepository;
+import com.wangge.app.server.monthtask.repository.MonthTaskRepository;
+import com.wangge.app.server.monthtask.repository.MonthTaskSubRepository;
+import com.wangge.app.server.monthtask.repository.MonthshopBasDataRepository;
 import com.wangge.app.server.repository.RegionRepository;
 import com.wangge.app.server.repository.RegistDataRepository;
 import com.wangge.app.server.repository.SalesmanRepository;

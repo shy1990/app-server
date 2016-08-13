@@ -1,4 +1,4 @@
-package com.wangge.app.server.monthTask.service;
+package com.wangge.app.server.monthtask.service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;

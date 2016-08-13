@@ -1,4 +1,4 @@
-package com.wangge.app.server.monthTask.service;
+package com.wangge.app.server.monthtask.service;
 
 
 import javax.persistence.EntityManager;
@@ -9,8 +9,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.wangge.app.server.monthTask.repository.MonthTaskSubRepository;
-import com.wangge.app.server.monthTask.repository.MonthshopBasDataRepository;
+import com.wangge.app.server.monthtask.repository.MonthTaskSubRepository;
+import com.wangge.app.server.monthtask.repository.MonthshopBasDataRepository;
 import com.wangge.app.server.repository.RegistDataRepository;
 import com.wangge.app.server.repository.SalesmanRepository;
 

@@ -1,4 +1,4 @@
-package com.wangge.app.server.monthTask.repository;
+package com.wangge.app.server.monthtask.repository;
 
 
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.wangge.app.server.monthTask.entity.MonthOdersData;
+import com.wangge.app.server.monthtask.entity.MonthOdersData;
 
 public interface MonthOrdersDataRepository extends JpaRepository<MonthOdersData, Long> {
 	/**

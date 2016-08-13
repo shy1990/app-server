@@ -1,4 +1,4 @@
-package com.wangge.app.server.monthTask.repository;
+package com.wangge.app.server.monthtask.repository;
 
 
 import javax.transaction.Transactional;
@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
-import com.wangge.app.server.monthTask.entity.MonthshopBasData;
+import com.wangge.app.server.monthtask.entity.MonthshopBasData;
 
 public interface MonthshopBasDataRepository
 		extends JpaRepository<MonthshopBasData, Long>, JpaSpecificationExecutor<MonthshopBasData> {

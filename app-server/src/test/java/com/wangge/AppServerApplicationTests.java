@@ -1,25 +1,19 @@
 package com.wangge;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
-import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.TestRestTemplate.HttpClientOption;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.web.client.RestTemplate;
-//git.oschina.net/sylarlove/app-server.git
 
 import com.wangge.app.server.AppServerApplication;
-import com.wangge.app.server.monthTask.repository.MonthTaskSubRepository;
+import com.wangge.app.server.monthtask.repository.MonthTaskSubRepository;
 import com.wangge.app.server.repository.OrderSignforRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)

@@ -1,4 +1,4 @@
-package com.wangge.app.server.monthTask.entity;
+package com.wangge.app.server.monthtask.entity;
 
 import java.io.Serializable;
 import java.util.Date;

@@ -1,4 +1,4 @@
-package com.wangge.app.server.monthTask.repository;
+package com.wangge.app.server.monthtask.repository;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.wangge.app.server.monthTask.entity.MonthTaskSub;
+import com.wangge.app.server.monthtask.entity.MonthTaskSub;
 
 public interface MonthTaskSubRepository
 		extends JpaRepository<MonthTaskSub, Long>, JpaSpecificationExecutor<MonthTaskSub> {

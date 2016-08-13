@@ -1,9 +1,9 @@
-package com.wangge.app.server.monthTask.repository;
+package com.wangge.app.server.monthtask.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import com.wangge.app.server.monthTask.entity.MonthTask;
+import com.wangge.app.server.monthtask.entity.MonthTask;
 
 
 public interface MonthTaskRepository extends JpaRepository<MonthTask, Long> {
