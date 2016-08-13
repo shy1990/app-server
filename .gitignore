@@ -1,14 +1,12 @@
-*/Servers/
-*/RemoteSystemsTempFiles/
-*/.metadata/
-*/target/
-*/.settings/
-*/.classpath
-*/.project
-*/bin
-*.class
-*/.springBeans
-*/.factorypath
+/.metadata/
+/target/
+/.settings/
+/.classpath
+/.project
+/bin
+.class
+/.springBeans
+/.factorypath
 # Mobile Tools for Java (J2ME)
 */mtj.tmp/
 
