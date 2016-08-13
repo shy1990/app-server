@@ -1,27 +1,23 @@
 package com.wangge.app.server.repositoryimpl;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import com.wangge.app.server.entity.MonthTarget;
+import com.wangge.app.server.entity.Salesman;
+import com.wangge.app.server.pojo.Json;
+import com.wangge.app.server.service.MonthTargetService;
+import com.wangge.app.server.vo.Exam;
+import com.wangge.app.server.vo.Exam.Town;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
-import com.alibaba.fastjson.JSONObject;
-import com.wangge.app.server.entity.MonthTarget;
-import com.wangge.app.server.entity.Salesman;
-import com.wangge.app.server.pojo.Json;
-import com.wangge.app.server.service.MonthTargetService;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.ObjectUtils;
-import org.springframework.stereotype.Repository;
-
-import com.wangge.app.server.vo.Exam;
-import com.wangge.app.server.vo.Exam.Town;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Repository
 public class ExamImpl {

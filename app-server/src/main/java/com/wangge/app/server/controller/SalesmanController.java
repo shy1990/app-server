@@ -1,29 +1,6 @@
 package com.wangge.app.server.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Resource;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-
-import net.sf.json.JSONObject;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
+import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.Region;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.User;
@@ -33,12 +10,22 @@ import com.wangge.app.server.repository.SalesmanRepository;
 import com.wangge.app.server.repository.UserRepository;
 import com.wangge.app.server.service.SalesmanService;
 import com.wangge.app.server.vo.Exam.Town;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/v1/saleman")
 public class SalesmanController {
-  @PersistenceContext  
-  private EntityManager em; 
+  @PersistenceContext
+  private EntityManager em;
 	@Resource
 	private SalesmanService salesmanService;
 	@Autowired
@@ -47,17 +34,15 @@ public class SalesmanController {
 	private RegionRepository reRepository;
 	@Autowired
 	private UserRepository ur;
-	
-	
+
 	@RequestMapping(value = "/findSalesman", method = RequestMethod.POST)
 	public ResponseEntity<List<Salesman>> findSalesman() {
 		List<Salesman> listSalesman=salesmanService.findSalesman();
-			
+
 	 return new ResponseEntity<List<Salesman>>(listSalesman,HttpStatus.OK);
-	
+
 }
 
-	
 	@RequestMapping(value = "/findRegionBySale", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> findByUserId(String userid) {
 		Salesman salesman=salesmanService.findSalesmanbyId(userid.trim());
@@ -66,12 +51,11 @@ public class SalesmanController {
 		 Map<String, Object>  map=new HashMap<String, Object>();
 		   map.put("regionId", regionId);
 		   map.put("regionName", regionName);
-		
+
 	 return new ResponseEntity<Map<String, Object>>(map,HttpStatus.OK);
-	
+
 }
-	
-	
+
 	@RequestMapping(value = "/findRegionIdBySale", method = RequestMethod.POST)
 	public ResponseEntity<String> findRegionIdBySaleId(String salesmanid) {
 		Salesman salesman=salesmanService.findSalesmanbyId(salesmanid.trim());
@@ -81,12 +65,11 @@ public class SalesmanController {
 	    }else{
 	       regionId = salesman.getRegion().getId();
 	    }
-		
-		
+
 	 return new ResponseEntity<String>(regionId,HttpStatus.OK);
-	
+
 }
-	
+
 	@RequestMapping(value = "/findRegBySale", method = RequestMethod.POST)
 	public ResponseEntity<String> findById(String userid) {
 		Salesman salesman=salesmanService.findSalesmanbyId(userid.trim());
@@ -95,12 +78,11 @@ public class SalesmanController {
 //		 Map<String, Object>  map=new HashMap<String, Object>();
 //		   map.put("regionId", regionId);
 //		   map.put("regionName", regionName);
-		
+
 	 return new ResponseEntity<String>(regionName,HttpStatus.OK);
-	
+
 }
-	
-	
+
 	/**
 	 * 业务员申请
 	 * @param json
@@ -137,7 +119,7 @@ public class SalesmanController {
 		salesmanService.save(salesman);
 		return new ResponseEntity<String>("OK",HttpStatus.OK);
 	}
-			
+
 	@RequestMapping(value = "/{username}/password", method = RequestMethod.PUT)
 	public ResponseEntity<Json> changePassword(@PathVariable("username") String username,
 					@RequestBody JSONObject jsons) {
@@ -164,7 +146,7 @@ public class SalesmanController {
 	public ResponseEntity<Json> saleList(){
 		Json json = new Json();
 		List<Salesman> salelist = salesmanService.findAll();
-		
+
 		List<Map<String,Object>> slm = new ArrayList<Map<String,Object>>();
 //		System.out.println(salelist.size());
 		if(salelist != null && salelist.size()>0){
@@ -196,13 +178,13 @@ public class SalesmanController {
 			.append("\"").append("regionid").append("\"").append(":").append("\"").append(ssm.getRegion().getId()).append("\"}");
 		}
 	jsbuf.append("]}");*/
-		
+
 	}
-	
+
 	public String getOldId(String phone){
 	  String oldId=null;
-	  
-	   //指标信息    a.USERNAME=(select USERNAME from SJ_DB.SYS_USER where USER_ID='"+salesId+"' ) 
+
+	   //指标信息    a.USERNAME=(select USERNAME from SJ_DB.SYS_USER where USER_ID='"+salesId+"' )
     String sql = "select * from  SJZAIXIAN.SJ_TB_ADMIN t where t.mobilephone="+phone;
     Query query =  em.createNativeQuery(sql);
     List obj = query.getResultList();
@@ -214,12 +196,10 @@ public class SalesmanController {
         Object[] o = (Object[])it.next();
         System.out.println(o[0]);
         oldId=o[0].toString();
-        
+
       }
     }
-	  
+
 	  return  oldId;
 	}
-	
-	
 }

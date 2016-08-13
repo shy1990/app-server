@@ -36,8 +36,6 @@ import com.wangge.app.server.repository.WaterOrderDetailRepository;
 import com.wangge.app.server.util.DateUtil;
 import com.wangge.app.server.util.SearchFilter;
 
-import scala.unchecked;
-
 @Service
 public class WaterOrderService {
 
