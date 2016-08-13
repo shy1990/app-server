@@ -1,3 +1,8 @@
 /.apt_generated/
 /target/
 /bin/
+/.factorypath
+/.settings/
+/.classpath
+/.springBeans
+/.project
