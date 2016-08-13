@@ -1,4 +1,4 @@
-package com.wangge.app.server.customTask.server;
+package com.wangge.app.server.customtask.server;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,10 +11,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.wangge.app.server.customTask.entity.CustomMessages;
-import com.wangge.app.server.customTask.entity.CustomTask;
-import com.wangge.app.server.customTask.repository.CustomMessagesRepository;
-import com.wangge.app.server.customTask.repository.CustomTaskRepository;
+import com.wangge.app.server.customtask.entity.CustomMessages;
+import com.wangge.app.server.customtask.entity.CustomTask;
+import com.wangge.app.server.customtask.repository.CustomMessagesRepository;
+import com.wangge.app.server.customtask.repository.CustomTaskRepository;
 import com.wangge.app.server.repository.SalesmanRepository;
 import com.wangge.app.server.util.DateUtil;
 

@@ -1,4 +1,4 @@
-package com.wangge.app.server.customTask.entity;
+package com.wangge.app.server.customtask.entity;
 
 import java.util.Date;
 

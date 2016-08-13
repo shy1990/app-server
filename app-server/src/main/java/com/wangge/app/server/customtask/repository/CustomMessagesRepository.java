@@ -1,14 +1,14 @@
-package com.wangge.app.server.customTask.repository;
+package com.wangge.app.server.customtask.repository;
 
 import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import com.wangge.app.server.customtask.entity.CustomMessages;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-
-import com.wangge.app.server.customTask.entity.CustomMessages;
 
 public interface CustomMessagesRepository extends JpaRepository<CustomMessages, Long> {
 	/**

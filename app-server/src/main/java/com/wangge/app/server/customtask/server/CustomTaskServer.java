@@ -1,12 +1,12 @@
-package com.wangge.app.server.customTask.server;
+package com.wangge.app.server.customtask.server;
 
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Pageable;
 
-import com.wangge.app.server.customTask.entity.CustomMessages;
-import com.wangge.app.server.customTask.entity.CustomTask;
+import com.wangge.app.server.customtask.entity.CustomMessages;
+import com.wangge.app.server.customtask.entity.CustomTask;
 
 public interface CustomTaskServer {
 	/**
