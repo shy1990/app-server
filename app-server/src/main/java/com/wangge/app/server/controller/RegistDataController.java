@@ -68,7 +68,7 @@ public class RegistDataController {
 	 */
 	@RequestMapping(value = "/update_registData", method = RequestMethod.POST)
 	public ResponseEntity<Object> updateDataSaojie(@RequestBody JSONObject jsons) {
-		return httpRequestHandler.exchange(url + "/update_registData", HttpMethod.POST,null,jsons,null);
+		return httpRequestHandler.exchange(url + "/update_registData", HttpMethod.POST,null,jsons);
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class RegistDataController {
 
 	@RequestMapping(value = "/rd/registData", method = RequestMethod.POST)
 	public ResponseEntity<Object> list() {
-		return httpRequestHandler.exchange(url + "/rd/registData", HttpMethod.POST,null,null,null);
+		return httpRequestHandler.exchange(url + "/rd/registData", HttpMethod.POST,null,null);
 	}
 }
 
