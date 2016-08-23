@@ -103,7 +103,7 @@ public class MineController {
       jo.put("skuNum", skuNum);
       jo.put("itemOtherNum", giftNum);
       jo.put("goods", sb);
-      jo.put("payType", order.getPayMent().getName());
+      jo.put("payType", order.getDealType());
       RegistData rd = rds.findByMemberId(order.getMemberId());
       if(rd != null){
         String Coordinate =rd.getSaojieData().getCoordinate();

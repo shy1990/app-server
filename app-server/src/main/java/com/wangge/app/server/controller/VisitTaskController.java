@@ -58,8 +58,6 @@ public class VisitTaskController {
 	@Resource
 	private MonthTaskServive monthTaskServive;
 
-	@Value("${app-interface.url}")
-	private String url;
 	
 	Json json = new Json();
 	

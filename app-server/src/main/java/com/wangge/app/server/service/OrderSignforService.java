@@ -5,21 +5,24 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.wangge.app.constant.OrderShipStatusConstant;
 import com.wangge.app.server.entity.Cash;
 import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.event.afterSalesmanSignforEvent;
 import com.wangge.app.server.event.afterSignforEvent;
 import com.wangge.app.server.monthTask.service.MonthTaskServive;
-import com.wangge.app.server.repository.CashRepository;
 import com.wangge.app.server.repository.OrderSignforRepository;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.repositoryimpl.OrderSignforImpl;
+import com.wangge.app.server.thread.OrderSignforCountDown;
 @Service
 public class OrderSignforService {
   
@@ -78,7 +81,7 @@ public class OrderSignforService {
                     }
                     os.setAccountId(accountId);
                     osr.save(os);
-                     opl.updateOrderShipStateByOrderNum(os.getOrderNo(),"2");
+                     opl.updateOrderShipStateByOrderNum(os.getOrderNo(),OrderShipStatusConstant.SHOP_ORDER_SHIPSTATUS_YWSIGNEDFOR,null,null);
                   }
                 ctx.publishEvent(new afterSalesmanSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,5));
                 return date;
@@ -107,6 +110,8 @@ public class OrderSignforService {
   public void updateOrderSignfor(String orderNo, String userPhone,
       String signGeoPoint, int payType, String smsCode,int isPrimaryAccount,String userId,String childId,String  storePhone) throws Exception {
       OrderSignfor orderSignFor =  findOrderSignFor(orderNo,userPhone);
+      String dealType = "";
+      String payStatus = "";
        if(orderSignFor!= null){
            String accountId = null;
            orderSignFor.setCustomSignforTime(new Date());
@@ -129,20 +134,23 @@ public class OrderSignforService {
            //收现金
            try {
              if(2 == payType){
+               dealType = "现金支付";
+               payStatus = OrderShipStatusConstant.SHOP_ORDER_PAYSTATUS_HAVETOPAY;
                Cash cash= new Cash(orderSignFor.getId(),userId);
                cs.save(cash);
              }
           } catch (Exception e) {
             logger.info("客户签收---->收现金--->bug:"+e.getMessage());
           }
-            opl.updateOrderShipStateByOrderNum(orderNo,"3");
-           RegistData registData = registDataService.findByPhoneNum(storePhone);
+            opl.updateOrderShipStateByOrderNum(orderNo,OrderShipStatusConstant.SHOP_ORDER_SHIPSTATUS_KHSIGNEDFOR,payStatus,dealType);
+            startCountDown(orderNo);
+            RegistData registData = registDataService.findByPhoneNum(storePhone);
            if(registData != null){
              monthTaskServive.saveExecution(registData.getId(), "客户签收");
            }
           
              ctx.publishEvent(new afterSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,6,storePhone));
-        
+             
        }else{
          throw new  RuntimeException("订单不存在!");
        }
@@ -151,6 +159,12 @@ public class OrderSignforService {
      
   }
 
+  
+  private void startCountDown(String orderNo){
+		Thread cd = new Thread(new OrderSignforCountDown(new Date(),
+				orderNo));
+		cd.start(); 
+  }
 
   /**
    * 
@@ -184,7 +198,7 @@ public class OrderSignforService {
         }
         orderSignFor.setAccountId(accountId);
         osr.save(orderSignFor);
-         opl.updateOrderShipStateByOrderNum(orderNo,"7");
+         opl.updateOrderShipStateByOrderNum(orderNo,OrderShipStatusConstant.SHOP_ORDER_SHIPSTATUS_KHUNSIGNEDFOR,null,null);
          RegistData registData = registDataService.findByPhoneNum(storePhone);
          if(registData != null){
            monthTaskServive.saveExecution(registData.getId(), "客户拒签");
@@ -228,5 +242,31 @@ public class OrderSignforService {
 	  
 	  return osr.findByOrderNo(orderno);
   }
-  
+  /**
+   * 
+  * @Title: existOrder 
+  * @Description: TODO(根据订单判断订单是否已经存在) 
+  * @param @param orderno
+  * @param @return    设定文件 
+  * @return boolean    返回类型 
+  * @throws
+ */
+@Transactional(rollbackFor=Exception.class)
+public void updateOrderSignfor(String orderno,String payStatus) {
+	 OrderSignfor o = osr.findByOrderNo(orderno);
+	 if(o != null){
+			if (!StringUtils.isEmpty(payStatus)) {
+				o.setOrderStatus(OrderShipStatusConstant.ORDER_SHIPSTATUS_KHSIGNEDFOR);
+				o.setCustomSignforTime(new Date());
+			} else {
+
+				o.setOrderStatus(OrderShipStatusConstant.ORDER_SHIPSTATUS_YWSIGNEDFOR);
+				o.setCustomSignforTime(null);
+				opl.updateOrderShipStateByOrderNum(orderno,
+						OrderShipStatusConstant.SHOP_ORDER_SHIPSTATUS_YWSIGNEDFOR);
+			}
+			osr.save(o);
+	 }
+}
+
 }
