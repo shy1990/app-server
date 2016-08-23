@@ -7,7 +7,6 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.json.JSONObject;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,16 +24,16 @@ import com.wangge.app.server.repositoryimpl.OrderSignforImpl;
 import com.wangge.app.server.thread.OrderSignforCountDown;
 @Service
 public class OrderSignforService {
-  
+
   private Logger logger = Logger.getLogger(OrderSignforService.class);
   @Resource
   private OrderSignforRepository osr;
   @Resource
   private CashService cs;
-  
+
   @Resource
   private OrderImpl opl ;
-  
+
   @Resource
   private OrderSignforImpl osi;
   @Resource
@@ -46,22 +45,22 @@ public class OrderSignforService {
 
   public void saveOrderSignfor(OrderSignfor xlsOrder) {
     osr.save(xlsOrder);
-    
+
   }
 
   /**
-   * 
-  * @Title: updateOrderSignforList 
-  * @Description: TODO(业务揽收) 
-  * @param @param fastMailNo
-  * @param @param userPhone
-  * @param @param signGeoPoint
-  * @param @param isPrimaryAccount
-  * @param @param userId
-  * @param @param childId
-  * @param @return    设定文件 
-  * @return Date    返回类型 
-  * @throws
+   *
+   * @Title: updateOrderSignforList
+   * @Description: TODO(业务揽收)
+   * @param @param fastMailNo
+   * @param @param userPhone
+   * @param @param signGeoPoint
+   * @param @param isPrimaryAccount
+   * @param @param userId
+   * @param @param childId
+   * @param @return    设定文件
+   * @return Date    返回类型
+   * @throws
    */
   @Transactional(readOnly=false,rollbackFor=Exception.class)
   public Date updateOrderSignforList(String fastMailNo,String userPhone,String signGeoPoint, int isPrimaryAccount,String userId,String childId) {
@@ -166,54 +165,55 @@ public class OrderSignforService {
 		cd.start(); 
   }
 
+
   /**
-   * 
-  * @Title: updateOrderSignfor 
-  * @Description: TODO(客户拒签) 
-  * @param @param orderNo
-  * @param @param userPhone
-  * @param @param remark
-  * @param @param signGeoPoint
-  * @param @param isPrimaryAccount
-  * @param @param userId
-  * @param @param childId
-  * @param @param storePhone    设定文件 
-  * @return void    返回类型 
-  * @throws
+   *
+   * @Title: updateOrderSignfor
+   * @Description: TODO(客户拒签)
+   * @param @param orderNo
+   * @param @param userPhone
+   * @param @param remark
+   * @param @param signGeoPoint
+   * @param @param isPrimaryAccount
+   * @param @param userId
+   * @param @param childId
+   * @param @param storePhone    设定文件
+   * @return void    返回类型
+   * @throws
    */
   @Transactional(readOnly=false,rollbackFor=Exception.class)
   public void updateOrderSignfor(String orderNo, String userPhone, String remark,String signGeoPoint,int isPrimaryAccount,String userId,String childId,String  storePhone) throws Exception{
     OrderSignfor orderSignFor = findOrderSignFor(orderNo,userPhone);
     if(orderSignFor!= null){
-        String accountId = null;
-        orderSignFor.setCustomUnSignRemark(remark);
-        orderSignFor.setCustomSignforTime(new Date());
-        orderSignFor.setCustomSignforGeopoint(signGeoPoint);
-        orderSignFor.setOrderStatus(4);
-        orderSignFor.setIsPrimaryAccount(isPrimaryAccount);
-        if(isPrimaryAccount==0){
-          accountId = userId;
-        }else{
-          accountId = childId;
-        }
-        orderSignFor.setAccountId(accountId);
-        osr.save(orderSignFor);
-         opl.updateOrderShipStateByOrderNum(orderNo,OrderShipStatusConstant.SHOP_ORDER_SHIPSTATUS_KHUNSIGNEDFOR,null,null);
-         RegistData registData = registDataService.findByPhoneNum(storePhone);
-         if(registData != null){
-           monthTaskServive.saveExecution(registData.getId(), "客户拒签");
-         }
-           ctx.publishEvent(new afterSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,7,storePhone));
-     
+      String accountId = null;
+      orderSignFor.setCustomUnSignRemark(remark);
+      orderSignFor.setCustomSignforTime(new Date());
+      orderSignFor.setCustomSignforGeopoint(signGeoPoint);
+      orderSignFor.setOrderStatus(4);
+      orderSignFor.setIsPrimaryAccount(isPrimaryAccount);
+      if(isPrimaryAccount==0){
+        accountId = userId;
+      }else{
+        accountId = childId;
+      }
+      orderSignFor.setAccountId(accountId);
+      osr.save(orderSignFor);
+      opl.updateOrderShipStateByOrderNum(orderNo,OrderShipStatusConstant.SHOP_ORDER_SHIPSTATUS_KHUNSIGNEDFOR,null,null);
+      RegistData registData = registDataService.findByPhoneNum(storePhone);
+      if(registData != null){
+        monthTaskServive.saveExecution(registData.getId(), "客户拒签");
+      }
+      ctx.publishEvent(new afterSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,7,storePhone));
+
     }else{
       throw new  RuntimeException("订单不存在!");
     }
-     
+
   }
 
-  
+
   private OrderSignfor findOrderSignFor(String orderNo,String userPhone){
-     return osr.findByOrderNoAndUserPhone(orderNo,userPhone);  
+    return osr.findByOrderNoAndUserPhone(orderNo,userPhone);
   }
 
   public String updateMessageType(int status,String orderNum){
@@ -221,26 +221,26 @@ public class OrderSignforService {
   }
 
   /**
-   * 
-  * @Title: existOrder 
-  * @Description: TODO(根据订单判断订单是否已经存在) 
-  * @param @param orderno
-  * @param @return    设定文件 
-  * @return boolean    返回类型 
-  * @throws
+   *
+   * @Title: existOrder
+   * @Description: TODO(根据订单判断订单是否已经存在)
+   * @param @param orderno
+   * @param @return    设定文件
+   * @return boolean    返回类型
+   * @throws
    */
   public boolean existOrder(String orderno) {
-        OrderSignfor o = osr.findByOrderNo(orderno);
-        if(o != null){
-           return false;
-        }
+    OrderSignfor o = osr.findByOrderNo(orderno);
+    if(o != null){
+      return false;
+    }
     return true;
   }
-  
-  
+
+
   public OrderSignfor findbyOrderNum(String orderno){
-	  
-	  return osr.findByOrderNo(orderno);
+
+    return osr.findByOrderNo(orderno);
   }
   /**
    * 

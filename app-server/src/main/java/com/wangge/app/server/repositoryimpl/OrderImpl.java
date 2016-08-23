@@ -1,24 +1,17 @@
 package com.wangge.app.server.repositoryimpl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-
+import com.wangge.app.server.entity.Message;
+import com.wangge.app.server.vo.OrderPub;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.wangge.app.server.entity.Message;
-import com.wangge.app.server.vo.OrderPub;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import java.util.*;
 
 @Repository
 public class OrderImpl {
@@ -27,7 +20,7 @@ public class OrderImpl {
 	@PersistenceContext
 	private EntityManager em;
 	/**
-	 * 
+	 *
 	 * @Description: 根据订单号查询订单详情
 	 * @param @param
 	 *            orderNum
@@ -66,7 +59,7 @@ public class OrderImpl {
 	// return orderlist;
 	// }
 	/**
-	 * 
+	 *
 	 * @Description: 根据业务手机号订单号判断该订单是否属于该业务员
 	 * @param @param
 	 *            ordernum
@@ -91,7 +84,7 @@ public class OrderImpl {
 	// }
 
 	/**
-	 * 
+	 *
 	 * @Description: 根据订单号判断该订单是否已签收
 	 * @param @param
 	 *            ordernum
@@ -111,7 +104,7 @@ public class OrderImpl {
 	}
 
 	/**
-	 * 
+	 *
 	 * @Description: 根据业务用户名查询所属区域订单的送货状态
 	 * @param @param
 	 *            mobile
@@ -152,7 +145,7 @@ public class OrderImpl {
 	}
 
 	/**
-	 * 
+	 *
 	 * @Description: 修改订单状态
 	 * @param @param
 	 *            ordernum
@@ -166,7 +159,7 @@ public class OrderImpl {
 	 */
 	@Transactional
 	public String updateOrderShipStateByOrderNum(String ordernum, String paytype, String point, String status,
-			Integer type) {
+																							 Integer type) {
 		// if("已送达".equals(status)){
 		// status="2";
 		// }
@@ -184,8 +177,8 @@ public class OrderImpl {
 	}
 
 	/**
-	 * 
-	 * 
+	 *
+	 *
 	 * @Description: 修改订单状态及客户签收时间
 	 * @param @param
 	 *            ordernum
@@ -224,7 +217,7 @@ public class OrderImpl {
 	}
 
 	/**
-	 * 
+	 *
 	 * @Description: 客户拒收原因保存
 	 * @param @param
 	 *            ordernum
@@ -245,7 +238,7 @@ public class OrderImpl {
 	}
 
 	/**
-	 * 
+	 *
 	 * @Description: 客户取消订单修改信息表类型
 	 * @param @param
 	 *            MessageType mt
@@ -266,7 +259,7 @@ public class OrderImpl {
 	}
 
 	/**
-	 * 
+	 *
 	 * @Description: 退款
 	 * @param @param
 	 *            orderNum
@@ -288,7 +281,7 @@ public class OrderImpl {
 				Object[] o = (Object[]) it.next();
 				map.put("payMent", o[0] + "");
 				map.put("totalCost", o[1] + "");
-				map.put("payNo", o[2] + "");
+				map.put("payNo", (String) o[2]);
 				map.put("walletNum", o[3] + "");
 			}
 		}
@@ -296,7 +289,7 @@ public class OrderImpl {
 	}
 
 	/**
-	 * 
+	 *
 	 * @Description: 保存活动通知记录
 	 * @param @param
 	 *            list
@@ -336,7 +329,7 @@ public class OrderImpl {
 		} catch (Exception e) {
 			LOG.info(e);
 		}
-		
+
 		return map;
 	}
 }
