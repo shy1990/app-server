@@ -18,11 +18,14 @@ import com.wangge.app.server.entity.ChildAccount;
 import com.wangge.app.server.entity.Salary;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.User.UserStatus;
+import com.wangge.app.server.event.AfterLongEvent;
 import com.wangge.app.server.pojo.JsonCustom;
 import com.wangge.app.server.service.AssessService;
 import com.wangge.app.server.service.ChildAccountService;
 import com.wangge.app.server.service.SalaryService;
 import com.wangge.app.server.service.SalesmanService;
+
+import org.springframework.context.ApplicationContext;
 
 @RestController
 @RequestMapping(value = "/v1")
@@ -38,6 +41,8 @@ public class LoginController {
 	private ChildAccountService childAccountService;
 	@Resource
 	private SalaryService salaryService;
+	@Resource
+	  private ApplicationContext ctx;
 	/**
 	 * 登录 
 	 * @param json
@@ -106,6 +111,7 @@ public class LoginController {
 	* @throws
 	 */
 	private ResponseEntity<JsonCustom> returnLogSucMsg(JsonCustom json, Salesman salesman) {
+		 ctx.publishEvent(new AfterLongEvent( salesman.getId(), 0));
 		json.setPhone(salesman.getMobile());
 		json.setRegionId(salesman.getRegion().getId());
 		json.setId(salesman.getId());

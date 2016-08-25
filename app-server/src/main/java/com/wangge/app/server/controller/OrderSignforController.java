@@ -151,7 +151,7 @@ public class OrderSignforController {
   @RequestMapping(value ="/customOrderSign", method = RequestMethod.POST)
   @ResponseBody
   public ResponseEntity<MessageCustom> customOrderSign(@RequestBody JSONObject jsons){
-    String userPhone = jsons.getString("userPhone");
+     String userPhone = jsons.getString("userPhone");
      String orderNo = jsons.getString("orderNo");
      String smsCode = jsons.getString("smsCode");
      int payType =  jsons.getIntValue("payType");

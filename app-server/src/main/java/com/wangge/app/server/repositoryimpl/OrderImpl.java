@@ -192,14 +192,26 @@ public class OrderImpl {
 	 */
 
 	@Transactional
-	public void updateOrderShipStateByOrderNum(String ordernum, String status,String payStatus,String dealType) {
+	public void updateOrderShipStateByOrderNum(String ordernum, String status,
+			String payStatus, String dealType) {
 		String paySql = !StringUtils.isEmpty(payStatus) ? " ,PAY_STATUS='"
 				+ payStatus + "'" : "";
 		String dealTypeSql = !StringUtils.isEmpty(dealType) ? " ,deal_type='"
 				+ dealType + "'" : "";
+		String signforTime = StringUtils.isEmpty(dealType)
+				&& StringUtils.isEmpty(payStatus) ? ", yewu_signfor_time=sysdate"
+				: ", signfortime=sysdate";
 		String sql = "update SJZAIXIAN.SJ_TB_ORDER set ship_status='" + status
-				+ "' ,custom_signfor_time=sysdate,signfortime = sysdate"
-				+ paySql + dealTypeSql + " where order_num='" + ordernum + "'";
+				+ "' " + paySql + dealTypeSql + signforTime
+				+ " where order_num='" + ordernum + "'";
+		Query query = em.createNativeQuery(sql);
+		query.executeUpdate();
+	}
+	@Transactional
+	public void updateOrderShipStateByOrderNum(String ordernum, String status) {
+		
+		String sql = "update SJZAIXIAN.SJ_TB_ORDER set ship_status='" + status
+				+ "',set signfortime = null" + " where order_num='" + ordernum + "'";
 		Query query = em.createNativeQuery(sql);
 		query.executeUpdate();
 	}

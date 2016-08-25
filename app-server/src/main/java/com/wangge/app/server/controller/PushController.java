@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.wangge.app.server.entity.Message;
 import com.wangge.app.server.entity.Message.MessageType;
 import com.wangge.app.server.entity.Message.SendChannel;
+import com.wangge.app.server.entity.Order;
 import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.entity.Salesman;
@@ -429,5 +431,16 @@ public class PushController {
 			mg.setReceiver(mobiles);
 			list.add(mg);
 		}
+	}
+	
+	@RequestMapping(value = { "/pushNewPosPayments" }, method = RequestMethod.POST)
+	public void updateOrderSignfor(String msg){
+		JSONObject json = new JSONObject(msg);
+	    String orderno = json.getString("orderNo");
+	    String payStatus = json.getString("payStatus");
+	    if(!StringUtils.isEmpty(orderno) && !StringUtils.isEmpty(payStatus)){
+	    	orderSignforService.updateOrderSignfor(orderno,payStatus);
+	    }
+		
 	}
 }

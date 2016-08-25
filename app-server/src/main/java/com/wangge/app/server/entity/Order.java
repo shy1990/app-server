@@ -18,14 +18,14 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-
 @Entity
 @Table(name = "SYS_ORDER")
 public class Order implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public enum ShipStatus {
-		NO_SEND("未发货"), SENDED("已发货"), SALESMAN_RESIVED("业务签收"), MEMBER_RESIVED("客户签收"),MEMBER_REFUSE("客户拒收");
+		NO_SEND("未发货"), SENDED("已发货"), SALESMAN_RESIVED("业务签收"), MEMBER_RESIVED(
+				"客户签收"), MEMBER_REFUSE("客户拒收");
 		private String name;
 
 		private ShipStatus(String name) {
@@ -36,21 +36,20 @@ public class Order implements Serializable {
 			return name;
 		}
 	}
-	
-	
-	public enum PayMent{
-	  PAY_ONLINE("线上支付"),PAY_OFFLINE("货到付款"),POS("POS支付");
-	  private String name;
 
-    private PayMent(String name) {
-      this.name = name;
-    }
+	public enum PayMent {
+		PAY_ONLINE("线上支付"), PAY_OFFLINE("货到付款"), POS("POS支付");
+		private String name;
 
-    public String getName() {
-      return name;
-    }
+		private PayMent(String name) {
+			this.name = name;
+		}
+
+		public String getName() {
+			return name;
+		}
 	}
-	
+
 	@Id
 	@Column(name = "ORDER_NUM")
 	private String id;
@@ -59,22 +58,28 @@ public class Order implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createTime;// 下单时间
 	@Enumerated(EnumType.ORDINAL)
-	@Column(name="SHIP_STATUS")
+	@Column(name = "SHIP_STATUS")
 	private ShipStatus status;
-	
-	@Column(name="pay_ment")
-	private PayMent payMent; //支付方式
+	@Column(name = "PAY_STATUS")
+	private String payStatus;
+
+	@Column(name = "pay_ment")
+	private PayMent payMent; // 支付方式
+
+	@Column(name = "deal_type")
+	private String dealType; // 支付方式
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
 	private Collection<OrderItem> items;
-	
+
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "region_id")
 	private Region region;
-	@Column(name="mobile")
-	private String mobile;//客户手机号
-	@Column(name="member_id")
-	private String memberId;//b2b商城用户id
-	
+	@Column(name = "mobile")
+	private String mobile;// 客户手机号
+	@Column(name = "member_id")
+	private String memberId;// b2b商城用户id
+
 	public String getMobile() {
 		return mobile;
 	}
@@ -84,14 +89,14 @@ public class Order implements Serializable {
 	}
 
 	public PayMent getPayMent() {
-    return payMent;
-  }
+		return payMent;
+	}
 
-  public void setPayMent(PayMent payMent) {
-    this.payMent = payMent;
-  }
+	public void setPayMent(PayMent payMent) {
+		this.payMent = payMent;
+	}
 
-  public String getId() {
+	public String getId() {
 		return id;
 	}
 
@@ -147,12 +152,34 @@ public class Order implements Serializable {
 		this.region = region;
 	}
 
-  public String getMemberId() {
-    return memberId;
-  }
+	public String getMemberId() {
+		return memberId;
+	}
 
-  public void setMemberId(String memberId) {
-    this.memberId = memberId;
-  }
+	public void setMemberId(String memberId) {
+		this.memberId = memberId;
+	}
+
+	public String getDealType() {
+		if (dealType == null) {
+			this.dealType = "未付款";
+		}
+		if("yeePay".equals(dealType)){
+			this.dealType = "在线支付";
+		}
+		return dealType;
+	}
+
+	public void setDealType(String dealType) {
+		this.dealType = dealType;
+	}
+
+	public String getPayStatus() {
+		return payStatus;
+	}
+
+	public void setPayStatus(String payStatus) {
+		this.payStatus = payStatus;
+	}
 	
 }

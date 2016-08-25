@@ -1,5 +1,16 @@
 package com.wangge.app.server.service;
 
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.wangge.app.constant.OrderShipStatusConstant;
 import com.wangge.app.server.entity.Cash;
 import com.wangge.app.server.entity.OrderSignfor;
@@ -10,14 +21,7 @@ import com.wangge.app.server.monthTask.service.MonthTaskServive;
 import com.wangge.app.server.repository.OrderSignforRepository;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.repositoryimpl.OrderSignforImpl;
-import org.apache.log4j.Logger;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.annotation.Resource;
-import java.util.Date;
-import java.util.List;
+import com.wangge.app.server.thread.OrderSignforCountDown;
 @Service
 public class OrderSignforService {
 
@@ -63,94 +67,102 @@ public class OrderSignforService {
     Date date = new Date();
     String accountId = null;
     List<OrderSignfor> osList =   osr.findByUserPhoneAndFastmailNo(userPhone,fastMailNo);
-    if(osList != null && osList.size() > 0){
-      for(OrderSignfor os : osList){
-        os.setYewuSignforTime(date);
-        os.setYewuSignforGeopoint(signGeoPoint);
-        os.setOrderStatus(2);
-        os.setIsPrimaryAccount(isPrimaryAccount);
-        if(isPrimaryAccount==0){
-          accountId = userId;
-        }else{
-          accountId = childId;
-        }
-        os.setAccountId(accountId);
-        osr.save(os);
-        opl.updateOrderShipStateByOrderNum(os.getOrderNo(),OrderShipStatusConstant.SHOP_ORDER_SHIPSTATUS_YWSIGNEDFOR,null,null);
-      }
-      ctx.publishEvent(new afterSalesmanSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,5));
-      return date;
-    }
-    return null;
+            if(osList != null && osList.size() > 0){
+                for(OrderSignfor os : osList){
+                    os.setYewuSignforTime(date);
+                    os.setYewuSignforGeopoint(signGeoPoint);
+                    os.setOrderStatus(2);
+                    os.setIsPrimaryAccount(isPrimaryAccount);
+                    if(isPrimaryAccount==0){
+                      accountId = userId;
+                    }else{
+                      accountId = childId;
+                    }
+                    os.setAccountId(accountId);
+                    osr.save(os);
+                     opl.updateOrderShipStateByOrderNum(os.getOrderNo(),OrderShipStatusConstant.SHOP_ORDER_SHIPSTATUS_YWSIGNEDFOR,null,null);
+                  }
+                ctx.publishEvent(new afterSalesmanSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,5));
+                return date;
+            }
+            return null;
   }
 
 
   /**
-   *
-   * @Title: updateOrderSignfor
-   * @Description: TODO(客户签收)
-   * @param @param orderNo
-   * @param @param userPhone
-   * @param @param signGeoPoint
-   * @param @param payType
-   * @param @param smsCode
-   * @param @param isPrimaryAccount
-   * @param @param userId
-   * @param @param childId
-   * @param @param storePhone    设定文件
-   * @return void    返回类型
-   * @throws
+   * 
+  * @Title: updateOrderSignfor 
+  * @Description: TODO(客户签收) 
+  * @param @param orderNo
+  * @param @param userPhone
+  * @param @param signGeoPoint
+  * @param @param payType
+  * @param @param smsCode
+  * @param @param isPrimaryAccount
+  * @param @param userId
+  * @param @param childId
+  * @param @param storePhone    设定文件 
+  * @return void    返回类型 
+  * @throws
    */
   @Transactional(readOnly=false,rollbackFor=Exception.class)
   public void updateOrderSignfor(String orderNo, String userPhone,
-                                 String signGeoPoint, int payType, String smsCode,int isPrimaryAccount,String userId,String childId,String  storePhone) throws Exception {
-    OrderSignfor orderSignFor =  findOrderSignFor(orderNo,userPhone);
-    String dealType = "";
-    String payStatus = "";
-    if(orderSignFor!= null){
-      String accountId = null;
-      orderSignFor.setCustomSignforTime(new Date());
-      orderSignFor.setCustomSignforGeopoint(signGeoPoint);
-      orderSignFor.setOrderPayType(payType);
-      orderSignFor.setOrderStatus(3);
-      orderSignFor.setIsPrimaryAccount(isPrimaryAccount);
-      if(smsCode != null && !"".equals(smsCode)){
-        orderSignFor.setCustomSignforException(1);
-      }else{
-        orderSignFor.setCustomSignforException(0);
-      }
-      if(isPrimaryAccount==0){
-        accountId = userId;
-      }else{
-        accountId = childId;
-      }
-      orderSignFor.setAccountId(accountId);
-      orderSignFor = osr.save(orderSignFor);
-      //收现金
-      try {
-        if(2 == payType){
-          dealType = "现金支付";
-          payStatus = OrderShipStatusConstant.SHOP_ORDER_PAYSTATUS_HAVETOPAY;
-          Cash cash= new Cash(orderSignFor.getId(),userId);
-          cs.save(cash);
-        }
-      } catch (Exception e) {
-        logger.info("客户签收---->收现金--->bug:"+e.getMessage());
-      }
-      opl.updateOrderShipStateByOrderNum(orderNo,OrderShipStatusConstant.SHOP_ORDER_SHIPSTATUS_KHSIGNEDFOR,payStatus,dealType);
-      RegistData registData = registDataService.findByPhoneNum(storePhone);
-      if(registData != null){
-        monthTaskServive.saveExecution(registData.getId(), "客户签收");
-      }
+      String signGeoPoint, int payType, String smsCode,int isPrimaryAccount,String userId,String childId,String  storePhone) throws Exception {
+      OrderSignfor orderSignFor =  findOrderSignFor(orderNo,userPhone);
+      String dealType = "";
+      String payStatus = "";
+       if(orderSignFor!= null){
+           String accountId = null;
+           orderSignFor.setCustomSignforTime(new Date());
+           orderSignFor.setCustomSignforGeopoint(signGeoPoint);
+           orderSignFor.setOrderPayType(payType);
+           orderSignFor.setOrderStatus(3);
+           orderSignFor.setIsPrimaryAccount(isPrimaryAccount);
+           if(smsCode != null && !"".equals(smsCode)){
+             orderSignFor.setCustomSignforException(1);
+           }else{
+             orderSignFor.setCustomSignforException(0);
+           }
+           if(isPrimaryAccount==0){
+             accountId = userId;
+           }else{
+             accountId = childId;
+           }
+           orderSignFor.setAccountId(accountId);
+           orderSignFor = osr.save(orderSignFor);
+           //收现金
+           try {
+             if(2 == payType){
+               dealType = "现金支付";
+               payStatus = OrderShipStatusConstant.SHOP_ORDER_PAYSTATUS_HAVETOPAY;
+               Cash cash= new Cash(orderSignFor.getId(),userId);
+               cs.save(cash);
+             }
+          } catch (Exception e) {
+            logger.info("客户签收---->收现金--->bug:"+e.getMessage());
+          }
+            opl.updateOrderShipStateByOrderNum(orderNo,OrderShipStatusConstant.SHOP_ORDER_SHIPSTATUS_KHSIGNEDFOR,payStatus,dealType);
+            startCountDown(orderNo);
+            RegistData registData = registDataService.findByPhoneNum(storePhone);
+           if(registData != null){
+             monthTaskServive.saveExecution(registData.getId(), "客户签收");
+           }
+          
+             ctx.publishEvent(new afterSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,6,storePhone));
+             
+       }else{
+         throw new  RuntimeException("订单不存在!");
+       }
+         
+        
+     
+  }
 
-      ctx.publishEvent(new afterSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,6,storePhone));
-
-    }else{
-      throw new  RuntimeException("订单不存在!");
-    }
-
-
-
+  
+  private void startCountDown(String orderNo){
+		Thread cd = new Thread(new OrderSignforCountDown(new Date(),
+				orderNo));
+		cd.start(); 
   }
 
 
@@ -230,5 +242,31 @@ public class OrderSignforService {
 
     return osr.findByOrderNo(orderno);
   }
+  /**
+   * 
+  * @Title: existOrder 
+  * @Description: TODO(根据订单判断订单是否已经存在) 
+  * @param @param orderno
+  * @param @return    设定文件 
+  * @return boolean    返回类型 
+  * @throws
+ */
+@Transactional(rollbackFor=Exception.class)
+public void updateOrderSignfor(String orderno,String payStatus) {
+	 OrderSignfor o = osr.findByOrderNo(orderno);
+	 if(o != null){
+			if (!StringUtils.isEmpty(payStatus)) {
+				o.setOrderStatus(OrderShipStatusConstant.ORDER_SHIPSTATUS_KHSIGNEDFOR);
+				o.setCustomSignforTime(new Date());
+			} else {
+
+				o.setOrderStatus(OrderShipStatusConstant.ORDER_SHIPSTATUS_YWSIGNEDFOR);
+				o.setCustomSignforTime(null);
+				opl.updateOrderShipStateByOrderNum(orderno,
+						OrderShipStatusConstant.SHOP_ORDER_SHIPSTATUS_YWSIGNEDFOR);
+			}
+			osr.save(o);
+	 }
+}
 
 }

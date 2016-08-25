@@ -768,6 +768,45 @@ public class DateUtil {
  		 return sdf.format(calendar.getTime()); //
  		
  	}
+ 	
+ 	/**
+	 * 将Date 转换成Long
+	 * 
+	 * @Title: getLongByDate
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @param @param date
+	 * @param @return 设定文件
+	 * @return Long 返回类型
+	 * @author ZhouZhangbao
+	 */
+	public static Long getLongByDate(Date date) {
+		if (date == null) {
+			return null;
+		}
+		Long lSysTime = date.getTime() / 1000; // 得到秒数，Date类型的getTime()返回毫秒数
+		return lSysTime;
+	}
+
 	
+ 	/**
+	 * 验证两个日期的时间差是否大于限定的时间，<br>
+	 * 大于返回false;否则返回true
+	 * 
+	 * @Title: isCheckExpires
+	 * @Description: TODO(验证两个日期的时间差是否大于限定的时间)
+	 * @param @param sendDate
+	 * @param @param milliseconds
+	 * @param @return 大于返回false;否则返回true
+	 * @return boolean 返回类型
+	 * @author ZhouZhangbao
+	 */
+	public static boolean isCheckExpires(Date sendDate, Long milliseconds) {
+		Long timeDifference = getLongByDate(new Date()) - getLongByDate(sendDate);// 获得时间差(秒)
+		if (timeDifference > milliseconds) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 	
 }
