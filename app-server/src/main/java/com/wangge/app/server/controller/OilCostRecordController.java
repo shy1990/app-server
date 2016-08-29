@@ -38,9 +38,9 @@ public class OilCostRecordController {
   
   
   @RequestMapping(value = "/workCheck", method = RequestMethod.POST)
-  public  ResponseEntity<Void> signed(@RequestBody JSONObject jsons){
+  public  void signed(@RequestBody JSONObject jsons){
     
-    return trackService.signed(jsons);
+     trackService.signed(jsons);
   }
   /**
    * 

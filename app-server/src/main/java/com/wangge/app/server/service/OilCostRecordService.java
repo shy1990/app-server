@@ -11,6 +11,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +41,7 @@ import com.wangge.app.util.DateUtil;
 
 @Service
 public class OilCostRecordService {
+  private final Log logger = LogFactory.getLog(OilCostRecordService.class);
   @Resource
   private OilCostRecordRepository trackRepository;
   @Resource
@@ -375,7 +378,7 @@ public class OilCostRecordService {
    * @return void    返回类型 
    * @throws
     */
-      public  ResponseEntity<Void> signed(JSONObject jsons) {
+      public  void signed(JSONObject jsons) {
         int isPrimaryAccount = jsons.getIntValue("isPrimary");
         //String coordinates = jsons.getString("coordinate");
         String userId = jsons.getString("userId");
@@ -392,35 +395,35 @@ public class OilCostRecordService {
            
             SalesmanAddress address = addressService.getAddress(userId);
            // if(type == 1){
-              if(track == null){
-                OilCostRecord yestodayTrack = trackRepository.findByDateTimeAndUserId(yestodayTime,userId);
-                  if(yestodayTrack != null){
-                    JSONArray jsonArray = JSONArray.parseArray(yestodayTrack.getOilRecord());
-                    // String str = getOilRecord( coordinates,  type);
-                    jsonArray.add(getOilRecord(address.getHomePoint(),OilRecordConstant.OILRECORD_ACTIONTYPE_SIGNEDDOWN,userId).get(0));
-                    yestodayTrack.setDateTime(yestodayTime);
-                    yestodayTrack.setIsPrimaryAccount(isPrimaryAccount);
-                   // track.setParentId(userId);
-                    yestodayTrack.setOilRecord(jsonArray.toJSONString());
-                    Float mileage =  getDistance(address.getHomePoint(),null,yestodayTrack.getDistance(),jsonArray);
-                    OilParameters param = getOilParam(userId);
-                    Float mileages = mileage * param.getKmRatio();//实际公里数
-                    yestodayTrack.setDistance(mileages);
-                    yestodayTrack.setOilCost(mileages*param.getKmOilSubsidy());
-                    trackRepository.save(yestodayTrack);
-                  }
-                  OilCostRecord ocr = new OilCostRecord();
-                  ocr.setUserId(userId);
-                  ocr.setDateTime(format.parse(format.format(new Date())));
-                  ocr.setOilRecord(getOilRecord(address.getHomePoint(),OilRecordConstant.OILRECORD_ACTIONTYPE_SIGNEDUP,userId).toJSONString());
-                  ocr.setIsPrimaryAccount(isPrimaryAccount);
-                    trackRepository.save(ocr);
-                    return new ResponseEntity<Void>(HttpStatus.OK);
-                }
+              if(address != null){
+            	  if(track == null){
+                      OilCostRecord yestodayTrack = trackRepository.findByDateTimeAndUserId(yestodayTime,userId);
+                        if(yestodayTrack != null){
+                          JSONArray jsonArray = JSONArray.parseArray(yestodayTrack.getOilRecord());
+                          // String str = getOilRecord( coordinates,  type);
+                          jsonArray.add(getOilRecord(address.getHomePoint(),OilRecordConstant.OILRECORD_ACTIONTYPE_SIGNEDDOWN,userId).get(0));
+                          yestodayTrack.setDateTime(yestodayTime);
+                          yestodayTrack.setIsPrimaryAccount(isPrimaryAccount);
+                         // track.setParentId(userId);
+                          yestodayTrack.setOilRecord(jsonArray.toJSONString());
+                          Float mileage =  getDistance(address.getHomePoint(),null,yestodayTrack.getDistance(),jsonArray);
+                          OilParameters param = getOilParam(userId);
+                          Float mileages = mileage * param.getKmRatio();//实际公里数
+                          yestodayTrack.setDistance(mileages);
+                          yestodayTrack.setOilCost(mileages*param.getKmOilSubsidy());
+                          trackRepository.save(yestodayTrack);
+                        }
+                        OilCostRecord ocr = new OilCostRecord();
+                        ocr.setUserId(userId);
+                        ocr.setDateTime(format.parse(format.format(new Date())));
+                        ocr.setOilRecord(getOilRecord(address.getHomePoint(),OilRecordConstant.OILRECORD_ACTIONTYPE_SIGNEDUP,userId).toJSONString());
+                        ocr.setIsPrimaryAccount(isPrimaryAccount);
+                          trackRepository.save(ocr);
+                      }
+              }
          } catch (Exception e) {
-           e.printStackTrace();
+         
          }
-         return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
        }
   /**
    * 

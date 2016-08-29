@@ -6,11 +6,13 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -30,8 +32,8 @@ public class MonthTaskExecution implements Serializable {
 	 */
 	private static final long serialVersionUID = 101L;
 	@Id
-	@GenericGenerator(name = "idgen", strategy = "increment")
-	@GeneratedValue(generator = "idgen")
+	@SequenceGenerator(initialValue = 1, name = "idgen", sequenceName = "sys_month_task_seq")
+  @GeneratedValue(generator = "idgen",strategy=GenerationType.SEQUENCE)
 	private long id;
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "memberid")
