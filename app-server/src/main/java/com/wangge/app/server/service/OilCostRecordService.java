@@ -401,16 +401,16 @@ public class OilCostRecordService {
                         if(yestodayTrack != null){
                           JSONArray jsonArray = JSONArray.parseArray(yestodayTrack.getOilRecord());
                           // String str = getOilRecord( coordinates,  type);
-                          jsonArray.add(getOilRecord(address.getHomePoint(),OilRecordConstant.OILRECORD_ACTIONTYPE_SIGNEDDOWN,userId).get(0));
                           yestodayTrack.setDateTime(yestodayTime);
                           yestodayTrack.setIsPrimaryAccount(isPrimaryAccount);
                          // track.setParentId(userId);
-                          yestodayTrack.setOilRecord(jsonArray.toJSONString());
                           Float mileage =  getDistance(address.getHomePoint(),null,yestodayTrack.getDistance(),jsonArray);
                           OilParameters param = getOilParam(userId);
                           Float mileages = mileage * param.getKmRatio();//实际公里数
                           yestodayTrack.setDistance(mileages);
                           yestodayTrack.setOilCost(mileages*param.getKmOilSubsidy());
+                          jsonArray.add(getOilRecord(address.getHomePoint(),OilRecordConstant.OILRECORD_ACTIONTYPE_SIGNEDDOWN,userId).get(0));
+                          yestodayTrack.setOilRecord(jsonArray.toJSONString());
                           trackRepository.save(yestodayTrack);
                         }
                         OilCostRecord ocr = new OilCostRecord();
@@ -422,7 +422,7 @@ public class OilCostRecordService {
                       }
               }
          } catch (Exception e) {
-         
+        	 logger.info(e.getMessage());
          }
        }
   /**
