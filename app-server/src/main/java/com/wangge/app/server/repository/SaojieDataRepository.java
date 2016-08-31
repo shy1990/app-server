@@ -25,4 +25,5 @@ public interface SaojieDataRepository extends JpaRepository<SaojieData, Long>{
 	SaojieData findByRegistData(RegistData id);
 	
 	List<SaojieData> findByRegion(Region region);
+
 }

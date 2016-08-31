@@ -1,25 +1,18 @@
 package com.wangge.app.server.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Resource;
-
+import com.wangge.app.server.entity.*;
+import com.wangge.app.server.entity.Saojie.SaojieStatus;
+import com.wangge.app.server.repository.RegionRepository;
+import com.wangge.app.server.repository.SaojieDataRepository;
+import com.wangge.app.server.repository.SaojieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.wangge.app.server.entity.Region;
-import com.wangge.app.server.entity.RegistData;
-import com.wangge.app.server.entity.Salesman;
-import com.wangge.app.server.entity.SalesmanStatus;
-import com.wangge.app.server.entity.Saojie;
-import com.wangge.app.server.entity.Saojie.SaojieStatus;
-import com.wangge.app.server.entity.SaojieData;
-import com.wangge.app.server.repository.RegionRepository;
-import com.wangge.app.server.repository.SaojieDataRepository;
-import com.wangge.app.server.repository.SaojieRepository;
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class DataSaojieService {
@@ -73,6 +66,9 @@ public class DataSaojieService {
 
 		return dataSaojieRepository.findByRegionId(regionId, new Sort(Sort.Direction.DESC, "id"));
 	}
+
+
+
 
 	public SaojieData findSaojieDataById(Long saojieDataId) {
 		

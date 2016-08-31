@@ -1,18 +1,5 @@
 package com.wangge.app.server.controller;
 
-import java.util.Date;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.pojo.MessageCustom;
@@ -23,11 +10,18 @@ import com.wangge.app.server.service.OrderService;
 import com.wangge.app.server.service.OrderSignforService;
 import com.wangge.app.server.service.SalesmanService;
 import com.wangge.app.server.util.HttpUtil;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/v1/remind")
 public class OrderSignforController {
-  
+
+
   //private static final Logger logger = LoggerFactory.getLogger(OrderSignforController.class);
   @Resource
   private OrderSignforService orderSignforService;

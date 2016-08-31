@@ -1,16 +1,5 @@
 package com.wangge.app.server.service;
 
-import java.util.Date;
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.wangge.app.constant.OrderShipStatusConstant;
 import com.wangge.app.server.entity.Cash;
 import com.wangge.app.server.entity.OrderSignfor;
@@ -21,7 +10,15 @@ import com.wangge.app.server.monthTask.service.MonthTaskServive;
 import com.wangge.app.server.repository.OrderSignforRepository;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.repositoryimpl.OrderSignforImpl;
-import com.wangge.app.server.thread.OrderSignforCountDown;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.util.Date;
+import java.util.List;
 @Service
 public class OrderSignforService {
 
@@ -142,7 +139,7 @@ public class OrderSignforService {
             logger.info("客户签收---->收现金--->bug:"+e.getMessage());
           }
             opl.updateOrderShipStateByOrderNum(orderNo,OrderShipStatusConstant.SHOP_ORDER_SHIPSTATUS_KHSIGNEDFOR,payStatus,dealType);
-            startCountDown(orderNo);
+//            startCountDown(orderNo);
             RegistData registData = registDataService.findByPhoneNum(storePhone);
            if(registData != null){
              monthTaskServive.saveExecution(registData.getId(), "客户签收");
@@ -159,11 +156,11 @@ public class OrderSignforService {
   }
 
   
-  private void startCountDown(String orderNo){
-		Thread cd = new Thread(new OrderSignforCountDown(new Date(),
-				orderNo));
-		cd.start(); 
-  }
+//  private void startCountDown(String orderNo){
+//		Thread cd = new Thread(new OrderSignforCountDown(new Date(),
+//				orderNo));
+//		cd.start();
+//  }
 
 
   /**
