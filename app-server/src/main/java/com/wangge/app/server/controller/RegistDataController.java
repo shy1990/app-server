@@ -94,6 +94,45 @@ public class RegistDataController {
 	  }
 		return new ResponseEntity< List<SaojieData>>(list, HttpStatus.OK);
 	}
+	/**
+	 * 
+	 * @Description: 根据店铺名或手机号获取已注册和未注册店铺
+	 * @param @param
+	 *            param(shopname or mobile)
+	 * @param @return
+	 * @return ResponseEntity<Map<String,List<SaojieData>>>
+	 * @author songbaozhen
+	 * @date 2016年08月31日
+	 * @version V2.0
+	 */
+	@RequestMapping(value = "/{param}/{regionId}/getRegistDatas", method = RequestMethod.GET)
+	public ResponseEntity<List<SaojieData>> getlist(@PathVariable("param") String param,@PathVariable("regionId") String regionId) {
+		List<Object[]> Data = dataSaojieService.getSaojieDataByParam(param,regionId);
+		List<SaojieData> list = new ArrayList<SaojieData>();
+		
+		   for(int i= 0;i<Data.size();i++){
+			   Object[] da = Data.get(i);
+				   SaojieData sjdata = new SaojieData();
+				   sjdata.setId(Long.parseLong(da[0]+""));
+				   sjdata.setCoordinate(da[1]+"");
+				   sjdata.setName(da[2]+"");
+				   sjdata.setDescription("null".equals(da[3]+"")?"":da[1]+"");
+				   sjdata.setImageUrl(da[4]+"");
+				   if(da[5] != null){
+				          sjdata.setRegistId(Long.parseLong(da[5]+""));
+				          sjdata.setDateInterval(dateInterval.examDateInterval(da[6]+""));
+				          sjdata.setColorStatus(getPercent(da[6]+"").getNum());
+				          sjdata.setIncSize(getPickingSize(da[6]+""));
+				   }else{
+					   sjdata.setDateInterval(-1);
+				       sjdata.setColorStatus(Color.gray.getNum());
+				   }
+				   list.add(sjdata);
+		   }
+			
+			return new ResponseEntity< List<SaojieData>>(list, HttpStatus.OK);
+	}
+	
 	
 	/**
 	 * 
