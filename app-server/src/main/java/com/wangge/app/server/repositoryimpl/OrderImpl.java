@@ -211,7 +211,7 @@ public class OrderImpl {
 	public void updateOrderShipStateByOrderNum(String ordernum, String status) {
 		
 		String sql = "update SJZAIXIAN.SJ_TB_ORDER set ship_status='" + status
-				+ "',set signfortime = null" + " where order_num='" + ordernum + "'";
+				+ "', signfortime = null" + " where order_num='" + ordernum + "'";
 		Query query = em.createNativeQuery(sql);
 		query.executeUpdate();
 	}

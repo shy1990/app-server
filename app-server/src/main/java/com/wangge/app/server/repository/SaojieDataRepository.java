@@ -26,6 +26,6 @@ public interface SaojieDataRepository extends JpaRepository<SaojieData, Long>{
 	
 	List<SaojieData> findByRegion(Region region);
 	
-	@Query("select d.id,d.coordinate,d.name,d.description,d.imageUrl,d.registData.id,d.registData.memberId from SaojieData d  left join d.registData  rd  where d.name like ?1% or  (d.region.parent.id=?2 and rd.phoneNum like ?1% )")
+	@Query("select d.id,d.coordinate,d.name,d.description,d.imageUrl,d.registData.id,d.registData.memberId from SaojieData d  right join d.registData  rd  where d.name like ?1% or (d.region.parent.id=?2 and rd.phoneNum like ?1% )")
 	List<Object[]> findByParam(String param,String regionId);
 }

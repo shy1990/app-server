@@ -1,5 +1,16 @@
 package com.wangge.app.server.service;
 
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.wangge.app.constant.OrderShipStatusConstant;
 import com.wangge.app.server.entity.Cash;
 import com.wangge.app.server.entity.OrderSignfor;
@@ -10,15 +21,7 @@ import com.wangge.app.server.monthTask.service.MonthTaskServive;
 import com.wangge.app.server.repository.OrderSignforRepository;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.repositoryimpl.OrderSignforImpl;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.annotation.Resource;
-import java.util.Date;
-import java.util.List;
+import com.wangge.app.server.thread.OrderSignforCountDown;
 @Service
 public class OrderSignforService {
 
@@ -39,6 +42,9 @@ public class OrderSignforService {
   private RegistDataService registDataService;
   @Resource
   private MonthTaskServive monthTaskServive;
+  
+  @Resource
+	private OrderService oderService;
 
   public void saveOrderSignfor(OrderSignfor xlsOrder) {
     osr.save(xlsOrder);
@@ -139,7 +145,7 @@ public class OrderSignforService {
             logger.info("客户签收---->收现金--->bug:"+e.getMessage());
           }
             opl.updateOrderShipStateByOrderNum(orderNo,OrderShipStatusConstant.SHOP_ORDER_SHIPSTATUS_KHSIGNEDFOR,payStatus,dealType);
-//            startCountDown(orderNo);
+            startCountDown(orderNo,oderService);
             RegistData registData = registDataService.findByPhoneNum(storePhone);
            if(registData != null){
              monthTaskServive.saveExecution(registData.getId(), "客户签收");
@@ -156,11 +162,11 @@ public class OrderSignforService {
   }
 
   
-//  private void startCountDown(String orderNo){
-//		Thread cd = new Thread(new OrderSignforCountDown(new Date(),
-//				orderNo));
-//		cd.start();
-//  }
+private void startCountDown(String orderNo, OrderService oderService){
+		Thread cd = new Thread(new OrderSignforCountDown(new Date(),
+				orderNo, oderService));
+		cd.start(); 
+  }
 
 
   /**
@@ -259,6 +265,7 @@ public void updateOrderSignfor(String orderno,String payStatus) {
 
 				o.setOrderStatus(OrderShipStatusConstant.ORDER_SHIPSTATUS_YWSIGNEDFOR);
 				o.setCustomSignforTime(null);
+				o.setCustomSignforGeopoint(null);
 				opl.updateOrderShipStateByOrderNum(orderno,
 						OrderShipStatusConstant.SHOP_ORDER_SHIPSTATUS_YWSIGNEDFOR);
 			}

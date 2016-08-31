@@ -18,14 +18,14 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+
 @Entity
 @Table(name = "SYS_ORDER")
 public class Order implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public enum ShipStatus {
-		NO_SEND("未发货"), SENDED("已发货"), SALESMAN_RESIVED("业务签收"), MEMBER_RESIVED(
-				"客户签收"), MEMBER_REFUSE("客户拒收");
+		NO_SEND("未发货"), SENDED("已发货"), SALESMAN_RESIVED("业务签收"), MEMBER_RESIVED("客户签收"),MEMBER_REFUSE("客户拒收");
 		private String name;
 
 		private ShipStatus(String name) {
@@ -36,14 +36,15 @@ public class Order implements Serializable {
 			return name;
 		}
 	}
+	
+	
+	public enum PayMent{
+	  PAY_ONLINE("线上支付"),PAY_OFFLINE("货到付款"),POS("POS支付");
+	  private String name;
 
-	public enum PayMent {
-		PAY_ONLINE("线上支付"), PAY_OFFLINE("货到付款"), POS("POS支付");
-		private String name;
-
-		private PayMent(String name) {
-			this.name = name;
-		}
+    private PayMent(String name) {
+        this.name = name;
+      }
 
 		public String getName() {
 			return name;
@@ -58,7 +59,7 @@ public class Order implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createTime;// 下单时间
 	@Enumerated(EnumType.ORDINAL)
-	@Column(name = "SHIP_STATUS")
+	@Column(name="SHIP_STATUS")
 	private ShipStatus status;
 	@Column(name = "PAY_STATUS")
 	private String payStatus;

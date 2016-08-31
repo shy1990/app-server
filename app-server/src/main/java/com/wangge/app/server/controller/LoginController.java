@@ -68,7 +68,7 @@ public class LoginController {
           return returnLogSucMsg(json, salesman);
       
         }else{
-          if(salesman.getIsPrimaryAccount() == 1){
+         // if(salesman.getIsPrimaryAccount() == 1){
             List<ChildAccount> childList  =   childAccountService.getChildAccountByParentId(salesman.getId());
             if(childList!=null && childList.size() > 0){
               for(ChildAccount chil : childList){
@@ -82,7 +82,7 @@ public class LoginController {
                
               }
           }
-          }
+     //     }
           
         }
         json.setMsg("与你上一次登录手机卡不同！");
