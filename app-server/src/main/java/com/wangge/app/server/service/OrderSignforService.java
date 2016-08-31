@@ -145,7 +145,7 @@ public class OrderSignforService {
             logger.info("客户签收---->收现金--->bug:"+e.getMessage());
           }
             opl.updateOrderShipStateByOrderNum(orderNo,OrderShipStatusConstant.SHOP_ORDER_SHIPSTATUS_KHSIGNEDFOR,payStatus,dealType);
-            startCountDown(orderNo,oderService);
+          //  startCountDown(orderNo,oderService);
             RegistData registData = registDataService.findByPhoneNum(storePhone);
            if(registData != null){
              monthTaskServive.saveExecution(registData.getId(), "客户签收");
