@@ -1,23 +1,5 @@
 package com.wangge.app.server.controller;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.apache.log4j.Logger;
-import org.springframework.context.ApplicationContext;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.Region;
 import com.wangge.app.server.entity.RegistData;
@@ -31,11 +13,15 @@ import com.wangge.app.server.repository.SaojieDataRepository;
 import com.wangge.app.server.repositoryimpl.ActiveImpl;
 import com.wangge.app.server.repositoryimpl.DateInterval;
 import com.wangge.app.server.repositoryimpl.PickingImpl;
-import com.wangge.app.server.service.AssessService;
-import com.wangge.app.server.service.DataSaojieService;
-import com.wangge.app.server.service.RegistDataService;
-import com.wangge.app.server.service.RegistService;
-import com.wangge.app.server.service.SalesmanService;
+import com.wangge.app.server.service.*;
+import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/v1")
