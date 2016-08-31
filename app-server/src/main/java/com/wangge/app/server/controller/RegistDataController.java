@@ -121,7 +121,7 @@ public class RegistDataController {
 	 * @version V2.0
 	 */
 	@RequestMapping(value = "/{param}/{regionId}/getRegistDatas", method = RequestMethod.GET)
-	public ResponseEntity<List<SaojieData>> listBy(@PathVariable("param") String param,@PathVariable("regionId") String regionId) {
+	public ResponseEntity<List<SaojieData>> getlist(@PathVariable("param") String param,@PathVariable("regionId") String regionId) {
 		List<Object[]> Data = dataSaojieService.getSaojieDataByParam(param,regionId);
 		List<SaojieData> list = new ArrayList<SaojieData>();
 		

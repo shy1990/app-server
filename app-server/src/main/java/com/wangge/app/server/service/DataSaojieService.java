@@ -125,6 +125,7 @@ public class DataSaojieService {
 	  return dataSaojieRepository.findByRegistData(id);
 	}
 
+	
 	public List<Object[]> getSaojieDataByParam(String param,String regionId) {
 		return dataSaojieRepository.findByParam(param,regionId);
 	}
