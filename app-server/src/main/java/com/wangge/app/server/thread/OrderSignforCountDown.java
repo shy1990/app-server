@@ -40,11 +40,12 @@ public class OrderSignforCountDown implements Runnable {
 	@Override
 	public void run() {
 		
-		Long i = 5*60L;
+		Long i = 2*60L;
 			//		oderService.exsistShipStatus(orderNo);
 		while (DateUtil.isCheckExpires(signForTime, i)) {
 			try {
 				i--;
+				System.out.println("===================="+i);
 				if(i==0){
 					oderService.exsistShipStatus(orderNo);
 				}
