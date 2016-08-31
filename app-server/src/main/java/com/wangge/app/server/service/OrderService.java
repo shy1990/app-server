@@ -59,15 +59,6 @@ public class OrderService {
   public Order findOne(String ordernum) {
     return or.findOne(ordernum);
   }
-  
-  public void exsistShipStatus(String ordernum){
-	  Order order =  or.findOne(ordernum);
-	  if(order != null){
-		 if("0".equals(order.getPayStatus())){
-			 orderSignforService.updateOrderSignfor(ordernum,null); 
-		 }
-	  }
-  }
   /**
    * 
    * @Description: 回掉钱包接口
@@ -107,6 +98,16 @@ public class OrderService {
 //          result.append(line);
 //        }
 //    return result.toString();
+  }
+  
+  
+  public void exsistShipStatus(String ordernum){
+	  Order order =  or.findOne(ordernum);
+	  if(order != null){
+		 if("0".equals(order.getPayStatus())){
+			 orderSignforService.updateOrderSignfor(ordernum,null); 
+		 }
+	  }
   }
     
 }

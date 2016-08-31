@@ -42,6 +42,9 @@ public class OrderSignforService {
   private RegistDataService registDataService;
   @Resource
   private MonthTaskServive monthTaskServive;
+  
+  @Resource
+	private OrderService oderService;
 
   public void saveOrderSignfor(OrderSignfor xlsOrder) {
     osr.save(xlsOrder);
@@ -142,7 +145,7 @@ public class OrderSignforService {
             logger.info("客户签收---->收现金--->bug:"+e.getMessage());
           }
             opl.updateOrderShipStateByOrderNum(orderNo,OrderShipStatusConstant.SHOP_ORDER_SHIPSTATUS_KHSIGNEDFOR,payStatus,dealType);
-            startCountDown(orderNo);
+            startCountDown(orderNo,oderService);
             RegistData registData = registDataService.findByPhoneNum(storePhone);
            if(registData != null){
              monthTaskServive.saveExecution(registData.getId(), "客户签收");
@@ -159,9 +162,9 @@ public class OrderSignforService {
   }
 
   
-  private void startCountDown(String orderNo){
+private void startCountDown(String orderNo, OrderService oderService){
 		Thread cd = new Thread(new OrderSignforCountDown(new Date(),
-				orderNo));
+				orderNo, oderService));
 		cd.start(); 
   }
 
@@ -262,6 +265,7 @@ public void updateOrderSignfor(String orderno,String payStatus) {
 
 				o.setOrderStatus(OrderShipStatusConstant.ORDER_SHIPSTATUS_YWSIGNEDFOR);
 				o.setCustomSignforTime(null);
+				o.setCustomSignforGeopoint(null);
 				opl.updateOrderShipStateByOrderNum(orderno,
 						OrderShipStatusConstant.SHOP_ORDER_SHIPSTATUS_YWSIGNEDFOR);
 			}
