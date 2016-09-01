@@ -112,19 +112,19 @@ public class MineController {
         jo.put("point","");
       }
      
-			if(regionId.equals(order.getRegion().getId())){
-				if(opl.checkByOrderNum(ordernum)){
-				  jo.put("state", "正常订单");
-				  return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
-				}else{
-					jo.put("state", "该订单已签收,请核实");
-					return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
-				}
-			}else{
+//			if(regionId.equals(order.getRegion().getId())){
+//				if(opl.checkByOrderNum(ordernum)){
+//				  jo.put("state", "正常订单");
+//				  return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
+//				}else{
+//					jo.put("state", "该订单已签收,请核实");
+//					return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
+//				}
+//			}else{
 
-        jo.put("state", "该订单不属于此地区,请核实");
-        return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
-      }
+ //       jo.put("state", "该订单不属于此地区,请核实");
+  //      return new ResponseEntity<JSONObject>(jo, HttpStatus.OK);
+//      }
     }
     jo.put("msg", "未查询相关信息或快件未揽收,请重试");
     return new ResponseEntity<JSONObject>(jo, HttpStatus.BAD_REQUEST);
