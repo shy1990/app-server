@@ -1,15 +1,9 @@
 package com.wangge.app.server.thread;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import javax.annotation.Resource;
-
-import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.service.OrderService;
-import com.wangge.app.server.service.OrderSignforService;
 import com.wangge.app.server.util.DateUtil;
+
+import java.util.Date;
 
 public class OrderSignforCountDown implements Runnable {
 	
@@ -39,13 +33,12 @@ public class OrderSignforCountDown implements Runnable {
 
 	@Override
 	public void run() {
-		
 		int i = 5*60;
 			//		oderService.exsistShipStatus(orderNo);
 		while (DateUtil.isCheckExpires(signForTime, 5*60L)) {
 			try {
 				i--;
-				if(i==0L){
+				if(i==0){
 					oderService.exsistShipStatus(orderNo);
 				}
 				
