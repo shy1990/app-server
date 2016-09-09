@@ -80,6 +80,11 @@ public class Order implements Serializable {
 	private String mobile;// 客户手机号
 	@Column(name = "member_id")
 	private String memberId;// b2b商城用户id
+	@Column(name = "actual_pay_num")
+	private BigDecimal actualPayNum;//实付金额
+	
+	@Column(name = "wallet_pay_no")
+	private String walletPayNo;//钱包支付流水号
 
 	public String getMobile() {
 		return mobile;
@@ -181,6 +186,22 @@ public class Order implements Serializable {
 
 	public void setPayStatus(String payStatus) {
 		this.payStatus = payStatus;
+	}
+
+	public BigDecimal getActualPayNum() {
+		return actualPayNum;
+	}
+
+	public void setActualPayNum(BigDecimal actualPayNum) {
+		this.actualPayNum = actualPayNum;
+	}
+
+	public String getWalletPayNo() {
+		return walletPayNo;
+	}
+
+	public void setWalletPayNo(String walletPayNo) {
+		this.walletPayNo = walletPayNo;
 	}
 	
 }

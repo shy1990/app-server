@@ -1,5 +1,19 @@
 package com.wangge.app.server.controller;
 
+import java.util.Date;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.pojo.MessageCustom;
@@ -10,18 +24,11 @@ import com.wangge.app.server.service.OrderService;
 import com.wangge.app.server.service.OrderSignforService;
 import com.wangge.app.server.service.SalesmanService;
 import com.wangge.app.server.util.HttpUtil;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.Resource;
-import java.util.Date;
 
 @RestController
 @RequestMapping("/v1/remind")
 public class OrderSignforController {
-
-
+  
   //private static final Logger logger = LoggerFactory.getLogger(OrderSignforController.class);
   @Resource
   private OrderSignforService orderSignforService;
@@ -154,19 +161,20 @@ public class OrderSignforController {
      int isPrimaryAccount = jsons.getIntValue("isPrimary");
     String userId =  jsons.getString("userId");
     String childId =  jsons.getString("childId");
+    String walletPayNo =  jsons.getString("walletPayNo");
     MessageCustom m = new MessageCustom();
     try {
       if(smsCode != null && !"".equals(smsCode) && storePhone != null && !"".equals(storePhone)){
         String msg = HttpUtil.sendPost("http://www.3j1688.com/member/existMobileCode/"+storePhone+"_"+smsCode+".html","");
         if(msg!=null && msg.contains("true")){
-            orderSignforService.updateOrderSignfor(orderNo, userPhone, signGeoPoint,payType,smsCode,isPrimaryAccount,userId,childId,storePhone);
+            orderSignforService.updateOrderSignfor(orderNo, userPhone, signGeoPoint,payType,smsCode,isPrimaryAccount,userId,childId,storePhone,walletPayNo);
             m.setMsg("success");
             m.setCode(0);
         }else{
             m.setMsg("短信验证码不存在！");
         }
       }else{
-        orderSignforService.updateOrderSignfor(orderNo, userPhone, signGeoPoint,payType,smsCode,isPrimaryAccount,userId,childId,storePhone);
+        orderSignforService.updateOrderSignfor(orderNo, userPhone, signGeoPoint,payType,smsCode,isPrimaryAccount,userId,childId,storePhone,walletPayNo);
         m.setMsg("success");
         m.setCode(0);
       }
@@ -279,6 +287,25 @@ public class OrderSignforController {
         int pageSize = jsons.getIntValue("pageSize");
         QueryResult<OrderSignfor> qr = osi.getOrdersByMailNo(fastmailNo,userPhone, pageNo > 0 ? pageNo-1 : 0,pageSize > 0 ? pageSize : 10);   
         return new ResponseEntity<QueryResult<OrderSignfor>>(qr,HttpStatus.OK);
+  }
+  /**
+   * 
+  * @Title: checkOrderByOrderNum 
+  * @Description: TODO(根据订单号查询订单是否存在) 
+  * @param @param map
+  * @param @return    设定文件 
+  * @return ResponseEntity<List<OrderSignfor>>    返回类型 
+  * @throws
+   */
+@RequestMapping(value = "/checkOrder",method = RequestMethod.POST)
+  public String checkOrderByOrderNum(String orderNum){
+	  if(!StringUtils.isEmpty(orderNum)){
+		 OrderSignfor orderSignfor = orderSignforService.findbyOrderNum(orderNum);
+		 if(orderSignfor != null){
+			 return "true";
+		 }
+	  }
+	  return "false";
   }
   
 
