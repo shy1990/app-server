@@ -99,6 +99,8 @@ public class MineController {
       jo.put("orderNum", order.getId());
       jo.put("shipStatus", order.getStatus().ordinal());
       jo.put("amount", order.getAmount());
+      jo.put("actualPayNum", order.getActualPayNum());
+      jo.put("walletPayNo", order.getWalletPayNo());
       jo.put("mobile", order.getMobile());
       jo.put("skuNum", skuNum);
       jo.put("itemOtherNum", giftNum);

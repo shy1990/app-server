@@ -1,7 +1,10 @@
 package com.wangge.app.server.service;
 
+import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -10,6 +13,7 @@ import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import com.wangge.app.constant.OrderShipStatusConstant;
 import com.wangge.app.server.entity.Cash;
@@ -22,10 +26,13 @@ import com.wangge.app.server.repository.OrderSignforRepository;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.repositoryimpl.OrderSignforImpl;
 import com.wangge.app.server.thread.OrderSignforCountDown;
+import com.wangge.app.server.util.HttpUtil;
 @Service
 public class OrderSignforService {
 
   private Logger logger = Logger.getLogger(OrderSignforService.class);
+  
+  private static final String url = "http://115.28.87.182:58081/v1/";
   @Resource
   private OrderSignforRepository osr;
   @Resource
@@ -110,7 +117,7 @@ public class OrderSignforService {
    */
   @Transactional(readOnly=false,rollbackFor=Exception.class)
   public void updateOrderSignfor(String orderNo, String userPhone,
-      String signGeoPoint, int payType, String smsCode,int isPrimaryAccount,String userId,String childId,String  storePhone) throws Exception {
+      String signGeoPoint, int payType, String smsCode,int isPrimaryAccount,String userId,String childId,String  storePhone, String walletPayNo) throws Exception {
       OrderSignfor orderSignFor =  findOrderSignFor(orderNo,userPhone);
       String dealType = "";
       String payStatus = "";
@@ -140,12 +147,22 @@ public class OrderSignforService {
                payStatus = OrderShipStatusConstant.SHOP_ORDER_PAYSTATUS_HAVETOPAY;
                Cash cash= new Cash(orderSignFor.getId(),userId);
                cs.save(cash);
+               if(!"null".equals(walletPayNo)){
+            	   RestTemplate restTemplate = new RestTemplate();
+            	   Map<String, Object> param = new HashMap<String, Object>();
+   				param.put("status", "SUCCESS");
+            	   String walletPayNoUrl = walletPayNo+"/status";
+            	  // String param = "SUCCESS";
+            	   restTemplate.put(url+walletPayNoUrl, param);
+               }
+              
              }
           } catch (Exception e) {
             logger.info("客户签收---->收现金--->bug:"+e.getMessage());
+            throw new  IOException("收现金异常!"+e.getMessage());
           }
             opl.updateOrderShipStateByOrderNum(orderNo,OrderShipStatusConstant.SHOP_ORDER_SHIPSTATUS_KHSIGNEDFOR,payStatus,dealType);
-          //  startCountDown(orderNo,oderService);
+            startCountDown(orderNo,oderService);
             RegistData registData = registDataService.findByPhoneNum(storePhone);
            if(registData != null){
              monthTaskServive.saveExecution(registData.getId(), "客户签收");
@@ -265,7 +282,7 @@ public void updateOrderSignfor(String orderno,String payStatus) {
 
 				o.setOrderStatus(OrderShipStatusConstant.ORDER_SHIPSTATUS_YWSIGNEDFOR);
 				o.setCustomSignforTime(null);
-				o.setCustomSignforGeopoint(null);
+//				o.setCustomSignforGeopoint(null);
 				opl.updateOrderShipStateByOrderNum(orderno,
 						OrderShipStatusConstant.SHOP_ORDER_SHIPSTATUS_YWSIGNEDFOR);
 			}

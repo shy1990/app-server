@@ -45,7 +45,7 @@ public class OrderSignforCountDown implements Runnable {
 		while (DateUtil.isCheckExpires(signForTime, 5*60L)) {
 			try {
 				i--;
-				if(i==0L){
+				if(i==0){
 					oderService.exsistShipStatus(orderNo);
 				}
 				
