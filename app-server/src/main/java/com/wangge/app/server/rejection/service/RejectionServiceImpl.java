@@ -13,6 +13,7 @@ import com.wangge.app.server.service.OrderSignforService;
 import com.wangge.app.server.service.SalesmanService;
 import com.wangge.app.server.util.DateUtil;
 import com.wangge.app.util.JsonResponse;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -24,6 +25,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
+
 import java.util.Map;
 
 @Service
@@ -78,13 +81,13 @@ public class RejectionServiceImpl implements RejectionServive {
                 if (map != null) {
                     //判断钱包流水号是否为空,若是则不调用退款接口
                     if (StringUtils.isNotBlank(map.get("payNo"))) {
-                        if ("0".equals(map.get("payMent"))) {
-                            if (map.get("totalCost").equals(map.get("walletNum"))) {
+                      //  if ("0".equals(map.get("payMent"))) {
+                         //   if (map.get("totalCost").equals(map.get("walletNum"))) {
                                 flag = true;
-                            }
-                        } else {
-                            flag = true;
-                        }
+                         //   }
+                      //  } else {
+                       //     flag = true;
+                      //  }
                     }
                 }
                 if (flag) {
