@@ -538,14 +538,15 @@ public class OilCostRecordService {
     j.add(obj);
    // return j;
   }else if(type == 5){
-    if (isError(coordinates, userId)) {
+    /*if (isError(coordinates, userId)) {
       exception = 1;
     }else{
       exception = 0;
-    }
-    regionType = 1;
+    }*/
+    regionType = 1;//动作类型：例如：0代表上班签到,1代表揽收
     String  typeName  = "业务揽收";
     regionName = getLogistics( coordinates, userId);
+    exception = "物流点".equals(regionName) ? 1 : 0;
     j  = new JSONArray();
     obj = ChainageUtil.createOilRecord(coordinates, typeName, regionName,regionType, exception);
     j.add(obj);
@@ -635,13 +636,13 @@ public class OilCostRecordService {
         }
       }
      
-      if(null!=d1&&d1 < Double.parseDouble("150")){
+      if(null!=d1&&d1 < Double.parseDouble("300")){
         Logistics =  "物流点一";
         return  Logistics;
-      }else if(null!=d2&&d2 <  Double.parseDouble("150")){
+      }else if(null!=d2&&d2 <  Double.parseDouble("300")){
         Logistics = "物流点二";
         return  Logistics ;
-      }else if(null!=d3&&d3 <  Double.parseDouble("150")){
+      }else if(null!=d3&&d3 <  Double.parseDouble("300")){
         Logistics = "物流点三";
         return  Logistics ;
       }
