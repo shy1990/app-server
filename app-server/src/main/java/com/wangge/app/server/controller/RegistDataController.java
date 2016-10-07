@@ -216,34 +216,34 @@ public class RegistDataController {
 			data.setDescription(description);
 			Map<String, String> member = registDataService.findMemberInfo(loginAccount);
 			if (member != null && !"".equals(member)) {
-			  List<RegistData> listRegistdata=registDataService.findByLoginAccount(loginAccount);
-			  if(listRegistdata.size()>=1){
-			    json.setMsg("输入的账号已存在");
-	        json.setSuccess(false);
-	        return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
-			  }
+				List<RegistData> listRegistdata = registDataService.findByLoginAccount(loginAccount);
+				if (listRegistdata.size() >= 1 || registDataService.findByMemberId(member.get("MEMBERID")) != null) {
+					json.setMsg("输入的账号已存在");
+					json.setSuccess(false);
+					return new ResponseEntity<Json>(json, HttpStatus.UNAUTHORIZED);
+				}
 				data.setConsignee(member.get("CONSIGNEE"));
 				data.setReceivingAddress(member.get("ADDRESS"));
 				data.setPhoneNum(member.get("MOBILE"));
 				data.setShopName(member.get("SHOPNAME"));
 				data.setMemberId(member.get("MEMBERID"));
 				data.setIsPrimaryAccount(isPrimaryAccount);
-				if(isPrimaryAccount == 0){
-				  accId = userId;
-				}else{
-				  accId = childId;
+				if (isPrimaryAccount == 0) {
+					accId = userId;
+				} else {
+					accId = childId;
 				}
 				data.setAccountId(accId);
 				RegistData registData = registDataService.addRegistData(data);
-				
+
 				// 更新扫街
 				SaojieData sjData = dataSaojieService.findBySaojieData(Long.parseLong(saojieId));
 				sjData.setRegistData(registData);
 				sjData.setDescription(description);
 				sjData.setCoordinate(coordinates);
-				dataSaojieService.addDataSaojie(sjData,salesman);
-			  monthTaskServive.saveExecution(registData.getId(), "注册");
-				cxt.publishEvent(new afterDailyEvent(region.getId(),userId,member.get("SHOPNAME"),coordinates,isPrimaryAccount,childId,3));
+				dataSaojieService.addDataSaojie(sjData, salesman);
+				monthTaskServive.saveExecution(registData.getId(), "注册");
+				cxt.publishEvent(new afterDailyEvent(region.getId(), userId, member.get("SHOPNAME"), coordinates, isPrimaryAccount, childId, 3));
 				json.setId(String.valueOf(registData.getId()));
 				json.setSuccess(true);
 				json.setMsg("保存成功！");

@@ -1,22 +1,10 @@
 package com.wangge.app.server.entity;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 
 @Entity
@@ -171,7 +159,7 @@ public class Order implements Serializable {
 			this.dealType = "未付款";
 		}
 		if("yeePay".equals(dealType)){
-			this.dealType = "在线支付";
+			this.dealType = "线上支付"; //最开始版本叫：线上支付　现在：在线支付
 		}
 		return dealType;
 	}

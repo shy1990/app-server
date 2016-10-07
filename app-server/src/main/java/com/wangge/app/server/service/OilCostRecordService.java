@@ -1,23 +1,5 @@
 package com.wangge.app.server.service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.constant.OilRecordConstant;
@@ -25,12 +7,7 @@ import com.wangge.app.server.entity.OilCostRecord;
 import com.wangge.app.server.entity.OilParameters;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.SalesmanAddress;
-import com.wangge.app.server.pojo.HistoryDestOilRecord;
-import com.wangge.app.server.pojo.HistoryOilRecord;
-import com.wangge.app.server.pojo.MessageCustom;
-import com.wangge.app.server.pojo.QueryResult;
-import com.wangge.app.server.pojo.Record;
-import com.wangge.app.server.pojo.TodayOilRecord;
+import com.wangge.app.server.pojo.*;
 import com.wangge.app.server.repository.ChildAccountRepostory;
 import com.wangge.app.server.repository.OilCostRecordRepository;
 import com.wangge.app.server.repositoryimpl.OilRecordImpl;
@@ -38,6 +15,17 @@ import com.wangge.app.server.util.JWtoAdrssUtil;
 import com.wangge.app.server.vo.OilCostRecordVo;
 import com.wangge.app.util.ChainageUtil;
 import com.wangge.app.util.DateUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class OilCostRecordService {
@@ -597,8 +585,8 @@ public class OilCostRecordService {
   }
   
   /**
-   * @param userId2 
-   * @param coordinates2 
+   * @param
+   * @param
    * 
   * @Title: getLogistics 
   * @Description: TODO(根据当前坐标判断物流点) 
@@ -692,9 +680,11 @@ public class OilCostRecordService {
      String lng = city[1];
      String lat = city[0];
     String url="http://api.map.baidu.com/geocoder/v2/?ak=702632E1add3d4953d0f105f27c294b9&callback=renderReverse&location="+lng+","+lat+"&output=json&pois=1";
+   // System.out.println(url);
      String jsonString = JWtoAdrssUtil.getdata(url);
+    //System.out.println(jsonString);
     String jsonstr=jsonString.substring(0,jsonString.length()-1);
-    String address = jsonstr.substring(jsonstr.indexOf("city")+6,jsonstr.indexOf("country")-2);
+    String address = jsonstr.substring(jsonstr.indexOf("city")+6,jsonstr.indexOf("district")-2);
     return address;
   }
  

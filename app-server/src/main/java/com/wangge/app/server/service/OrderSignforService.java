@@ -1,20 +1,5 @@
 package com.wangge.app.server.service;
 
-import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
-
 import com.wangge.app.constant.OrderShipStatusConstant;
 import com.wangge.app.server.entity.Cash;
 import com.wangge.app.server.entity.OrderSignfor;
@@ -26,7 +11,19 @@ import com.wangge.app.server.repository.OrderSignforRepository;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.repositoryimpl.OrderSignforImpl;
 import com.wangge.app.server.thread.OrderSignforCountDown;
-import com.wangge.app.server.util.HttpUtil;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+
+import javax.annotation.Resource;
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 @Service
 public class OrderSignforService {
 
@@ -147,10 +144,11 @@ public class OrderSignforService {
                payStatus = OrderShipStatusConstant.SHOP_ORDER_PAYSTATUS_HAVETOPAY;
                Cash cash= new Cash(orderSignFor.getId(),userId);
                cs.save(cash);
-               if(!"null".equals(walletPayNo)){
+               System.out.println("walletPayNo"+walletPayNo);
+               if(null!=walletPayNo){
             	   RestTemplate restTemplate = new RestTemplate();
             	   Map<String, Object> param = new HashMap<String, Object>();
-   				param.put("status", "SUCCESS");
+                 param.put("status", "SUCCESS");
             	   String walletPayNoUrl = walletPayNo+"/status";
             	  // String param = "SUCCESS";
             	   restTemplate.put(url+walletPayNoUrl, param);
