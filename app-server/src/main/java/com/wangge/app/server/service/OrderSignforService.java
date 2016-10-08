@@ -145,7 +145,7 @@ public class OrderSignforService {
                Cash cash= new Cash(orderSignFor.getId(),userId);
                cs.save(cash);
                System.out.println("walletPayNo"+walletPayNo);
-               if(null!=walletPayNo){
+               if(null!=walletPayNo&&!walletPayNo.equals("null")){
             	   RestTemplate restTemplate = new RestTemplate();
             	   Map<String, Object> param = new HashMap<String, Object>();
                  param.put("status", "SUCCESS");
