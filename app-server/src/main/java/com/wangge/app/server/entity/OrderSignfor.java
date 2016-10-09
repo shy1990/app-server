@@ -3,11 +3,17 @@ package com.wangge.app.server.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -68,6 +74,16 @@ public class OrderSignfor implements Serializable {
   private String customUnSignRemark;
   
   private int isPrimaryAccount;
+  
+private Integer billStatus; //订单结款状态
+  
+  private  Float  arrears;//欠款金额
+  
+  private Float payAmount;// 实付金额
+  
+  private Date overTime ; // 订单结清日期
+  
+  private Date updateTime ; // 订单结清日期
   
   private String accountId;
   public int getOrderCount() {
@@ -235,6 +251,47 @@ public class OrderSignfor implements Serializable {
   public void setAccountId(String accountId) {
     this.accountId = accountId;
   }
-  
+
+public Integer getBillStatus() {
+	return billStatus;
+}
+
+public void setBillStatus(Integer billStatus) {
+	this.billStatus = billStatus;
+}
+
+public Float getArrears() {
+	return arrears;
+}
+
+public void setArrears(Float arrears) {
+	this.arrears = arrears;
+}
+
+public Float getPayAmount() {
+	return payAmount;
+}
+
+public void setPayAmount(Float payAmount) {
+	this.payAmount = payAmount;
+}
+
+public Date getOverTime() {
+	return overTime;
+}
+
+public void setOverTime(Date overTime) {
+	this.overTime = overTime;
+}
+
+public Date getUpdateTime() {
+	return updateTime;
+}
+
+public void setUpdateTime(Date updateTime) {
+	this.updateTime = updateTime;
+}
+
+
   
 }

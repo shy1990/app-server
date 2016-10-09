@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.ApplyPrice;
 import com.wangge.app.server.entity.Order;
 import com.wangge.app.server.entity.OrderItem;
+import com.wangge.app.server.entity.Receipt;
 import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.pojo.Json;
@@ -30,8 +32,10 @@ import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.service.ApplyPriceService;
 import com.wangge.app.server.service.MessageService;
 import com.wangge.app.server.service.OrderService;
+import com.wangge.app.server.service.OrderSignforService;
 import com.wangge.app.server.service.RegistDataService;
 import com.wangge.app.server.service.SalesmanService;
+import com.wangge.app.server.util.DateUtil;
 import com.wangge.app.server.util.HttpUtil;
 import com.wangge.app.server.util.SortUtil;
 import com.wangge.app.server.vo.Apply;
@@ -62,6 +66,11 @@ public class MineController {
 	private RegistDataService rds;
 	@Resource
 	private SalesmanService salesmanService;
+	/*@Resource
+	private ReceiptService receiptService;
+	
+	 @Resource*/
+	 private OrderSignforService orderSignforService;
 	/**
 	 * 
 	 * @Description: 根据业务手机号订单号判断该订单是否属于该业务员并返回订单详情
@@ -129,9 +138,26 @@ public class MineController {
       }*/
     }
     jo.put("msg", "未查询相关信息或快件未揽收,请重试");
+   /* if(order.getStatus().ordinal() == 3){
+    	JSONArray array = receiptService.findByOrderNo(order.getId());
+    	jo.put("content", array);
+    }*/
     return new ResponseEntity<JSONObject>(jo, HttpStatus.BAD_REQUEST);
 
   }
+	
+	/*private JSONObject getOrderOverTime(String ordernum,JSONObject jo){
+	    Date overTime = orderSignforService.getOrderOverTime(ordernum);
+	    if(overTime !=null){
+	    	jo.put("isEdit", 1);//1表示隐藏
+	    	
+	    }else{
+	    	jo.put("isEdit", 0);//0表示显示按钮
+	    }
+	   
+		//DateUtil.
+		return jo;
+	}*/
   
   
   /**

@@ -1,16 +1,18 @@
 package com.wangge.app.server.controller;
 
 import java.util.Date;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,27 +31,15 @@ import com.wangge.app.server.util.HttpUtil;
 @RequestMapping("/v1/remind")
 public class OrderSignforController {
   
-  //private static final Logger logger = LoggerFactory.getLogger(OrderSignforController.class);
+  private static final Logger logger = LoggerFactory.getLogger(OrderSignforController.class);
   @Resource
   private OrderSignforService orderSignforService;
   @Resource
   private SalesmanService salesmanService;
   @Resource
   private OrderImpl opl ;
-  
-  
   @Resource
   private OrderService or;
-  
-  /*private String userPhone ;
-  private String orderNo ;
-  private String smsCode;
-  private int payType;
-  private String signGeoPoint;
-  private String storePhone ;
-  private int isPrimaryAccount;
-  private String  remark;
-  private String fastMailNo;*/
   
   @Resource
   private OrderSignforImpl osi;
@@ -151,7 +141,8 @@ public class OrderSignforController {
    */
   @RequestMapping(value ="/customOrderSign", method = RequestMethod.POST)
   @ResponseBody
-  public ResponseEntity<MessageCustom> customOrderSign(@RequestBody JSONObject jsons){
+  public ResponseEntity<MessageCustom> customOrderSign(@RequestBody JSONObject jsons,@RequestParam(defaultValue="",required=false,value="amountCollected") String amountCollected,
+		  @RequestParam(value="",required=false,defaultValue="") String billStatus){
      String userPhone = jsons.getString("userPhone");
      String orderNo = jsons.getString("orderNo");
      String smsCode = jsons.getString("smsCode");
@@ -162,24 +153,36 @@ public class OrderSignforController {
     String userId =  jsons.getString("userId");
     String childId =  jsons.getString("childId");
     String walletPayNo =  jsons.getString("walletPayNo");
+    String actualPayNum =  jsons.getString("actualPayNum");
+    String accountId = "";
     MessageCustom m = new MessageCustom();
     try {
-      if(smsCode != null && !"".equals(smsCode) && storePhone != null && !"".equals(storePhone)){
-        String msg = HttpUtil.sendPost("http://www.3j1688.com/member/existMobileCode/"+storePhone+"_"+smsCode+".html","");
-        if(msg!=null && msg.contains("true")){
-            orderSignforService.updateOrderSignfor(orderNo, userPhone, signGeoPoint,payType,smsCode,isPrimaryAccount,userId,childId,storePhone,walletPayNo);
-            m.setMsg("success");
-            m.setCode(0);
-        }else{
-            m.setMsg("短信验证码不存在！");
-        }
-      }else{
-        orderSignforService.updateOrderSignfor(orderNo, userPhone, signGeoPoint,payType,smsCode,isPrimaryAccount,userId,childId,storePhone,walletPayNo);
-        m.setMsg("success");
-        m.setCode(0);
-      }
+			if (isPrimaryAccount == 0) {
+				accountId = userId;
+			} else {
+				accountId = childId;
+			}
+			if (payType == 2) {
+				orderSignforService.customSignforByCash(orderNo,userPhone,signGeoPoint,payType,smsCode,isPrimaryAccount,childId,storePhone,userId,accountId,Integer.parseInt(billStatus),Float.parseFloat(amountCollected),walletPayNo,Float.parseFloat(actualPayNum));
+			}else{
+				 if(smsCode != null && !"".equals(smsCode) && storePhone != null && !"".equals(storePhone)){
+				        String msg = HttpUtil.sendPost("http://www.3j1688.com/member/existMobileCode/"+storePhone+"_"+smsCode+".html","");
+				        if(msg!=null && msg.contains("true")){
+				            orderSignforService.customSignforByPos(orderNo, userPhone, signGeoPoint,payType,smsCode,isPrimaryAccount,userId,childId,accountId,storePhone,walletPayNo);
+				            m.setMsg("success");
+				            m.setCode(0);
+				        }else{
+				            m.setMsg("短信验证码不存在！");
+				        }
+				      }else{
+					        orderSignforService.customSignforByPos(orderNo, userPhone, signGeoPoint,payType,smsCode,isPrimaryAccount,userId,childId,accountId,storePhone,walletPayNo);
+					        m.setMsg("success");
+					        m.setCode(0);
+				      }
+			}
       
     } catch (Exception e) {
+    	logger.info(e.getMessage());
       m.setMsg(e.getMessage());
       m.setCode(1);
      /* logger.error("OrderSignforController updateOrderSignfor error :"+e);*/
@@ -307,7 +310,6 @@ public class OrderSignforController {
 	  }
 	  return "false";
   }
-  
 
 }
 

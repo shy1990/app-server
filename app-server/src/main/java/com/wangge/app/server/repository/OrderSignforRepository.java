@@ -1,7 +1,10 @@
 package com.wangge.app.server.repository;
 
+import java.util.Date;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -14,6 +17,12 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
   OrderSignfor findByOrderNoAndUserPhone(String orderNo, String userPhone);
   
   OrderSignfor findByOrderNo(String orderno);
+  @Query("select o from OrderSignfor o where o.userId=?1 and o.creatTime>=trunc(?2) and o.creatTime<trunc(?3)")
+  Page<OrderSignfor> findByUserIdAndCreatTime(String userId,String startDate,String endDate, Pageable pageRequest);
+  @Query("select sum(o.arrears) from OrderSignfor o where o.userId=?1 and o.creatTime>=trunc(?2) and o.creatTime<trunc(?3)")
+  Float findSumForArrears(String userId,String startDate,String endDate);
+  @Query("select sum(o.arrears) from OrderSignfor o where o.userId=?1")
+  Float findSumForArrears(String userId);
   
   /**
    * countByuserAndDayAndMonth:查询以业务员每天的订单统计和该月的订单统计. <br/>
@@ -53,4 +62,5 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
       + "       sum(s.phone_Count), 'cancleCount'\n" + "  from biz_order_signfor s\n" + " where s.order_status in (1,4) \n"
       + "   and s.user_id = ?1 \n" + "   and to_char(s.creat_time, 'yyyy-mm-dd') = ?2 \n", nativeQuery = true)
   List<Object> countByuserAndDay(String userId, String day);
+
 }
