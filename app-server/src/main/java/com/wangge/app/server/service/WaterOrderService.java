@@ -1,28 +1,5 @@
 package com.wangge.app.server.service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-
 import com.wangge.app.server.entity.MonthPunish;
 import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.entity.WaterOrderCash;
@@ -35,8 +12,23 @@ import com.wangge.app.server.repository.WaterOrderCashRepository;
 import com.wangge.app.server.repository.WaterOrderDetailRepository;
 import com.wangge.app.server.util.DateUtil;
 import com.wangge.app.util.SearchFilter;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
 
-import scala.unchecked;
+import javax.annotation.Resource;
+import javax.persistence.criteria.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class WaterOrderService {
@@ -133,8 +125,9 @@ public class WaterOrderService {
           OrderDetailPart odp=new OrderDetailPart();
           OrderSignfor osf= wod.getCash().getOrder();
           odp.setNum(osf.getOrderNo());
-          odp.setAmount(osf.getOrderPrice());
-          
+          odp.setAmount(osf.getActualPayNum());//实际金额
+//          odp.setAmount(osf.getOrderPrice());
+
           orderItem.add(odp);
         });
         part.setOrder(orderItem);
