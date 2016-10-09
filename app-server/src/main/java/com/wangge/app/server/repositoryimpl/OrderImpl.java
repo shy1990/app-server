@@ -195,7 +195,7 @@ public class OrderImpl {
 	public void updateOrderShipStateByOrderNum(String ordernum, String status,
 			String payStatus, String dealType) {
 		String paySql = !StringUtils.isEmpty(payStatus) ? " ,PAY_STATUS='"
-				+ payStatus + "'" : "";
+				+ payStatus + "', PAY_TIME=sysdate" : "";
 		String dealTypeSql = !StringUtils.isEmpty(dealType) ? " ,deal_type='"
 				+ dealType + "'" : "";
 		String signforTime = StringUtils.isEmpty(dealType)
