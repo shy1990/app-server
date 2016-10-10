@@ -1,24 +1,20 @@
 package com.wangge.app.server.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
+import com.wangge.app.server.entity.Order;
+import com.wangge.app.server.entity.Region;
+import com.wangge.app.server.repository.OrderRepository;
+import com.wangge.app.server.vo.OrderPub;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.alibaba.fastjson.JSONObject;
-import com.wangge.app.server.entity.Order;
-import com.wangge.app.server.entity.OrderSignfor;
-import com.wangge.app.server.entity.Region;
-import com.wangge.app.server.repository.OrderRepository;
-import com.wangge.app.server.vo.OrderPub;
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 @Service
 public class OrderService {
   @Autowired
@@ -105,7 +101,7 @@ public class OrderService {
 	  Order order =  or.findOne(ordernum);
 	  if(order != null){
 		 if("0".equals(order.getPayStatus())){
-			 orderSignforService.updateOrderSignfor(ordernum,null); 
+			 orderSignforService.updateOrderSignfor(ordernum,null);
 		 }
 	  }
   }

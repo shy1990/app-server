@@ -1,23 +1,5 @@
 package com.wangge.app.server.service;
 
-import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.context.ApplicationContext;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.constant.OrderShipStatusConstant;
@@ -35,6 +17,25 @@ import com.wangge.app.server.repositoryimpl.OrderSignforImpl;
 import com.wangge.app.server.thread.OrderSignforCountDown;
 import com.wangge.app.server.vo.BillVo;
 import com.wangge.app.server.vo.OrderVo;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+
+import javax.annotation.Resource;
+
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 @Service
 public class OrderSignforService {
 
@@ -282,10 +283,15 @@ private void updateOrderSingfor(String orderNo, String userPhone,
                payStatus = OrderShipStatusConstant.SHOP_ORDER_PAYSTATUS_HAVETOPAY;
                Cash cash= new Cash(orderSignFor.getId(),userId);
                cs.save(cash);
+<<<<<<< HEAD
                if(null!=walletPayNo){
+=======
+               System.out.println("walletPayNo"+walletPayNo);
+               if(null!=walletPayNo&&!walletPayNo.equals("null")){
+>>>>>>> branch 'youbufenzhi0523' of https://git.oschina.net/wgtechnology/app-server.git
             	   RestTemplate restTemplate = new RestTemplate();
             	   Map<String, Object> param = new HashMap<String, Object>();
-   				param.put("status", "SUCCESS");
+                 param.put("status", "SUCCESS");
             	   String walletPayNoUrl = walletPayNo+"/status";
             	   restTemplate.put(url+walletPayNoUrl, param);
                }
