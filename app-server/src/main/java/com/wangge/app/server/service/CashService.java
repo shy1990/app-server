@@ -1,26 +1,7 @@
 package com.wangge.app.server.service;
 
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.apache.log4j.Logger;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.wangge.app.server.entity.Cash;
-import com.wangge.app.server.entity.MonthPunish;
-import com.wangge.app.server.entity.OrderItem;
-import com.wangge.app.server.entity.OrderSignfor;
-import com.wangge.app.server.entity.WaterOrderCash;
-import com.wangge.app.server.entity.WaterOrderDetail;
+import com.wangge.app.server.entity.*;
 import com.wangge.app.server.pojo.CashPart;
 import com.wangge.app.server.pojo.OrderDetailPart;
 import com.wangge.app.server.repository.CashRepository;
@@ -28,6 +9,14 @@ import com.wangge.app.server.repository.OrderItemRepository;
 import com.wangge.app.server.repository.WaterOrderCashRepository;
 import com.wangge.app.server.repository.WaterOrderDetailRepository;
 import com.wangge.app.server.util.DateUtil;
+import org.apache.log4j.Logger;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.util.*;
 @Service
 public class CashService {
   
@@ -66,7 +55,7 @@ public class CashService {
         OrderSignfor order=cash.getOrder();
         part.setId(cash.getCashId());
         part.setNum(order.getOrderNo());
-        part.setCash(order.getOrderPrice());
+        part.setCash(order.getActualPayNum());
         part.setDetails(disposeOrderItem(cash.getOrderItem()));
         cashPartList.add(part);
       });
@@ -117,7 +106,7 @@ public class CashService {
    * 7.修改现金订单列表中状态status改为1（已结算）
    * 8.返回状态
    * @param userId
-   * @param cashIds
+   * @param
    * @return
    */
   @Transactional(readOnly=false)
@@ -139,7 +128,7 @@ public class CashService {
         for(Cash cash:cashlist){
           //计算流水单号收现金金额
           OrderSignfor order=cash.getOrder();
-          totalPrice+=order.getOrderPrice();
+          totalPrice+=order.getActualPayNum();
           
           //组装流水单号详情数据
           WaterOrderDetail detail=new WaterOrderDetail();
@@ -222,7 +211,7 @@ public class CashService {
   }
   /**
    * 保存流水单号
-   * @param waterOrder
+   * @param
    */
   public void saveWaterOrderCash(WaterOrderCash woc) {
     wocr.save(woc);

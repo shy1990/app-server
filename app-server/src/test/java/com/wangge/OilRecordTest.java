@@ -1,15 +1,21 @@
 package com.wangge;
 
+import com.wangge.app.server.entity.Message;
+import com.wangge.app.server.entity.OrderSignfor;
+import com.wangge.app.server.entity.RegistData;
+import com.wangge.app.server.entity.Salesman;
+import com.wangge.app.server.jpush.client.JpushClient;
 import com.wangge.app.server.repositoryimpl.RegionImpl;
-import com.wangge.app.server.service.OilParametersService;
-import com.wangge.app.server.service.RegionService;
-import com.wangge.app.server.service.RegistDataService;
-import com.wangge.app.server.service.SalesmanService;
+import com.wangge.app.server.service.*;
+import org.json.JSONObject;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
+import java.util.Date;
+import java.util.List;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -25,6 +31,10 @@ public class OilRecordTest {
   private SalesmanService salesmanService;
   @Resource
   private RegistDataService registDataService;
+  @Resource
+  private MessageService mr;
+  @Resource
+  private OrderSignforService orderSignforService;
 //  @Test
 //  public void testOildCost(){
 //
@@ -87,5 +97,88 @@ public class OilRecordTest {
     String address = jsonstr.substring(jsonstr.indexOf("city")+6,jsonstr.indexOf("district")-2);
   }
 
+
+  @Test
+  public void test5(){
+
+
+    /**
+     * 【20151029164718792】山东省潍坊市青州市潍坊市青州市|弥河镇慧霞手机店下单成功，
+     * 订单商品:标准版Samsung/三星 三星SM-G5308W*1台,标准版Xiaomi/小米 红米 红米note2*2台
+     *{"orderNum":"222222222222222","mobiles":"1561069 62989","amount":"10.0","username":"天桥魅族店"}
+     */
+
+   String msg="{'orderNum':'20161008103803709','mobiles':'18653807779','amount':'970','username':'泰安市东平县佛山营业厅','skuNum':'1','accNum':'2','memberMobile':'18653807779'}";
+    JSONObject json = new JSONObject(msg);
+    String mobile = json.getString("mobiles");
+    String accCount = json.getString("accNum");
+    String ss = json.getString("username");
+    int skuNum = Integer.parseInt(json.getString("skuNum"));
+    Float amount = Float.parseFloat(json.getString("amount"));//总金额
+    Float acutalPrice = Float.parseFloat(json.getString("acutalPrice"));//总金额
+    String orderno = json.getString("orderNum");
+    Salesman salesman =new Salesman();
+    String userId=null;
+    Message mes = new Message();
+    mes.setChannel(Message.SendChannel.PUSH);
+    mes.setType(Message.MessageType.ORDER);
+    mes.setSendTime(new Date());
+    mes.setContent(msg);
+    mes.setReceiver(mobile);
+    mr.save(mes);
+    if(!json.isNull("memberMobile")){
+      String memberMobile=json.getString("memberMobile");
+      RegistData registdata=registDataService.findByPhoneNum(memberMobile);
+      if(null==registdata){
+      }
+      List<Salesman> listSalesman= salesmanService.findSaleamanByRegionId(registdata.getRegion().getParent().getId());//通过注册客户信息找到关联区域的业务员。正确推送步骤需要1.业务后台注册数据要和区域统一
+      for(Salesman man:listSalesman){
+        if(man.getUser().getStatus().ordinal()==0){
+          salesman=man;
+        }
+      }
+      mobile=salesman.getMobile();
+      userId=salesman.getId();
+    }
+
+//    if(ss.contains("市")){
+    //     ss = ss.substring(ss.indexOf("市")+1,ss.length());
+//    }
+    String send = ss+",数量:"+skuNum+",金额:"+amount+",订单号:"+orderno;
+
+
+    String str = "";
+    try {
+
+
+      if(orderSignforService.existOrder(orderno)){//判断订单是否已经存在，不存在保存
+        OrderSignfor o = new OrderSignfor();
+        o.setOrderNo(orderno);
+        o.setCreatTime(new Date());
+        o.setOrderPrice(amount);
+        o.setActualPayNum(acutalPrice);//实际金额
+        o.setPhoneCount(skuNum);
+        o.setOrderStatus(0);
+        o.setShopName(ss);
+        o.setUserId(userId);
+        o.setUserPhone(mobile);
+        o.setPartsCount(Integer.parseInt(accCount));
+        orderSignforService.saveOrderSignfor(o);
+        if(null!=salesmanService.findByMobile(mobile)){
+          str = JpushClient.sendOrder("下单通知", send,mobile,json.getString("orderNum"),json.getString("skuNum"),json.getString("accNum"),"0");
+        }
+      }
+
+
+
+
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    if(str.contains("发送失败")){
+      //  mr.updateMessageResult(str, mes.getId());
+    }
+  }
 }
 

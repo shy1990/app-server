@@ -70,7 +70,7 @@ public class PushController {
      *{"orderNum":"222222222222222","mobiles":"1561069 62989","amount":"10.0","username":"天桥魅族店"}
      */
     
-	// msg="{'orderNum':'4334434dfddf343','mobiles':'156106962989','amount':'10.0','username':'测试店铺','skuNum':'333333','accNum':'444444','memberMobile':'13406391876'}";
+	 //msg="{'orderNum':'20161008103857232','mobiles':'15376200000','amount':'1376','username':'泰安肥城市新城路中国电信互联网卖场','skuNum':'2','accNum':'2','memberMobile':'15376200000'}";
     JSONObject json = new JSONObject(msg);
     String mobile = json.getString("mobiles");
     String accCount = json.getString("accNum");

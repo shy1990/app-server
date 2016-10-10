@@ -231,7 +231,7 @@ public class OrderSignfor implements Serializable {
   }
 
   public Float getActualPayNum() {
-    return actualPayNum;
+    return actualPayNum==null?orderPrice:actualPayNum;
   }
 
   public void setActualPayNum(Float actualPayNum) {
