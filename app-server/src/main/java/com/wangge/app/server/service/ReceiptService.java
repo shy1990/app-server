@@ -31,40 +31,58 @@ public class ReceiptService {
 		return jsonArray;
 	}
 
-	public void save(Receipt r) {
+	public void addReceipt(Receipt r) {
 		receiptRepository.save(r);
 		
 	}
 
 	@Transactional(rollbackFor=Exception.class)
-	public void addOrUpdateReceipt(JSONObject jsons) {
+	public void addOrUpdateReceipt(JSONObject jsons) throws Exception {
 		String accountId = jsons.getString("accountId");
 		Float amountCollected = jsons.getFloat("amountCollected");
-		int  accountType = jsons.getInteger("accountType");
+		int  billType = jsons.getInteger("billType");
 		String orderno = jsons.getString("orderNum");
 		Float actualPayNum = jsons.getFloat("actualPayNum");
 		OrderSignfor orderSignfor	= orderSignforService.findbyOrderNum(orderno);
-		
+		Float arrears = orderSignfor.getArrears();
 		if(orderSignfor != null){
-			if(accountType== 1){
-				orderSignfor.setArrears(actualPayNum-amountCollected);
-				orderSignfor.setPayAmount(amountCollected);
-				orderSignfor.setUpdateTime(new Date());
+			if(billType== 1){
+					orderSignfor.setArrears(actualPayNum-amountCollected);
+					orderSignfor.setPayAmount(amountCollected);
+					orderSignfor.setUpdateTime(new Date());
 			}else{
-				
-				boolean flag = orderSignfor.getArrears()-amountCollected == 0 ? true : false;
-				if(flag){
-					orderSignfor.setArrears(orderSignfor.getArrears()-amountCollected);
-					orderSignfor.setPayAmount(orderSignfor.getPayAmount()+amountCollected);
-					orderSignfor.setOverTime(new Date());
-				}
+				    
+				    if(arrears-amountCollected >= 0){
+				    	orderSignfor.setArrears(arrears-amountCollected);
+						orderSignfor.setPayAmount(orderSignfor.getPayAmount()+amountCollected);
+						if(arrears-amountCollected == 0){
+							orderSignfor.setOverTime(new Date());
+						}
+						createReceipt(accountId, amountCollected, billType,
+								orderno);
+				    }else{
+				    	throw new RuntimeException("输入金额大于尾款");
+				    }
+					
 			}
 			orderSignforService.saveOrderSignfor(orderSignfor);
-			Receipt receipt = new Receipt(amountCollected, accountType, new Date(), accountId, orderno);
-			receiptRepository.save(receipt);
+			
 		}
 		
 		
 	}
+   /**
+    * 新增一条收款明细
+    * @param accountId
+    * @param amountCollected
+    * @param billType
+    * @param orderno
+    */
+	private void createReceipt(String accountId, Float amountCollected,
+			int billType, String orderno) {
+		Receipt receipt = new Receipt(amountCollected, billType, new Date(), accountId, orderno);
+		receiptRepository.save(receipt);
+	}
+    
 
 }

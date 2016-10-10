@@ -1,25 +1,8 @@
 package com.wangge.app.server.controller;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.lang.StringUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.wangge.app.server.entity.Message;
 import com.wangge.app.server.entity.Message.MessageType;
 import com.wangge.app.server.entity.Message.SendChannel;
-import com.wangge.app.server.entity.Order;
 import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.entity.Salesman;
@@ -30,6 +13,20 @@ import com.wangge.app.server.service.MessageService;
 import com.wangge.app.server.service.OrderSignforService;
 import com.wangge.app.server.service.RegistDataService;
 import com.wangge.app.server.service.SalesmanService;
+import org.apache.commons.lang.StringUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping({ "/v1/push" })
@@ -79,7 +76,8 @@ public class PushController {
     String accCount = json.getString("accNum");
     String ss = json.getString("username");
     int skuNum = Integer.parseInt(json.getString("skuNum"));
-    Float amount = Float.parseFloat(json.getString("amount"));
+    Float amount = Float.parseFloat(json.getString("amount"));//总金额
+    Float acutalPrice = Float.parseFloat(json.getString("acutalPrice"));//总金额
     String orderno = json.getString("orderNum");
     Salesman salesman =new Salesman();
     String userId=null;
@@ -121,6 +119,7 @@ public class PushController {
         o.setOrderNo(orderno);
         o.setCreatTime(new Date());
         o.setOrderPrice(amount);
+        o.setActualPayNum(acutalPrice);//实际金额
         o.setPhoneCount(skuNum);
         o.setOrderStatus(0);
         o.setShopName(ss);
@@ -441,6 +440,23 @@ public class PushController {
 	    if(!StringUtils.isEmpty(orderno) && !StringUtils.isEmpty(payStatus)){
 	    	orderSignforService.updateOrderSignfor(orderno,payStatus);
 	    }
-		
 	}
+
+  /**
+   * 商城调用修改实际金额
+   * @param msg
+   */
+  @RequestMapping(value = { "/pushAcutalPrice" }, method = RequestMethod.POST)
+  public void pushAcutalPrice(String msg){
+    JSONObject json = new JSONObject(msg);
+    String orderno = json.getString("orderNo");
+    Float acutalPrice = Float.parseFloat(json.getString("acutalPrice"));
+    if(!StringUtils.isEmpty(orderno) && !StringUtils.isEmpty(orderno)){
+      OrderSignfor orderSignfor=orderSignforService.findbyOrderNum(orderno);
+      orderSignfor.setActualPayNum(acutalPrice);
+      orderSignforService.saveOrderSignfor(orderSignfor);
+    }
+  }
+
+
 }

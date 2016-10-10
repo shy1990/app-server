@@ -1,23 +1,5 @@
 package com.wangge.app.server.service;
 
-import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.context.ApplicationContext;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.constant.OrderShipStatusConstant;
@@ -35,6 +17,26 @@ import com.wangge.app.server.repositoryimpl.OrderSignforImpl;
 import com.wangge.app.server.thread.OrderSignforCountDown;
 import com.wangge.app.server.vo.BillVo;
 import com.wangge.app.server.vo.OrderVo;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+
+import javax.annotation.Resource;
+
+import java.io.EOFException;
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 @Service
 public class OrderSignforService {
 
@@ -163,9 +165,11 @@ public class OrderSignforService {
    */
   @Transactional(readOnly=false,rollbackFor=Exception.class)
   public void customSignforByCash(String orderNo,String userPhone,String signGeoPoint,int payType,String smsCode,int isPrimaryAccount,String childId,String storePhone,String userId,String accountId, int billStatus,Float amountCollected,String walletPayNo,Float actualPayNum) throws Exception{
-  	 singOrder(orderNo, userPhone, signGeoPoint, payType, smsCode,
-  				isPrimaryAccount, userId, childId, accountId, storePhone);
-  	createBill(orderNo,userPhone,userId,accountId,billStatus,amountCollected,walletPayNo,actualPayNum);
+ 
+  		 singOrder(orderNo, userPhone, signGeoPoint, payType, smsCode,
+   				isPrimaryAccount, userId, childId, accountId, storePhone);
+   	createBill(orderNo,userPhone,userId,accountId,billStatus,amountCollected,walletPayNo,actualPayNum);
+	
   }
 
   /**
@@ -228,7 +232,7 @@ public class OrderSignforService {
  */
 private void singOrder(String orderNo, String userPhone, String signGeoPoint,
 		int payType, String smsCode, int isPrimaryAccount, String userId,
-		String childId, String accountId, String storePhone) throws Exception{
+		String childId, String accountId, String storePhone){
 	  updateOrderSingfor(orderNo, userPhone, signGeoPoint, payType, smsCode,
 			isPrimaryAccount, accountId);
        createMonthTaskRecord(storePhone);
@@ -239,6 +243,7 @@ private void singOrder(String orderNo, String userPhone, String signGeoPoint,
         if(1 == payType){
          	 startCountDown(orderNo,oderService);
          } 
+       
 }
 /**
  * 更新订单
@@ -282,10 +287,15 @@ private void updateOrderSingfor(String orderNo, String userPhone,
                payStatus = OrderShipStatusConstant.SHOP_ORDER_PAYSTATUS_HAVETOPAY;
                Cash cash= new Cash(orderSignFor.getId(),userId);
                cs.save(cash);
+<<<<<<< HEAD
                if(null!=walletPayNo){
+=======
+               System.out.println("walletPayNo"+walletPayNo);
+               if(null!=walletPayNo&&!walletPayNo.equals("null")){
+>>>>>>> branch 'youbufenzhi0523' of https://git.oschina.net/wgtechnology/app-server.git
             	   RestTemplate restTemplate = new RestTemplate();
             	   Map<String, Object> param = new HashMap<String, Object>();
-   				param.put("status", "SUCCESS");
+                 param.put("status", "SUCCESS");
             	   String walletPayNoUrl = walletPayNo+"/status";
             	   restTemplate.put(url+walletPayNoUrl, param);
                }
@@ -313,19 +323,24 @@ private void updateOrderSingfor(String orderNo, String userPhone,
  * @param storePhone
  */
 private void createOilRecord(String signGeoPoint, int isPrimaryAccount,
-		String userId, String childId, String storePhone) throws Exception{
-	ctx.publishEvent(new afterSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,6,storePhone));
+		String userId, String childId, String storePhone){
+	
+		ctx.publishEvent(new afterSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,6,storePhone));
+		
+	
 }
 /**
  * 创建月任务
  * @param storePhone
  * @throws Exception
  */
-private void createMonthTaskRecord(String storePhone) throws Exception {
-	RegistData registData = registDataService.findByPhoneNum(storePhone);
-	 if(registData != null){
-	   monthTaskServive.saveExecution(registData.getId(), "客户签收");
-	 }
+private void createMonthTaskRecord(String storePhone) {
+
+		RegistData registData = registDataService.findByPhoneNum(storePhone);
+		 if(registData != null){
+		   monthTaskServive.saveExecution(registData.getId(), "客户签收");
+		 }
+	
 }
 /**
  * 更新商城订单
@@ -333,13 +348,15 @@ private void createMonthTaskRecord(String storePhone) throws Exception {
  * @param payType
  */
   private void updateMallOrder(String orderNo, int payType){
-	  String dealType = "";
-      String payStatus = "";
-      if(payType == 2){
-    	  dealType = "cash";
-          payStatus = OrderShipStatusConstant.SHOP_ORDER_PAYSTATUS_HAVETOPAY;
-      }
-	  opl.updateOrderShipStateByOrderNum(orderNo,OrderShipStatusConstant.SHOP_ORDER_SHIPSTATUS_KHSIGNEDFOR,payStatus,dealType);
+	
+		 String dealType = "";
+	      String payStatus = "";
+	      if(payType == 2){
+	    	  dealType = "cash";
+	          payStatus = OrderShipStatusConstant.SHOP_ORDER_PAYSTATUS_HAVETOPAY;
+	      }
+		  opl.updateOrderShipStateByOrderNum(orderNo,OrderShipStatusConstant.SHOP_ORDER_SHIPSTATUS_KHSIGNEDFOR,payStatus,dealType);
+	
   }
   
 private void startCountDown(String orderNo, OrderService oderService){
@@ -525,16 +542,21 @@ public void settlement(JSONObject jsons) {
 	String orderno = jsons.getString("orderNum");
 	Float arrears = jsons.getFloat("arrears");
 	String accountId = jsons.getString("accountId");
-	 OrderSignfor orderSignfor = osr.findByOrderNo(orderno);
-	 if(orderSignfor != null){
-		 orderSignfor.setPayAmount(orderSignfor.getPayAmount()+arrears);
-		 orderSignfor.setArrears(0f);//欠款为0
-		 orderSignfor.setOverTime(new Date());//款项结清的时间
-		 orderSignfor.setBillStatus(0);//收款的状态为已付清
-		 osr.save(orderSignfor);
-	 }
-	 Receipt r = new Receipt(arrears, 0, new Date(), accountId, orderno);
-	 receiptService.save(r);
+	if(!StringUtils.isEmpty(orderno) && arrears > 0 && !StringUtils.isEmpty(accountId)){
+		OrderSignfor orderSignfor = osr.findByOrderNo(orderno);
+		 if(orderSignfor != null){
+			 orderSignfor.setPayAmount(orderSignfor.getPayAmount()+arrears);
+			 orderSignfor.setArrears(0f);//欠款为0
+			 orderSignfor.setOverTime(new Date());//款项结清的时间
+			 orderSignfor.setBillStatus(0);//收款的状态为已付清
+			 osr.save(orderSignfor);
+		 }
+		 Receipt r = new Receipt(arrears, 0, new Date(), accountId, orderno);
+		 receiptService.addReceipt(r);
+	}else{
+		throw new RuntimeException("参数不完整");
+	}
+	 
 	
 	
 }
@@ -582,12 +604,16 @@ private BillVo createOrderVo(Page<OrderSignfor> o) {
 	BillVo vo = new BillVo();
 	return vo;
 }
-
+/**
+ * 获取欠款情况(今日，昨日，历史)
+ * @param userId
+ * @return
+ */
 public Map<String, Float> queryArrears(String userId) {
 	Map<String, Float> map = new HashMap<String, Float>();
 	Float	historyArrears = osr.findSumForArrears(userId);
-	Float  yesterdayArrears = osr.findSumForArrears(userId, "sysdate-2", "sysdate-1");
-	Float todayArrears = osr.findSumForArrears(userId, "sysdate-1", "sysdate");
+	Float  yesterdayArrears = osr.findSumForArrears(userId,2,1);
+	Float todayArrears = osr.findSumForArrears(userId,1,0);
 	map.put("historyArrears", historyArrears);
 	map.put("yesterdayArrears", yesterdayArrears);
 	map.put("todayArrears", todayArrears);

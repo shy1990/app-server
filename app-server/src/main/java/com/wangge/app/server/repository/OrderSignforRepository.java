@@ -19,8 +19,8 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
   OrderSignfor findByOrderNo(String orderno);
   @Query("select o from OrderSignfor o where o.userId=?1 and o.creatTime>=trunc(?2) and o.creatTime<trunc(?3)")
   Page<OrderSignfor> findByUserIdAndCreatTime(String userId,String startDate,String endDate, Pageable pageRequest);
-  @Query("select sum(o.arrears) from OrderSignfor o where o.userId=?1 and o.creatTime>=trunc(?2) and o.creatTime<trunc(?3)")
-  Float findSumForArrears(String userId,String startDate,String endDate);
+  @Query("select sum(o.arrears) from OrderSignfor o where o.userId=?1 and o.creatTime>=trunc(sysdate) -?2 and o.creatTime<trunc(sysdate) -?3 ")
+  Float findSumForArrears(String userId,long startDate,long endDate);
   @Query("select sum(o.arrears) from OrderSignfor o where o.userId=?1")
   Float findSumForArrears(String userId);
   

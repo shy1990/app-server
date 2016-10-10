@@ -1,15 +1,13 @@
 package com.wangge.app.server.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
+import com.wangge.app.server.entity.Regist;
+import com.wangge.app.server.entity.Regist.RegistStatus;
+import com.wangge.app.server.entity.Salesman;
+import com.wangge.app.server.service.AssessService;
+import com.wangge.app.server.service.RegionService;
+import com.wangge.app.server.service.RegistService;
+import com.wangge.app.server.service.SalesmanService;
+import com.wangge.app.server.vo.RegistAreaVo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,16 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.wangge.app.server.entity.Regist;
-import com.wangge.app.server.entity.Regist.RegistStatus;
-import com.wangge.app.server.entity.RegistData;
-import com.wangge.app.server.entity.Salesman;
-import com.wangge.app.server.service.AssessService;
-import com.wangge.app.server.service.RegionService;
-import com.wangge.app.server.service.RegistService;
-import com.wangge.app.server.service.SalesmanService;
-import com.wangge.app.server.vo.RegionVo;
-import com.wangge.app.server.vo.RegistAreaVo;
+import javax.annotation.Resource;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/v1")
@@ -56,7 +49,6 @@ public class RegistController {
 	   //  Map<String, List<RegionVo>>   regionMap = assessService.getRegistRegion(salesman);
 	     
 	     List<RegistAreaVo> voList = assessService.getRegistRegions(salesman);
-	   
 		return new ResponseEntity<List<RegistAreaVo>>(voList,HttpStatus.OK);
 	}
 	

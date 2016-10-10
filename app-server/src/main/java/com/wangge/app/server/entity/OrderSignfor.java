@@ -3,17 +3,11 @@ package com.wangge.app.server.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -25,8 +19,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 
 
-//@JsonIgnoreProperties(value = { "hibernateLazyInitializer" ,"handler"})
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+
 @JsonInclude(Include.NON_EMPTY)
 @Entity
 @Table(name = "BIZ_ORDER_SIGNFOR")
@@ -49,6 +42,7 @@ public class OrderSignfor implements Serializable {
   private String userPhone;
   private String shopName;
   private Float orderPrice;
+  private Float actualPayNum;//实际支付金额
   private Integer phoneCount;
   @JsonFormat(pattern = "MM.dd HH:mm",timezone="GMT+8")
   private Date creatTime;
@@ -294,4 +288,11 @@ public void setUpdateTime(Date updateTime) {
 
 
   
+  public Float getActualPayNum() {
+    return actualPayNum;
+  }
+
+  public void setActualPayNum(Float actualPayNum) {
+    this.actualPayNum = actualPayNum;
+  }
 }

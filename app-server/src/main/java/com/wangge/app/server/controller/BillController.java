@@ -22,15 +22,15 @@ import com.wangge.app.server.service.ReceiptService;
 import com.wangge.app.server.vo.BillVo;
 
 @RestController
-@RequestMapping("v1/bill")
+@RequestMapping("/v1/bill")
 public class BillController {
 	@Resource
 	private ReceiptService receiptService;
 	@Resource
 	private OrderSignforService orderSignforService;
 	
-	@RequestMapping(value="/UpdateBill",method=RequestMethod.POST)
-	public  ResponseEntity<Json> addOrUpdateReceipt(@RequestBody JSONObject jsons){
+	@RequestMapping(value="/addOrEditBill",method=RequestMethod.POST)
+	public  ResponseEntity<Json> addOrUpdateReceipt(@RequestBody JSONObject jsons) throws Exception{
 		Json json = new Json();
 		receiptService.addOrUpdateReceipt(jsons);
 		json.setMsg("success");
@@ -58,16 +58,20 @@ public class BillController {
 		return new ResponseEntity<Json>(json,HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="queryBillList/{userId}/{day}",method = RequestMethod.POST)
+	@RequestMapping(value="/queryBillList/{userId}/{day}",method = RequestMethod.POST)
 	public ResponseEntity<Void> queryBillList(@PathVariable("userId")String userId,@PathVariable("day")String day,@RequestBody JSONObject jsons){
 		
 		 Page<OrderSignfor> pages = orderSignforService.getBillList(userId,day,jsons);
 		
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
-	
-	@RequestMapping(value="queryArrears/{userId}/",method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Float>> queryArrears(@PathVariable()String userId){
+	/**
+	 * 获取总欠款(今日，昨日，历史)
+	 * @param userId
+	 * @return
+	 */
+	@RequestMapping(value="/queryArrears/{userId}/",method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Float>> queryArrears(@PathVariable("userId")String userId){
 		Map<String, Float> Arrears = orderSignforService.queryArrears(userId);
 		return  new ResponseEntity<Map<String, Float>>(Arrears,HttpStatus.OK);
 	}
