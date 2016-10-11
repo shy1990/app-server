@@ -23,7 +23,7 @@ public class Receipt {
 	private Date createTime;
 	private String accountId;
 	private int signid;
-	private String orderno;
+	private String orderNo;
 	
 	
 	public Receipt(Float amountCollected, Integer receiptType, Date createTime,
@@ -33,7 +33,7 @@ public class Receipt {
 		this.receiptType = receiptType;
 		this.createTime = createTime;
 		this.accountId = accountId;
-		this.orderno = orderno;
+		this.orderNo = orderno;
 	}
 	public Integer getId() {
 		return id;
@@ -71,11 +71,11 @@ public class Receipt {
 	public void setSignid(int signid) {
 		this.signid = signid;
 	}
-	public String getOrderno() {
-		return orderno;
+	public String getOrderNo() {
+		return orderNo;
 	}
-	public void setOrderno(String orderno) {
-		this.orderno = orderno;
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
 	}
 	
 }

@@ -141,8 +141,8 @@ public class OrderSignforController {
    */
   @RequestMapping(value ="/customOrderSign", method = RequestMethod.POST)
   @ResponseBody
-  public ResponseEntity<MessageCustom> customOrderSign(@RequestBody JSONObject jsons,@RequestParam(defaultValue="",required=false,value="amountCollected") String amountCollected,
-		  @RequestParam(value="",required=false,defaultValue="") String billStatus){
+  public ResponseEntity<MessageCustom> customOrderSign(@RequestBody JSONObject jsons,@RequestParam(defaultValue="",required=false,value="amountCollected") Float amountCollected,
+		  @RequestParam(value="",required=false,defaultValue="") int billStatus){
      String userPhone = jsons.getString("userPhone");
      String orderNo = jsons.getString("orderNo");
      String smsCode = jsons.getString("smsCode");
@@ -163,7 +163,7 @@ public class OrderSignforController {
 				accountId = childId;
 			}
 			if (payType == 2) {
-				orderSignforService.customSignforByCash(orderNo,userPhone,signGeoPoint,payType,smsCode,isPrimaryAccount,childId,storePhone,userId,accountId,Integer.parseInt(billStatus),Float.parseFloat(amountCollected),walletPayNo,Float.parseFloat(actualPayNum));
+				orderSignforService.customSignforByCash(orderNo,userPhone,signGeoPoint,payType,smsCode,isPrimaryAccount,childId,storePhone,userId,accountId,billStatus,amountCollected,walletPayNo,Float.parseFloat(actualPayNum));
 			}else{
 				 if(smsCode != null && !"".equals(smsCode) && storePhone != null && !"".equals(storePhone)){
 				        String msg = HttpUtil.sendPost("http://www.3j1688.com/member/existMobileCode/"+storePhone+"_"+smsCode+".html","");

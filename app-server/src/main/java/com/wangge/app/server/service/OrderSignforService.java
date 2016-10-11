@@ -16,7 +16,6 @@ import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.repositoryimpl.OrderSignforImpl;
 import com.wangge.app.server.thread.OrderSignforCountDown;
 import com.wangge.app.server.vo.BillVo;
-import com.wangge.app.server.vo.OrderVo;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -562,36 +561,23 @@ public void settlement(JSONObject jsons) {
 }
 
 public Page<OrderSignfor> getBillList(String userId, String day,
-		JSONObject jsons) {
+		JSONObject jsons, int pageSize ) {
 	int pageNo = jsons.getIntValue("pageNumber");
-	int pageSize = 10;
-	String  startDate = "";
-	String endDate = "";
-	 Float todayArrears = 0f;
-	 Float yesterdayArrears=0f;
-	 Float historyArrears=0f;
+	int  startDate = 0;
+	int endDate = 0;
 	 if(day.equals("today")){
-		  startDate = "sysdate-1";
-		 endDate = "sysdate";
+		  startDate = 1;
+		 //endDate = "0";
 	 }else if(day.equals("yesterday")){
-		   startDate = "sysdate-2";
-		   endDate = "sysdate-1";
+		   startDate = 2;
+		   endDate = 1;
 			 
 	 }
 	 Page<OrderSignfor>	o = osr.findByUserIdAndCreatTime(userId, startDate, endDate, new PageRequest(pageNo > 0 ?pageNo-1:0,pageSize > 0 ? pageSize : 10,new Sort(Direction.DESC, "id")));
 	 
-	// BillVo Vo =  createOrderVo(o,todayArrears,yesterdayArrears,historyArrears);
-	 
 	 return o;
 }
 
-/*public BillVo getBillVo(String userId, String day,
-		JSONObject jsons){
-	Float	historyArrears = osr.findSumForArrears(userId);
-	Float  yesterdayArrears = osr.findSumForArrears(userId, "sysdate-2", "sysdate-1");
-	Float todayArrears = osr.findSumForArrears(userId, "sysdate-1", "sysdate");
-	return  null;
-}*/
 
 /**
  * 组装
@@ -610,13 +596,22 @@ private BillVo createOrderVo(Page<OrderSignfor> o) {
  * @return
  */
 public Map<String, Float> queryArrears(String userId) {
-	Map<String, Float> map = new HashMap<String, Float>();
-	Float	historyArrears = osr.findSumForArrears(userId);
-	Float  yesterdayArrears = osr.findSumForArrears(userId,2,1);
-	Float todayArrears = osr.findSumForArrears(userId,1,0);
-	map.put("historyArrears", historyArrears);
+	
+	Map<String, Float> arrears = createTotalArrears(userId);
+	/*map.put("historyArrears", historyArrears);
 	map.put("yesterdayArrears", yesterdayArrears);
-	map.put("todayArrears", todayArrears);
+	map.put("todayArrears", todayArrears);*/
+	return arrears;
+}
+
+private Map<String, Float> createTotalArrears(String userId){
+	Map<String, Float> map = new HashMap<String, Float>();
+	List<Float> arrears = osr.findSumForArrears(userId);
+	for(int i=0;i<arrears.size();i++){
+		map.put("historyArrears", arrears.get(0));
+		map.put("todayArrears", arrears.get(1));
+		map.put("yesterdayArrears", arrears.get(2));
+	}
 	return map;
 }
 

@@ -17,12 +17,16 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
   OrderSignfor findByOrderNoAndUserPhone(String orderNo, String userPhone);
   
   OrderSignfor findByOrderNo(String orderno);
-  @Query("select o from OrderSignfor o where o.userId=?1 and o.creatTime>=trunc(?2) and o.creatTime<trunc(?3)")
-  Page<OrderSignfor> findByUserIdAndCreatTime(String userId,String startDate,String endDate, Pageable pageRequest);
-  @Query("select sum(o.arrears) from OrderSignfor o where o.userId=?1 and o.creatTime>=trunc(sysdate) -?2 and o.creatTime<trunc(sysdate) -?3 ")
-  Float findSumForArrears(String userId,long startDate,long endDate);
-  @Query("select sum(o.arrears) from OrderSignfor o where o.userId=?1")
-  Float findSumForArrears(String userId);
+  @Query("select o from OrderSignfor o where o.userId=?1 and o.creatTime>=trunc(sysdate)- ?2 and o.creatTime<trunc(sysdate)-?3")
+  Page<OrderSignfor> findByUserIdAndCreatTime(String userId,int startDate,int endDate, Pageable pageRequest);
+ /* @Query("select sum(o.arrears) from OrderSignfor o where o.userId=?1 and o.creatTime>=trunc(sysdate) -?2 and o.creatTime<trunc(sysdate) -?3 ")
+  Float findSumForArrears(String userId,long startDate,long endDate);*/
+  @Query(value="select sum(o.arrears) from biz_order_signfor o where o.user_id=?1"+
+" union"+
+" select sum(o.arrears) from biz_order_signfor o where o.user_id= ?1 and o.creat_time>=trunc(sysdate) - 1 and o.creat_time<trunc(sysdate)"+
+" union"+
+" select sum(o.arrears) from biz_order_signfor o where o.user_id= ?1 and o.creat_time>=trunc(sysdate) - 2 and o.creat_time<trunc(sysdate)-1",nativeQuery=true)
+  List<Float> findSumForArrears(String userId);
   
   /**
    * countByuserAndDayAndMonth:查询以业务员每天的订单统计和该月的订单统计. <br/>

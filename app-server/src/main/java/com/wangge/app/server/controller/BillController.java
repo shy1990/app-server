@@ -11,15 +11,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.OrderSignfor;
-import com.wangge.app.server.entity.UnpaymentRemark;
+import com.wangge.app.server.entity.Receipt;
 import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.service.OrderSignforService;
 import com.wangge.app.server.service.ReceiptService;
-import com.wangge.app.server.vo.BillVo;
+import com.wangge.app.server.vo.ReceiptVo;
 
 @RestController
 @RequestMapping("/v1/bill")
@@ -30,12 +31,9 @@ public class BillController {
 	private OrderSignforService orderSignforService;
 	
 	@RequestMapping(value="/addOrEditBill",method=RequestMethod.POST)
-	public  ResponseEntity<Json> addOrUpdateReceipt(@RequestBody JSONObject jsons) throws Exception{
-		Json json = new Json();
-		receiptService.addOrUpdateReceipt(jsons);
-		json.setMsg("success");
-		json.setCode(0);
-		return new ResponseEntity<Json>(json,HttpStatus.OK);
+	public  ResponseEntity<ReceiptVo> addOrUpdateReceipt(@RequestBody JSONObject jsons) throws Exception{
+		ReceiptVo ReceiptVo = receiptService.addOrUpdateReceipt(jsons);
+		return new ResponseEntity<ReceiptVo>(ReceiptVo,HttpStatus.OK);
 	}
 	
 	
@@ -59,9 +57,9 @@ public class BillController {
 	}
 	
 	@RequestMapping(value="/queryBillList/{userId}/{day}",method = RequestMethod.POST)
-	public ResponseEntity<Void> queryBillList(@PathVariable("userId")String userId,@PathVariable("day")String day,@RequestBody JSONObject jsons){
+	public ResponseEntity<Void> queryBillList(@PathVariable("userId")String userId,@PathVariable("day")String day,@RequestBody JSONObject jsons, @RequestParam(defaultValue="10",required=false,value="pageSize") int pageSize){
 		
-		 Page<OrderSignfor> pages = orderSignforService.getBillList(userId,day,jsons);
+		 Page<OrderSignfor> pages = orderSignforService.getBillList(userId,day,jsons,pageSize);
 		
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}

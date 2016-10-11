@@ -69,7 +69,7 @@ public class OrderSignfor implements Serializable {
   
   private int isPrimaryAccount;
   
-private Integer billStatus; //订单结款状态
+  private Integer billStatus; //订单结款状态
   
   private  Float  arrears;//欠款金额
   
