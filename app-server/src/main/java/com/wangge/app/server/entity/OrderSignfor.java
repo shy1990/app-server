@@ -4,7 +4,6 @@ package com.wangge.app.server.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -27,8 +26,8 @@ public class OrderSignfor implements Serializable {
   private static final long serialVersionUID = 1L;
   @Id
   @Column(name = "SIGNID")
-  @GenericGenerator(name = "idgen", strategy = "increment")
-  @GeneratedValue(generator = "idgen")
+  @SequenceGenerator(name = "idgen")
+  @GeneratedValue(generator = "idgen", strategy = GenerationType.SEQUENCE)
   private Integer id;
   private String fastmailNo;
   private String orderNo;

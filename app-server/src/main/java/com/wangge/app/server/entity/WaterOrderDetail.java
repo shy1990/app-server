@@ -1,18 +1,7 @@
 package com.wangge.app.server.entity;
 
+import javax.persistence.*;
 import java.io.Serializable;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.GenericGenerator;
 
 
 
@@ -29,10 +18,11 @@ public class WaterOrderDetail implements Serializable  {
    * 
    */
   private static final long serialVersionUID = 1L;
-  
+
+
   @Id
-  @GenericGenerator(name = "idgen", strategy = "increment")
-  @GeneratedValue(generator = "idgen")
+  @SequenceGenerator(name = "idgen")
+  @GeneratedValue(generator = "idgen", strategy = GenerationType.SEQUENCE)
   private Integer id;
   @Column(name="SERIAL_NO")
   private String serialNo ; //流水单号

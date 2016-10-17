@@ -159,7 +159,7 @@ public class Order implements Serializable {
 			this.dealType = "未付款";
 		}
 		if("yeePay".equals(dealType)){
-			this.dealType = "线上支付"; //最开始版本叫：线上支付　现在：在线支付
+			this.dealType = "在线支付"; //最开始版本叫：线上支付　现在：在线支付
 		}
 		return dealType;
 	}
