@@ -7,15 +7,21 @@ import com.wangge.app.server.entity.Cash;
 import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.entity.Receipt;
 import com.wangge.app.server.entity.RegistData;
+import com.wangge.app.server.entity.dto.BillHistoryDto;
+import com.wangge.app.server.entity.dto.OrderDto;
 import com.wangge.app.server.event.afterSalesmanSignforEvent;
 import com.wangge.app.server.event.afterSignforEvent;
 import com.wangge.app.server.monthTask.service.MonthTaskServive;
+import com.wangge.app.server.pojo.QueryResult;
 import com.wangge.app.server.repository.OrderSignforRepository;
 import com.wangge.app.server.repository.ReceiptRepository;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.repositoryimpl.OrderSignforImpl;
 import com.wangge.app.server.thread.OrderSignforCountDown;
+import com.wangge.app.util.DateUtil;
+import com.wangge.app.server.vo.BillHistoryVo;
 import com.wangge.app.server.vo.BillVo;
+import com.wangge.app.server.vo.OrderVo;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -24,14 +30,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
-import java.io.EOFException;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -424,13 +436,13 @@ private OrderSignfor createCashRecord(String orderNo, String userPhone,
  * @param walletPayNo
  */
 private void updateQb(String walletPayNo) {
-	if(null!=walletPayNo){
+	/*if(null!=walletPayNo){
 	   RestTemplate restTemplate = new RestTemplate();
 	   Map<String, Object> param = new HashMap<String, Object>();
 			param.put("status", "SUCCESS");
 	   String walletPayNoUrl = walletPayNo+"/status";
 	   restTemplate.put(url+walletPayNoUrl, param);
-	 }
+	 }*/
 	}
 
 /**
@@ -442,8 +454,14 @@ private void updateQb(String walletPayNo) {
  */
 private void updateOrderReceipt(int billStatus, Float amountCollected,
 		Float actualPayNum, OrderSignfor orderSignFor) {
+	 if(billStatus == 0){
+		 amountCollected =  actualPayNum;
+	 }else if(billStatus == 1){
+		 amountCollected = 0f;
+	 }
 	orderSignFor.setBillStatus(billStatus);
 	 orderSignFor.setPayAmount(amountCollected);
+	
 	 Float arrears = actualPayNum-amountCollected;
 	 orderSignFor.setArrears(arrears);
 	 orderSignFor.setUpdateTime(new Date());
@@ -560,9 +578,9 @@ public void settlement(JSONObject jsons) {
 	
 }
 
-public Page<OrderSignfor> getBillList(String userId, String day,
-		JSONObject jsons, int pageSize ) {
-	int pageNo = jsons.getIntValue("pageNumber");
+
+public BillVo getBillList(String userId, String day,
+		int pageNo, int pageSize ) {
 	int  startDate = 0;
 	int endDate = 0;
 	 if(day.equals("today")){
@@ -571,42 +589,150 @@ public Page<OrderSignfor> getBillList(String userId, String day,
 	 }else if(day.equals("yesterday")){
 		   startDate = 2;
 		   endDate = 1;
-			 
 	 }
-	 Page<OrderSignfor>	o = osr.findByUserIdAndCreatTime(userId, startDate, endDate, new PageRequest(pageNo > 0 ?pageNo-1:0,pageSize > 0 ? pageSize : 10,new Sort(Direction.DESC, "id")));
+	 Page<Object>	o = osr.findByUserIdAndCreatTime(userId, startDate, endDate, new PageRequest(pageNo > 0 ?pageNo-1:0,pageSize > 0 ? pageSize : 10,new Sort(Direction.DESC, "id")));
 	 
-	 return o;
+	 return createBillVo(o);
 }
-
-
 /**
- * 组装
- * @param o
+ * 获取某天欠款列表
+ * @param userId
+ * @param date
+ * @param pageNo
+ * @param pageSize
  * @return
  */
-private BillVo createOrderVo(Page<OrderSignfor> o) {
-	// TODO Auto-generated method stub
-	
-	BillVo vo = new BillVo();
-	return vo;
+public BillVo getBillListOneDay(String userId, String date, int pageNo, int pageSize){
+	 Page<Object>	o = osr.findByUserIdAndCreatTime(userId, date, new PageRequest(pageNo > 0 ?pageNo-1:0,pageSize,new Sort(Direction.DESC, "id")));
+     return createBillVo(o) ;
 }
+
 /**
- * 获取欠款情况(今日，昨日，历史)
+ * 获取欠款历史总汇列表
+ * @param userId
+ * @param pageNo
+ * @param pageSize
+ */
+public BillHistoryVo queryBillHistory(String userId,int pageNo, int pageSize) {
+	 
+	 List<Object>	o = osr.findBillHistoryConfluenceList(userId,pageNo,pageSize);
+	 Long	count  = osr.findBillHistoryConfluenceCount(userId);
+     QueryResult<BillHistoryVo> re = new QueryResult<BillHistoryVo>();
+     re.setTotalPages(count,Long.parseLong(String.valueOf(pageSize)));
+    return createBillHistoryVo(o,Integer.valueOf(String.valueOf(re.getTotalPages())));
+}
+
+public BillVo getBillList(String userId, String createTime, int pageNumer, int pageSize,int isPrimary,int billStatus, int orderStatus) {
+	 Page<OrderSignfor> orderPage = osr.findAll(new Specification<OrderSignfor>() {
+
+	      public Predicate toPredicate(Root<OrderSignfor> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+	        List<Predicate> predicates = new ArrayList<Predicate>();
+	        if(!StringUtils.isEmpty(userId)){
+	        	  Predicate p1 = cb.equal(root.get("userId").as(String.class), userId );
+		          predicates.add(p1);
+	        }
+	        
+	        if (isPrimary  > 0 ) {
+	        	int isPrimaryAccount = 0;
+	        	if(isPrimary == 1){
+	        		isPrimaryAccount = 1;
+	        	}else if(isPrimary == 2){
+	        		isPrimaryAccount = 0;
+	        	}
+	          Predicate p2 = cb.equal(root.get("isPrimaryAccount").as(int.class), isPrimaryAccount );
+	          predicates.add(p2);
+	        }
+	        
+	        if(billStatus>0){
+	        	 Predicate p3 = cb.equal(root.get("billStatus").as(Integer.class), billStatus);
+	        	 predicates.add(p3);
+	        }
+	        
+	       
+	        	if(orderStatus == 3){
+	        		Predicate p4 = cb.equal(root.get("orderStatus").as(Integer.class), orderStatus);
+		        	 predicates.add(p4);
+	        	}else{
+	        		Predicate p4 = cb.equal(root.get("orderStatus").as(Integer.class), 0);
+	        		Predicate p5 = cb.equal(root.get("orderStatus").as(Integer.class), 2);
+		        	 predicates.add(cb.or(p4,p5));
+	        	}
+	        	
+	      
+	        
+	        if(!StringUtils.isEmpty(createTime)){
+	        	Predicate p4 = cb.isNotNull(root.get("fastmailNo").as(String.class));
+	        	Predicate p5 = cb.between(root.get("creatTime").as(Date.class),DateUtil.getYesterdayDate2(createTime), DateUtil.getTodayDate2(createTime));
+	        	predicates.add(cb.and(p4,p5));
+	        }
+	        
+	       
+	        return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+	      }
+
+	    }, new PageRequest(pageNumer > 0 ? pageNumer-1:0, 20, new Sort(Sort.Direction.DESC,"creatTime")));
+	  return createBillVoByOrderSignfor(orderPage);
+	  }
+
+
+ private BillVo createBillVoByOrderSignfor(Page<OrderSignfor> orderPage){
+	 BillVo bvo = new BillVo();
+	 Float totalArrears = 0f;
+	 List<OrderVo> list = createOrderVoByOrderSignfor(orderPage);
+	 for(OrderVo vo : list){
+		 totalArrears+=vo.getTotalArreas();
+	 }
+	 bvo.setContent(list);
+	 bvo.setTotalArrears(totalArrears);
+	 bvo.setTotalPages(orderPage.getTotalPages());
+	 return bvo;
+ }
+/**
+ * 按条件查询后组装
+ * @param orderPage
+ * @return
+ */
+private List<OrderVo> createOrderVoByOrderSignfor(Page<OrderSignfor> orderPage) {
+	List<OrderVo> volist = new ArrayList<OrderVo>();
+    List<OrderSignfor> list = new ArrayList<OrderSignfor>(orderPage.getContent());
+    List<OrderSignfor> list2 = new ArrayList<OrderSignfor>(orderPage.getContent());
+	for(int i = 0;i<list.size();){
+		List<OrderDto> dtoList = new ArrayList<OrderDto>();
+		Float totalArrear = 0f;
+		OrderVo bvo = new OrderVo();
+		OrderSignfor o = list.get(i);
+		bvo.setShopName(o.getShopName());
+		
+		bvo.setContent(dtoList);
+		for(OrderSignfor os : list2){
+			
+			if(o.getShopName().toString().equals(os.getShopName().toString())){
+				OrderDto dto = new OrderDto();
+				dto.setOrderNo(os.getOrderNo());
+				dto.setPayTyp(os.getOrderPayType() != null ? os.getOrderPayType() : 3);
+				dto.setOrderPrice(os.getOrderPrice());
+				dto.setCreateTime(os.getCreatTime());
+				dto.setArrear(os.getOrderStatus() == 3 ? os.getArrears() : os.getActualPayNum());
+				dtoList.add(dto);
+				totalArrear += os.getArrears();//os.getOrderStatus() == 3 ? os.getArrears() : os.getActualPayNum()
+				bvo.setTotalArreas(totalArrear);
+				list.remove(os);
+			}
+		}
+		volist.add(bvo);
+	}
+	return volist;
+}
+
+/**
+ * 获取欠款总和(今日，昨日，历史)
  * @param userId
  * @return
  */
-public Map<String, Float> queryArrears(String userId) {
+public Map<String, BigDecimal> queryArrears(String userId) {
 	
-	Map<String, Float> arrears = createTotalArrears(userId);
-	/*map.put("historyArrears", historyArrears);
-	map.put("yesterdayArrears", yesterdayArrears);
-	map.put("todayArrears", todayArrears);*/
-	return arrears;
-}
-
-private Map<String, Float> createTotalArrears(String userId){
-	Map<String, Float> map = new HashMap<String, Float>();
-	List<Float> arrears = osr.findSumForArrears(userId);
+	Map<String, BigDecimal> map = new HashMap<String, BigDecimal>();
+	List<BigDecimal> arrears =  osr.findSumForArrears(userId);
 	for(int i=0;i<arrears.size();i++){
 		map.put("historyArrears", arrears.get(0));
 		map.put("todayArrears", arrears.get(1));
@@ -615,5 +741,101 @@ private Map<String, Float> createTotalArrears(String userId){
 	return map;
 }
 
-
+public Date checkOrderOverTime(String ordernum) {
+	Object object = osr.findOverTimeByOrderNo(ordernum);
+	return (Date)object;
 }
+
+private BillHistoryVo createBillHistoryVo(List<Object> o,int totalPages) {
+	BillHistoryVo historyVo = new BillHistoryVo();
+	List<BillHistoryDto> dtoList = new ArrayList<BillHistoryDto>();
+	 //List<Object> list = o.getContent();
+	Float totalArrears = 0f;
+	for(int i=0;i< o.size();i++){
+		Object[] ob = (Object[]) o.get(i);
+		BillHistoryDto dto = new BillHistoryDto();
+		dto.setOrderNumber((BigDecimal)ob[1]);
+		dto.setArrears((BigDecimal)ob[2]);
+		dto.setShopNumber((BigDecimal)ob[4]);
+		dto.setDateYearMonth((Date)ob[3]);
+		dto.setDateDay((Date)ob[3]);
+		dtoList.add(dto);
+		totalArrears +=  new BigDecimal(ob[2]+"").floatValue();
+		
+	}
+	historyVo.setTotalArrears(totalArrears);
+	historyVo.setContent(dtoList);
+	historyVo.setTotalPages(totalPages);
+	return historyVo;
+	
+}
+
+private BillVo createBillVo(Page<Object> o){
+	BillVo bvo = new BillVo();
+	Float totalArrears = 0f;
+	List<OrderVo> voList = createOrderVo(o);
+	for(OrderVo vo : voList){
+		totalArrears += vo.getTotalArreas();
+	}
+	bvo.setTotalPages(o.getTotalPages());
+	bvo.setTotalArrears(totalArrears);
+	bvo.setContent(voList);
+	return bvo;
+}
+
+/**
+ * 组装
+ * @param o
+ * @return
+ */
+private List<OrderVo> createOrderVo(Page<Object> o) {
+	List<OrderVo> volist = new ArrayList<OrderVo>();
+    List<Object> list = new ArrayList<Object>(o.getContent());
+    List<Object> list2 = new ArrayList<Object>(o.getContent());
+	for(int i=0;i<list.size();){
+		Object[] ob = (Object[])list.get(0);
+		List<OrderDto> dtoList = new ArrayList<OrderDto>();
+		Float totalArrear = 0f;
+		OrderVo bvo = new OrderVo();
+		bvo.setShopName(ob[0]+"");
+		
+		bvo.setContent(dtoList);
+		
+		for(int j = 0;j<list2.size();j++){
+			
+			Object[] obj = (Object[])list2.get(j);
+			
+			if(String.valueOf(ob[0]).equals(String.valueOf(obj[0]))){
+				OrderDto dto = new OrderDto();
+				dto.setOrderNo(obj[1]+"");
+				dto.setPayTyp(obj[2] != null ?Integer.parseInt(obj[2]+""):3);
+				dto.setOrderPrice((Float)obj[3]);
+				dto.setCreateTime((Date)obj[4]);
+				dto.setArrear((int)obj[8]==3?(Float)obj[5]:(Float)obj[9]);
+				dto.setBillStatus(obj[6]!=null?(int)obj[6]:1);
+				dto.setPayee((int)obj[7]);
+				dto.setOrderStatus((int)obj[8]);
+				dtoList.add(dto);
+				totalArrear += (Float)obj[5];//(int)obj[8]==3?(Float)obj[5]:(Float)obj[9]
+				bvo.setTotalArreas(totalArrear);
+				list.remove(obj);
+			}
+			
+		}
+		
+		volist.add(bvo);
+	}
+	return volist;
+}
+
+
+
+
+/*public void getBillList(OrderSignfor orderSignfor, int pageNumer, int pageSize) {
+	// TODO Auto-generated method stub
+	
+}
+	*/
+}
+
+

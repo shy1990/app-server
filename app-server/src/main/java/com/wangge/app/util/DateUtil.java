@@ -138,6 +138,48 @@ public class DateUtil {
     
     /**
      * 
+      * getYesterdayDate:获取昨日21点前时间
+      * @author robert 
+      * @return 
+      * @since JDK 1.8
+     */
+    public static Date getYesterdayDate2(String dateTime){
+    	 Calendar   cal   =   Calendar.getInstance();
+         SimpleDateFormat formate = new SimpleDateFormat( "yyyy-MM-dd");
+      try {
+    	  
+    	    cal.setTime(formate.parse(dateTime));
+			cal.add(Calendar.DATE, -(1+3/24));
+      } catch (ParseException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+        throw new RuntimeException("21点前日期类型转换错误");
+      }
+      return cal.getTime();
+    }
+    /**
+     * 
+      * getYesterdayDate:获取今日21点前时间
+      * @author robert 
+      * @return 
+      * @since JDK 1.8
+     */
+    public static Date getTodayDate2(String dateTime){
+      Calendar   cal   =   Calendar.getInstance();
+      SimpleDateFormat formate = new SimpleDateFormat( "yyyy-MM-dd");
+      try {
+			cal.setTime(formate.parse(dateTime));
+			cal.add(Calendar.DATE,   -3/24);
+      } catch (ParseException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+        throw new RuntimeException("今日21点前日期类型转换错误");
+      }
+      return cal.getTime();
+    }
+    
+    /**
+     * 
       * getMonthFirstDay:当月第一天
       * @author Administrator 
       * @return 

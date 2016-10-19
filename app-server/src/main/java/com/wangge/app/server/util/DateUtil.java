@@ -58,7 +58,7 @@ public class DateUtil {
 	/**
 	 * 自动匹配字符串格式
 	 */
-	public  static String[] parsePatterns = { "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", 
+	public  static String[] parsePatterns = {"yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", 
 		"yyyy/MM/dd", "yyyy/MM/dd HH:mm:ss", "yyyy/MM/dd HH:mm" ,"yyyyMMddHHmmssSSS"};
 	
 	/**
@@ -240,6 +240,23 @@ public class DateUtil {
 		return d.getTime();
 	}
 	
+	/**
+	 * 将Date 转换成Long
+	 * 
+	 * @Title: getLongByDate
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @param @param date
+	 * @param @return 设定文件
+	 * @return Long 返回类型
+	 * @author ZhouZhangbao
+	 */
+	public static Long getLongByDate(Date date) {
+		if (date == null) {
+			return null;
+		}
+		Long lSysTime = date.getTime() / 1000; // 得到秒数，Date类型的getTime()返回毫秒数
+		return lSysTime;
+	}
 	/**
 	 * 获得当前月初日期 yyyy-MM-01
 	 * @return
@@ -769,24 +786,6 @@ public class DateUtil {
  		
  	}
  	
- 	/**
-	 * 将Date 转换成Long
-	 * 
-	 * @Title: getLongByDate
-	 * @Description: TODO(这里用一句话描述这个方法的作用)
-	 * @param @param date
-	 * @param @return 设定文件
-	 * @return Long 返回类型
-	 * @author ZhouZhangbao
-	 */
-	public static Long getLongByDate(Date date) {
-		if (date == null) {
-			return null;
-		}
-		Long lSysTime = date.getTime() / 1000; // 得到秒数，Date类型的getTime()返回毫秒数
-		return lSysTime;
-	}
-
 	
  	/**
 	 * 验证两个日期的时间差是否大于限定的时间，<br>

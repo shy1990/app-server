@@ -30,14 +30,11 @@ public class ReceiptService {
 	@Resource
 	private OrderSignforService orderSignforService;
 
-	public JSONArray findByOrderNo(String orderno) throws ParseException {
-		JSONArray jsonArray = null ;
-		List<ReceiptDto> list = createReceiptDtoList(orderno);
-		if(list != null && list.size() > 0){
-		    jsonArray = new JSONArray();
-			jsonArray.add(list);
-		}
-		return jsonArray;
+	public ReceiptVo findByOrderNo(String orderno) throws ParseException {
+		
+		ReceiptVo vo = createReceiptVo(orderno);
+		
+		return vo;
 	}
 
 	public void addReceipt(Receipt r) {
@@ -55,34 +52,55 @@ public class ReceiptService {
 		OrderSignfor orderSignfor	= orderSignforService.findbyOrderNum(orderno);
 		Float arrears = orderSignfor.getArrears();
 		if(orderSignfor != null){
-			if(billType== 1){
-					orderSignfor.setArrears(actualPayNum-amountCollected);
-					orderSignfor.setPayAmount(amountCollected);
-					orderSignfor.setUpdateTime(new Date());
-			}else{
-				    
-				    if(arrears-amountCollected >= 0){
-				    	orderSignfor.setArrears(arrears-amountCollected);
-						orderSignfor.setPayAmount(orderSignfor.getPayAmount()+amountCollected);
-						if(arrears-amountCollected == 0){
-							orderSignfor.setOverTime(new Date());
-						}
-						createReceipt(accountId, amountCollected, billType,
+			 if(arrears-amountCollected >= 0){
+				 if(billType== 1){
+						orderSignfor.setArrears(actualPayNum-amountCollected);
+						orderSignfor.setPayAmount(amountCollected);
+						orderSignfor.setUpdateTime(new Date());
+						orderSignfor =	updateBillStatus(amountCollected, actualPayNum,
+								orderSignfor);
+						 updateReceipt(accountId, amountCollected, billType,
 								orderno);
-				    }else{
-				    	throw new RuntimeException("输入金额大于尾款");
-				    }
-					
-			}
-		     orderSignforService.saveOrderSignfor(orderSignfor);
+				}else{
+					    
+					orderSignfor.setArrears(arrears-amountCollected);
+					orderSignfor.setPayAmount(orderSignfor.getPayAmount()+amountCollected);
+					orderSignfor =	updateBillStatus(amountCollected, actualPayNum,
+							orderSignfor);
+					createReceipt(accountId, amountCollected, billType,
+							orderno);
+						
+				}
+				   orderSignforService.saveOrderSignfor(orderSignfor);
+			    }else{
+			    	throw new RuntimeException("输入金额大于尾款");
+			    }
 			 
 		}
 		return createReceiptVo(orderno);
 		
 	}
+
+	private OrderSignfor updateBillStatus(Float amountCollected, Float actualPayNum,
+			OrderSignfor orderSignfor) {
+		if(actualPayNum-amountCollected == 0){
+			orderSignfor.setBillStatus(0);//整单已付
+			orderSignfor.setOverTime(new Date());
+		}else if(actualPayNum-amountCollected > 0){
+			orderSignfor.setBillStatus(2);//部分未付
+		}
+		return orderSignfor;
+	}
 	
 	
 	
+	private void updateReceipt(String accountId, Float amountCollected, int billType, String orderno) {
+		//receiptRepository.delete(receiptRepository.findAllByOrderNo(orderno));
+		createReceipt(accountId, amountCollected, billType,
+				orderno);
+		
+	}
+
 	private ReceiptVo createReceiptVo(String orderno) throws ParseException{
 		OrderSignfor orderSignfor = orderSignforService.findbyOrderNum(orderno);
 		

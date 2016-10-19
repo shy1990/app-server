@@ -17,7 +17,7 @@ public class Receipt {
 	  @Column(name = "receipt_id")
 	  @GenericGenerator(name = "idgen", strategy = "increment")
 	  @GeneratedValue(generator = "idgen")
-	private Integer id;
+	private Long id;
 	private Float amountCollected;
 	private Integer receiptType;
 	private Date createTime;
@@ -26,21 +26,28 @@ public class Receipt {
 	private String orderNo;
 	
 	
+	public Receipt() {
+		super();
+	}
+
 	public Receipt(Float amountCollected, Integer receiptType, Date createTime,
-			String accountId, String orderno) {
+			String accountId, String orderNo) {
 		super();
 		this.amountCollected = amountCollected;
 		this.receiptType = receiptType;
 		this.createTime = createTime;
 		this.accountId = accountId;
-		this.orderNo = orderno;
+		this.orderNo = orderNo;
 	}
-	public Integer getId() {
+
+	public Long getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+
+	public void setId(Long id) {
 		this.id = id;
 	}
+
 	public Float getAmountCollected() {
 		return amountCollected;
 	}

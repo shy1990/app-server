@@ -158,9 +158,9 @@ public class Order implements Serializable {
 		if (dealType == null) {
 			this.dealType = "未付款";
 		}
-		if("yeePay".equals(dealType)){
+		/*if("yeePay".equals(dealType)){
 			this.dealType = "线上支付"; //最开始版本叫：线上支付　现在：在线支付
-		}
+		}*/
 		return dealType;
 	}
 

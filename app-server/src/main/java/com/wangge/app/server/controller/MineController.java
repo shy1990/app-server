@@ -2,6 +2,7 @@ package com.wangge.app.server.controller;
 
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +35,7 @@ import com.wangge.app.server.service.ApplyPriceService;
 import com.wangge.app.server.service.MessageService;
 import com.wangge.app.server.service.OrderService;
 import com.wangge.app.server.service.OrderSignforService;
+import com.wangge.app.server.service.ReceiptService;
 import com.wangge.app.server.service.RegistDataService;
 import com.wangge.app.server.service.SalesmanService;
 import com.wangge.app.server.util.DateUtil;
@@ -41,6 +44,7 @@ import com.wangge.app.server.util.SortUtil;
 import com.wangge.app.server.vo.Apply;
 import com.wangge.app.server.vo.Exam;
 import com.wangge.app.server.vo.OrderPub;
+import com.wangge.app.server.vo.ReceiptVo;
 
 @RestController
 @RequestMapping(value = "/v1/mine")
@@ -66,10 +70,10 @@ public class MineController {
 	private RegistDataService rds;
 	@Resource
 	private SalesmanService salesmanService;
-	/*@Resource
+	@Resource
 	private ReceiptService receiptService;
 	
-	 @Resource*/
+	 @Resource
 	 private OrderSignforService orderSignforService;
 	/**
 	 * 
@@ -122,7 +126,13 @@ public class MineController {
       }else{
         jo.put("point","");
       }
-     
+      jo = getOrderOverTime(ordernum,jo);
+      if(order.getStatus().ordinal() == 3){
+    	  ReceiptVo vo = receiptService.findByOrderNo(order.getId());
+    	  jo.put("payAmount", vo.getPayAmount());
+  		jo.put("arrears", vo.getArrears());
+  		jo.put("content", vo.getReceipts());
+      }
 			//if(regionId.equals(order.getRegion().getId())){
 				if(opl.checkByOrderNum(ordernum)){
 				  jo.put("state", "正常订单");
@@ -138,26 +148,29 @@ public class MineController {
       }*/
     }
     jo.put("msg", "未查询相关信息或快件未揽收,请重试");
-   /* if(order.getStatus().ordinal() == 3){
-    	JSONArray array = receiptService.findByOrderNo(order.getId());
-    	jo.put("content", array);
-    }*/
+    
     return new ResponseEntity<JSONObject>(jo, HttpStatus.BAD_REQUEST);
 
   }
 	
-	/*private JSONObject getOrderOverTime(String ordernum,JSONObject jo){
-	    Date overTime = orderSignforService.getOrderOverTime(ordernum);
-	    if(overTime !=null){
-	    	jo.put("isEdit", 1);//1表示隐藏
+	private JSONObject getOrderOverTime(String ordernum,JSONObject jo){
+	    Date overTime = orderSignforService.checkOrderOverTime(ordernum);
+	    if(overTime != null){
 	    	
+		    	if(DateUtil.isCheckExpires(overTime, 2880*60L)){
+		    		jo.put("isEdit", 1);//1表示隐藏
+		    	}else{
+		    	    jo.put("isEdit", 0);//0表示显示按钮
+		    	}
+		    	jo.put("isEdit", 1);//1表示隐藏
+		    	
 	    }else{
 	    	jo.put("isEdit", 0);//0表示显示按钮
 	    }
 	   
 		//DateUtil.
 		return jo;
-	}*/
+	}
   
   
   /**
