@@ -15,8 +15,6 @@ import com.wangge.app.server.repository.ReceiptRepository;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.repositoryimpl.OrderSignforImpl;
 import com.wangge.app.server.thread.OrderSignforCountDown;
-import com.wangge.app.server.vo.BillVo;
-import com.wangge.app.server.vo.OrderVo;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -582,12 +580,12 @@ public Page<OrderSignfor> getBillList(String userId, String day,
  * @param o
  * @return
  */
-private BillVo createOrderVo(Page<OrderSignfor> o) {
+/*private BillVo createOrderVo(Page<OrderSignfor> o) {
 	// TODO Auto-generated method stub
 	
 	BillVo vo = new BillVo();
 	return vo;
-}
+}*/
 
 public Map<String, Float> queryArrears(String userId) {
 	Map<String, Float> map = new HashMap<String, Float>();

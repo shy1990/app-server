@@ -1,4 +1,4 @@
-package com.wangge.app.server.controller;
+/*package com.wangge.app.server.controller;
 
 import java.util.Map;
 
@@ -19,7 +19,6 @@ import com.wangge.app.server.entity.UnpaymentRemark;
 import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.service.OrderSignforService;
 import com.wangge.app.server.service.ReceiptService;
-import com.wangge.app.server.vo.BillVo;
 
 @RestController
 @RequestMapping("v1/bill")
@@ -39,7 +38,7 @@ public class BillController {
 	}
 	
 	
-	/**
+	*//**
 	 * 
 	* @Title: settlement 
 	* @Description: TODO(结清订单) 
@@ -47,7 +46,7 @@ public class BillController {
 	* @param @return    设定文件 
 	* @return ResponseEntity<Void>    返回类型 
 	* @throws
-	 */
+	 *//*
 	@RequestMapping(value = "/settlementBill",method = RequestMethod.POST)
 	public ResponseEntity<Json>  settlement(@RequestBody JSONObject jsons){
 		Json json = new Json();
@@ -73,3 +72,4 @@ public class BillController {
 	}
 
 }
+*/
