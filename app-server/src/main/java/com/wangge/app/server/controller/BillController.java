@@ -90,9 +90,9 @@ public class BillController {
 	 * @return
 	 */
 	@RequestMapping(value="/queryArrears/{userId}",method = RequestMethod.GET)
-	public ResponseEntity<Map<String, BigDecimal>> queryArrears(@PathVariable("userId")String userId){
-		Map<String, BigDecimal> Arrears = orderSignforService.queryArrears(userId);
-		return  new ResponseEntity<Map<String, BigDecimal>>(Arrears,HttpStatus.OK);
+	public ResponseEntity<Map<String, Float>> queryArrears(@PathVariable("userId")String userId){
+		Map<String, Float> Arrears = orderSignforService.queryArrears(userId);
+		return  new ResponseEntity<Map<String, Float>>(Arrears,HttpStatus.OK);
 	}
 	/**
 	 * 历史欠款列表
@@ -123,8 +123,8 @@ public class BillController {
 			@RequestParam(defaultValue="10",value="pageSize",required=false) int pageSize,
 			@RequestParam(defaultValue="",value="createTime",required=false)String createTime,
 			@RequestParam(defaultValue="0",value="isPrimary",required=false)int isPrimary,
-			@RequestParam(defaultValue="0",value="orderStatus",required=false)int orderStatus,
-			@RequestParam(defaultValue="0",value="billStatus",required=false)int billStatus
+			@RequestParam(defaultValue="3",value="orderStatus",required=false)int orderStatus,
+			@RequestParam(defaultValue="3",value="billStatus",required=false)int billStatus
 			) {
 			BillVo vo = orderSignforService.getBillList(userId,createTime,pageNumer,pageSize,isPrimary,billStatus,orderStatus);
 			return new ResponseEntity<BillVo>(vo,HttpStatus.OK);

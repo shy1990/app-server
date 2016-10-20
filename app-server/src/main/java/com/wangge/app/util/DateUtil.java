@@ -149,7 +149,11 @@ public class DateUtil {
       try {
     	  
     	    cal.setTime(formate.parse(dateTime));
-			cal.add(Calendar.DATE, -(1+3/24));
+			cal.add(Calendar.DATE, -2);
+			cal.set(Calendar.HOUR_OF_DAY, 21);  
+			cal.set(Calendar.MINUTE, 0);  
+			cal.set(Calendar.SECOND, 0);  
+			cal.set(Calendar.MILLISECOND, 0);  
       } catch (ParseException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
@@ -169,7 +173,11 @@ public class DateUtil {
       SimpleDateFormat formate = new SimpleDateFormat( "yyyy-MM-dd");
       try {
 			cal.setTime(formate.parse(dateTime));
-			cal.add(Calendar.DATE,   -3/24);
+			cal.add(Calendar.DATE, -1);
+			cal.set(Calendar.HOUR_OF_DAY, 21);  
+			cal.set(Calendar.MINUTE, 0);  
+			cal.set(Calendar.SECOND, 0);  
+			cal.set(Calendar.MILLISECOND, 0); 
       } catch (ParseException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();

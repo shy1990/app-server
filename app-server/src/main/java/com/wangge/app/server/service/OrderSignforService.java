@@ -290,36 +290,6 @@ private void updateOrderSingfor(String orderNo, String userPhone,
             osr.save(orderSignFor);
             
            
-           /*//收现金
-           try {
-             if(2 == payType){
-              // dealType = "现金支付";
-               dealType = "cash";
-               payStatus = OrderShipStatusConstant.SHOP_ORDER_PAYSTATUS_HAVETOPAY;
-               Cash cash= new Cash(orderSignFor.getId(),userId);
-               cs.save(cash);
-<<<<<<< HEAD
-               if(null!=walletPayNo){
-=======
-               System.out.println("walletPayNo"+walletPayNo);
-               if(null!=walletPayNo&&!walletPayNo.equals("null")){
->>>>>>> branch 'youbufenzhi0523' of https://git.oschina.net/wgtechnology/app-server.git
-            	   RestTemplate restTemplate = new RestTemplate();
-            	   Map<String, Object> param = new HashMap<String, Object>();
-                 param.put("status", "SUCCESS");
-            	   String walletPayNoUrl = walletPayNo+"/status";
-            	   restTemplate.put(url+walletPayNoUrl, param);
-               }
-              
-             }
-          } catch (Exception e) {
-            logger.info("客户签收---->收现金--->bug:"+e.getMessage());
-            throw new  IOException("收现金异常!"+e.getMessage());
-          }*/
-          
-           // opl.updateOrderShipStateByOrderNum(orderNo,OrderShipStatusConstant.SHOP_ORDER_SHIPSTATUS_KHSIGNEDFOR,payStatus,dealType);
-            
-             
        }else{
          throw new  RuntimeException("订单不存在!");
        }
@@ -436,13 +406,13 @@ private OrderSignfor createCashRecord(String orderNo, String userPhone,
  * @param walletPayNo
  */
 private void updateQb(String walletPayNo) {
-	/*if(null!=walletPayNo){
+	if(null!=walletPayNo){
 	   RestTemplate restTemplate = new RestTemplate();
 	   Map<String, Object> param = new HashMap<String, Object>();
 			param.put("status", "SUCCESS");
 	   String walletPayNoUrl = walletPayNo+"/status";
 	   restTemplate.put(url+walletPayNoUrl, param);
-	 }*/
+	 }
 	}
 
 /**
@@ -578,7 +548,14 @@ public void settlement(JSONObject jsons) {
 	
 }
 
-
+/**
+ *  今日，昨日对账单
+ * @param userId
+ * @param day
+ * @param pageNo
+ * @param pageSize
+ * @return
+ */
 public BillVo getBillList(String userId, String day,
 		int pageNo, int pageSize ) {
 	int  startDate = 0;
@@ -621,7 +598,17 @@ public BillHistoryVo queryBillHistory(String userId,int pageNo, int pageSize) {
      re.setTotalPages(count,Long.parseLong(String.valueOf(pageSize)));
     return createBillHistoryVo(o,Integer.valueOf(String.valueOf(re.getTotalPages())));
 }
-
+/**
+ * 多条件查询对账单
+ * @param userId
+ * @param createTime
+ * @param pageNumer
+ * @param pageSize
+ * @param isPrimary
+ * @param billStatus
+ * @param orderStatus
+ * @return
+ */
 public BillVo getBillList(String userId, String createTime, int pageNumer, int pageSize,int isPrimary,int billStatus, int orderStatus) {
 	 Page<OrderSignfor> orderPage = osr.findAll(new Specification<OrderSignfor>() {
 
@@ -643,48 +630,57 @@ public BillVo getBillList(String userId, String createTime, int pageNumer, int p
 	          predicates.add(p2);
 	        }
 	        
-	        if(billStatus>0){
-	        	 Predicate p3 = cb.equal(root.get("billStatus").as(Integer.class), billStatus);
-	        	 predicates.add(p3);
+	        if(billStatus==3){
+	        	 Predicate p3 = cb.equal(root.get("billStatus").as(Integer.class), 0);
+	        	 Predicate p4 = cb.equal(root.get("billStatus").as(Integer.class), 1);
+		         Predicate p5 = cb.equal(root.get("billStatus").as(Integer.class), 2);
+		         Predicate p6 = cb.isNull(root.get("billStatus").as(Integer.class));
+		         predicates.add(cb.or(p3,p4,p5,p6));
+	        	
+	        }else{
+	        	Predicate p7 = cb.equal(root.get("billStatus").as(Integer.class), billStatus);
+	        	 predicates.add(p7);
 	        }
 	        
 	       
 	        	if(orderStatus == 3){
-	        		Predicate p4 = cb.equal(root.get("orderStatus").as(Integer.class), orderStatus);
-		        	 predicates.add(p4);
-	        	}else{
-	        		Predicate p4 = cb.equal(root.get("orderStatus").as(Integer.class), 0);
-	        		Predicate p5 = cb.equal(root.get("orderStatus").as(Integer.class), 2);
-		        	 predicates.add(cb.or(p4,p5));
+	        		Predicate p8 = cb.equal(root.get("orderStatus").as(Integer.class), orderStatus);
+		        	 predicates.add(p8);
+	        	}else {
+	        		Predicate p9 = cb.equal(root.get("orderStatus").as(Integer.class), 0);
+	        		Predicate p10 = cb.equal(root.get("orderStatus").as(Integer.class), 2);
+		        	 predicates.add(cb.or(p9,p10));
 	        	}
 	        	
-	      
-	        
 	        if(!StringUtils.isEmpty(createTime)){
-	        	Predicate p4 = cb.isNotNull(root.get("fastmailNo").as(String.class));
-	        	Predicate p5 = cb.between(root.get("creatTime").as(Date.class),DateUtil.getYesterdayDate2(createTime), DateUtil.getTodayDate2(createTime));
-	        	predicates.add(cb.and(p4,p5));
+	        	Predicate p11 = cb.isNotNull(root.get("fastmailNo").as(String.class));
+	        	Predicate p12 = cb.between(root.get("creatTime").as(Date.class),DateUtil.getYesterdayDate2(createTime), DateUtil.getTodayDate2(createTime));
+	        	predicates.add(cb.and(p11,p12));
 	        }
 	        
 	       
 	        return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 	      }
 
-	    }, new PageRequest(pageNumer > 0 ? pageNumer-1:0, 20, new Sort(Sort.Direction.DESC,"creatTime")));
+	    }, new PageRequest(pageNumer > 0 ? pageNumer-1:0, pageSize, new Sort(Sort.Direction.DESC,"creatTime")));
 	  return createBillVoByOrderSignfor(orderPage);
 	  }
 
 
  private BillVo createBillVoByOrderSignfor(Page<OrderSignfor> orderPage){
 	 BillVo bvo = new BillVo();
-	 Float totalArrears = 0f;
-	 List<OrderVo> list = createOrderVoByOrderSignfor(orderPage);
-	 for(OrderVo vo : list){
-		 totalArrears+=vo.getTotalArreas();
+	 if(orderPage.getContent() != null){
+		
+		 Float totalArrears = 0f;
+		 List<OrderVo> list = createOrderVoByOrderSignfor(orderPage);
+		 for(OrderVo vo : list){
+			 totalArrears+=vo.getTotalArreas();
+		 }
+		 bvo.setContent(list);
+		 bvo.setTotalArrears(totalArrears);
+		 bvo.setTotalPages(orderPage.getTotalPages());
 	 }
-	 bvo.setContent(list);
-	 bvo.setTotalArrears(totalArrears);
-	 bvo.setTotalPages(orderPage.getTotalPages());
+	 
 	 return bvo;
  }
 /**
@@ -714,7 +710,7 @@ private List<OrderVo> createOrderVoByOrderSignfor(Page<OrderSignfor> orderPage) 
 				dto.setCreateTime(os.getCreatTime());
 				dto.setArrear(os.getOrderStatus() == 3 ? os.getArrears() : os.getActualPayNum());
 				dtoList.add(dto);
-				totalArrear += os.getArrears();//os.getOrderStatus() == 3 ? os.getArrears() : os.getActualPayNum()
+				totalArrear += os.getOrderStatus() == 3 ? os.getArrears() : os.getActualPayNum();
 				bvo.setTotalArreas(totalArrear);
 				list.remove(os);
 			}
@@ -729,15 +725,30 @@ private List<OrderVo> createOrderVoByOrderSignfor(Page<OrderSignfor> orderPage) 
  * @param userId
  * @return
  */
-public Map<String, BigDecimal> queryArrears(String userId) {
+public Map<String, Float> queryArrears(String userId) {
 	
-	Map<String, BigDecimal> map = new HashMap<String, BigDecimal>();
-	List<BigDecimal> arrears =  osr.findSumForArrears(userId);
-	for(int i=0;i<arrears.size();i++){
-		map.put("historyArrears", arrears.get(0));
-		map.put("todayArrears", arrears.get(1));
-		map.put("yesterdayArrears", arrears.get(2));
-	}
+	Map<String, Float> map = new HashMap<String, Float>();
+	List<Object> object =  osr.findSumForArrears(userId);
+	List<Object> object2 =  osr.findSumForArrearsUign(userId);
+	Object[] arrears = (Object[])object.get(0);
+	Object[] arrearsUign = (Object[])object2.get(0);
+	//Float  f = arrears[0].floatValue();
+	
+	
+	Float todayArrears = arrears[0] != null ? ((BigDecimal)arrears[0]).floatValue() : 0f;
+	Float yesterdayArrears = arrears[1]!= null ?   ((BigDecimal)arrears[1]).floatValue() : 0f;
+	Float historyArrears = arrears[2]!= null ?   ((BigDecimal)arrears[2]).floatValue() : 0f;
+	
+	Float todayArrearsUign = arrearsUign[0] != null ?  ((BigDecimal)arrearsUign[0]).floatValue() : 0f;
+	Float yesterdayArrearsUign = arrearsUign[1] != null ?((BigDecimal)arrearsUign[1]).floatValue() : 0f;
+	Float historyArrearsUign = arrearsUign[2] != null ?  ((BigDecimal)arrearsUign[2]).floatValue() : 0f;
+	
+	
+	
+	
+		map.put("todayArrears", todayArrears + todayArrearsUign);
+		map.put("yesterdayArrears", yesterdayArrears+yesterdayArrearsUign);
+		map.put("historyArrears", historyArrears+historyArrearsUign);
 	return map;
 }
 
@@ -816,7 +827,7 @@ private List<OrderVo> createOrderVo(Page<Object> o) {
 				dto.setPayee((int)obj[7]);
 				dto.setOrderStatus((int)obj[8]);
 				dtoList.add(dto);
-				totalArrear += (Float)obj[5];//(int)obj[8]==3?(Float)obj[5]:(Float)obj[9]
+				totalArrear += (int)obj[8]==3?(Float)obj[5]:(Float)obj[9];
 				bvo.setTotalArreas(totalArrear);
 				list.remove(obj);
 			}
