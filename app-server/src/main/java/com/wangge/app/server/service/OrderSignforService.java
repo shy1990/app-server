@@ -424,21 +424,26 @@ private void updateQb(String walletPayNo) {
  */
 private void updateOrderReceipt(int billStatus, Float amountCollected,
 		Float actualPayNum, OrderSignfor orderSignFor) {
-	 if(billStatus == 0){
-		 amountCollected =  actualPayNum;
-	 }else if(billStatus == 1){
-		 amountCollected = 0f;
-	 }
-	orderSignFor.setBillStatus(billStatus);
-	 orderSignFor.setPayAmount(amountCollected);
+	if(actualPayNum-amountCollected >=0){
+		 if(billStatus == 0){
+			 amountCollected =  actualPayNum;
+		 }else if(billStatus == 1){
+			 amountCollected = 0f;
+		 }
+		orderSignFor.setBillStatus(billStatus);
+		 orderSignFor.setPayAmount(amountCollected);
+		
+		 Float arrears = actualPayNum-amountCollected;
+		 orderSignFor.setArrears(arrears);
+		 orderSignFor.setUpdateTime(new Date());
+		 if(arrears==0){
+			 orderSignFor.setOverTime(new Date());
+		 }
+		 osr.save(orderSignFor);
+	}else{
+		throw new RuntimeException("收款金额大于应付金额!");
+	}
 	
-	 Float arrears = actualPayNum-amountCollected;
-	 orderSignFor.setArrears(arrears);
-	 orderSignFor.setUpdateTime(new Date());
-	 if(arrears==0){
-		 orderSignFor.setOverTime(new Date());
-	 }
-	 osr.save(orderSignFor);
 }
 
 /**
@@ -525,7 +530,7 @@ public void updateOrderSignfor(String orderno,String payStatus) {
 
 
 @Transactional(rollbackFor=Exception.class)
-public void settlement(JSONObject jsons) {
+public void settlement(JSONObject jsons)throws Exception {
 	String orderno = jsons.getString("orderNum");
 	Float arrears = jsons.getFloat("arrears");
 	String accountId = jsons.getString("accountId");

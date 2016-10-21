@@ -88,7 +88,9 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
 			+ " trunc(osf.creat_time) as daytime"
 			+ " from biz_order_signfor osf"
 
-			+ " where osf.order_status = '3' " + " and osf.user_id = ?1"
+			+ " where osf.order_status = '3' " + " and osf.user_id = ?1 "
+			   +"     and osf.creat_time >= trunc(sysdate - 1) - 3/24 "
+               +"    and osf.creat_time < trunc(sysdate) - 3/24 "
 			+ " group by trunc(osf.creat_time)"
 
 			+ " union "
@@ -99,7 +101,11 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
 			+ " from biz_order_signfor osf"
 
 			+ " where (osf.order_status = '0' or  osf.order_status = '2')"
-			+ " and osf.user_id = ?1" + " group by trunc(osf.creat_time)"
+			+ " and osf.user_id = ?1" 
+			   +"     and osf.creat_time >= trunc(sysdate - 1) - 3/24 "
+               +"    and osf.creat_time < trunc(sysdate) - 3/24 "
+			
+			+ " group by trunc(osf.creat_time)"
 
 			+ " ) t group by t.daytime order by t.daytime desc"
 
@@ -114,6 +120,8 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
 					+ " from biz_order_signfor osr "
 					+ " where osr.order_status = '3'  "
 					+ " and osr.user_id = ?1 "
+					   +"     and osr.creat_time >= trunc(sysdate - 1) - 3/24 "
+                       +"    and osr.creat_time < trunc(sysdate) - 3/24 "
 					+ " group by trunc(osr.creat_time), osr.shop_name "
 					
 					+ " union " 
@@ -123,6 +131,8 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
 					+ " from biz_order_signfor osr "
 					+ " where (osr.order_status = '0' or  osr.order_status = '2')"
 					+ " and osr.user_id = ?1 "
+					   +"     and osr.creat_time >= trunc(sysdate - 1) - 3/24 "
+                       +"    and osr.creat_time < trunc(sysdate) - 3/24 "
 					+ " group by trunc(osr.creat_time), osr.shop_name) t"
 					+ " group by t.createTime " 
 					+ " ) os on os.createTime = o.daytime order by o.daytime desc"
@@ -139,6 +149,8 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
 
 			+ " where osf.order_status = '3' "
 			+ " and osf.user_id = ?1"
+			+"  and osf.creat_time >= trunc(sysdate - 1) - 3/24 "
+            +"  and osf.creat_time < trunc(sysdate) - 3/24 "
 			+ " group by trunc(osf.creat_time)"
 			
 			+ " union "
@@ -150,6 +162,8 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
 
 			+ " where (osf.order_status = '0' or  osf.order_status = '2')"
 			+ " and osf.user_id = ?1"
+			   +"     and osf.creat_time >= trunc(sysdate - 1) - 3/24 "
+               +"    and osf.creat_time < trunc(sysdate) - 3/24 "
 			+ " group by trunc(osf.creat_time)"
 
 			+" ) o left join "
@@ -160,16 +174,20 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
 			+ " osr.shop_name "
 			+ " from biz_order_signfor osr "
 			+ " where osr.order_status = '3'  "
-			+ " and osr.user_id = ?1 "
+            + " and osr.user_id = ?1 "
+			+ " and osr.creat_time >= trunc(sysdate - 1) - 3/24 "
+			+ " and osr.creat_time < trunc(sysdate) - 3/24 "
 			+ " group by trunc(osr.creat_time), osr.shop_name"
-			
-			+ " union " 
+
+			+ " union "
 			
 			+ " select trunc(osr.creat_time) as createTime,"
 			+ " osr.shop_name "
 			+ " from biz_order_signfor osr "
 			+ " where (osr.order_status = '0' or  osr.order_status = '2')"
 			+ " and osr.user_id = ?1 "
+			   +"     and osr.creat_time >= trunc(sysdate - 1) - 3/24 "
+               +"    and osr.creat_time < trunc(sysdate) - 3/24 "
 			+ " group by trunc(osr.creat_time), osr.shop_name) t"
 			+ " group by t.createTime " 
 
@@ -177,7 +195,7 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
   Long findBillHistoryConfluenceCount(String userId);
   
 	
-	 @Query("select o.shopName,o.orderNo,o.orderPayType,o.orderPrice,o.creatTime,o.arrears,o.billStatus,o.isPrimaryAccount,o.orderStatus,o.actualPayNum from OrderSignfor o  where o.userId= ?1 and o.fastmailNo is not null and o.creatTime>=trunc(to_date(?2,'yyyy/MM/dd')-1)-3/24  and o.creatTime<trunc(to_date(?2,'yyyy/MM/dd'))-3/24")
+	 @Query("select o.shopName,o.orderNo,o.orderPayType,o.orderPrice,o.creatTime,o.arrears,o.billStatus,o.isPrimaryAccount,o.orderStatus,o.actualPayNum from OrderSignfor o  where o.userId= ?1 and o.fastmailNo is not null and ( o.orderStatus = '0' or  o.orderStatus = '2' or o.orderStatus = '3') and o.creatTime>=trunc(to_date(?2,'yyyy/MM/dd')-1)-3/24  and o.creatTime<trunc(to_date(?2,'yyyy/MM/dd'))-3/24")
 	  Page<Object> findByUserIdAndCreatTime(String userId,String date, Pageable pageRequest);
 	 
 	 Page<OrderSignfor> findAll(Specification<OrderSignfor> specification, Pageable pageRequest);

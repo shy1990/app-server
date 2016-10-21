@@ -41,13 +41,25 @@ public class BillController {
 	private OrderSignforService orderSignforService;
 	
 	@RequestMapping(value="/addOrEditBill",method=RequestMethod.POST)
-	public  ResponseEntity<ReceiptVo> addOrUpdateReceipt(@RequestBody JSONObject jsons) throws Exception{
-		ReceiptVo ReceiptVo = receiptService.addOrUpdateReceipt(jsons);
-		return new ResponseEntity<ReceiptVo>(ReceiptVo,HttpStatus.OK);
+	public  ResponseEntity<Json> addOrUpdateReceipt(@RequestBody JSONObject jsons) {
+		Json json = new Json();
+		ReceiptVo ReceiptVo;
+		try {
+			ReceiptVo = receiptService.addOrUpdateReceipt(jsons);
+			json.setObj(ReceiptVo);
+			json.setCode(0);
+			return new ResponseEntity<Json>(json,HttpStatus.OK);
+		} catch (Exception e) {
+			json.setMsg(e.getMessage());
+			json.setCode(1);
+			return new ResponseEntity<Json>(json,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
 	}
 	
 	
 	/**
+	 * @throws Exception 
 	 * 
 	* @Title: settlement 
 	* @Description: TODO(结清订单) 
@@ -59,10 +71,17 @@ public class BillController {
 	@RequestMapping(value = "/settlementBill",method = RequestMethod.POST)
 	public ResponseEntity<Json>  settlement(@RequestBody JSONObject jsons){
 		Json json = new Json();
-		orderSignforService.settlement(jsons);
-		json.setMsg("success");
-		json.setCode(0);
-		return new ResponseEntity<Json>(json,HttpStatus.OK);
+		try {
+			orderSignforService.settlement(jsons);
+			json.setMsg("订单结清");
+			json.setCode(0);
+			return new ResponseEntity<Json>(json,HttpStatus.OK);
+		} catch (Exception e) {
+			json.setMsg(e.getMessage());
+			json.setCode(1);
+			return new ResponseEntity<Json>(json,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
 	}
 	/**
 	 * 昨日今日对账单列表
@@ -132,7 +151,7 @@ public class BillController {
 	}
 	
 	/**
-	 * 
+	 * 查询某一天对账单列表
 	 * @param userId
 	 * @param date
 	 * @param pageNumber

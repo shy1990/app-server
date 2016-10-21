@@ -46,28 +46,28 @@ public class ReceiptService {
 	public ReceiptVo addOrUpdateReceipt(JSONObject jsons) throws Exception {
 		String accountId = jsons.getString("accountId");
 		Float amountCollected = jsons.getFloat("amountCollected");
-		int  billType = jsons.getInteger("billType");
+		int  receiptType = jsons.getInteger("billType");
 		String orderno = jsons.getString("orderNum");
 		Float actualPayNum = jsons.getFloat("actualPayNum");
 		OrderSignfor orderSignfor	= orderSignforService.findbyOrderNum(orderno);
 		Float arrears = orderSignfor.getArrears();
 		if(orderSignfor != null){
 			 if(arrears-amountCollected >= 0){
-				 if(billType== 1){
+				 if(receiptType== 1){
 						orderSignfor.setArrears(actualPayNum-amountCollected);
 						orderSignfor.setPayAmount(amountCollected);
 						orderSignfor.setUpdateTime(new Date());
 						orderSignfor =	updateBillStatus(amountCollected, actualPayNum,
 								orderSignfor);
-						 updateReceipt(accountId, amountCollected, billType,
+						createReceipt(accountId, amountCollected ,   receiptType,
 								orderno);
 				}else{
 					    
 					orderSignfor.setArrears(arrears-amountCollected);
 					orderSignfor.setPayAmount(orderSignfor.getPayAmount()+amountCollected);
-					orderSignfor =	updateBillStatus(amountCollected, actualPayNum,
+					orderSignfor =	updateBillStatus(amountCollected, arrears,
 							orderSignfor);
-					createReceipt(accountId, amountCollected, billType,
+					createReceipt(accountId, amountCollected ,   receiptType,
 							orderno);
 						
 				}
@@ -81,25 +81,17 @@ public class ReceiptService {
 		
 	}
 
-	private OrderSignfor updateBillStatus(Float amountCollected, Float actualPayNum,
+	private OrderSignfor updateBillStatus(Float amountCollected, Float arrears,
 			OrderSignfor orderSignfor) {
-		if(actualPayNum-amountCollected == 0){
-			orderSignfor.setBillStatus(0);//整单已付
+		if(arrears-amountCollected == 0){
+			orderSignfor.setBillStatus(0);//0 整单已付
 			orderSignfor.setOverTime(new Date());
-		}else if(actualPayNum-amountCollected > 0){
-			orderSignfor.setBillStatus(2);//部分未付
+		}else if(arrears-amountCollected > 0){
+			orderSignfor.setBillStatus(2);//2 部分未付
 		}
 		return orderSignfor;
 	}
 	
-	
-	
-	private void updateReceipt(String accountId, Float amountCollected, int billType, String orderno) {
-		//receiptRepository.delete(receiptRepository.findAllByOrderNo(orderno));
-		createReceipt(accountId, amountCollected, billType,
-				orderno);
-		
-	}
 
 	private ReceiptVo createReceiptVo(String orderno) throws ParseException{
 		OrderSignfor orderSignfor = orderSignforService.findbyOrderNum(orderno);
@@ -134,8 +126,8 @@ public class ReceiptService {
     * @param orderno
     */
 	private void createReceipt(String accountId, Float amountCollected,
-			int billType, String orderno) {
-		Receipt receipt = new Receipt(amountCollected, billType, new Date(), accountId, orderno);
+			int receiptType, String orderno) {
+		Receipt receipt = new Receipt(amountCollected, receiptType, new Date(), accountId, orderno);
 		receiptRepository.save(receipt);
 	}
     
