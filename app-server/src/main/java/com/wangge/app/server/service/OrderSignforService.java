@@ -406,7 +406,7 @@ private OrderSignfor createCashRecord(String orderNo, String userPhone,
  * @param walletPayNo
  */
 private void updateQb(String walletPayNo) {
-	if(null!=walletPayNo){
+	if(null!=walletPayNo && !"null".equals(walletPayNo) ){
 	   RestTemplate restTemplate = new RestTemplate();
 	   Map<String, Object> param = new HashMap<String, Object>();
 			param.put("status", "SUCCESS");
