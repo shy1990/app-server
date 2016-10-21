@@ -80,7 +80,7 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
 	@Query(value = " select * from (select * from ( "
 			+ " select ROWNUM AS RN,t.* from (  "
 			+ " select o.orderCount,o.dayArrears,o.daytime,os.shopCount from "
-			+ " (select count(t.orderCount) as orderCount,"
+			+ " (select sum(t.orderCount) as orderCount,"
 			+ " sum(t.dayArrears) as dayArrears,"
 			+ " trunc(t.daytime) as daytime from ("
 			+ " select count(osf.signid) as orderCount,"
