@@ -31,6 +31,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -55,6 +56,7 @@ public class OrderSignforService {
   
  // private static final String url = "http://115.28.87.182:58081/v1/";
   private static final String url = "http://115.28.92.73:58080/v1/";
+  private static final String incomeUrl = "http://192.168.2.179:8080/mainIncome/calcuPayed";
   @Resource
   private OrderSignforRepository osr;
   @Resource
@@ -148,11 +150,11 @@ public class OrderSignforService {
   @Transactional(readOnly=false,rollbackFor=Exception.class)
   public void customSignforByPos(String orderNo, String userPhone,
       String signGeoPoint, int payType, String smsCode,int isPrimaryAccount,
-      String userId,String childId,String accountId,String  storePhone, String walletPayNo) throws Exception  {
+      String userId,String childId,String accountId,String  storePhone, String walletPayNo, String regionId) throws Exception  {
      
 	
 		  singOrder(orderNo, userPhone, signGeoPoint, payType, smsCode,
-					isPrimaryAccount, userId, childId, accountId, storePhone);
+					isPrimaryAccount, userId, childId, accountId, storePhone, regionId);
 		     
   }
   
@@ -175,10 +177,11 @@ public class OrderSignforService {
    * @throws Exception
    */
   @Transactional(readOnly=false,rollbackFor=Exception.class)
-  public void customSignforByCash(String orderNo,String userPhone,String signGeoPoint,int payType,String smsCode,int isPrimaryAccount,String childId,String storePhone,String userId,String accountId, int billStatus,Float amountCollected,String walletPayNo,Float actualPayNum) throws Exception{
+  public void customSignforByCash(String orderNo,String userPhone,String signGeoPoint,int payType,String smsCode,int isPrimaryAccount,String childId,String storePhone,
+		  String userId,String accountId, int billStatus,Float amountCollected,String walletPayNo,Float actualPayNum, String regionId) throws Exception{
  
   		 singOrder(orderNo, userPhone, signGeoPoint, payType, smsCode,
-   				isPrimaryAccount, userId, childId, accountId, storePhone);
+   				isPrimaryAccount, userId, childId, accountId, storePhone, regionId);
    	createBill(orderNo,userPhone,userId,accountId,billStatus,amountCollected,walletPayNo,actualPayNum);
 	
   }
@@ -243,7 +246,7 @@ public class OrderSignforService {
  */
 private void singOrder(String orderNo, String userPhone, String signGeoPoint,
 		int payType, String smsCode, int isPrimaryAccount, String userId,
-		String childId, String accountId, String storePhone){
+		String childId, String accountId, String storePhone , String regionId){
 	  updateOrderSingfor(orderNo, userPhone, signGeoPoint, payType, smsCode,
 			isPrimaryAccount, accountId);
        createMonthTaskRecord(storePhone);
@@ -251,11 +254,23 @@ private void singOrder(String orderNo, String userPhone, String signGeoPoint,
        createOilRecord(signGeoPoint, isPrimaryAccount, userId, childId,
  			storePhone);
         updateMallOrder(orderNo,payType);
+       // calcuPayed(new Date(), orderNo, userId, regionId);
         if(1 == payType){
          	 startCountDown(orderNo,oderService);
          } 
        
 }
+
+private void calcuPayed(Date payDate , String orderNo, String userId, String regionId){
+	RestTemplate rest=new RestTemplate();
+	Map<String, Object> param = new HashMap<String, Object>();
+	param.put("payDate", payDate);
+	param.put("orderNo", orderNo);
+	param.put("userId", userId);
+	param.put("regionId", regionId);
+	rest.getForEntity(incomeUrl, String.class, param);
+}
+
 /**
  * 更新订单
  * @param orderNo
@@ -635,7 +650,7 @@ public BillVo getBillList(String userId, String createTime, int pageNumer, int p
 	          predicates.add(p2);
 	        }
 	        
-	        if(billStatus==3){
+	        if(billStatus==0){
 	        	 Predicate p3 = cb.equal(root.get("billStatus").as(Integer.class), 0);
 	        	 Predicate p4 = cb.equal(root.get("billStatus").as(Integer.class), 1);
 		         Predicate p5 = cb.equal(root.get("billStatus").as(Integer.class), 2);
@@ -643,7 +658,13 @@ public BillVo getBillList(String userId, String createTime, int pageNumer, int p
 		         predicates.add(cb.or(p3,p4,p5,p6));
 	        	
 	        }else{
-	        	Predicate p7 = cb.equal(root.get("billStatus").as(Integer.class), billStatus);
+	        	int billStatus2 = 0;
+	            if(billStatus == 2){
+	            	billStatus2 = 1;
+	        	}else if(billStatus == 3){
+	        		billStatus2 = 2;
+	        	}
+	        	Predicate p7 = cb.equal(root.get("billStatus").as(Integer.class), billStatus2);
 	        	 predicates.add(p7);
 	        }
 	        
@@ -713,6 +734,7 @@ private List<OrderVo> createOrderVoByOrderSignfor(Page<OrderSignfor> orderPage) 
 				dto.setPayTyp(os.getOrderPayType() != null ? os.getOrderPayType() : 3);
 				dto.setOrderPrice(os.getOrderPrice());
 				dto.setCreateTime(os.getCreatTime());
+				dto.setBillStatus(os.getBillStatus());
 				dto.setArrear(os.getOrderStatus() == 3 ? os.getArrears() : os.getActualPayNum());
 				dtoList.add(dto);
 				totalArrear += os.getOrderStatus() == 3 ? os.getArrears() : os.getActualPayNum();

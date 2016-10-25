@@ -154,6 +154,7 @@ public class OrderSignforController {
     String childId =  jsons.getString("childId");
     String walletPayNo =  jsons.getString("walletPayNo");
     Float actualPayNum =  jsons.getFloat("actualPayNum");
+    String regionId = jsons.getString("regionId");
     String accountId = "";
     MessageCustom m = new MessageCustom();
     try {
@@ -163,19 +164,19 @@ public class OrderSignforController {
 				accountId = childId;
 			}
 			if (payType == 2) {
-				orderSignforService.customSignforByCash(orderNo,userPhone,signGeoPoint,payType,smsCode,isPrimaryAccount,childId,storePhone,userId,accountId,billStatus,amountCollected,walletPayNo,actualPayNum);
+				orderSignforService.customSignforByCash(orderNo,userPhone,signGeoPoint,payType,smsCode,isPrimaryAccount,childId,storePhone,userId,accountId,billStatus,amountCollected,walletPayNo,actualPayNum,regionId);
 			}else{
 				 if(smsCode != null && !"".equals(smsCode) && storePhone != null && !"".equals(storePhone)){
 				        String msg = HttpUtil.sendPost("http://www.3j1688.com/member/existMobileCode/"+storePhone+"_"+smsCode+".html","");
 				        if(msg!=null && msg.contains("true")){
-				            orderSignforService.customSignforByPos(orderNo, userPhone, signGeoPoint,payType,smsCode,isPrimaryAccount,userId,childId,accountId,storePhone,walletPayNo);
+				            orderSignforService.customSignforByPos(orderNo, userPhone, signGeoPoint,payType,smsCode,isPrimaryAccount,userId,childId,accountId,storePhone,walletPayNo,regionId);
 				            m.setMsg("success");
 				            m.setCode(0);
 				        }else{
 				            m.setMsg("短信验证码不存在！");
 				        }
 				      }else{
-					        orderSignforService.customSignforByPos(orderNo, userPhone, signGeoPoint,payType,smsCode,isPrimaryAccount,userId,childId,accountId,storePhone,walletPayNo);
+					        orderSignforService.customSignforByPos(orderNo, userPhone, signGeoPoint,payType,smsCode,isPrimaryAccount,userId,childId,accountId,storePhone,walletPayNo,regionId);
 					        m.setMsg("success");
 					        m.setCode(0);
 				      }
