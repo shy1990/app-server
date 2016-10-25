@@ -45,6 +45,7 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
                 +   " from biz_order_signfor o "
                 +  " where o.user_id = ?1"
                 +    " and o.fastmail_no is not null"
+                +" and o.creat_time < trunc(sysdate) -1 "
                 +     " and o.order_status = '3') as historyArrears"
            + " from dual", nativeQuery = true) 
 	List<Object> findSumForArrears(String userId);
@@ -68,7 +69,7 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
                     +"        from biz_order_signfor o "
                      +"      where o.user_id = ?1 "
                       +"       and o.fastmail_no is not null "
-                            
+                      +" and o.creat_time < trunc(sysdate) -1 "   
                        +"      and (o.order_status = '0' or o.order_status = '2')) "
                    
                   +"  from dual", nativeQuery = true) 
