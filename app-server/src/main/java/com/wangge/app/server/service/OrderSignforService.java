@@ -44,6 +44,8 @@ import javax.persistence.criteria.Root;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -628,8 +630,9 @@ public BillHistoryVo queryBillHistory(String userId,int pageNo, int pageSize) {
  * @param billStatus
  * @param orderStatus
  * @return
+ * @throws ParseException 
  */
-public BillVo getBillList(String userId, String createTime, int pageNumber, int pageSize,int isPrimary,int billStatus, int orderStatus) {
+public BillVo getBillList(String userId, String createTime, int pageNumber, int pageSize,int isPrimary,int billStatus, int orderStatus) throws ParseException {
 	 Page<OrderSignfor> orderPage = osr.findAll(new Specification<OrderSignfor>() {
 
 	      public Predicate toPredicate(Root<OrderSignfor> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -669,13 +672,14 @@ public BillVo getBillList(String userId, String createTime, int pageNumber, int 
 	        }
 	        
 	       
-	        	if(orderStatus == 3){
+	        	if(orderStatus > 0){
 	        		Predicate p8 = cb.equal(root.get("orderStatus").as(Integer.class), orderStatus);
 		        	 predicates.add(p8);
 	        	}else {
 	        		Predicate p9 = cb.equal(root.get("orderStatus").as(Integer.class), 0);
+	        		Predicate p8 = cb.equal(root.get("orderStatus").as(Integer.class), 3);
 	        		Predicate p10 = cb.equal(root.get("orderStatus").as(Integer.class), 2);
-		        	 predicates.add(cb.or(p9,p10));
+		        	 predicates.add(cb.or(p8,p9,p10));
 	        	}
 	        	
 	        if(!StringUtils.isEmpty(createTime)){
@@ -689,21 +693,17 @@ public BillVo getBillList(String userId, String createTime, int pageNumber, int 
 	      }
 
 	    }, new PageRequest(pageNumber > 0 ? pageNumber-1:0, pageSize, new Sort(Sort.Direction.DESC,"creatTime")));
-	  return createBillVoByOrderSignfor(orderPage);
+	  return createBillVoByOrderSignfor(orderPage, userId, createTime);
 	  }
 
 
- private BillVo createBillVoByOrderSignfor(Page<OrderSignfor> orderPage){
+ private BillVo createBillVoByOrderSignfor(Page<OrderSignfor> orderPage, String userId,String createTime) throws ParseException{
 	 BillVo bvo = new BillVo();
 	 if(orderPage.getContent() != null){
-		
-		 Float totalArrears = 0f;
+		 Float totalArrears = osr.currentArrears(userId,new SimpleDateFormat("yyyy-MM-dd").parse(createTime) );
 		 List<OrderVo> list = createOrderVoByOrderSignfor(orderPage);
-		 for(OrderVo vo : list){
-			 totalArrears+=vo.getTotalArreas();
-		 }
 		 bvo.setContent(list);
-		 bvo.setTotalArrears(totalArrears);
+		 bvo.setTotalArrears(totalArrears != null ? totalArrears : 0);
 		 bvo.setTotalPages(orderPage.getTotalPages());
 	 }
 	 

@@ -134,6 +134,7 @@ public class BillController {
 	/**
 	 * 根据条件查询对账单 列表
 	 * @return
+	 * @throws ParseException 
 	 */
 	@RequestMapping(value = "/queryBillList/{userId}", method = RequestMethod.GET)
 	public ResponseEntity<BillVo> queryBill(
@@ -142,9 +143,9 @@ public class BillController {
 			@RequestParam(defaultValue="10",value="pageSize",required=false) int pageSize,
 			@RequestParam(defaultValue="",value="createTime",required=false)String createTime,
 			@RequestParam(defaultValue="0",value="isPrimary",required=false)int isPrimary,
-			@RequestParam(defaultValue="3",value="orderStatus",required=false)int orderStatus,
+			@RequestParam(defaultValue="0",value="orderStatus",required=false)int orderStatus,
 			@RequestParam(defaultValue="0",value="billStatus",required=false)int billStatus
-			) {
+			) throws ParseException {
 			BillVo vo = orderSignforService.getBillList(userId,createTime,pageNumber,pageSize,isPrimary,billStatus,orderStatus);
 			return new ResponseEntity<BillVo>(vo,HttpStatus.OK);
 		

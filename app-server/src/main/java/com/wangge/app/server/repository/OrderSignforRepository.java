@@ -55,7 +55,7 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
                 +"    and o.fastmail_no is not null "
                  +"    and o.creat_time >= trunc(sysdate - 1) - 3/24 "
                    +"  and o.creat_time < trunc(sysdate) "
-                     +" and (o.order_status = '0' or o.order_status = '2') ) , "
+                     +" and (o.order_status = '0' or o.order_status = '2') ) as todayArrears , "
                     +" (select sum(o.actual_pay_num)  "
                       +"      from biz_order_signfor o "
                      +"      where o.user_id = ?1 "
@@ -70,7 +70,7 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
                      +"      where o.user_id = ?1 "
                       +"       and o.fastmail_no is not null "
                       +" and o.creat_time < trunc(sysdate) -1 "   
-                       +"      and (o.order_status = '0' or o.order_status = '2')) "
+                       +"      and (o.order_status = '0' or o.order_status = '2')) as historyArrears "
                    
                   +"  from dual", nativeQuery = true) 
 	List<Object> findSumForArrearsUign(String userId);
@@ -247,6 +247,22 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
       + "       sum(s.phone_Count), 'cancleCount'\n" + "  from biz_order_signfor s\n" + " where s.order_status in (1,4) \n"
       + "   and s.user_id = ?1 \n" + "   and to_char(s.creat_time, 'yyyy-mm-dd') = ?2 \n", nativeQuery = true)
   List<Object> countByuserAndDay(String userId, String day);
+  @Query(value = " select (select sum(o.arrears)"
+           +   " from biz_order_signfor o "
+           +  " where o.user_id = ?1"
+           +    " and o.fastmail_no is not null"
+           + " and o.creat_time >= trunc(?2 - 1) - 3/24"
+           +" and o.creat_time < trunc(?2) "
+           +     " and o.order_status = '3') + "
+           + " (select sum(o.actual_pay_num) "
+                   +"        from biz_order_signfor o "
+                    +"      where o.user_id = ?1 "
+                     +"       and o.fastmail_no is not null "
+                     + "and o.creat_time >= trunc(?2 - 1) - 3/24"
+                     +" and o.creat_time < trunc(?2) "   
+                      +"  and (o.order_status = '0' or o.order_status = '2')) as historyArrears"
+      + " from dual", nativeQuery = true) 
+Float currentArrears(String userId,Date createTime);
 
 
 
