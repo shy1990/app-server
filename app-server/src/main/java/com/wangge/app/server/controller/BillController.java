@@ -138,14 +138,14 @@ public class BillController {
 	@RequestMapping(value = "/queryBillList/{userId}", method = RequestMethod.GET)
 	public ResponseEntity<BillVo> queryBill(
 			@PathVariable("userId") String userId,
-			@RequestParam(defaultValue = "1", value = "pageNumer", required = false) int pageNumer,
+			@RequestParam(defaultValue = "1", value = "pageNumber", required = false) int pageNumber,
 			@RequestParam(defaultValue="10",value="pageSize",required=false) int pageSize,
 			@RequestParam(defaultValue="",value="createTime",required=false)String createTime,
 			@RequestParam(defaultValue="0",value="isPrimary",required=false)int isPrimary,
 			@RequestParam(defaultValue="3",value="orderStatus",required=false)int orderStatus,
-			@RequestParam(defaultValue="3",value="billStatus",required=false)int billStatus
+			@RequestParam(defaultValue="0",value="billStatus",required=false)int billStatus
 			) {
-			BillVo vo = orderSignforService.getBillList(userId,createTime,pageNumer,pageSize,isPrimary,billStatus,orderStatus);
+			BillVo vo = orderSignforService.getBillList(userId,createTime,pageNumber,pageSize,isPrimary,billStatus,orderStatus);
 			return new ResponseEntity<BillVo>(vo,HttpStatus.OK);
 		
 	}

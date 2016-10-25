@@ -629,7 +629,7 @@ public BillHistoryVo queryBillHistory(String userId,int pageNo, int pageSize) {
  * @param orderStatus
  * @return
  */
-public BillVo getBillList(String userId, String createTime, int pageNumer, int pageSize,int isPrimary,int billStatus, int orderStatus) {
+public BillVo getBillList(String userId, String createTime, int pageNumber, int pageSize,int isPrimary,int billStatus, int orderStatus) {
 	 Page<OrderSignfor> orderPage = osr.findAll(new Specification<OrderSignfor>() {
 
 	      public Predicate toPredicate(Root<OrderSignfor> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -688,7 +688,7 @@ public BillVo getBillList(String userId, String createTime, int pageNumer, int p
 	        return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 	      }
 
-	    }, new PageRequest(pageNumer > 0 ? pageNumer-1:0, pageSize, new Sort(Sort.Direction.DESC,"creatTime")));
+	    }, new PageRequest(pageNumber > 0 ? pageNumber-1:0, pageSize, new Sort(Sort.Direction.DESC,"creatTime")));
 	  return createBillVoByOrderSignfor(orderPage);
 	  }
 
@@ -734,7 +734,7 @@ private List<OrderVo> createOrderVoByOrderSignfor(Page<OrderSignfor> orderPage) 
 				dto.setPayTyp(os.getOrderPayType() != null ? os.getOrderPayType() : 3);
 				dto.setOrderPrice(os.getOrderPrice());
 				dto.setCreateTime(os.getCreatTime());
-				dto.setBillStatus(os.getBillStatus());
+				dto.setBillStatus(os.getBillStatus()!= null ? os.getBillStatus() : 1 );
 				dto.setArrear(os.getOrderStatus() == 3 ? os.getArrears() : os.getActualPayNum());
 				dtoList.add(dto);
 				totalArrear += os.getOrderStatus() == 3 ? os.getArrears() : os.getActualPayNum();
