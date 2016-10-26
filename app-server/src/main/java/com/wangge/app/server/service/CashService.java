@@ -215,7 +215,6 @@ public class CashService {
 	private void pushWaterOrderToMall() {
 
 	}
-
 	/**
 	 * 流水单号生成策略：时间戳+4位随机码
 	 *
