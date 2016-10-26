@@ -113,12 +113,16 @@ public class WaterOrderController {
 	 */
 	@RequestMapping(value = "/pay/{serialNo}", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JsonResponse<Boolean>> updateStatus(@RequestParam(value = "serialNo") WaterOrderCash orderCash,@RequestParam Long payDate, @RequestParam String payMoney) {
+	public ResponseEntity<JsonResponse<Boolean>> updateStatus(@PathVariable(value = "serialNo") WaterOrderCash orderCash,@RequestParam Long payDate, @RequestParam String payMoney) {
 		JsonResponse<Boolean> statusJson = new JsonResponse<>();
 		statusJson.setResult(false);
 		try {
 			if(ObjectUtils.equals(null,orderCash)){
 				statusJson.setErrorMsg("没有此流水单！");
+				return new ResponseEntity<>(statusJson, HttpStatus.OK);
+			}
+			if(payDate==null||payMoney==null||"".equals(payMoney)){
+				statusJson.setErrorMsg("缺少参数！");
 				return new ResponseEntity<>(statusJson, HttpStatus.OK);
 			}
 			orderCash.setPayDate(new Date(payDate));

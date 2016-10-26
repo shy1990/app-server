@@ -62,7 +62,6 @@ public class CashService {
 				cashPartList.add(part);
 			});
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.info(e.getMessage());
 		}
 
@@ -212,6 +211,7 @@ public class CashService {
 		return msg;
 	}
 
+	//推送流水单号到老商城订单
 	private void pushWaterOrderToMall() {
 
 	}
