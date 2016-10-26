@@ -50,7 +50,7 @@ public class WaterOrderCash implements Serializable  {
   private Float paymentMoney ;//支付金额
   private Integer isPunish ;//是否扣罚
   
-  @OneToMany(cascade = CascadeType.ALL,fetch=FetchType.LAZY)
+  @OneToMany(fetch=FetchType.LAZY)
   @JoinColumn(name="SERIAL_NO",insertable=false,updatable=false)
   private List<WaterOrderDetail> orderDetailList;//订单详情
   
@@ -74,13 +74,13 @@ public class WaterOrderCash implements Serializable  {
   public void setPayStatus(Integer payStatus) {
     this.payStatus = payStatus;
   }
-  public String getSerialNo() {
-    return serialNo;
-  }
   public void setSerialNo(String serialNo) {
     this.serialNo = serialNo;
   }
-  public String getUserId() {
+	public String getSerialNo() {
+		return serialNo;
+	}
+	public String getUserId() {
     return userId;
   }
   public void setUserId(String userId) {
