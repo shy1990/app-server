@@ -1,14 +1,5 @@
 package com.wangge.app.server.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.wangge.app.server.entity.Region;
@@ -21,6 +12,13 @@ import com.wangge.app.server.repository.SaojieRepository;
 import com.wangge.app.server.repositoryimpl.RegionImpl;
 import com.wangge.app.server.vo.RegionVo;
 import com.wangge.app.server.vo.TreeVo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class RegionService {

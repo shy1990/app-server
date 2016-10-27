@@ -1,19 +1,5 @@
 package com.wangge.app.server.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.apache.log4j.Logger;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.wangge.app.server.entity.Region;
 import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.entity.Saojie;
@@ -22,6 +8,18 @@ import com.wangge.app.server.service.SalesmanService;
 import com.wangge.app.server.service.SaojieService;
 import com.wangge.app.server.vo.RegionVo;
 import com.wangge.app.server.vo.TreeVo;
+import org.apache.log4j.Logger;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -42,7 +40,7 @@ public class RegionController {
 	private SaojieService saojieService;
 	/**
 	 * 业务人员区域信息
-	 * @param username
+	 * @param
 	 * @return
 	 */
 	@RequestMapping(value="/{id}/regions",method=RequestMethod.GET)
@@ -106,15 +104,17 @@ public class RegionController {
 		logger.debug("parentid"+parentid+"pointStr"+pointStr);
 		List<Region> listRegion=regionService.findRegionSort(parentid);
 		int id;
+		Region entity;
 		if(listRegion.size()>0){
 			Region region=new Region();
 			region.setId(parentid);
-			
 			id=Integer.parseInt(regionService.findMaxIdByParent(region).toString())+1;
+			 entity = new Region(String.valueOf(id), name,region.getType());
 		}else{
 			id=Integer.parseInt(parentid+"00")+1;
+			Region regionp=regionService.findRegion(parentid);
+			 entity = new Region(String.valueOf(id), name,regionp.getType());
 		}
-		Region entity = new Region(String.valueOf(id), name,Region.RegionType.TOWN);
 		entity.setCoordinates(pointStr);
 				
 		entity.setParent(regionService.findRegion(parentid));
