@@ -39,6 +39,9 @@ public class CashService {
 	private WaterOrderCashRepository wocr;
 	@Resource
 	private WaterOrderDetailRepository wodr;
+
+	@Resource(name = "restTemplate")
+	private RestTemplate restTemplate;
 	@Value("${mall.url}")
 	private String MALL_URl;
 
@@ -165,7 +168,6 @@ public class CashService {
 					//修改状态
 					cash.setStatus(1);
 				}
-				;
 
 				//组装流水单数据
 				WaterOrderCash woc = new WaterOrderCash();
@@ -218,8 +220,7 @@ public class CashService {
 	//推送流水单号到老商城订单
 	private void pushWaterOrderToMall(WaterOrderCash woc) {
 		String url = "";
-		RestTemplate restTemplate  = new RestTemplate();
-//		restTemplate.getForEntity(MALL_URl+url, JSONObject)
+//		restTemplate.getForEntity(MALL_URl+url, );
 	}
 	/**
 	 * 流水单号生成策略：时间戳+4位随机码
