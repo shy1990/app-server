@@ -50,7 +50,6 @@ public class BillController {
 	
 	/**
 	 * @throws Exception 
-	 * 
 	* @Title: settlement 
 	* @Description: TODO(结清订单) 
 	* @param @param jsons
