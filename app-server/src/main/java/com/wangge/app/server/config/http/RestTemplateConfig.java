@@ -1,4 +1,4 @@
-package com.wangge.app.server.config;
+package com.wangge.app.server.config.http;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
