@@ -62,6 +62,7 @@ public class Region implements Serializable {
 	private String coordinates;
 
 	@Enumerated(EnumType.ORDINAL)
+	@Column(name = "REGION_TYPE_ID")
 	private RegionType type;
 
 	@JsonIgnore
