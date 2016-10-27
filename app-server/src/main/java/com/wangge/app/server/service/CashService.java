@@ -1,7 +1,7 @@
 package com.wangge.app.server.service;
 
 
-import com.alibaba.fastjson.JSONObject;
+import com.wangge.app.server.config.http.HttpRequestHandler;
 import com.wangge.app.server.entity.*;
 import com.wangge.app.server.pojo.CashPart;
 import com.wangge.app.server.pojo.OrderDetailPart;
@@ -14,9 +14,9 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -40,8 +40,8 @@ public class CashService {
 	@Resource
 	private WaterOrderDetailRepository wodr;
 
-	@Resource(name = "restTemplate")
-	private RestTemplate restTemplate;
+	@Resource
+	private HttpRequestHandler httpRequestHandler;
 	@Value("${mall.url}")
 	private String MALL_URl;
 
@@ -207,7 +207,7 @@ public class CashService {
 				cr.save(cashlist);
 				msg = woc.getSerialNo();
 				//TODO 推送流水单号到老商城订单
-//				pushWaterOrderToMall(woc);
+				pushWaterOrderToMall(woc);
 			}
 		} catch (Exception e) {
 			logger.info(e.getMessage());
@@ -219,8 +219,13 @@ public class CashService {
 
 	//推送流水单号到老商城订单
 	private void pushWaterOrderToMall(WaterOrderCash woc) {
-		String url = "";
-//		restTemplate.getForEntity(MALL_URl+url, );
+		try {
+			String url = "order/addNewOrder.html?orderNum="+woc.getSerialNo()+"&totalCost="+woc.getCashMoney();
+			httpRequestHandler.get(MALL_URl + url, HttpMethod.GET);
+		}catch (Exception e){
+			e.printStackTrace();
+			logger.info("流水单推送老商城失败!",e);
+		}
 	}
 	/**
 	 * 流水单号生成策略：时间戳+4位随机码
@@ -265,6 +270,10 @@ public class CashService {
 	@Transactional
 	public Cash save(Cash cash) {
 		return cr.save(cash);
+	}
+	@Transactional
+	public List<Cash> save(List<Cash> cashList) {
+		return cr.save(cashList);
 	}
 //  public List<Cash> findByOrderIdIn()
 }
