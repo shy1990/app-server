@@ -1,13 +1,8 @@
 package com.wangge.app.server.vo;
 
-import java.util.List;
-
-import oracle.net.aso.f;
-
-import org.springframework.data.domain.Page;
-
-import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.entity.dto.OrderDto;
+
+import java.util.List;
 
 public class OrderVo {
 	

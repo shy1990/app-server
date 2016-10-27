@@ -12,6 +12,7 @@ import com.wangge.app.server.repository.WaterOrderDetailRepository;
 import com.wangge.app.server.util.DateUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
@@ -218,10 +219,10 @@ public class CashService {
 	}
 
 	//推送流水单号到老商城订单
-	private void pushWaterOrderToMall(WaterOrderCash woc) {
+	public void pushWaterOrderToMall(WaterOrderCash woc) {
 		try {
 			String url = "order/addNewOrder.html?orderNum="+woc.getSerialNo()+"&totalCost="+woc.getCashMoney();
-			httpRequestHandler.get(MALL_URl + url, HttpMethod.GET);
+			httpRequestHandler.get(MALL_URl + url,HttpMethod.POST);
 		}catch (Exception e){
 			e.printStackTrace();
 			logger.info("流水单推送老商城失败!",e);

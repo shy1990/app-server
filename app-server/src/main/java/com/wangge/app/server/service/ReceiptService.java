@@ -1,27 +1,19 @@
 package com.wangge.app.server.service;
 
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.Resource;
-
-import oracle.sql.DATE;
-
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.stereotype.Service;
-
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.entity.Receipt;
 import com.wangge.app.server.entity.dto.ReceiptDto;
 import com.wangge.app.server.repository.ReceiptRepository;
 import com.wangge.app.server.vo.ReceiptVo;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class ReceiptService {
