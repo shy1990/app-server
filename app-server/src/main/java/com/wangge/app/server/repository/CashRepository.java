@@ -9,7 +9,7 @@ import com.wangge.app.server.entity.Cash;
 public interface CashRepository extends JpaRepository<Cash, Integer>{
 
   List<Cash> findByUserIdAndStatus(String userId,Integer status);
-  
-  List<Cash> findByUserIdAndCashIdIn(String userId,Integer[] ids);
+
+  List<Cash> findByUserIdAndStatusAndCashIdIn(String userId,Integer status, Integer[] ids);
   
 }
