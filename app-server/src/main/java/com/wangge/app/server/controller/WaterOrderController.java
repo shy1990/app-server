@@ -8,6 +8,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.WaterOrderCash;
 import com.wangge.app.server.util.DateUtil;
 import org.apache.commons.lang.ObjectUtils;
@@ -21,12 +22,7 @@ import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.wangge.app.server.pojo.WaterOrderPart;
 import com.wangge.app.server.service.WaterOrderService;
@@ -107,14 +103,15 @@ public class WaterOrderController {
 	/**
 	 * 更改流水单回调
 	 * @param orderCash seriaNo流水单号
-	 * @param payDate 时间戳
-	 * @param payMoney 支付金额
+	 * @param jsonObject {"payDate":1477534294628,"payMoney":15465}payDate 时间戳payMoney 支付金额
 	 * @return
 	 */
 	@RequestMapping(value = "/pay/{serialNo}", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JsonResponse<Boolean>> updateStatus(@PathVariable(value = "serialNo") WaterOrderCash orderCash,@RequestParam Long payDate, @RequestParam String payMoney) {
+	public ResponseEntity<JsonResponse<Boolean>> updateStatus(@PathVariable(value = "serialNo") WaterOrderCash orderCash, @RequestBody JSONObject jsonObject) {
 		JsonResponse<Boolean> statusJson = new JsonResponse<>();
+		Long payDate = jsonObject.getLong("payDate");
+		String payMoney =jsonObject.getString("payMoney");
 		statusJson.setResult(false);
 		try {
 			if(ObjectUtils.equals(null,orderCash)){

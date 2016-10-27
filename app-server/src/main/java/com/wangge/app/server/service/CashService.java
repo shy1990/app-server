@@ -1,6 +1,7 @@
 package com.wangge.app.server.service;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.*;
 import com.wangge.app.server.pojo.CashPart;
 import com.wangge.app.server.pojo.OrderDetailPart;
@@ -10,10 +11,12 @@ import com.wangge.app.server.repository.WaterOrderCashRepository;
 import com.wangge.app.server.repository.WaterOrderDetailRepository;
 import com.wangge.app.server.util.DateUtil;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -36,7 +39,8 @@ public class CashService {
 	private WaterOrderCashRepository wocr;
 	@Resource
 	private WaterOrderDetailRepository wodr;
-
+	@Value("${mall.url}")
+	private String MALL_URl;
 
 	/**
 	 * 现金订单购物车
@@ -201,7 +205,7 @@ public class CashService {
 				cr.save(cashlist);
 				msg = woc.getSerialNo();
 				//TODO 推送流水单号到老商城订单
-				pushWaterOrderToMall();
+//				pushWaterOrderToMall(woc);
 			}
 		} catch (Exception e) {
 			logger.info(e.getMessage());
@@ -212,8 +216,10 @@ public class CashService {
 	}
 
 	//推送流水单号到老商城订单
-	private void pushWaterOrderToMall() {
-
+	private void pushWaterOrderToMall(WaterOrderCash woc) {
+		String url = "";
+		RestTemplate restTemplate  = new RestTemplate();
+//		restTemplate.getForEntity(MALL_URl+url, JSONObject)
 	}
 	/**
 	 * 流水单号生成策略：时间戳+4位随机码
