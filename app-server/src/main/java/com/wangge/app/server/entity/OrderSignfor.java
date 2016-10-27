@@ -1,17 +1,17 @@
 package com.wangge.app.server.entity;
 
 
-import java.io.Serializable;
-import java.util.Date;
+import java.io.Serializable;import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -20,8 +20,6 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 
 
-//@JsonIgnoreProperties(value = { "hibernateLazyInitializer" ,"handler"})
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @JsonInclude(Include.NON_EMPTY)
 @Entity
 @Table(name = "BIZ_ORDER_SIGNFOR")
@@ -35,8 +33,8 @@ public class OrderSignfor implements Serializable {
   private static final long serialVersionUID = 1L;
   @Id
   @Column(name = "SIGNID")
-  @GenericGenerator(name = "idgen", strategy = "increment")
-  @GeneratedValue(generator = "idgen")
+  @SequenceGenerator(name = "idgen")
+  @GeneratedValue(generator = "idgen", strategy = GenerationType.SEQUENCE)
   private Integer id;
   private String fastmailNo;
   private String orderNo;
@@ -71,7 +69,7 @@ public class OrderSignfor implements Serializable {
   
   private int isPrimaryAccount;
   
-private Integer billStatus; //订单结款状态
+  private Integer billStatus; //订单结款状态
   
   private  Float  arrears;//欠款金额
   
@@ -291,7 +289,7 @@ public void setUpdateTime(Date updateTime) {
 
   
   public Float getActualPayNum() {
-    return actualPayNum;
+    return actualPayNum==null?orderPrice:actualPayNum;
   }
 
   public void setActualPayNum(Float actualPayNum) {

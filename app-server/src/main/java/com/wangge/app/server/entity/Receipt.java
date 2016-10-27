@@ -17,30 +17,37 @@ public class Receipt {
 	  @Column(name = "receipt_id")
 	  @GenericGenerator(name = "idgen", strategy = "increment")
 	  @GeneratedValue(generator = "idgen")
-	private Integer id;
+	private Long id;
 	private Float amountCollected;
 	private Integer receiptType;
 	private Date createTime;
 	private String accountId;
 	private int signid;
-	private String orderno;
+	private String orderNo;
 	
 	
+	public Receipt() {
+		super();
+	}
+
 	public Receipt(Float amountCollected, Integer receiptType, Date createTime,
-			String accountId, String orderno) {
+			String accountId, String orderNo) {
 		super();
 		this.amountCollected = amountCollected;
 		this.receiptType = receiptType;
 		this.createTime = createTime;
 		this.accountId = accountId;
-		this.orderno = orderno;
+		this.orderNo = orderNo;
 	}
-	public Integer getId() {
+
+	public Long getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+
+	public void setId(Long id) {
 		this.id = id;
 	}
+
 	public Float getAmountCollected() {
 		return amountCollected;
 	}
@@ -71,11 +78,11 @@ public class Receipt {
 	public void setSignid(int signid) {
 		this.signid = signid;
 	}
-	public String getOrderno() {
-		return orderno;
+	public String getOrderNo() {
+		return orderNo;
 	}
-	public void setOrderno(String orderno) {
-		this.orderno = orderno;
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
 	}
 	
 }

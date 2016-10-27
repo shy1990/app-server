@@ -141,8 +141,8 @@ public class OrderSignforController {
    */
   @RequestMapping(value ="/customOrderSign", method = RequestMethod.POST)
   @ResponseBody
-  public ResponseEntity<MessageCustom> customOrderSign(@RequestBody JSONObject jsons,@RequestParam(defaultValue="",required=false,value="amountCollected") String amountCollected,
-		  @RequestParam(value="",required=false,defaultValue="") String billStatus){
+  public ResponseEntity<MessageCustom> customOrderSign(@RequestBody JSONObject jsons,@RequestParam(defaultValue="0",required=false,value="amountCollected") Float amountCollected,
+		  @RequestParam(value="billStatus",required=false,defaultValue="0") int billStatus){
      String userPhone = jsons.getString("userPhone");
      String orderNo = jsons.getString("orderNo");
      String smsCode = jsons.getString("smsCode");
@@ -153,7 +153,8 @@ public class OrderSignforController {
     String userId =  jsons.getString("userId");
     String childId =  jsons.getString("childId");
     String walletPayNo =  jsons.getString("walletPayNo");
-    String actualPayNum =  jsons.getString("actualPayNum");
+    Float actualPayNum =  jsons.getFloat("actualPayNum");
+    String regionId = jsons.getString("regionId");
     String accountId = "";
     MessageCustom m = new MessageCustom();
     try {
@@ -163,19 +164,19 @@ public class OrderSignforController {
 				accountId = childId;
 			}
 			if (payType == 2) {
-				orderSignforService.customSignforByCash(orderNo,userPhone,signGeoPoint,payType,smsCode,isPrimaryAccount,childId,storePhone,userId,accountId,Integer.parseInt(billStatus),Float.parseFloat(amountCollected),walletPayNo,Float.parseFloat(actualPayNum));
+				orderSignforService.customSignforByCash(orderNo,userPhone,signGeoPoint,payType,smsCode,isPrimaryAccount,childId,storePhone,userId,accountId,billStatus,amountCollected,walletPayNo,actualPayNum,regionId);
 			}else{
 				 if(smsCode != null && !"".equals(smsCode) && storePhone != null && !"".equals(storePhone)){
 				        String msg = HttpUtil.sendPost("http://www.3j1688.com/member/existMobileCode/"+storePhone+"_"+smsCode+".html","");
 				        if(msg!=null && msg.contains("true")){
-				            orderSignforService.customSignforByPos(orderNo, userPhone, signGeoPoint,payType,smsCode,isPrimaryAccount,userId,childId,accountId,storePhone,walletPayNo);
+				            orderSignforService.customSignforByPos(orderNo, userPhone, signGeoPoint,payType,smsCode,isPrimaryAccount,userId,childId,accountId,storePhone,walletPayNo,regionId);
 				            m.setMsg("success");
 				            m.setCode(0);
 				        }else{
 				            m.setMsg("短信验证码不存在！");
 				        }
 				      }else{
-					        orderSignforService.customSignforByPos(orderNo, userPhone, signGeoPoint,payType,smsCode,isPrimaryAccount,userId,childId,accountId,storePhone,walletPayNo);
+					        orderSignforService.customSignforByPos(orderNo, userPhone, signGeoPoint,payType,smsCode,isPrimaryAccount,userId,childId,accountId,storePhone,walletPayNo,regionId);
 					        m.setMsg("success");
 					        m.setCode(0);
 				      }
@@ -191,6 +192,8 @@ public class OrderSignforController {
    return  new ResponseEntity<MessageCustom>(m, HttpStatus.OK);
   }
  
+  
+  
   /**
    * 
   * @Title: customOrderUnSign 

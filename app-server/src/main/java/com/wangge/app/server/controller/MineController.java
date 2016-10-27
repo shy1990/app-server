@@ -1,14 +1,18 @@
 package com.wangge.app.server.controller;
 
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
+import com.alibaba.fastjson.JSONObject;
+import com.wangge.app.server.entity.*;
+import com.wangge.app.server.pojo.Json;
+import com.wangge.app.server.repository.RegionRepository;
+import com.wangge.app.server.repositoryimpl.ExamImpl;
+import com.wangge.app.server.repositoryimpl.OrderImpl;
+import com.wangge.app.server.service.*;
+import com.wangge.app.server.util.HttpUtil;
+import com.wangge.app.server.util.SortUtil;
+import com.wangge.app.server.vo.Apply;
+import com.wangge.app.server.vo.Exam;
+import com.wangge.app.server.vo.OrderPub;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,30 +21,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.wangge.app.server.entity.ApplyPrice;
-import com.wangge.app.server.entity.Order;
-import com.wangge.app.server.entity.OrderItem;
-import com.wangge.app.server.entity.Receipt;
-import com.wangge.app.server.entity.RegistData;
-import com.wangge.app.server.entity.Salesman;
-import com.wangge.app.server.pojo.Json;
-import com.wangge.app.server.repository.RegionRepository;
-import com.wangge.app.server.repositoryimpl.ExamImpl;
-import com.wangge.app.server.repositoryimpl.OrderImpl;
-import com.wangge.app.server.service.ApplyPriceService;
-import com.wangge.app.server.service.MessageService;
-import com.wangge.app.server.service.OrderService;
-import com.wangge.app.server.service.OrderSignforService;
-import com.wangge.app.server.service.RegistDataService;
-import com.wangge.app.server.service.SalesmanService;
-import com.wangge.app.server.util.DateUtil;
-import com.wangge.app.server.util.HttpUtil;
-import com.wangge.app.server.util.SortUtil;
-import com.wangge.app.server.vo.Apply;
-import com.wangge.app.server.vo.Exam;
-import com.wangge.app.server.vo.OrderPub;
+import javax.annotation.Resource;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/v1/mine")
@@ -66,11 +52,8 @@ public class MineController {
 	private RegistDataService rds;
 	@Resource
 	private SalesmanService salesmanService;
-	/*@Resource
-	private ReceiptService receiptService;
-	
-	 @Resource*/
-	 private OrderSignforService orderSignforService;
+	@Resource
+	private AppVersionService appVersionService;
 	/**
 	 * 
 	 * @Description: 根据业务手机号订单号判断该订单是否属于该业务员并返回订单详情
@@ -138,26 +121,9 @@ public class MineController {
       }*/
     }
     jo.put("msg", "未查询相关信息或快件未揽收,请重试");
-   /* if(order.getStatus().ordinal() == 3){
-    	JSONArray array = receiptService.findByOrderNo(order.getId());
-    	jo.put("content", array);
-    }*/
     return new ResponseEntity<JSONObject>(jo, HttpStatus.BAD_REQUEST);
 
   }
-	
-	/*private JSONObject getOrderOverTime(String ordernum,JSONObject jo){
-	    Date overTime = orderSignforService.getOrderOverTime(ordernum);
-	    if(overTime !=null){
-	    	jo.put("isEdit", 1);//1表示隐藏
-	    	
-	    }else{
-	    	jo.put("isEdit", 0);//0表示显示按钮
-	    }
-	   
-		//DateUtil.
-		return jo;
-	}*/
   
   
   /**
@@ -462,7 +428,12 @@ public class MineController {
 	 * @author changjun
 	 * @date 2015年10月21日
 	 */
-	//{"salesmanId":"C37010511230","regionId":"370105","applyReason":"增加竞争力","range":"-100","skuName":"红米2A"}
+	//{"salesmanId":"C37010511230","regionId":"370105","apply
+	//
+	//
+	//
+	//
+	// Reason":"增加竞争力","range":"-100","skuName":"红米2A"}
 	 
 	@RequestMapping(value = "/applyChangePrice",method = RequestMethod.POST)
 	public ResponseEntity<JSONObject> applyChangePrice(@RequestBody  JSONObject json){
@@ -513,5 +484,15 @@ public class MineController {
 		Long id = json.getLong("id");
 		ApplyPrice ap = aps.selApplyById(id);
 		return new ResponseEntity<ApplyPrice>(ap, HttpStatus.OK);
+	}
+
+	/**
+	 * 查询版本号，升级app
+	 * @return
+	 */
+	@RequestMapping(value = "/findAppVersion",method = RequestMethod.POST)
+	public ResponseEntity<AppVersion> findAppVersion(){
+		List<AppVersion>  ap = appVersionService.findAppVersion();
+		return new ResponseEntity<AppVersion>(ap.get(0), HttpStatus.OK);
 	}
 }

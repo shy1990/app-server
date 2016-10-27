@@ -22,7 +22,11 @@ public class afterSignforListener implements ApplicationListener<afterSignforEve
 
   @Override
   public void onApplicationEvent(afterSignforEvent event) {
-    oilCostRecordService.addHandshake(event.getUserId(),event.getCoordinates(),event.getIsPrimaryAccount(),event.getChildId(),event.getType(),event.getStorePhone());
+    try {
+		oilCostRecordService.addHandshake(event.getUserId(),event.getCoordinates(),event.getIsPrimaryAccount(),event.getChildId(),event.getType(),event.getStorePhone());
+	} catch (Exception e) {
+		throw new  RuntimeException("记录油补异常   "+ e.getMessage());
+	}
   }
   
   

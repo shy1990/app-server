@@ -32,7 +32,7 @@ public class MonthTaskExecution implements Serializable {
 	 */
 	private static final long serialVersionUID = 101L;
 	@Id
-	@SequenceGenerator(initialValue = 1, name = "idgen", sequenceName = "sys_month_task_seq")
+	@SequenceGenerator( name = "idgen", sequenceName = "sys_month_task_seq")
   @GeneratedValue(generator = "idgen",strategy=GenerationType.SEQUENCE)
 	private long id;
 	@ManyToOne(fetch = FetchType.EAGER)

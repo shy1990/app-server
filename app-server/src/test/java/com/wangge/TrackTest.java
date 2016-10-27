@@ -4,10 +4,7 @@ package com.wangge;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.wangge.app.server.entity.OilParameters;
-import com.wangge.app.server.entity.Salesman;
 import com.wangge.app.server.util.HttpUtil;
-import com.wangge.app.util.ChainageUtil;
 
 public class TrackTest {
 
@@ -113,5 +110,9 @@ public static void main(String [] args){
   mileage = mileage != null ? distance + mileage : distance;//将握手点之间的距离叠加起来
  System.out.println("+++++++j=======++++++++"+mileage);
  System.out.println("+++++++j=======++++++++"+d);
-}  
+}
+
+
+
+
 }

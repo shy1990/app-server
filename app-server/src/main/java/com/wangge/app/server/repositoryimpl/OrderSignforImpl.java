@@ -96,8 +96,8 @@ public class OrderSignforImpl {
    */
   public QueryResult<OrderSignfor> getOrderSignforList(String userPhone, int pageNo, int pageSize) {
    
-     String sql = "select t.* from (select os.fastmail_no,os.yewu_signfor_time,os.fastmail_time, count(os.signid) as orderCount from biz_order_signfor os  where os.user_phone = '"+userPhone+"'  group by os.fastmail_no, os.yewu_signfor_time, os.fastmail_time ) t order by t.fastmail_time desc";
-     String countSql = "select count(t.fastmail_no) from (select os.fastmail_no,os.yewu_signfor_time,os.fastmail_time, count(os.signid) as orderCount from biz_order_signfor os  where os.user_phone = '"+userPhone+"'  group by os.fastmail_no, os.yewu_signfor_time, os.fastmail_time) t order by t.fastmail_time";
+     String sql = "select t.* from (select os.fastmail_no,os.yewu_signfor_time,os.fastmail_time, count(os.signid) as orderCount from biz_order_signfor os  where os.user_phone = '"+userPhone+"' and os.fastmail_time is not null  group by os.fastmail_no, os.yewu_signfor_time, os.fastmail_time ) t order by t.fastmail_time desc";
+     String countSql = "select count(t.fastmail_no) from (select os.fastmail_no,os.yewu_signfor_time,os.fastmail_time, count(os.signid) as orderCount from biz_order_signfor os  where os.user_phone = '"+userPhone+"' and os.fastmail_time is not null group by os.fastmail_no, os.yewu_signfor_time, os.fastmail_time) t order by t.fastmail_time desc";
      Query query = em.createNativeQuery(sql);
      if(pageNo!=-1 && pageSize != -1)query.setFirstResult(pageNo*pageSize).setMaxResults(pageSize);
      BigDecimal a = (BigDecimal)  em.createNativeQuery(countSql).getSingleResult();

@@ -202,7 +202,7 @@ public class OilCostRecordService {
   * @return void    返回类型 
   * @throws
    */
-  public void addHandshake(String userId,String coordinates,int isPrimaryAccount,String childId,int type,String storePhone){
+  public void addHandshake(String userId,String coordinates,int isPrimaryAccount,String childId,int type,String storePhone) throws Exception{
   //  String id = null;
     String regionId = null;
     String shopName = null;

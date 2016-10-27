@@ -25,10 +25,7 @@ import javax.annotation.Resource;
 import javax.persistence.criteria.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class WaterOrderService {
@@ -157,6 +154,18 @@ public class WaterOrderService {
     }
     return orderPartPage;
   }
+
+	/**
+	 * 查询用户流水单号在某天的条数
+	 * @param userId
+	 * @param createDate
+	 * @return
+	 */
+  public Long countByUserIdAndCreateDate(String userId, Date createDate){
+  	String startDate = DateUtil.date2String(createDate) + " 00:00:00";
+  	String endDate = DateUtil.date2String(createDate) + " 23:59:59";
+  	return wocr.countByUserIdAndCreateDate(userId,startDate,endDate);
+  }
   /**
    * 
    * @param searchParams
@@ -167,6 +176,14 @@ public class WaterOrderService {
     Specification<WaterOrderCash> spec = oilCostSearchFilter(filters.values(), WaterOrderCash.class);
     return  wocr.findAll(spec);
   }
+
+	/**
+	 * 保存数据
+	 */
+	public WaterOrderCash save(WaterOrderCash waterOrderCash) {
+		return wocr.save(waterOrderCash);
+	}
+
   private static <T> Specification<T> oilCostSearchFilter(final Collection<SearchFilter> filters,
       final Class<T> entityClazz) {
 
@@ -341,7 +358,5 @@ public class WaterOrderService {
       }
     };
   }
- 
-  
-  
+
 }
