@@ -3,6 +3,10 @@ package com.wangge.app.server.service;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -94,6 +98,36 @@ public class RegionServiceTest {
 	  double d = 3.1465926;
 	  String result = String.format("%.2f", d);
 	  System.out.println(">>>>>>>>>>>>>>>>>>>>>>"+result); 
+	}
+	
+	
+	public static void main(String[] args) {
+		/* Calendar   cal   =   Calendar.getInstance();
+		 try {
+			 SimpleDateFormat formate = new SimpleDateFormat( "yyyy-MM-dd");
+			cal.setTime(formate.parse("2016-10-16"));
+			cal.add(Calendar.DATE,   -1-3/24);
+		      String yesterday = formate.format(cal.getTime());
+		      System.out.println("========="+yesterday);
+		      System.out.println("=========>>"+formate.parse(yesterday));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+		
+		String time = null;
+		try {
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			Date starDate = df.parse("2016.10.16".replace(".", "-"));
+
+			time = df.format(starDate);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		System.out.println("=====================>"+time); ;
+
+	      
 	}
 	
 }
