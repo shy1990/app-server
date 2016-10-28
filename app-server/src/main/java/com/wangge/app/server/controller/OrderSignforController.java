@@ -168,6 +168,7 @@ public class OrderSignforController {
 			}
 			if (payType == 2) {
 				orderSignforService.customSignforByCash(orderNo,userPhone,signGeoPoint,payType,smsCode,isPrimaryAccount,childId,storePhone,userId,accountId,billStatus,amountCollected,walletPayNo,actualPayNum,regionId);
+                pointService.addPoint((int) (pointService.findTotalCostByOrderNum(orderNo)/10),userPhone);
 			}else{
 				 if(smsCode != null && !"".equals(smsCode) && storePhone != null && !"".equals(storePhone)){
 				        String msg = HttpUtil.sendPost("http://www.3j1688.com/member/existMobileCode/"+storePhone+"_"+smsCode+".html","");
