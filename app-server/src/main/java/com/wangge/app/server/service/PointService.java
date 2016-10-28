@@ -27,7 +27,8 @@ public class PointService {
         try{
             String sql = "select r.TOTAL_COST from SJZAIXIAN.SJ_TB_ORDER r where r.ORDER_NUM = " + "'" + orderNum + "'";
             Query query = entityManager.createNativeQuery(sql);
-            o = (Double) query.getSingleResult();
+            String obj =  query.getSingleResult().toString() ;
+            o=Double.parseDouble(obj);
         }catch (Exception e){
             e.printStackTrace();
         }

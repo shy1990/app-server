@@ -7,26 +7,42 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
+
 @JsonInclude(Include.NON_EMPTY)
 @Entity
 @Table(name = "SYS_REGION")
 @SecondaryTable(name = "SYS_COORDINATES")
-@JsonIgnoreProperties(value = { "hibernateLazyInitializer" ,"handler"})
+@JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler" })
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@NamedEntityGraph(name = "region", attributeNodes = { @NamedAttributeNode(value = "children"),
+		@NamedAttributeNode(value = "parent")})
 public class Region implements Serializable {
 	private static final long serialVersionUID = 1L;
+
+	public static enum RegionType {
+		COUNTRY("国"), PARGANA("大区"), PROVINCE("省"), AREA("区"), CITY("市"), COUNTY("县"), TOWN("镇"), OTHER("其他");
+		private String name;
+
+		RegionType(String name) {
+			this.name = name;
+		}
+
+		public String getName() {
+			return name;
+		}
+	}
 
 	@Id
 	@Column(name = "REGION_ID")
 	private String id;
 	private String name;
-
 	@Lob
 	@Basic(fetch = FetchType.LAZY)
-	@Column(table = "SYS_COORDINATES", columnDefinition = "CLOB", name = "content",updatable=true)
+	@Column(table = "SYS_COORDINATES", columnDefinition = "CLOB", name = "content")
 	private String coordinates;
 
-
+	@Enumerated(EnumType.ORDINAL)
+	private RegionType type;
 
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -35,17 +51,6 @@ public class Region implements Serializable {
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
 	private Collection<Region> children;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "REGION_TYPE_ID")
-	private RegionType type;
-
-	private String namepath;
-
-	private String centerPoint;
-
-	private Integer starsLevel;
-
 
 	public String getId() {
 		return id;
@@ -66,16 +71,6 @@ public class Region implements Serializable {
 		this.id = id;
 		this.name = name;
 		this.type = type;
-	}
-
-
-
-	public String getNamepath() {
-		return namepath;
-	}
-
-	public void setNamepath(String namepath) {
-		this.namepath = namepath;
 	}
 
 	public RegionType getType() {
@@ -119,16 +114,6 @@ public class Region implements Serializable {
 		this.coordinates = coordinates;
 	}
 
-
-
-	public Integer getStarsLevel() {
-		return starsLevel;
-	}
-
-	public void setStarsLevel(Integer starsLevel) {
-		this.starsLevel = starsLevel;
-	}
-
 	public Collection<Region> getChildren() {
 		return Collections.unmodifiableCollection(children);
 	}
@@ -136,14 +121,5 @@ public class Region implements Serializable {
 	public void setChildren(Collection<Region> children) {
 		this.children = children;
 	}
-
-	public String getCenterPoint() {
-		return centerPoint;
-	}
-
-	public void setCenterPoint(String centerPoint) {
-		this.centerPoint = centerPoint;
-	}
-
 
 }
