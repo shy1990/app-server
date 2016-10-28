@@ -4,17 +4,18 @@ package com.wangge.app.server.controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.Cash;
 import com.wangge.app.server.entity.WaterOrderCash;
 import com.wangge.app.server.service.CashService;
 import com.wangge.app.server.util.DateUtil;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -51,9 +52,10 @@ public class WaterOrderController {
 	 */
 	@RequestMapping(value = "/{userId}", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<JsonResponse<Page<WaterOrderPart>>> getWaterOrderList(@PathVariable("userId") String userId,
-	                                                                            @PageableDefault(page = 0, size = 10, sort = {"payStatus", "createDate"}, direction = Direction.DESC) Pageable pageable,
-	                                                                            HttpServletRequest request) {
+	public ResponseEntity<JsonResponse<Page<WaterOrderPart>>> getWaterOrderList(
+					@PathVariable("userId") String userId,
+					@PageableDefault(page = 0, size = 10, sort = {"payStatus", "createDate"}, direction = Direction.DESC) Pageable pageable,
+					HttpServletRequest request) {
 		//
 		JsonResponse<Page<WaterOrderPart>> waterOrderJson = new JsonResponse<>();
 		try {
@@ -107,18 +109,17 @@ public class WaterOrderController {
 	/**
 	 * 更改流水单回调
 	 * @param orderCash seriaNo流水单号
-	 * @param jsonObject {"payDate":1477534294628,"payMoney":15465}payDate 时间戳payMoney 支付金额
+//	 * @param msg {"payDate":1477534294628,"payMoney":15465}payDate 时间戳payMoney 支付金额
 	 * @return
 	 */
 	@RequestMapping(value = "/pay/{serialNo}", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JsonResponse<Boolean>> updateStatus(@PathVariable(value = "serialNo") WaterOrderCash orderCash, @RequestBody JSONObject jsonObject) {
+	public ResponseEntity<JsonResponse<Boolean>> updateStatus(@PathVariable(value = "serialNo") WaterOrderCash orderCash, String payMoney,String payDate) {
 		JsonResponse<Boolean> statusJson = new JsonResponse<>();
-		String payMoney =jsonObject.getString("payMoney");
-		Long payDate = jsonObject.getLong("payDate");
-		Date payDate_ = new Date(payDate);
-		statusJson.setResult(false);
 		try {
+			System.out.println("============更改流水单回调=========="+payDate+":"+payMoney);
+			Date payDate_ = new Date(Long.valueOf(payDate));
+			statusJson.setResult(false);
 			if(ObjectUtils.equals(null,orderCash)){
 				statusJson.setErrorMsg("没有此流水单！");
 				return new ResponseEntity<>(statusJson, HttpStatus.OK);

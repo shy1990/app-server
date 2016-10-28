@@ -13,6 +13,7 @@ import com.wangge.app.server.util.SortUtil;
 import com.wangge.app.server.vo.Apply;
 import com.wangge.app.server.vo.Exam;
 import com.wangge.app.server.vo.OrderPub;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,6 +55,9 @@ public class MineController {
 	private SalesmanService salesmanService;
 	@Resource
 	private AppVersionService appVersionService;
+	@Resource
+	private OrderSignforService orderSignforService;
+
 	/**
 	 * 
 	 * @Description: 根据业务手机号订单号判断该订单是否属于该业务员并返回订单详情
@@ -105,7 +109,13 @@ public class MineController {
       }else{
         jo.put("point","");
       }
-     
+
+			//根据订单号查询并返回关联状态
+     	OrderSignfor orderSignfor = orderSignforService.findbyOrderNum(ordernum);
+			OrderSignfor.RelatedStatus status = orderSignfor.getRelatedStatus();
+			if (ObjectUtils.notEqual(orderSignfor,null) && ObjectUtils.notEqual(status,null)){
+				jo.put("relatedStatus",status);
+			}
 			//if(regionId.equals(order.getRegion().getId())){
 				if(opl.checkByOrderNum(ordernum)){
 				  jo.put("state", "正常订单");

@@ -1,6 +1,5 @@
 package com.wangge.app.server.service;
 
-
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.constant.OrderShipStatusConstant;
 import com.wangge.app.server.entity.Cash;
@@ -59,6 +58,7 @@ public class OrderSignforService {
   private static final String url = "http://115.28.87.182:58081/v1/";
   //private static final String url = "http://115.28.92.73:58080/v1/";
   private static final String incomeUrl = "http://192.168.2.179:8080/mainIncome/calcuPayed";
+
   @Resource
   private OrderSignforRepository osr;
   @Resource
@@ -76,16 +76,13 @@ public class OrderSignforService {
   @Resource
   private MonthTaskServive monthTaskServive;
   @Resource
-  private OrderService orderService;
-  
-  @Resource
 	private OrderService oderService;
   @Resource
   private ReceiptService receiptService;
-  
+
   @Resource
 	private ReceiptRepository receiptRepository;
-	
+
   public void saveOrderSignfor(OrderSignfor xlsOrder) {
     osr.save(xlsOrder);
 
@@ -133,10 +130,10 @@ public class OrderSignforService {
 
 
   /**
- * @throws Exception 
-   * 
-  * @Title: customSignforByPos 
-  * @Description: TODO(客户pos签收) 
+ * @throws Exception
+   *
+  * @Title: customSignforByPos
+  * @Description: TODO(客户pos签收)
   * @param @param orderNo
   * @param @param userPhone
   * @param @param signGeoPoint
@@ -153,13 +150,13 @@ public class OrderSignforService {
   public void customSignforByPos(String orderNo, String userPhone,
       String signGeoPoint, int payType, String smsCode,int isPrimaryAccount,
       String userId,String childId,String accountId,String  storePhone, String walletPayNo, String regionId) throws Exception  {
-     
-	
+
+
 		  singOrder(orderNo, userPhone, signGeoPoint, payType, smsCode,
 					isPrimaryAccount, userId, childId, accountId, storePhone, regionId);
-		     
+
   }
-  
+
   /**
    * 客户现金签收
    * @param orderNo
@@ -181,11 +178,11 @@ public class OrderSignforService {
   @Transactional(readOnly=false,rollbackFor=Exception.class)
   public void customSignforByCash(String orderNo,String userPhone,String signGeoPoint,int payType,String smsCode,int isPrimaryAccount,String childId,String storePhone,
 		  String userId,String accountId, int billStatus,Float amountCollected,String walletPayNo,Float actualPayNum, String regionId) throws Exception{
- 
+
   		 singOrder(orderNo, userPhone, signGeoPoint, payType, smsCode,
    				isPrimaryAccount, userId, childId, accountId, storePhone, regionId);
    	createBill(orderNo,userPhone,userId,accountId,billStatus,amountCollected,walletPayNo,actualPayNum);
-	
+
   }
 
   /**
@@ -226,11 +223,11 @@ public class OrderSignforService {
   	           monthTaskServive.saveExecution(registData.getId(), "客户拒签");
   	         }
   	           ctx.publishEvent(new afterSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,7,storePhone));
-  	     
+
   	    }else{
   	      throw new  RuntimeException("订单不存在!");
   	    }
-  	     
+
   }
 /**
  * 签收订单
@@ -252,15 +249,15 @@ private void singOrder(String orderNo, String userPhone, String signGeoPoint,
 	  updateOrderSingfor(orderNo, userPhone, signGeoPoint, payType, smsCode,
 			isPrimaryAccount, accountId);
        createMonthTaskRecord(storePhone);
-	    
+
        createOilRecord(signGeoPoint, isPrimaryAccount, userId, childId,
  			storePhone);
         updateMallOrder(orderNo,payType);
        // calcuPayed(new Date(), orderNo, userId, regionId);
         if(1 == payType){
          	 startCountDown(orderNo,oderService);
-         } 
-       
+         }
+
 }
 
 private void calcuPayed(Date payDate , String orderNo, String userId, String regionId){
@@ -305,8 +302,8 @@ private void updateOrderSingfor(String orderNo, String userPhone,
            }*/
            orderSignFor.setAccountId(accountId);
             osr.save(orderSignFor);
-            
-           
+
+
        }else{
          throw new  RuntimeException("订单不存在!");
        }
@@ -322,10 +319,10 @@ private void updateOrderSingfor(String orderNo, String userPhone,
  */
 private void createOilRecord(String signGeoPoint, int isPrimaryAccount,
 		String userId, String childId, String storePhone){
-	
+
 		ctx.publishEvent(new afterSignforEvent( userId, signGeoPoint,  isPrimaryAccount, childId,6,storePhone));
-		
-	
+
+
 }
 /**
  * 创建月任务
@@ -338,7 +335,7 @@ private void createMonthTaskRecord(String storePhone) {
 		 if(registData != null){
 		   monthTaskServive.saveExecution(registData.getId(), "客户签收");
 		 }
-	
+
 }
 /**
  * 更新商城订单
@@ -346,7 +343,7 @@ private void createMonthTaskRecord(String storePhone) {
  * @param payType
  */
   private void updateMallOrder(String orderNo, int payType){
-	
+
 		 String dealType = "";
 	      String payStatus = "";
 	      if(payType == 2){
@@ -354,13 +351,13 @@ private void createMonthTaskRecord(String storePhone) {
 	          payStatus = OrderShipStatusConstant.SHOP_ORDER_PAYSTATUS_HAVETOPAY;
 	      }
 		  opl.updateOrderShipStateByOrderNum(orderNo,OrderShipStatusConstant.SHOP_ORDER_SHIPSTATUS_KHSIGNEDFOR,payStatus,dealType);
-	
+
   }
-  
+
 private void startCountDown(String orderNo, OrderService oderService){
 		Thread cd = new Thread(new OrderSignforCountDown(new Date(),
 				orderNo, oderService));
-		cd.start(); 
+		cd.start();
   }
 
 
@@ -377,7 +374,7 @@ private void startCountDown(String orderNo, OrderService oderService){
  * @throws IOException
  */
 private void createBill(String orderNo,String userPhone,String userId,String accountId,int billStatus,Float amountCollected,String walletPayNo,Float actualPayNum) throws IOException{
-	//收现金记录 
+	//收现金记录
 	OrderSignfor orderSignFor = createCashRecord(orderNo, userPhone, userId);
 	//更新商城红包，钱包状态
      updateQb(walletPayNo);
@@ -406,13 +403,13 @@ private OrderSignfor createCashRecord(String orderNo, String userPhone,
 		        String payStatus = OrderShipStatusConstant.SHOP_ORDER_PAYSTATUS_HAVETOPAY;
 		         Cash cash= new Cash(orderSignFor.getId(),userId);
 		         cs.save(cash);
-		         
+
 		} catch (Exception e) {
 			logger.info("客户签收---->收现金--->bug:"+e.getMessage());
             throw new  IOException("收现金异常!"+e.getMessage());
 		}
-		 
-	         
+
+
 	 }else{
 		 throw new  RuntimeException("订单不存在!");
 	 }
@@ -452,7 +449,7 @@ private void updateOrderReceipt(int billStatus, Float amountCollected,
 		 }
 		orderSignFor.setBillStatus(billStatus);
 		 orderSignFor.setPayAmount(amountCollected);
-		
+
 		 Float arrears = actualPayNum-amountCollected;
 		 orderSignFor.setArrears(arrears);
 		 orderSignFor.setUpdateTime(new Date());
@@ -463,7 +460,7 @@ private void updateOrderReceipt(int billStatus, Float amountCollected,
 	}else{
 		throw new RuntimeException("收款金额大于应付金额!");
 	}
-	
+
 }
 
 /**
@@ -472,7 +469,7 @@ private void updateOrderReceipt(int billStatus, Float amountCollected,
  * @param billStatus
  * @param amountCollected
  * @param actualPayNum
- * @param orderSignFor
+ * @param
  */
 private void createReceiptInfo(String accountId, int billStatus,
 		Float amountCollected, Float actualPayNum, String orderNo) {
@@ -486,7 +483,7 @@ private void createReceiptInfo(String accountId, int billStatus,
 }
 
 
-  
+
 
 
   private OrderSignfor findOrderSignFor(String orderNo,String userPhone){
@@ -547,6 +544,10 @@ public void updateOrderSignfor(String orderno,String payStatus) {
 	 }
 }
 
+  public List<OrderSignfor> findByMemberPhoneAndCreatTime(String memberPhone){
+    List<OrderSignfor> orderSignfors = osr.findByMemberPhoneAndCreatTime(memberPhone);
+    return orderSignfors;
+  }
 
 
 @Transactional(rollbackFor=Exception.class)
@@ -568,9 +569,9 @@ public void settlement(JSONObject jsons)throws Exception {
 	}else{
 		throw new RuntimeException("参数不完整");
 	}
-	 
-	
-	
+
+
+
 }
 
 /**
@@ -593,7 +594,7 @@ public BillVo getBillList(String userId, String day,
 		   endDate = 1;
 	 }
 	 Page<Object>	o = osr.findByUserIdAndCreatTime(userId, startDate, endDate, new PageRequest(pageNo > 0 ?pageNo-1:0,pageSize > 0 ? pageSize : 10,new Sort(Direction.DESC, "id")));
-	 
+
 	 return createBillVo(o);
 }
 /**
@@ -616,7 +617,7 @@ public BillVo getBillListOneDay(String userId, String date, int pageNo, int page
  * @param pageSize
  */
 public BillHistoryVo queryBillHistory(String userId,int pageNo, int pageSize) {
-	 
+
 	 List<Object>	o = osr.findBillHistoryConfluenceList(userId,pageNo,pageSize);
 	 Long	count  = osr.findBillHistoryConfluenceCount(userId);
      QueryResult<BillHistoryVo> re = new QueryResult<BillHistoryVo>();
@@ -627,13 +628,13 @@ public BillHistoryVo queryBillHistory(String userId,int pageNo, int pageSize) {
  * 多条件查询对账单
  * @param userId
  * @param createTime
- * @param pageNumer
+ * @param
  * @param pageSize
  * @param isPrimary
  * @param billStatus
  * @param orderStatus
  * @return
- * @throws ParseException 
+ * @throws ParseException
  */
 public BillVo getBillList(String userId, String createTime, int pageNumber, int pageSize,int isPrimary,int billStatus, int orderStatus) throws ParseException {
 	 Page<OrderSignfor> orderPage = osr.findAll(new Specification<OrderSignfor>() {
@@ -644,7 +645,7 @@ public BillVo getBillList(String userId, String createTime, int pageNumber, int 
 	        	  Predicate p1 = cb.equal(root.get("userId").as(String.class), userId );
 		          predicates.add(p1);
 	        }
-	        
+
 	        if (isPrimary  > 0 ) {
 	        	int isPrimaryAccount = 0;
 	        	if(isPrimary == 1){
@@ -655,14 +656,14 @@ public BillVo getBillList(String userId, String createTime, int pageNumber, int 
 	          Predicate p2 = cb.equal(root.get("isPrimaryAccount").as(int.class), isPrimaryAccount );
 	          predicates.add(p2);
 	        }
-	        
+
 	        if(billStatus==0){
 	        	 Predicate p3 = cb.equal(root.get("billStatus").as(Integer.class), 0);
 	        	 Predicate p4 = cb.equal(root.get("billStatus").as(Integer.class), 1);
 		         Predicate p5 = cb.equal(root.get("billStatus").as(Integer.class), 2);
 		         Predicate p6 = cb.isNull(root.get("billStatus").as(Integer.class));
 		         predicates.add(cb.or(p3,p4,p5,p6));
-	        	
+
 	        }else{
 	        	int billStatus2 = 0;
 	            if(billStatus == 2){
@@ -673,8 +674,8 @@ public BillVo getBillList(String userId, String createTime, int pageNumber, int 
 	        	Predicate p7 = cb.equal(root.get("billStatus").as(Integer.class), billStatus2);
 	        	 predicates.add(p7);
 	        }
-	        
-	       
+
+
 	        	if(orderStatus > 0){
 	        		Predicate p8 = cb.equal(root.get("orderStatus").as(Integer.class), orderStatus);
 		        	 predicates.add(p8);
@@ -684,14 +685,14 @@ public BillVo getBillList(String userId, String createTime, int pageNumber, int 
 	        		Predicate p10 = cb.equal(root.get("orderStatus").as(Integer.class), 2);
 		        	 predicates.add(cb.or(p8,p9,p10));
 	        	}
-	        	
+
 	        if(!StringUtils.isEmpty(createTime)){
 	        	Predicate p11 = cb.isNotNull(root.get("fastmailNo").as(String.class));
 	        	Predicate p12 = cb.between(root.get("creatTime").as(Date.class),DateUtil.getYesterdayDate2(createTime), DateUtil.getTodayDate2(createTime));
 	        	predicates.add(cb.and(p11,p12));
 	        }
-	        
-	       
+
+
 	        return cb.and(predicates.toArray(new Predicate[predicates.size()]));
 	      }
 
@@ -709,7 +710,7 @@ public BillVo getBillList(String userId, String createTime, int pageNumber, int 
 		 bvo.setTotalArrears(totalArrears != null ? totalArrears : 0);
 		 bvo.setTotalPages(orderPage.getTotalPages());
 	 }
-	 
+
 	 return bvo;
  }
 /**
@@ -727,10 +728,10 @@ private List<OrderVo> createOrderVoByOrderSignfor(Page<OrderSignfor> orderPage) 
 		OrderVo bvo = new OrderVo();
 		OrderSignfor o = list.get(i);
 		bvo.setShopName(o.getShopName());
-		
+
 		bvo.setContent(dtoList);
 		for(OrderSignfor os : list2){
-			
+
 			if(o.getShopName().toString().equals(os.getShopName().toString())){
 				OrderDto dto = new OrderDto();
 				dto.setOrderNo(os.getOrderNo());
@@ -756,26 +757,26 @@ private List<OrderVo> createOrderVoByOrderSignfor(Page<OrderSignfor> orderPage) 
  * @return
  */
 public Map<String, Float> queryArrears(String userId) {
-	
+
 	Map<String, Float> map = new HashMap<String, Float>();
 	List<Object> object =  osr.findSumForArrears(userId);
 	List<Object> object2 =  osr.findSumForArrearsUign(userId);
 	Object[] arrears = (Object[])object.get(0);
 	Object[] arrearsUign = (Object[])object2.get(0);
 	//Float  f = arrears[0].floatValue();
-	
-	
+
+
 	Float todayArrears = arrears[0] != null ? ((BigDecimal)arrears[0]).floatValue() : 0f;
 	Float yesterdayArrears = arrears[1]!= null ?   ((BigDecimal)arrears[1]).floatValue() : 0f;
 	Float historyArrears = arrears[2]!= null ?   ((BigDecimal)arrears[2]).floatValue() : 0f;
-	
+
 	Float todayArrearsUign = arrearsUign[0] != null ?  ((BigDecimal)arrearsUign[0]).floatValue() : 0f;
 	Float yesterdayArrearsUign = arrearsUign[1] != null ?((BigDecimal)arrearsUign[1]).floatValue() : 0f;
 	Float historyArrearsUign = arrearsUign[2] != null ?  ((BigDecimal)arrearsUign[2]).floatValue() : 0f;
-	
-	
-	
-	
+
+
+
+
 		map.put("todayArrears", todayArrears + todayArrearsUign);
 		map.put("yesterdayArrears", yesterdayArrears+yesterdayArrearsUign);
 		map.put("historyArrears", historyArrears+historyArrearsUign);
@@ -802,13 +803,13 @@ private BillHistoryVo createBillHistoryVo(List<Object> o,int totalPages) {
 		dto.setDateDay((Date)ob[3]);
 		dtoList.add(dto);
 		totalArrears +=  new BigDecimal(ob[2]+"").floatValue();
-		
+
 	}
 	historyVo.setTotalArrears(totalArrears);
 	historyVo.setContent(dtoList);
 	historyVo.setTotalPages(totalPages);
 	return historyVo;
-	
+
 }
 
 private BillVo createBillVo(Page<Object> o){
@@ -839,13 +840,13 @@ private List<OrderVo> createOrderVo(Page<Object> o) {
 		Float totalArrear = 0f;
 		OrderVo bvo = new OrderVo();
 		bvo.setShopName(ob[0]+"");
-		
+
 		bvo.setContent(dtoList);
-		
+
 		for(int j = 0;j<list2.size();j++){
-			
+
 			Object[] obj = (Object[])list2.get(j);
-			
+
 			if(String.valueOf(ob[0]).equals(String.valueOf(obj[0]))){
 				OrderDto dto = new OrderDto();
 				dto.setOrderNo(obj[1]+"");
@@ -861,9 +862,9 @@ private List<OrderVo> createOrderVo(Page<Object> o) {
 				bvo.setTotalArreas(totalArrear);
 				list.remove(obj);
 			}
-			
+
 		}
-		
+
 		volist.add(bvo);
 	}
 	return volist;
