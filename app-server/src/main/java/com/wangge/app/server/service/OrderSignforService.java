@@ -7,21 +7,14 @@ import com.wangge.app.server.entity.Cash;
 import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.entity.Receipt;
 import com.wangge.app.server.entity.RegistData;
-import com.wangge.app.server.entity.dto.BillHistoryDto;
-import com.wangge.app.server.entity.dto.OrderDto;
 import com.wangge.app.server.event.afterSalesmanSignforEvent;
 import com.wangge.app.server.event.afterSignforEvent;
 import com.wangge.app.server.monthTask.service.MonthTaskServive;
-import com.wangge.app.server.pojo.QueryResult;
 import com.wangge.app.server.repository.OrderSignforRepository;
 import com.wangge.app.server.repository.ReceiptRepository;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.repositoryimpl.OrderSignforImpl;
 import com.wangge.app.server.thread.OrderSignforCountDown;
-import com.wangge.app.util.DateUtil;
-import com.wangge.app.server.vo.BillHistoryVo;
-import com.wangge.app.server.vo.BillVo;
-import com.wangge.app.server.vo.OrderVo;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -30,8 +23,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import com.wangge.app.server.entity.dto.BillHistoryDto;
+import com.wangge.app.server.entity.dto.OrderDto;
+import com.wangge.app.server.pojo.QueryResult;
+import com.wangge.app.util.DateUtil;
+import com.wangge.app.server.vo.BillHistoryVo;
+import com.wangge.app.server.vo.BillVo;
+import com.wangge.app.server.vo.OrderVo;
+
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -56,8 +56,8 @@ public class OrderSignforService {
 
   private Logger logger = Logger.getLogger(OrderSignforService.class);
   
- // private static final String url = "http://115.28.87.182:58081/v1/";
-  private static final String url = "http://115.28.92.73:58080/v1/";
+  private static final String url = "http://115.28.87.182:58081/v1/";
+  //private static final String url = "http://115.28.92.73:58080/v1/";
   private static final String incomeUrl = "http://192.168.2.179:8080/mainIncome/calcuPayed";
   @Resource
   private OrderSignforRepository osr;
@@ -872,11 +872,7 @@ private List<OrderVo> createOrderVo(Page<Object> o) {
 
 
 
-/*public void getBillList(OrderSignfor orderSignfor, int pageNumer, int pageSize) {
-	// TODO Auto-generated method stub
-	
-}
-	*/
+
 }
 
 

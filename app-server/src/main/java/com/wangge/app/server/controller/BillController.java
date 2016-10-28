@@ -1,18 +1,12 @@
 package com.wangge.app.server.controller;
 
-import java.math.BigDecimal;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,15 +15,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
-import com.wangge.app.server.entity.OrderSignfor;
-import com.wangge.app.server.entity.Receipt;
 import com.wangge.app.server.pojo.Json;
 import com.wangge.app.server.service.OrderSignforService;
 import com.wangge.app.server.service.ReceiptService;
-import com.wangge.app.server.util.DateUtil;
 import com.wangge.app.server.vo.BillHistoryVo;
 import com.wangge.app.server.vo.BillVo;
-import com.wangge.app.server.vo.OrderVo;
 import com.wangge.app.server.vo.ReceiptVo;
 
 @RestController
@@ -60,7 +50,6 @@ public class BillController {
 	
 	/**
 	 * @throws Exception 
-	 * 
 	* @Title: settlement 
 	* @Description: TODO(结清订单) 
 	* @param @param jsons
@@ -173,3 +162,4 @@ public class BillController {
 	
 
 }
+

@@ -9,7 +9,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wangge.app.server.entity.Cash;
 import com.wangge.app.server.entity.WaterOrderCash;
+import com.wangge.app.server.service.CashService;
 import com.wangge.app.server.util.DateUtil;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.log4j.Logger;
@@ -37,6 +39,8 @@ public class WaterOrderController {
 
 	@Resource
 	private WaterOrderService waterOrderService;
+	@Resource
+	private CashService cashService;
 
 	/**
 	 * 结算后流水单号列表
@@ -110,8 +114,9 @@ public class WaterOrderController {
 	@ResponseBody
 	public ResponseEntity<JsonResponse<Boolean>> updateStatus(@PathVariable(value = "serialNo") WaterOrderCash orderCash, @RequestBody JSONObject jsonObject) {
 		JsonResponse<Boolean> statusJson = new JsonResponse<>();
-		Long payDate = jsonObject.getLong("payDate");
 		String payMoney =jsonObject.getString("payMoney");
+		Long payDate = jsonObject.getLong("payDate");
+		Date payDate_ = new Date(payDate);
 		statusJson.setResult(false);
 		try {
 			if(ObjectUtils.equals(null,orderCash)){
@@ -122,9 +127,19 @@ public class WaterOrderController {
 				statusJson.setErrorMsg("缺少参数！");
 				return new ResponseEntity<>(statusJson, HttpStatus.OK);
 			}
-			orderCash.setPayDate(new Date(payDate));
+			orderCash.setPayDate(payDate_);
 			orderCash.setPaymentMoney(Float.valueOf(payMoney));
-			waterOrderService.save(orderCash);
+			waterOrderService.save(orderCash); //保存流水单
+			List<Cash> cashList = new ArrayList<>();
+			orderCash.getOrderDetailList().forEach(waterOrderDetail -> {
+				Cash cash = waterOrderDetail.getCash();
+				//设置支付时间
+				cash.setPayDate(payDate_);
+				//修改状态
+				cash.setStatus(2);
+				cashList.add(cash);
+			});
+			cashService.save(cashList);
 			statusJson.setResult(true);
 			statusJson.setSuccessMsg("支付正常");
 		}catch (Exception e){

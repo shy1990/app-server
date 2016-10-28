@@ -50,9 +50,15 @@ public class CashController {
 		return new ResponseEntity<>(cashJson, HttpStatus.OK);
 	}
 
+	/**
+	 * 结算收现金订单产生流水单
+	 * @param userId
+	 * @param cashIds
+	 * @return
+	 */
 	@RequestMapping(value = "/{userId}", method = RequestMethod.POST)
 	public ResponseEntity<JsonResponse<String>> OverCash(@PathVariable("userId") String userId,
-	                                                     @RequestParam(required = false) String cashIds) {
+	                                                     @RequestParam String cashIds) {
 		JsonResponse<String> json = new JsonResponse<>();
 		try {
 			String serialNo = cashService.cashToWaterOrder(userId, cashIds);
