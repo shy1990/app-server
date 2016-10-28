@@ -29,7 +29,7 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
   Float findSumForArrears(String userId,long startDate,long endDate);*/
 	@Query(value = "  select (select sum(o.arrears) "
                +  "   from biz_order_signfor o "
-               +  "  where o.user_id = ?1" 
+               +  "  where o.user_id = ?1"
                   +   " and o.fastmail_no is not null"
                    +  " and o.creat_time >= trunc(sysdate - 1) - 3/24"
                    +  " and o.creat_time < trunc(sysdate)"
@@ -47,7 +47,7 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
                 +    " and o.fastmail_no is not null"
                 +" and o.creat_time < trunc(sysdate) -1 "
                 +     " and o.order_status = '3') as historyArrears"
-           + " from dual", nativeQuery = true) 
+           + " from dual", nativeQuery = true)
 	List<Object> findSumForArrears(String userId);
 	@Query(value = "  select   ( select sum(o.actual_pay_num) "
                 +"    from biz_order_signfor o "
@@ -64,20 +64,20 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
                          +"    and o.creat_time < trunc(sysdate - 1) "
                          +"    and (o.order_status = '0' or o.order_status = '2')) as "
                 +"   yesterdayArrears, "
-                 
+
                      +"    (select sum(o.actual_pay_num) "
                     +"        from biz_order_signfor o "
                      +"      where o.user_id = ?1 "
                       +"       and o.fastmail_no is not null "
-                      +" and o.creat_time < trunc(sysdate) -1 "   
+                      +" and o.creat_time < trunc(sysdate) -1 "
                        +"      and (o.order_status = '0' or o.order_status = '2')) as historyArrears "
-                   
-                  +"  from dual", nativeQuery = true) 
+
+                  +"  from dual", nativeQuery = true)
 	List<Object> findSumForArrearsUign(String userId);
-  
+
 	/*@Query( " select count(*) as shopCount ,o.orderCount,o.shopArrears,o.createTime from ( select count(os.id) as orderCount,sum(os.arrears) as shopArrears, os.shopName,trunc(os.creatTime) as createTime from  OrderSignfor os where os.arrears > 0 and os.userId = ?1 group by os.shopName,trunc(os.creatTime)) o group by o.shopArrears,o.orderCount,o.createTime")
   Page<Object> findByUserId(String userId, Pageable pageRequest);*/
-  
+
 	@Query(value = " select * from (select * from ( "
 			+ " select ROWNUM AS RN,t.* from (  "
 			+ " select o.orderCount,o.dayArrears,o.daytime,os.shopCount from "
@@ -90,7 +90,7 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
 			+ " from biz_order_signfor osf"
 
 			+ " where osf.order_status = '3' " + " and osf.user_id = ?1 "
-			
+
                +"    and osf.creat_time < trunc(sysdate) - 1"
 			+ " group by trunc(osf.creat_time)"
 
@@ -102,18 +102,18 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
 			+ " from biz_order_signfor osf"
 
 			+ " where (osf.order_status = '0' or  osf.order_status = '2')"
-			+ " and osf.user_id = ?1" 
-			+ " and osf.fastmail_no is not null" 
+			+ " and osf.user_id = ?1"
+			+ " and osf.fastmail_no is not null"
                +"    and osf.creat_time < trunc(sysdate) - 1 "
-			
+
 			+ " group by trunc(osf.creat_time)"
 
 			+ " ) t group by t.daytime order by t.daytime desc"
 
-					
+
 
 					+" ) o left join "
-					
+
 
 					+ " (select count(*) as shopCount, t.createTime"
 					+ " from (select trunc(osr.creat_time) + 1 as createTime,"
@@ -121,24 +121,24 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
 					+ " from biz_order_signfor osr "
 					+ " where osr.order_status = '3'  "
 					+ " and osr.user_id = ?1 "
-					  
+
                        +"    and osr.creat_time < trunc(sysdate) - 1 "
 					+ " group by trunc(osr.creat_time), osr.shop_name "
-					
-					+ " union " 
-					
+
+					+ " union "
+
 					+ " select trunc(osr.creat_time) + 1 as createTime,"
 					+ " osr.shop_name "
 					+ " from biz_order_signfor osr "
 					+ " where (osr.order_status = '0' or  osr.order_status = '2')"
 					+ " and osr.fastmail_no is not null "
 					+ " and osr.user_id = ?1 "
-				
+
                        +"    and osr.creat_time < trunc(sysdate) - 1 "
 					+ " group by trunc(osr.creat_time), osr.shop_name) t"
-					+ " group by t.createTime " 
+					+ " group by t.createTime "
 					+ " ) os on os.createTime = o.daytime order by o.daytime desc"
-						      
+
 					+ "	)t	"
 					+ " )  where RN <= ?2*?3) where  RN>(?2-1)*?3", nativeQuery = true)
   List<Object> findBillHistoryConfluenceList(String userId,int pageNo,int pageSize);
@@ -151,12 +151,12 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
 
 			+ " where osf.order_status = '3' "
 			+ " and osf.user_id = ?1"
-			
+
             +"  and osf.creat_time < trunc(sysdate) - 1"
 			+ " group by trunc(osf.creat_time)"
-			
+
 			+ " union "
-			
+
 			+ " select count(osf.signid) as orderCount,"
 			+ " sum(osf.arrears) as dayArrears,"
 			+ " trunc(osf.creat_time) + 1 as daytime"
@@ -165,12 +165,12 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
 			+ " where (osf.order_status = '0' or  osf.order_status = '2')"
 			+ " and osf.fastmail_no is not null "
 			+ " and osf.user_id = ?1"
-			 
+
                +"    and osf.creat_time < trunc(sysdate) - 1"
 			+ " group by trunc(osf.creat_time)"
 
 			+" ) o left join "
-			
+
 
 			+ " (select count(*) as shopCount, t.createTime"
 			+ " from (select trunc(osr.creat_time) + 1 as createTime,"
@@ -178,12 +178,12 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
 			+ " from biz_order_signfor osr "
 			+ " where osr.order_status = '3'  "
             + " and osr.user_id = ?1 "
-			
+
 			+ " and osr.creat_time < trunc(sysdate) - 1 "
 			+ " group by trunc(osr.creat_time), osr.shop_name"
 
 			+ " union "
-			
+
 			+ " select trunc(osr.creat_time) + 1 as createTime,"
 			+ " osr.shop_name "
 			+ " from biz_order_signfor osr "
@@ -192,23 +192,23 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
 			+ " and osr.user_id = ?1 "
                +"    and osr.creat_time < trunc(sysdate) - 1 "
 			+ " group by trunc(osr.creat_time), osr.shop_name) t"
-			+ " group by t.createTime " 
+			+ " group by t.createTime "
 
 	+ " ) os on os.createTime = o.daytime order by o.daytime desc", nativeQuery = true)
   Long findBillHistoryConfluenceCount(String userId);
-  
-	
+
+
 	 @Query("select o.shopName,o.orderNo,o.orderPayType,o.orderPrice,o.creatTime,o.arrears,o.billStatus,o.isPrimaryAccount,o.orderStatus,o.actualPayNum from OrderSignfor o  where o.userId= ?1 and o.fastmailNo is not null and ( o.orderStatus = '0' or  o.orderStatus = '2' or o.orderStatus = '3') and o.creatTime>=trunc(to_date(?2,'yyyy/MM/dd')-1)-3/24  and o.creatTime<trunc(to_date(?2,'yyyy/MM/dd'))")
 	 Page<Object> findByUserIdAndCreatTime(String userId,String date, Pageable pageRequest);
-	 
+
 	 Page<OrderSignfor> findAll(Specification<OrderSignfor> specification, Pageable pageRequest);
-	 
+
 	 @Query("select o.overTime from OrderSignfor o where o.orderNo = ?1")
 	  Object findOverTimeByOrderNo(String ordernum);
-	  
-  
+
+
   /*************************************************************/
-  
+
   /**
    * countByuserAndDayAndMonth:查询以业务员每天的订单统计和该月的订单统计. <br/>
    * 
@@ -247,6 +247,21 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
       + "       sum(s.phone_Count), 'cancleCount'\n" + "  from biz_order_signfor s\n" + " where s.order_status in (1,4) \n"
       + "   and s.user_id = ?1 \n" + "   and to_char(s.creat_time, 'yyyy-mm-dd') = ?2 \n", nativeQuery = true)
   List<Object> countByuserAndDay(String userId, String day);
+
+  /**
+   * findByMemberPhoneAndCreatTime:查询某个店铺前天晚上8点到昨天晚上9点的订单<br/>
+   *
+   * @param memberPhone
+   * @return List<OrderSignfor>
+   * @since JDK 1.8
+   */
+  @Query(value = "select *\n" +
+                  "  from BIZ_ORDER_SIGNFOR bos\n" +
+                  " where bos.creat_time between\n" +
+                  "       (select trunc(sysdate - 2) + 20 / 24 from dual) and\n" +
+                  "       (select trunc(sysdate - 1) + 21 / 24 from dual)\n" +
+                  "   and bos.member_phone = ?1", nativeQuery = true)
+  List<OrderSignfor> findByMemberPhoneAndCreatTime(String memberPhone);
   @Query(value = " select (select sum(o.arrears)"
            +   " from biz_order_signfor o "
            +  " where o.user_id = ?1"
@@ -259,9 +274,9 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
                     +"      where o.user_id = ?1 "
                      +"       and o.fastmail_no is not null "
                      + "and o.creat_time >= trunc(?2 - 1) - 3/24"
-                     +" and o.creat_time < trunc(?2) "   
+                     +" and o.creat_time < trunc(?2) "
                       +"  and (o.order_status = '0' or o.order_status = '2')) as historyArrears"
-      + " from dual", nativeQuery = true) 
+      + " from dual", nativeQuery = true)
 Float currentArrears(String userId,Date createTime);
 
 
