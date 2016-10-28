@@ -114,7 +114,7 @@ public class ReceiptService {
     * 新增一条收款明细
     * @param accountId
     * @param amountCollected
-    * @param billType
+    * @param
     * @param orderno
     */
 	private void createReceipt(String accountId, Float amountCollected,

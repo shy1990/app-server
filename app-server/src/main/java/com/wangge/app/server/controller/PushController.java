@@ -94,6 +94,9 @@ public class PushController {
       if(null==registdata){
         return false;
       }
+
+      System.out.println(registdata.getRegion().getParent().getId());
+
       List<Salesman> listSalesman= salesmanService.findSaleamanByRegionId(registdata.getRegion().getParent().getId());//通过注册客户信息找到关联区域的业务员。正确推送步骤需要1.业务后台注册数据要和区域统一
       for(Salesman man:listSalesman){
     	 if(man.getUser().getStatus().ordinal()==0){

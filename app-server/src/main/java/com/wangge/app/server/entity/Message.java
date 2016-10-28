@@ -1,19 +1,8 @@
 package com.wangge.app.server.entity;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "SYS_MESSAGE")
@@ -48,10 +37,11 @@ public class Message implements Serializable {
 		}
 	}
 
+
 	@Id
-	@GenericGenerator(name = "idgen", strategy = "increment")
-	@GeneratedValue(generator = "idgen")
 	@Column(name = "MESSAGE_ID")
+	@SequenceGenerator(name = "idgen")
+	@GeneratedValue(generator = "idgen", strategy = GenerationType.SEQUENCE)
 	private Long id;
 
 	@Temporal(TemporalType.TIMESTAMP)

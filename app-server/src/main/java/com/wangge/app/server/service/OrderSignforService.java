@@ -385,8 +385,8 @@ private void createBill(String orderNo,String userPhone,String userId,String acc
      updateOrderReceipt(billStatus, amountCollected, actualPayNum,
 			orderSignFor);
      //创建收款详情
-     createReceiptInfo(accountId, billStatus, amountCollected,
-			actualPayNum, orderSignFor.getOrderNo());
+   //  createReceiptInfo(accountId, billStatus, amountCollected,
+		//	actualPayNum, orderSignFor.getOrderNo());
 }
 /**
  * 现金表创建一条记录
@@ -441,6 +441,9 @@ private void updateQb(String walletPayNo) {
  */
 private void updateOrderReceipt(int billStatus, Float amountCollected,
 		Float actualPayNum, OrderSignfor orderSignFor) {
+	if(null==actualPayNum){
+		actualPayNum=0.00f;
+	}
 	if(actualPayNum-amountCollected >=0){
 		 if(billStatus == 0){
 			 amountCollected =  actualPayNum;
@@ -456,7 +459,7 @@ private void updateOrderReceipt(int billStatus, Float amountCollected,
 		 if(arrears==0){
 			 orderSignFor.setOverTime(new Date());
 		 }
-		 osr.save(orderSignFor);
+	//	 osr.save(orderSignFor);
 	}else{
 		throw new RuntimeException("收款金额大于应付金额!");
 	}
