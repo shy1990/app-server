@@ -109,10 +109,12 @@ public class MineController {
       }else{
         jo.put("point","");
       }
+
 			//根据订单号查询并返回关联状态
      	OrderSignfor orderSignfor = orderSignforService.findbyOrderNum(ordernum);
-			if (ObjectUtils.notEqual(orderSignfor,null)){
-				jo.put("relatedStatus",orderSignfor.getRelatedStatus().getName());
+			OrderSignfor.RelatedStatus status = orderSignfor.getRelatedStatus();
+			if (ObjectUtils.notEqual(orderSignfor,null) && ObjectUtils.notEqual(status,null)){
+				jo.put("relatedStatus",status);
 			}
 			//if(regionId.equals(order.getRegion().getId())){
 				if(opl.checkByOrderNum(ordernum)){
