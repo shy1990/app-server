@@ -117,10 +117,7 @@ public class WaterOrderController {
 	public ResponseEntity<JsonResponse<Boolean>> updateStatus(@PathVariable(value = "serialNo") WaterOrderCash orderCash, String payMoney,String payDate) {
 		JsonResponse<Boolean> statusJson = new JsonResponse<>();
 		try {
-//			JSONObject json = new JSONObject(msg);
-//			String payMoney = json.getString("payMoney");
-//			Long payDate = json.getLong("payDate");
-			System.out.println(payDate+":"+payMoney);
+			System.out.println("============更改流水单回调=========="+payDate+":"+payMoney);
 			Date payDate_ = new Date(Long.valueOf(payDate));
 			statusJson.setResult(false);
 			if(ObjectUtils.equals(null,orderCash)){
