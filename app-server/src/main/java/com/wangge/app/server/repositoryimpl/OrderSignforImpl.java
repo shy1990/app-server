@@ -63,11 +63,11 @@ public class OrderSignforImpl {
   public QueryResult<OrderSignfor> getOrderList(String userPhone, String type, int pageNo, int pageSize){
     String sql = ""; String countSql = "";
     if("0".equals(type)){
-       sql = "select  os.order_no,os.shop_name,os.creat_time,os.order_status,os.phone_count,os.order_price  from BIZ_ORDER_SIGNFOR os  where os.user_phone = '"+userPhone+"' order by os.signid desc";
-       countSql = "select count(os.signid)  from BIZ_ORDER_SIGNFOR os  where os.user_phone = '"+userPhone+"' order by os.signid";
+       sql = "select  os.order_no,os.shop_name,os.creat_time,os.order_status,os.phone_count,os.order_price  from BIZ_ORDER_SIGNFOR os  where os.user_phone = '"+userPhone+"' order by os.creat_time desc";
+       countSql = "select count(os.signid)  from BIZ_ORDER_SIGNFOR os  where os.user_phone = '"+userPhone+"' order by os.creat_time desc";
     }else{
-       sql = "select  os.order_no,os.shop_name,os.creat_time,os.order_status,os.phone_count,os.order_price  from BIZ_ORDER_SIGNFOR os  where os.user_phone = '"+userPhone+"' and os.order_status in (2,3,4) order by os.signid desc";
-       countSql = "select  count(os.signid)  from BIZ_ORDER_SIGNFOR os  where os.user_phone = '"+userPhone+"' and os.order_status in (2,3,4) order by os.signid";
+       sql = "select  os.order_no,os.shop_name,os.creat_time,os.order_status,os.phone_count,os.order_price  from BIZ_ORDER_SIGNFOR os  where os.user_phone = '"+userPhone+"' and os.order_status in (2,3,4) order by os.creat_time desc";
+       countSql = "select  count(os.signid)  from BIZ_ORDER_SIGNFOR os  where os.user_phone = '"+userPhone+"' and os.order_status in (2,3,4) order by os.creat_time desc";
     }
     
     Query query = em.createNativeQuery(sql);
