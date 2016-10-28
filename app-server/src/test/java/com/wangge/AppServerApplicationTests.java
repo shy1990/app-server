@@ -7,6 +7,10 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
+import com.wangge.app.server.entity.WaterOrderCash;
+import com.wangge.app.server.repository.WaterOrderCashRepository;
+import com.wangge.app.server.service.CashService;
+import com.wangge.app.server.service.WaterOrderService;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +34,10 @@ public class AppServerApplicationTests {
 	MonthTaskSubRepository montRep;
 	@Autowired
 	OrderSignforRepository orderRep;
-	
+	@Autowired
+	CashService cashService;
+	@Autowired
+	WaterOrderCashRepository waterOrderCashRepository;
 	@Test
 	public void contextLoads() {
 //		RestTemplate rt = new HmacRestTemplet("zhangsan", "zhangsan", HttpClientOption.ENABLE_REDIRECTS);
@@ -63,6 +70,11 @@ public class AppServerApplicationTests {
 //   System.out.println(daycount.toString());
 //   Object monthcount=  orderRep.countByuserAndMonth("A37172304120", "2016-07");
 //   System.out.println(monthcount.toString());
+  }
+  @Test
+  public void test1(){
+	  WaterOrderCash waterOrderCash = waterOrderCashRepository.findOne("DL1477448929086");
+	  cashService.pushWaterOrderToMall(waterOrderCash);
   }
 }
 */

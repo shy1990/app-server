@@ -30,7 +30,7 @@ public class WaterOrderDetail implements Serializable  {
   @Column(name = "cash_Id")
   private Integer cashId; //订单号
   
-  @OneToOne(cascade = CascadeType.ALL,fetch=FetchType.LAZY)
+  @OneToOne(fetch=FetchType.EAGER)
   @JoinColumn(name = "cash_Id",insertable=false,updatable=false)
   private Cash cash; //订单号
   
