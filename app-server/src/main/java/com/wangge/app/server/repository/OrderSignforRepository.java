@@ -53,4 +53,19 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
       + "       sum(s.phone_Count), 'cancleCount'\n" + "  from biz_order_signfor s\n" + " where s.order_status in (1,4) \n"
       + "   and s.user_id = ?1 \n" + "   and to_char(s.creat_time, 'yyyy-mm-dd') = ?2 \n", nativeQuery = true)
   List<Object> countByuserAndDay(String userId, String day);
+
+  /**
+   * findByMemberPhoneAndCreatTime:查询某个店铺前天晚上8点到昨天晚上9点的订单<br/>
+   *
+   * @param memberPhone
+   * @return List<OrderSignfor>
+   * @since JDK 1.8
+   */
+  @Query(value = "select *\n" +
+                  "  from BIZ_ORDER_SIGNFOR bos\n" +
+                  " where bos.creat_time between\n" +
+                  "       (select trunc(sysdate - 2) + 20 / 24 from dual) and\n" +
+                  "       (select trunc(sysdate - 1) + 21 / 24 from dual)\n" +
+                  "   and bos.member_phone = ?1", nativeQuery = true)
+  List<OrderSignfor> findByMemberPhoneAndCreatTime(String memberPhone);
 }

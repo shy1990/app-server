@@ -11,6 +11,7 @@ import com.wangge.app.server.repository.OrderSignforRepository;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.repositoryimpl.OrderSignforImpl;
 import com.wangge.app.server.thread.OrderSignforCountDown;
+import com.wangge.app.server.util.DateUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
@@ -30,6 +31,7 @@ public class OrderSignforService {
   private Logger logger = Logger.getLogger(OrderSignforService.class);
   
   private static final String url = "http://115.28.87.182:58081/v1/";
+
   @Resource
   private OrderSignforRepository osr;
   @Resource
@@ -288,4 +290,8 @@ public void updateOrderSignfor(String orderno,String payStatus) {
 	 }
 }
 
+  public List<OrderSignfor> findByMemberPhoneAndCreatTime(String memberPhone){
+    List<OrderSignfor> orderSignfors = osr.findByMemberPhoneAndCreatTime(memberPhone);
+    return orderSignfors;
+  }
 }
