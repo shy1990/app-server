@@ -51,9 +51,10 @@ public class WaterOrderController {
 	 */
 	@RequestMapping(value = "/{userId}", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<JsonResponse<Page<WaterOrderPart>>> getWaterOrderList(@PathVariable("userId") String userId,
-	                                                                            @PageableDefault(page = 0, size = 10, sort = {"payStatus", "createDate"}, direction = Direction.DESC) Pageable pageable,
-	                                                                            HttpServletRequest request) {
+	public ResponseEntity<JsonResponse<Page<WaterOrderPart>>> getWaterOrderList(
+					@PathVariable("userId") String userId,
+					@PageableDefault(page = 0, size = 10, sort = {"payStatus", "createDate"}, direction = Direction.DESC) Pageable pageable,
+					HttpServletRequest request) {
 		//
 		JsonResponse<Page<WaterOrderPart>> waterOrderJson = new JsonResponse<>();
 		try {
