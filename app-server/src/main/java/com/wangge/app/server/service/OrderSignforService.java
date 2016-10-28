@@ -1,5 +1,6 @@
 package com.wangge.app.server.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.constant.OrderShipStatusConstant;
 import com.wangge.app.server.entity.Cash;
 import com.wangge.app.server.entity.OrderSignfor;
@@ -13,7 +14,6 @@ import com.wangge.app.server.repository.ReceiptRepository;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.repositoryimpl.OrderSignforImpl;
 import com.wangge.app.server.thread.OrderSignforCountDown;
-import com.wangge.app.server.util.DateUtil;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -75,9 +75,6 @@ public class OrderSignforService {
   private RegistDataService registDataService;
   @Resource
   private MonthTaskServive monthTaskServive;
-  @Resource
-  private OrderService orderService;
-
   @Resource
 	private OrderService oderService;
   @Resource
@@ -472,7 +469,7 @@ private void updateOrderReceipt(int billStatus, Float amountCollected,
  * @param billStatus
  * @param amountCollected
  * @param actualPayNum
- * @param orderSignFor
+ * @param
  */
 private void createReceiptInfo(String accountId, int billStatus,
 		Float amountCollected, Float actualPayNum, String orderNo) {
@@ -551,7 +548,6 @@ public void updateOrderSignfor(String orderno,String payStatus) {
     List<OrderSignfor> orderSignfors = osr.findByMemberPhoneAndCreatTime(memberPhone);
     return orderSignfors;
   }
-}
 
 
 @Transactional(rollbackFor=Exception.class)
@@ -632,7 +628,7 @@ public BillHistoryVo queryBillHistory(String userId,int pageNo, int pageSize) {
  * 多条件查询对账单
  * @param userId
  * @param createTime
- * @param pageNumer
+ * @param
  * @param pageSize
  * @param isPrimary
  * @param billStatus

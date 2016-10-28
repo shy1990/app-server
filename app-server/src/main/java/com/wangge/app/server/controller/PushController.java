@@ -104,23 +104,8 @@ public class PushController {
       }else {
         o.setRelatedStatus(RelatedStatus.NOTRELATED);//该订单所属店铺为未关联
       }
-    if(!json.isNull("memberMobile")){
-      String memberMobile=json.getString("memberMobile");
-      RegistData registdata=registDataService.findByPhoneNum(memberMobile);
-      if(null==registdata){
-        return false;
-      }
 
-      System.out.println(registdata.getRegion().getParent().getId());
 
-      List<Salesman> listSalesman= salesmanService.findSaleamanByRegionId(registdata.getRegion().getParent().getId());//通过注册客户信息找到关联区域的业务员。正确推送步骤需要1.业务后台注册数据要和区域统一
-      for(Salesman man:listSalesman){
-    	 if(man.getUser().getStatus().ordinal()==0){
-    		 salesman=man;
-    	 }
-      }
-      mobile=salesman.getMobile();
-      userId=salesman.getId();
     }
 //    if(ss.contains("市")){
     //     ss = ss.substring(ss.indexOf("市")+1,ss.length());
