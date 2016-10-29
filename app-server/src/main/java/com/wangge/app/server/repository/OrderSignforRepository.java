@@ -258,10 +258,11 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
   @Query(value = "select *\n" +
                   "  from BIZ_ORDER_SIGNFOR bos\n" +
                   " where bos.creat_time between\n" +
-                  "       (select trunc(sysdate - 2) + 20 / 24 from dual) and\n" +
-                  "       (select trunc(sysdate - 1) + 21 / 24 from dual)\n" +
+                  "       (select TRUNC(SYSDATE - 4) + 20 / 24 FROM dual) and\n" +
+                  "       (SELECT TRUNC(SYSDATE)+1-1/86400 FROM dual)\n" +
                   "   and bos.member_phone = ?1", nativeQuery = true)
   List<OrderSignfor> findByMemberPhoneAndCreatTime(String memberPhone);
+
   @Query(value = " select (select sum(o.arrears)"
            +   " from biz_order_signfor o "
            +  " where o.user_id = ?1"
