@@ -129,6 +129,7 @@ public class WaterOrderController {
 				return new ResponseEntity<>(statusJson, HttpStatus.OK);
 			}
 			orderCash.setPayDate(payDate_);
+			orderCash.setPayStatus(1);//更改状态：1-已付款；0-未付款
 			orderCash.setPaymentMoney(Float.valueOf(payMoney));
 			waterOrderService.save(orderCash); //保存流水单
 			List<Cash> cashList = new ArrayList<>();

@@ -158,7 +158,7 @@ public class CashService {
 				for (Cash cash : cashlist) {
 					//计算流水单号收现金金额
 					OrderSignfor order = cash.getOrder();
-					totalPrice += order.getActualPayNum();
+					totalPrice += order.getActualPayNum();//获取订单实际金额
 
 					//组装流水单号详情数据
 					WaterOrderDetail detail = new WaterOrderDetail();

@@ -54,7 +54,7 @@ public class WaterOrderCash implements Serializable  {
   @JoinColumn(name="SERIAL_NO",insertable=false,updatable=false)
   private List<WaterOrderDetail> orderDetailList;//订单详情
   
-  private Integer payStatus;//支付状态
+  private Integer payStatus;//支付状态 流水单审核状态 0,未审核 1,已审核
   
   @JsonFormat(pattern="MM.dd HH:mm",timezone = "GMT+8")  
   private Date createDate ;//创建日期
