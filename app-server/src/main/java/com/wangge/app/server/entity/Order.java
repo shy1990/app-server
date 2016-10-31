@@ -161,6 +161,9 @@ public class Order implements Serializable {
 		if("yeePay".equals(dealType)){
 			this.dealType = "在线支付"; //最开始版本叫：线上支付　现在：在线支付
 		}
+		if("cash".equals(dealType)){
+			this.dealType = "现金支付";
+		}
 		return dealType;
 	}
 

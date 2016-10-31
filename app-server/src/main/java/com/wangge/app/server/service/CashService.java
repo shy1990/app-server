@@ -147,7 +147,7 @@ public class CashService {
 
 			//生成流水单号
 			String serialNo = createSerialNo();
-			if (count > 2) {
+			if (count > 1) {
 				serialNo = "LD" + serialNo;
 			} else {
 				serialNo = "DL" + serialNo;

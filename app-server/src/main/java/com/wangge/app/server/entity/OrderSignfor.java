@@ -23,6 +23,20 @@ public class OrderSignfor implements Serializable {
   */
   
   private static final long serialVersionUID = 1L;
+
+  public static enum RelatedStatus {
+    NOTRELATED("未关联"), ENDRELATED("已关联");
+    private String name;
+
+    RelatedStatus(String name) {
+      this.name = name;
+    }
+
+    public String getName() {
+      return this.name;
+    }
+  }
+
   @Id
   @Column(name = "SIGNID")
   @SequenceGenerator(name = "idgen")
@@ -72,6 +86,12 @@ public class OrderSignfor implements Serializable {
   private Date updateTime ; // 订单结清日期
   
   private String accountId;
+
+  @Enumerated(EnumType.STRING)
+  private RelatedStatus relatedStatus;
+
+  private String memberPhone;
+
   public int getOrderCount() {
     return orderCount;
   }
@@ -286,5 +306,21 @@ public void setUpdateTime(Date updateTime) {
 
   public void setActualPayNum(Float actualPayNum) {
     this.actualPayNum = actualPayNum;
+  }
+
+  public RelatedStatus getRelatedStatus() {
+    return relatedStatus;
+  }
+
+  public void setRelatedStatus(RelatedStatus relatedStatus) {
+    this.relatedStatus = relatedStatus;
+  }
+
+  public String getMemberPhone() {
+    return memberPhone;
+  }
+
+  public void setMemberPhone(String memberPhone) {
+    this.memberPhone = memberPhone;
   }
 }

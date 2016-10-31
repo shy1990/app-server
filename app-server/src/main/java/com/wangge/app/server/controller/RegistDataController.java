@@ -1,10 +1,7 @@
 package com.wangge.app.server.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.wangge.app.server.entity.Region;
-import com.wangge.app.server.entity.RegistData;
-import com.wangge.app.server.entity.Salesman;
-import com.wangge.app.server.entity.SaojieData;
+import com.wangge.app.server.entity.*;
 import com.wangge.app.server.event.afterDailyEvent;
 import com.wangge.app.server.monthTask.service.MonthTaskServive;
 import com.wangge.app.server.pojo.Color;
@@ -14,6 +11,7 @@ import com.wangge.app.server.repositoryimpl.ActiveImpl;
 import com.wangge.app.server.repositoryimpl.DateInterval;
 import com.wangge.app.server.repositoryimpl.PickingImpl;
 import com.wangge.app.server.service.*;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -51,6 +49,8 @@ public class RegistDataController {
 	private ApplicationContext cxt;
 	@Resource
 	private MonthTaskServive monthTaskServive;
+	@Resource
+	private OrderSignforService orderSignforService;
 
 	/**
 	 * 
@@ -245,6 +245,15 @@ public class RegistDataController {
 				monthTaskServive.saveExecution(registData.getId(), "注册");
 				cxt.publishEvent(new afterDailyEvent(region.getId(), userId, member.get("SHOPNAME"), coordinates, isPrimaryAccount, childId, 3));
 				json.setId(String.valueOf(registData.getId()));
+				List<OrderSignfor> orderSignfors = orderSignforService.findByMemberPhoneAndCreatTime(loginAccount);
+				if (CollectionUtils.isNotEmpty(orderSignfors)){
+					orderSignfors.forEach(orderSignfor -> {
+						orderSignfor.setRelatedStatus(OrderSignfor.RelatedStatus.ENDRELATED);
+						orderSignfor.setUserId(userId);
+						orderSignfor.setUserPhone(salesman.getMobile());
+						orderSignforService.saveOrderSignfor(orderSignfor);
+					});
+				}
 				json.setSuccess(true);
 				json.setMsg("保存成功！");
 				return new ResponseEntity<Json>(json, HttpStatus.CREATED);
