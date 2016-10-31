@@ -536,7 +536,7 @@ public void updateOrderSignfor(String orderno,String payStatus) {
 
 				o.setOrderStatus(OrderShipStatusConstant.ORDER_SHIPSTATUS_YWSIGNEDFOR);
 				o.setCustomSignforTime(null);
-				o.setOrderPayType(null);//3代表未支付
+				o.setOrderPayType(null);
 //				o.setCustomSignforGeopoint(null);
 				opl.updateOrderShipStateByOrderNum(orderno,
 						OrderShipStatusConstant.SHOP_ORDER_SHIPSTATUS_YWSIGNEDFOR);
