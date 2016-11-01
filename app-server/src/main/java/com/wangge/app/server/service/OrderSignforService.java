@@ -594,7 +594,7 @@ public BillVo getBillList(String userId, String day,
 		   startDate = 2;
 		   endDate = 1;
 	 }
-	 Page<Object>	o = osr.findByUserIdAndCreatTime(userId, startDate, endDate, new PageRequest(pageNo > 0 ?pageNo-1:0,pageSize > 0 ? pageSize : 10,new Sort(Direction.DESC, "id")));
+	 Page<Object>	o = osr.findByUserIdAndCreatTime(userId, startDate, endDate, new PageRequest(pageNo > 0 ?pageNo-1:0,pageSize > 0 ? pageSize : 10,new Sort(Direction.DESC, "creatTime")));
 
 	 return createBillVo(o);
 }
@@ -607,7 +607,7 @@ public BillVo getBillList(String userId, String day,
  * @return
  */
 public BillVo getBillListOneDay(String userId, String date, int pageNo, int pageSize){
-	 Page<Object>	o = osr.findByUserIdAndCreatTime(userId, date, new PageRequest(pageNo > 0 ?pageNo-1:0,pageSize,new Sort(Direction.DESC, "id")));
+	 Page<Object>	o = osr.findByUserIdAndCreatTime(userId, date, new PageRequest(pageNo > 0 ?pageNo-1:0,pageSize,new Sort(Direction.DESC, "creatTime")));
      return createBillVo(o) ;
 }
 

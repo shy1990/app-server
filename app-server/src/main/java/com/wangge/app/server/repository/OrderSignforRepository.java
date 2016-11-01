@@ -23,7 +23,7 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
   
   OrderSignfor findByOrderNo(String orderno);
   /***************************对账单***********************************/
-	@Query("select o.shopName,o.orderNo,o.orderPayType,o.orderPrice,o.creatTime,o.arrears,o.billStatus,o.isPrimaryAccount,o.orderStatus,o.actualPayNum from OrderSignfor o  where o.userId= ?1 and o.fastmailNo is not null and ( o.orderStatus = '0' or  o.orderStatus = '2' or o.orderStatus = '3') and  o.creatTime>=trunc(sysdate - ?2) - 3/24  and o.creatTime<trunc(sysdate - ?3)")
+	@Query("select o.shopName,o.orderNo,o.orderPayType,o.orderPrice,o.creatTime,o.arrears,o.billStatus,o.isPrimaryAccount,o.orderStatus,o.actualPayNum from OrderSignfor o  where o.userId= ?1 and o.fastmailNo is not null and ( o.orderStatus = '0' or  o.orderStatus = '2' or o.orderStatus = '3') and ( o.creatTime>=trunc(sysdate - ?2) - 3/24  or o.creatTime like trunc(sysdate - ?3))")
   Page<Object> findByUserIdAndCreatTime(String userId,int startDate,int endDate, Pageable pageRequest);
  /* @Query("select sum(o.arrears) from OrderSignfor o where o.userId=?1 and o.creatTime>=trunc(sysdate) -?2 and o.creatTime<trunc(sysdate) -?3 ")
   Float findSumForArrears(String userId,long startDate,long endDate);*/
@@ -31,8 +31,8 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
                +  "   from biz_order_signfor o "
                +  "  where o.user_id = ?1"
                   +   " and o.fastmail_no is not null"
-                   +  " and o.creat_time >= trunc(sysdate - 1) - 3/24"
-                   +  " and o.creat_time < trunc(sysdate)"
+                   +  "  and ( o.creat_time >= trunc(sysdate - 1) - 3/24"
+                   +  " or o.creat_time like trunc(sysdate))"
                    + " and o.order_status = '3') as todayArrears,"
                  +" (select sum(o.arrears) "
                  +   " from biz_order_signfor o"
