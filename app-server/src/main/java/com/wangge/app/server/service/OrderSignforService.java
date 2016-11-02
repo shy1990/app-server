@@ -717,8 +717,13 @@ public BillVo getBillList(String userId, String createTime, int pageNumber, int 
  private BillVo createBillVoByOrderSignfor(Page<OrderSignfor> orderPage, String userId,String createTime) throws ParseException{
 	 BillVo bvo = new BillVo();
 	 if(orderPage.getContent() != null){
-		 Float totalArrears = osr.currentArrears(userId,new SimpleDateFormat("yyyy-MM-dd").parse(createTime) );
 		 List<OrderVo> list = createOrderVoByOrderSignfor(orderPage);
+		 Float totalArrears = 0f;
+			for(OrderVo vo : list){
+				totalArrears += vo.getTotalArreas();
+			}
+		// Float totalArrears = osr.currentArrears(userId,new SimpleDateFormat("yyyy-MM-dd").parse(createTime) );
+		 
 		 bvo.setContent(list);
 		 bvo.setTotalArrears(totalArrears != null ? totalArrears : 0);
 		 bvo.setTotalPages(orderPage.getTotalPages());
