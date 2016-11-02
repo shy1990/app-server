@@ -586,15 +586,15 @@ public void settlement(JSONObject jsons)throws Exception {
 public BillVo getBillList(String userId, String day,
 		int pageNo, int pageSize ) {
 	int  startDate = 0;
-	int endDate = 0;
+	//int endDate = 0;
 	 if(day.equals("today")){
 		  startDate = 1;
 		 //endDate = "0";
 	 }else if(day.equals("yesterday")){
 		   startDate = 2;
-		   endDate = 1;
+		  // endDate = 1;
 	 }
-	 Page<Object>	o = osr.findByUserIdAndCreatTime(userId, startDate, endDate, new PageRequest(pageNo > 0 ?pageNo-1:0,pageSize > 0 ? pageSize : 10,new Sort(Direction.DESC, "creatTime")));
+	 Page<Object>	o = osr.findByUserIdAndCreatTime(userId, startDate, new PageRequest(pageNo > 0 ?pageNo-1:0,pageSize > 0 ? pageSize : 10,new Sort(Direction.DESC, "creatTime")));
 
 	 return createBillVo(o);
 }
@@ -677,20 +677,24 @@ public BillVo getBillList(String userId, String createTime, int pageNumber, int 
 	        }
 
 
-	        	if(orderStatus > 0){
+	        	if(orderStatus == 3){
 	        		Predicate p8 = cb.equal(root.get("orderStatus").as(Integer.class), orderStatus);
 		        	 predicates.add(p8);
-	        	}else {
+	        	}else if(orderStatus == 0) {
 	        		Predicate p9 = cb.equal(root.get("orderStatus").as(Integer.class), 0);
 	        		Predicate p8 = cb.equal(root.get("orderStatus").as(Integer.class), 3);
 	        		Predicate p10 = cb.equal(root.get("orderStatus").as(Integer.class), 2);
 		        	 predicates.add(cb.or(p8,p9,p10));
+	        	}else{
+	        		Predicate p9 = cb.equal(root.get("orderStatus").as(Integer.class), 0);
+	        		Predicate p10 = cb.equal(root.get("orderStatus").as(Integer.class), 2);
+		        	 predicates.add(cb.or(p9,p10));
 	        	}
 
 	        if(!StringUtils.isEmpty(createTime)){
-	        	Predicate p11 = cb.isNotNull(root.get("fastmailNo").as(String.class));
-	        	Predicate p12 = cb.between(root.get("creatTime").as(Date.class),DateUtil.getYesterdayDate2(createTime), DateUtil.getTodayDate2(createTime));
-	        	predicates.add(cb.and(p11,p12));
+	        	//Predicate p11 = cb.isNotNull(root.get("fastmailNo").as(String.class));
+	        	Predicate p12 = cb.equal(root.get("fastmailTime").as(Date.class),DateUtil.getYesterdayDate2(createTime));
+	        	predicates.add(p12);
 	        }
 
 

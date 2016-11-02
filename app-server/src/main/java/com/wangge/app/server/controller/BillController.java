@@ -129,7 +129,7 @@ public class BillController {
 	public ResponseEntity<BillVo> queryBill(
 			@PathVariable("userId") String userId,
 			@RequestParam(defaultValue = "1", value = "pageNumber", required = false) int pageNumber,
-			@RequestParam(defaultValue="10",value="pageSize",required=false) int pageSize,
+			@RequestParam(defaultValue="1000",value="pageSize",required=false) int pageSize,
 			@RequestParam(defaultValue="",value="createTime",required=false)String createTime,
 			@RequestParam(defaultValue="0",value="isPrimary",required=false)int isPrimary,
 			@RequestParam(defaultValue="0",value="orderStatus",required=false)int orderStatus,
