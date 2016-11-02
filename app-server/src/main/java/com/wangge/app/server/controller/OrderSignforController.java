@@ -170,7 +170,7 @@ public class OrderSignforController {
 				            orderSignforService.customSignforByPos(orderNo, userPhone, signGeoPoint,payType,smsCode,isPrimaryAccount,userId,childId,accountId,storePhone,walletPayNo,regionId);
 				            m.setMsg("success");
 				            m.setCode(0);
-                            pointService.addPoint((int) (pointService.findTotalCostByOrderNum(orderNo)/10),storePhone);
+//                            pointService.addPoint((int) (pointService.findTotalCostByOrderNum(orderNo)/10),userPhone);
 				        }else{
 				            m.setMsg("短信验证码不存在！");
 				        }
@@ -178,7 +178,7 @@ public class OrderSignforController {
 					        orderSignforService.customSignforByPos(orderNo, userPhone, signGeoPoint,payType,smsCode,isPrimaryAccount,userId,childId,accountId,storePhone,walletPayNo,regionId);
 					        m.setMsg("success");
 					        m.setCode(0);
-                            pointService.addPoint((int) (pointService.findTotalCostByOrderNum(orderNo)/10),storePhone);
+//                            pointService.addPoint((int) (pointService.findTotalCostByOrderNum(orderNo)/10),userPhone);
 				      }
 			}
       
