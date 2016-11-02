@@ -85,7 +85,7 @@ public class BillController {
 			@PathVariable("userId") String userId,
 			@PathVariable("day") String day,
 			@RequestParam(defaultValue = "1", required = false, value = "pageNumber") int pageNumber,
-			@RequestParam(defaultValue = "10", required = false, value = "pageSize") int pageSize) {
+			@RequestParam(defaultValue = "300", required = false, value = "pageSize") int pageSize) {
 
 		BillVo vo = orderSignforService.getBillList(userId, day, pageNumber,
 				pageSize);
@@ -113,7 +113,7 @@ public class BillController {
 	public ResponseEntity<BillHistoryVo> queryBillHistoryList(
 			@PathVariable("userId") String userId,
 			@RequestParam(defaultValue = "1", value = "pageNumber", required = false) int pageNumber,
-			@RequestParam(defaultValue = "10", required = false, value = "pageSize") int pageSize) {
+			@RequestParam(defaultValue = "300", required = false, value = "pageSize") int pageSize) {
 
 		BillHistoryVo historyVo = orderSignforService.queryBillHistory(userId, pageNumber, pageSize);
 
@@ -129,7 +129,7 @@ public class BillController {
 	public ResponseEntity<BillVo> queryBill(
 			@PathVariable("userId") String userId,
 			@RequestParam(defaultValue = "1", value = "pageNumber", required = false) int pageNumber,
-			@RequestParam(defaultValue="1000",value="pageSize",required=false) int pageSize,
+			@RequestParam(defaultValue="300",value="pageSize",required=false) int pageSize,
 			@RequestParam(defaultValue="",value="createTime",required=false)String createTime,
 			@RequestParam(defaultValue="0",value="isPrimary",required=false)int isPrimary,
 			@RequestParam(defaultValue="0",value="orderStatus",required=false)int orderStatus,
@@ -153,7 +153,7 @@ public class BillController {
 			@PathVariable("userId") String userId,
 			@PathVariable("date") String date,
 			@RequestParam(defaultValue = "1", value = "pageNumber", required = false) int pageNumber,
-			@RequestParam(defaultValue = "10", value = "pageSize", required = true) int pageSize) {
+			@RequestParam(defaultValue = "300", value = "pageSize", required = true) int pageSize) {
 		BillVo vo = orderSignforService.getBillListOneDay(userId, date,
 				pageNumber, pageSize);
 

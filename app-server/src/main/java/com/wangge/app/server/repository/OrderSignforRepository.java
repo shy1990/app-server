@@ -23,7 +23,7 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
   
   OrderSignfor findByOrderNo(String orderno);
   /***************************对账单***********************************/
-	@Query("select o.shopName,o.orderNo,o.orderPayType,o.orderPrice,o.creatTime,o.arrears,o.billStatus,o.isPrimaryAccount,o.orderStatus,o.actualPayNum from OrderSignfor o  where o.userId= ?1 and o.fastmailTime = trunc(sysdate -?2) and ( o.orderStatus = '0' or  o.orderStatus = '2' or o.orderStatus = '3')")
+  @Query("select o.shopName,o.orderNo,o.orderPayType,o.orderPrice,o.creatTime,o.arrears,o.billStatus,o.isPrimaryAccount,o.orderStatus,o.actualPayNum from OrderSignfor o  where o.userId= ?1 and o.fastmailTime = trunc(sysdate -?2) and ( o.orderStatus = '0' or  o.orderStatus = '2' or o.orderStatus = '3')")
   Page<Object> findByUserIdAndCreatTime(String userId,int startDate, Pageable pageRequest);
  /* @Query("select sum(o.arrears) from OrderSignfor o where o.userId=?1 and o.creatTime>=trunc(sysdate) -?2 and o.creatTime<trunc(sysdate) -?3 ")
   Float findSumForArrears(String userId,long startDate,long endDate);*/
@@ -183,6 +183,19 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
 
 	 @Query("select o.overTime from OrderSignfor o where o.orderNo = ?1")
 	  Object findOverTimeByOrderNo(String ordernum);
+	 
+	 @Query(value = " select (select sum(o.arrears)"
+	           +   " from biz_order_signfor o "
+	           +  " where o.user_id = ?1"
+	           +    " and o.fastmail_time =  trunc(?2 - 1)"
+	           +     " and o.order_status = '3') + "
+	           + " (select sum(o.actual_pay_num) "
+	                   +"        from biz_order_signfor o "
+	                    +"      where o.user_id = ?1 "
+	                    +    " and o.fastmail_time =  trunc(?2 - 1)"
+	                      +"  and (o.order_status = '0' or o.order_status = '2')) as historyArrears"
+	      + " from dual", nativeQuery = true)
+	Float currentArrears(String userId,Date createTime);
 
 
   /*************************************************************/
@@ -241,22 +254,7 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
                   "   and bos.member_phone = ?1", nativeQuery = true)
   List<OrderSignfor> findByMemberPhoneAndCreatTime(String memberPhone);
 
-  @Query(value = " select (select sum(o.arrears)"
-           +   " from biz_order_signfor o "
-           +  " where o.user_id = ?1"
-           +    " and o.fastmail_no is not null"
-           + " and o.creat_time >= trunc(?2 - 1) - 3/24"
-           +" and o.creat_time < trunc(?2) "
-           +     " and o.order_status = '3') + "
-           + " (select sum(o.actual_pay_num) "
-                   +"        from biz_order_signfor o "
-                    +"      where o.user_id = ?1 "
-                     +"       and o.fastmail_no is not null "
-                     + "and o.creat_time >= trunc(?2 - 1) - 3/24"
-                     +" and o.creat_time < trunc(?2) "
-                      +"  and (o.order_status = '0' or o.order_status = '2')) as historyArrears"
-      + " from dual", nativeQuery = true)
-Float currentArrears(String userId,Date createTime);
+ 
 
 
 
