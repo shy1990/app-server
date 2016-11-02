@@ -666,14 +666,22 @@ public BillVo getBillList(String userId, String createTime, int pageNumber, int 
 		         predicates.add(cb.or(p3,p4,p5,p6));
 
 	        }else{
-	        	int billStatus2 = 0;
-	            if(billStatus == 2){
-	            	billStatus2 = 1;
-	        	}else if(billStatus == 3){
-	        		billStatus2 = 2;
+	        	
+	            if(billStatus == 3){
+	        		int billStatus2 = 0;
+	        		Predicate p7 = cb.equal(root.get("billStatus").as(Integer.class), billStatus2);
+	        		 predicates.add(p7);
+	        	}else if(billStatus == 1){
+	        		Predicate p7 = cb.equal(root.get("billStatus").as(Integer.class), billStatus);
+		        	Predicate p13 = cb.equal(root.get("orderStatus").as(Integer.class), 0);
+		        	Predicate p14 = cb.equal(root.get("orderStatus").as(Integer.class), 2);
+		        	 predicates.add(cb.or(p7,p13,p14));
+	        	}else{
+	        		Predicate p7 = cb.equal(root.get("billStatus").as(Integer.class), billStatus);
+	        		 predicates.add(p7);
 	        	}
-	        	Predicate p7 = cb.equal(root.get("billStatus").as(Integer.class), billStatus2);
-	        	 predicates.add(p7);
+	        	
+	           
 	        }
 
 
