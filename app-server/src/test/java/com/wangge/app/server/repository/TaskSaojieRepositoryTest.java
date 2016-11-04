@@ -1,19 +1,35 @@
 package com.wangge.app.server.repository;
 
-import com.wangge.AppServerApplication;
-import com.wangge.app.server.entity.ChildAccount;
-import com.wangge.app.server.entity.Receipt;
-import com.wangge.app.server.entity.Saojie;
-import com.wangge.app.server.entity.Saojie.SaojieStatus;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
-import java.util.Date;
-import java.util.List;
+import com.alibaba.fastjson.JSONObject;
+import com.wangge.AppServerApplication;
+import com.wangge.app.server.entity.ChildAccount;
+import com.wangge.app.server.entity.OrderSignfor;
+import com.wangge.app.server.entity.Receipt;
+import com.wangge.app.server.entity.Saojie;
+import com.wangge.app.server.entity.Saojie.SaojieStatus;
+import com.wangge.app.server.entity.dto.OrderDto;
+import com.wangge.app.server.service.OrderSignforService;
+import com.wangge.app.server.service.ReceiptService;
+import com.wangge.app.server.vo.OrderVo;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = AppServerApplication.class)
@@ -68,7 +84,7 @@ public class TaskSaojieRepositoryTest {
 	    System.out.println("================="+C.getTruename());
 	  }
 	}
-	//@Test
+//	@Test
 //	public void testOrderSignfor(){
 //		Page<Object>	o =	orderSignforR.findByUserIdAndCreatTime("A37018707220",3,2,new PageRequest(0,10,new Sort(Direction.DESC, "id")));
 //	    List<OrderVo> volist = new ArrayList<OrderVo>();
