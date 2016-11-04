@@ -1,21 +1,14 @@
 package com.wangge.app.server.controller;
 
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
 import com.wangge.app.server.entity.Cash;
 import com.wangge.app.server.entity.WaterOrderCash;
+import com.wangge.app.server.pojo.WaterOrderPart;
 import com.wangge.app.server.service.CashService;
-import com.wangge.app.server.util.DateUtil;
+import com.wangge.app.server.service.WaterOrderService;
+import com.wangge.app.util.JsonResponse;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.log4j.Logger;
-import org.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,9 +20,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.wangge.app.server.pojo.WaterOrderPart;
-import com.wangge.app.server.service.WaterOrderService;
-import com.wangge.app.util.JsonResponse;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/v1/waterOrder")
@@ -139,6 +134,7 @@ public class WaterOrderController {
 				//修改状态
 				cash.setStatus(2);
 				cashList.add(cash);
+
 			});
 			cashService.save(cashList);
 			statusJson.setResult(true);

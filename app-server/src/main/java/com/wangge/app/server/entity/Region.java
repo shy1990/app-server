@@ -41,8 +41,8 @@ public class Region implements Serializable {
 	@Column(table = "SYS_COORDINATES", columnDefinition = "CLOB", name = "content")
 	private String coordinates;
 
-	@Enumerated(EnumType.ORDINAL)
-	private RegionType type;
+//	@Enumerated(EnumType.ORDINAL)
+//	private RegionType type;
 
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -70,16 +70,16 @@ public class Region implements Serializable {
 		super();
 		this.id = id;
 		this.name = name;
-		this.type = type;
+		//this.type = type;
 	}
 
-	public RegionType getType() {
-		return type;
-	}
-
-	public void setType(RegionType type) {
-		this.type = type;
-	}
+//	public RegionType getType() {
+//		return type;
+//	}
+//
+//	public void setType(RegionType type) {
+//		this.type = type;
+//	}
 
 	/**
 	 * 区域编号
