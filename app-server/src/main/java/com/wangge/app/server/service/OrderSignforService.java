@@ -181,7 +181,10 @@ public class OrderSignforService {
 
   		 singOrder(orderNo, userPhone, signGeoPoint, payType, smsCode,
    				isPrimaryAccount, userId, childId, accountId, storePhone, regionId);
-   //	createBill(orderNo,userPhone,userId,accountId,billStatus,amountCollected,walletPayNo,actualPayNum);
+  		acceptCash(orderNo, userPhone, userId,
+  				walletPayNo);
+  		 
+  		 //	createBill(orderNo,userPhone,userId,accountId,billStatus,amountCollected,walletPayNo,actualPayNum);
 
   }
 
@@ -374,16 +377,34 @@ private void startCountDown(String orderNo, OrderService oderService){
  * @throws IOException
  */
 private void createBill(String orderNo,String userPhone,String userId,String accountId,int billStatus,Float amountCollected,String walletPayNo,Float actualPayNum) throws IOException{
-	//收现金记录
-	OrderSignfor orderSignFor = createCashRecord(orderNo, userPhone, userId);
-	//更新商城红包，钱包状态
-     updateQb(walletPayNo);
+	//收现金
+	OrderSignfor orderSignFor = acceptCash(orderNo, userPhone, userId,
+			walletPayNo);
      //更新订单收款记录
      updateOrderReceipt(billStatus, amountCollected, actualPayNum,
 			orderSignFor);
      //创建收款详情
-   //  createReceiptInfo(accountId, billStatus, amountCollected,
-		//	actualPayNum, orderSignFor.getOrderNo());
+     createReceiptInfo(accountId, billStatus, amountCollected,
+			actualPayNum, orderSignFor.getOrderNo());
+}
+
+/**
+ * 收现金
+ * @param orderNo
+ * @param userPhone
+ * @param userId
+ * @param walletPayNo
+ * @return
+ * @throws IOException
+ */
+
+private OrderSignfor acceptCash(String orderNo, String userPhone,
+		String userId, String walletPayNo) throws IOException {
+	//收现金记录
+	OrderSignfor orderSignFor = createCashRecord(orderNo, userPhone, userId);
+	//更新商城红包，钱包状态
+     updateQb(walletPayNo);
+	return orderSignFor;
 }
 /**
  * 现金表创建一条记录
