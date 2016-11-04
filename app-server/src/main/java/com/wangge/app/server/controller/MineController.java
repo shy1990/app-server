@@ -8,11 +8,14 @@ import com.wangge.app.server.repository.RegionRepository;
 import com.wangge.app.server.repositoryimpl.ExamImpl;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.service.*;
+import com.wangge.app.server.util.DateUtil;
 import com.wangge.app.server.util.HttpUtil;
 import com.wangge.app.server.util.SortUtil;
 import com.wangge.app.server.vo.Apply;
 import com.wangge.app.server.vo.Exam;
 import com.wangge.app.server.vo.OrderPub;
+import com.wangge.app.server.vo.ReceiptVo;
+
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -57,6 +61,8 @@ public class MineController {
 	private AppVersionService appVersionService;
 	@Resource
 	private OrderSignforService orderSignforService;
+	@Resource
+	private ReceiptService receiptService;
 
 	/**
 	 * 
@@ -109,12 +115,21 @@ public class MineController {
       }else{
         jo.put("point","");
       }
-
-			//根据订单号查询并返回关联状态
-     	OrderSignfor orderSignfor = orderSignforService.findbyOrderNum(ordernum);
+      jo = getOrderOverTime(ordernum,jo);
+      if(order.getStatus().ordinal() == 3){
+    	  ReceiptVo vo = receiptService.findByOrderNo(order.getId());
+    	  jo.put("payAmount", vo.getPayAmount());
+  		jo.put("arrears", vo.getArrears());
+  		jo.put("content", vo.getReceipts());
+      }
+      
+			// 根据订单号查询并返回关联状态
+			OrderSignfor orderSignfor = orderSignforService
+					.findbyOrderNum(ordernum);
 			OrderSignfor.RelatedStatus status = orderSignfor.getRelatedStatus();
-			if (ObjectUtils.notEqual(orderSignfor,null) && ObjectUtils.notEqual(status,null)){
-				jo.put("relatedStatus",status);
+			if (ObjectUtils.notEqual(orderSignfor, null)
+					&& ObjectUtils.notEqual(status, null)) {
+				jo.put("relatedStatus", status);
 			}
 			//if(regionId.equals(order.getRegion().getId())){
 				if(opl.checkByOrderNum(ordernum)){
@@ -131,9 +146,30 @@ public class MineController {
       }*/
     }
     jo.put("msg", "未查询相关信息或快件未揽收,请重试");
+    
     return new ResponseEntity<JSONObject>(jo, HttpStatus.BAD_REQUEST);
 
   }
+	
+	private JSONObject getOrderOverTime(String ordernum,JSONObject jo){
+	    Date overTime = orderSignforService.checkOrderOverTime(ordernum);
+	    if(overTime != null){
+	    	
+		    	if(DateUtil.isCheckExpires(overTime, 2880*60L)){
+		    		jo.put("isEdit", 1);//1表示隐藏
+		    	}else{
+		    	    jo.put("isEdit", 0);//0表示显示按钮
+		    	}
+		    	jo.put("isEdit", 1);//1表示隐藏
+		    	
+	    }else{
+	    	jo.put("isEdit", 0);//0表示显示按钮
+	    }
+	   
+		//DateUtil.
+		return jo;
+	}
+  
   
   
   /**

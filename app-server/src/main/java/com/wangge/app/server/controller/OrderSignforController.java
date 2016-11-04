@@ -1,22 +1,5 @@
 package com.wangge.app.server.controller;
 
-import java.util.Date;
-
-import javax.annotation.Resource;
-
-import com.wangge.app.server.service.PointService;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSONObject;
 import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.pojo.MessageCustom;
@@ -25,8 +8,18 @@ import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.repositoryimpl.OrderSignforImpl;
 import com.wangge.app.server.service.OrderService;
 import com.wangge.app.server.service.OrderSignforService;
+import com.wangge.app.server.service.PointService;
 import com.wangge.app.server.service.SalesmanService;
 import com.wangge.app.server.util.HttpUtil;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/v1/remind")
@@ -168,9 +161,10 @@ public class OrderSignforController {
 			}
 			if (payType == 2) {
 				orderSignforService.customSignforByCash(orderNo,userPhone,signGeoPoint,payType,smsCode,isPrimaryAccount,childId,storePhone,userId,accountId,billStatus,amountCollected,walletPayNo,actualPayNum,regionId);
-                pointService.addPoint((int) (pointService.findTotalCostByOrderNum(orderNo)/10),userPhone);
+                pointService.addPoint((int) (pointService.findTotalCostByOrderNum(orderNo)/10),storePhone);
 			}else{
 				 if(smsCode != null && !"".equals(smsCode) && storePhone != null && !"".equals(storePhone)){
+            System.out.println(storePhone+"***"+userPhone);
 				        String msg = HttpUtil.sendPost("http://www.3j1688.com/member/existMobileCode/"+storePhone+"_"+smsCode+".html","");
 				        if(msg!=null && msg.contains("true")){
 				            orderSignforService.customSignforByPos(orderNo, userPhone, signGeoPoint,payType,smsCode,isPrimaryAccount,userId,childId,accountId,storePhone,walletPayNo,regionId);

@@ -42,6 +42,8 @@ public class RegistDataService {
 		
 		return data;
 	}
+
+
 	
 	/*public int getDataCountByRegistId(Long registId) {
 		List<RegistData>  dataregist = registDataRepository.findByRegistId(registId);
@@ -132,5 +134,9 @@ public class RegistDataService {
     
     return registDataRepository.findByPhoneNum(phone);
   }
+
+    public void saveRegistData(RegistData registData){
+        registDataRepository.save(registData);
+    }
 }
 

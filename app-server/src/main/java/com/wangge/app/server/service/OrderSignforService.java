@@ -181,7 +181,10 @@ public class OrderSignforService {
 
   		 singOrder(orderNo, userPhone, signGeoPoint, payType, smsCode,
    				isPrimaryAccount, userId, childId, accountId, storePhone, regionId);
-   	createBill(orderNo,userPhone,userId,accountId,billStatus,amountCollected,walletPayNo,actualPayNum);
+  		acceptCash(orderNo, userPhone, userId,
+  				walletPayNo);
+  		 
+  		 //	createBill(orderNo,userPhone,userId,accountId,billStatus,amountCollected,walletPayNo,actualPayNum);
 
   }
 
@@ -374,16 +377,34 @@ private void startCountDown(String orderNo, OrderService oderService){
  * @throws IOException
  */
 private void createBill(String orderNo,String userPhone,String userId,String accountId,int billStatus,Float amountCollected,String walletPayNo,Float actualPayNum) throws IOException{
-	//收现金记录
-	OrderSignfor orderSignFor = createCashRecord(orderNo, userPhone, userId);
-	//更新商城红包，钱包状态
-     updateQb(walletPayNo);
+	//收现金
+	OrderSignfor orderSignFor = acceptCash(orderNo, userPhone, userId,
+			walletPayNo);
      //更新订单收款记录
      updateOrderReceipt(billStatus, amountCollected, actualPayNum,
 			orderSignFor);
      //创建收款详情
-   //  createReceiptInfo(accountId, billStatus, amountCollected,
-		//	actualPayNum, orderSignFor.getOrderNo());
+     createReceiptInfo(accountId, billStatus, amountCollected,
+			actualPayNum, orderSignFor.getOrderNo());
+}
+
+/**
+ * 收现金
+ * @param orderNo
+ * @param userPhone
+ * @param userId
+ * @param walletPayNo
+ * @return
+ * @throws IOException
+ */
+
+private OrderSignfor acceptCash(String orderNo, String userPhone,
+		String userId, String walletPayNo) throws IOException {
+	//收现金记录
+	OrderSignfor orderSignFor = createCashRecord(orderNo, userPhone, userId);
+	//更新商城红包，钱包状态
+     updateQb(walletPayNo);
+	return orderSignFor;
 }
 /**
  * 现金表创建一条记录
@@ -536,6 +557,7 @@ public void updateOrderSignfor(String orderno,String payStatus) {
 
 				o.setOrderStatus(OrderShipStatusConstant.ORDER_SHIPSTATUS_YWSIGNEDFOR);
 				o.setCustomSignforTime(null);
+				o.setOrderPayType(null);
 //				o.setCustomSignforGeopoint(null);
 				opl.updateOrderShipStateByOrderNum(orderno,
 						OrderShipStatusConstant.SHOP_ORDER_SHIPSTATUS_YWSIGNEDFOR);
@@ -585,15 +607,15 @@ public void settlement(JSONObject jsons)throws Exception {
 public BillVo getBillList(String userId, String day,
 		int pageNo, int pageSize ) {
 	int  startDate = 0;
-	int endDate = 0;
+	//int endDate = 0;
 	 if(day.equals("today")){
 		  startDate = 1;
 		 //endDate = "0";
 	 }else if(day.equals("yesterday")){
 		   startDate = 2;
-		   endDate = 1;
+		  // endDate = 1;
 	 }
-	 Page<Object>	o = osr.findByUserIdAndCreatTime(userId, startDate, endDate, new PageRequest(pageNo > 0 ?pageNo-1:0,pageSize > 0 ? pageSize : 10,new Sort(Direction.DESC, "id")));
+	 Page<Object>	o = osr.findByUserIdAndCreatTime(userId, startDate, new PageRequest(pageNo > 0 ?pageNo-1:0,pageSize > 0 ? pageSize : 10,new Sort(Direction.DESC, "creatTime")));
 
 	 return createBillVo(o);
 }
@@ -606,7 +628,7 @@ public BillVo getBillList(String userId, String day,
  * @return
  */
 public BillVo getBillListOneDay(String userId, String date, int pageNo, int pageSize){
-	 Page<Object>	o = osr.findByUserIdAndCreatTime(userId, date, new PageRequest(pageNo > 0 ?pageNo-1:0,pageSize,new Sort(Direction.DESC, "id")));
+	 Page<Object>	o = osr.findByUserIdAndCreatTime(userId, date, new PageRequest(pageNo > 0 ?pageNo-1:0,pageSize,new Sort(Direction.DESC, "creatTime")));
      return createBillVo(o) ;
 }
 
@@ -665,31 +687,43 @@ public BillVo getBillList(String userId, String createTime, int pageNumber, int 
 		         predicates.add(cb.or(p3,p4,p5,p6));
 
 	        }else{
-	        	int billStatus2 = 0;
-	            if(billStatus == 2){
-	            	billStatus2 = 1;
-	        	}else if(billStatus == 3){
-	        		billStatus2 = 2;
+	        	
+	            if(billStatus == 3){
+	        		int billStatus2 = 0;
+	        		Predicate p7 = cb.equal(root.get("billStatus").as(Integer.class), billStatus2);
+	        		 predicates.add(p7);
+	        	}else if(billStatus == 1){
+	        		Predicate p7 = cb.equal(root.get("billStatus").as(Integer.class), billStatus);
+		        	Predicate p13 = cb.equal(root.get("orderStatus").as(Integer.class), 0);
+		        	Predicate p14 = cb.equal(root.get("orderStatus").as(Integer.class), 2);
+		        	 predicates.add(cb.or(p7,p13,p14));
+	        	}else{
+	        		Predicate p7 = cb.equal(root.get("billStatus").as(Integer.class), billStatus);
+	        		 predicates.add(p7);
 	        	}
-	        	Predicate p7 = cb.equal(root.get("billStatus").as(Integer.class), billStatus2);
-	        	 predicates.add(p7);
+	        	
+	           
 	        }
 
 
-	        	if(orderStatus > 0){
+	        	if(orderStatus == 3){
 	        		Predicate p8 = cb.equal(root.get("orderStatus").as(Integer.class), orderStatus);
 		        	 predicates.add(p8);
-	        	}else {
+	        	}else if(orderStatus == 0) {
 	        		Predicate p9 = cb.equal(root.get("orderStatus").as(Integer.class), 0);
 	        		Predicate p8 = cb.equal(root.get("orderStatus").as(Integer.class), 3);
 	        		Predicate p10 = cb.equal(root.get("orderStatus").as(Integer.class), 2);
 		        	 predicates.add(cb.or(p8,p9,p10));
+	        	}else{
+	        		Predicate p9 = cb.equal(root.get("orderStatus").as(Integer.class), 0);
+	        		Predicate p10 = cb.equal(root.get("orderStatus").as(Integer.class), 2);
+		        	 predicates.add(cb.or(p9,p10));
 	        	}
 
 	        if(!StringUtils.isEmpty(createTime)){
-	        	Predicate p11 = cb.isNotNull(root.get("fastmailNo").as(String.class));
-	        	Predicate p12 = cb.between(root.get("creatTime").as(Date.class),DateUtil.getYesterdayDate2(createTime), DateUtil.getTodayDate2(createTime));
-	        	predicates.add(cb.and(p11,p12));
+	        	//Predicate p11 = cb.isNotNull(root.get("fastmailNo").as(String.class));
+	        	Predicate p12 = cb.equal(root.get("fastmailTime").as(Date.class),DateUtil.getYesterdayDate2(createTime));
+	        	predicates.add(p12);
 	        }
 
 
@@ -704,8 +738,13 @@ public BillVo getBillList(String userId, String createTime, int pageNumber, int 
  private BillVo createBillVoByOrderSignfor(Page<OrderSignfor> orderPage, String userId,String createTime) throws ParseException{
 	 BillVo bvo = new BillVo();
 	 if(orderPage.getContent() != null){
-		 Float totalArrears = osr.currentArrears(userId,new SimpleDateFormat("yyyy-MM-dd").parse(createTime) );
 		 List<OrderVo> list = createOrderVoByOrderSignfor(orderPage);
+		 Float totalArrears = 0f;
+			for(OrderVo vo : list){
+				totalArrears += vo.getTotalArreas();
+			}
+		// Float totalArrears = osr.currentArrears(userId,new SimpleDateFormat("yyyy-MM-dd").parse(createTime) );
+		 
 		 bvo.setContent(list);
 		 bvo.setTotalArrears(totalArrears != null ? totalArrears : 0);
 		 bvo.setTotalPages(orderPage.getTotalPages());

@@ -84,37 +84,37 @@ public class TaskSaojieRepositoryTest {
 	    System.out.println("================="+C.getTruename());
 	  }
 	}
-	@Test
-	public void testOrderSignfor(){
-		Page<Object>	o =	orderSignforR.findByUserIdAndCreatTime("A37018707220",3,2,new PageRequest(0,10,new Sort(Direction.DESC, "id")));
-	    List<OrderVo> volist = new ArrayList<OrderVo>();
-	    List<Object> list = o.getContent();
-		for(int i=0;i<list.size();i++){
-			Object[] ob = (Object[])list.get(i);
-			List<OrderDto> dtoList = new ArrayList<OrderDto>();
-			Float totalArrear = 0f;
-			OrderVo bvo = new OrderVo();
-			bvo.setShopName(ob[0]+"");
-			
-			bvo.setContent(dtoList);
-			for(int j = 0;j<list.size();j++){
-				Object[] obj = (Object[])list.get(j);
-				
-				if(ob[0] == obj[0]){
-					OrderDto dto = new OrderDto();
-					dto.setOrderNo(obj[1]+"");
-					dto.setPayTyp(Integer.parseInt(obj[2]+""));
-					dto.setOrderPrice((Float)obj[3]);
-					dto.setCreateTime((Date)obj[4]);
-					dto.setArrear((Float)obj[5]);
-					dtoList.add(dto);
-					totalArrear += (Float)obj[5];
-					bvo.setTotalArreas(totalArrear);
-				}
-			}
-			volist.add(bvo);
-		}
-	}
+//	@Test
+//	public void testOrderSignfor(){
+//		Page<Object>	o =	orderSignforR.findByUserIdAndCreatTime("A37018707220",3,2,new PageRequest(0,10,new Sort(Direction.DESC, "id")));
+//	    List<OrderVo> volist = new ArrayList<OrderVo>();
+//	    List<Object> list = o.getContent();
+//		for(int i=0;i<list.size();i++){
+//			Object[] ob = (Object[])list.get(i);
+//			List<OrderDto> dtoList = new ArrayList<OrderDto>();
+//			Float totalArrear = 0f;
+//			OrderVo bvo = new OrderVo();
+//			bvo.setShopName(ob[0]+"");
+//
+//			bvo.setContent(dtoList);
+//			for(int j = 0;j<list.size();j++){
+//				Object[] obj = (Object[])list.get(j);
+//
+//				if(ob[0] == obj[0]){
+//					OrderDto dto = new OrderDto();
+//					dto.setOrderNo(obj[1]+"");
+//					dto.setPayTyp(Integer.parseInt(obj[2]+""));
+//					dto.setOrderPrice((Float)obj[3]);
+//					dto.setCreateTime((Date)obj[4]);
+//					dto.setArrear((Float)obj[5]);
+//					dtoList.add(dto);
+//					totalArrear += (Float)obj[5];
+//					bvo.setTotalArreas(totalArrear);
+//				}
+//			}
+//			volist.add(bvo);
+//		}
+//	}
 	public static void main(String[] args) {
 		/*Float f = 10.00f;
 		BigDecimal b = new BigDecimal("20.00");

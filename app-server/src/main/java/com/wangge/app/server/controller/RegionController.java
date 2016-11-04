@@ -109,11 +109,11 @@ public class RegionController {
 			Region region=new Region();
 			region.setId(parentid);
 			id=Integer.parseInt(regionService.findMaxIdByParent(region).toString())+1;
-			 entity = new Region(String.valueOf(id), name,region.getType());
+			 entity = new Region(String.valueOf(id), name,null);
 		}else{
 			id=Integer.parseInt(parentid+"00")+1;
 			Region regionp=regionService.findRegion(parentid);
-			 entity = new Region(String.valueOf(id), name,regionp.getType());
+			 entity = new Region(String.valueOf(id), name,null);
 		}
 		entity.setCoordinates(pointStr);
 				

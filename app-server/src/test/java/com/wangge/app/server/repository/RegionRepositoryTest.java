@@ -1,15 +1,10 @@
 package com.wangge.app.server.repository;
 
 import com.wangge.AppServerApplication;
-import com.wangge.app.server.entity.Region;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import javax.transaction.Transactional;
-import java.util.Collection;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = AppServerApplication.class)
@@ -27,16 +22,16 @@ public class RegionRepositoryTest {
 		
 	}
 
-	@Test
-	@Transactional
-	public void testFind() {
-		Region entity = rr.findOne("0");
-		System.out.println(entity.getName()+ entity.getType().getName());
-		Collection<Region> children = entity.getChildren();
-		for (Region region : children) {
-			System.out.println(region.getName()+region.getType().getName());
-		}
-	}
+//	@Test
+//	@Transactional
+//	public void testFind() {
+//		Region entity = rr.findOne("0");
+//		System.out.println(entity.getName()+ entity.getType().getName());
+//		Collection<Region> children = entity.getChildren();
+//		for (Region region : children) {
+//			System.out.println(region.getName()+region.getType().getName());
+//		}
+//	}
 //	@Test
 //	@Transactional
 //	public void testFindMaxId() {

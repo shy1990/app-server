@@ -124,6 +124,7 @@ public class PushController {
         o.setShopName(ss);
         o.setUserId(userId);
         o.setUserPhone(mobile);
+        o.setArrears((float) 0);
         o.setPartsCount(Integer.parseInt(accCount));
         o.setMemberPhone(memberMobile);
         orderSignforService.saveOrderSignfor(o);
