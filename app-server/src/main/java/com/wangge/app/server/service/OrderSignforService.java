@@ -181,7 +181,7 @@ public class OrderSignforService {
 
   		 singOrder(orderNo, userPhone, signGeoPoint, payType, smsCode,
    				isPrimaryAccount, userId, childId, accountId, storePhone, regionId);
-   	createBill(orderNo,userPhone,userId,accountId,billStatus,amountCollected,walletPayNo,actualPayNum);
+   //	createBill(orderNo,userPhone,userId,accountId,billStatus,amountCollected,walletPayNo,actualPayNum);
 
   }
 
