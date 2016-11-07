@@ -57,16 +57,18 @@ public class CashService {
 		List<Cash> cashList = null;
 		List<CashPart> cashPartList = new ArrayList<>();
 		try {
+			//优化查询(使用负载图)
 			cashList = cr.findByUserIdAndStatus(userId, 0);
 			cashList.forEach(cash -> {
-				String orderNo = cash.getOrder().getOrderNo();
-				cash.setOrderItem(oir.findByOrder_Id(orderNo));
+//				String orderNo = cash.getOrder().getOrderNo();
+//				简化查询，不去查详情（耽误时间）
+//				cash.setOrderItem(oir.findByOrderNum(orderNo));
 				CashPart part = new CashPart();
 				OrderSignfor order = cash.getOrder();
 				part.setId(cash.getCashId());
 				part.setNum(order.getOrderNo());
 				part.setCash(order.getActualPayNum());
-				part.setDetails(disposeOrderItem(cash.getOrderItem()));
+//				part.setDetails(disposeOrderItem(cash.getOrderItem()));
 				cashPartList.add(part);
 			});
 		} catch (Exception e) {
