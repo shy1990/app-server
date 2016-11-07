@@ -62,11 +62,16 @@ public class RegistDataController {
 		org.json.JSONObject json = new org.json.JSONObject(msg);
 		String oldPhone = json.getString("oldPhone");
 		String newPhone = json.getString("newPhone");
-		RegistData rd = registDataService.findByPhoneNum(oldPhone);//查询旧手机号关联的客户
-		RegistData nrd = registDataService.findByPhoneNum(newPhone);//查询新手机号是否已关联
+		RegistData rd=new RegistData();
+		RegistData nrd=new RegistData();
+		rd = registDataService.findByPhoneNum(oldPhone);//查询旧手机号关联的客户
+		nrd = registDataService.findByPhoneNum(newPhone);//查询新手机号是否已关联
 		if(rd!=null && nrd==null){
+			System.out.println("newPhone"+"ssssshitoushitoushitoushitou");
 			rd.setPhoneNum(newPhone);
+			rd.setLoginAccount(newPhone);
 		}
+		System.out.println("shitoushitoushitoushitou");
            registDataService.saveRegistData(rd);
 	}
 
