@@ -49,16 +49,16 @@ public class WaterOrderController {
 	@ResponseBody
 	public ResponseEntity<JsonResponse<Page<WaterOrderPart>>> getWaterOrderList(
 					@PathVariable("userId") String userId,
-					@PageableDefault(page = 0, size = 10, sort = {"payStatus", "createDate"}, direction = Direction.DESC) Pageable pageable,
+					@PageableDefault(page = 0, size = 10, sort = {"createDate", "payStatus"}, direction = Direction.DESC) Pageable pageable,
 					HttpServletRequest request) {
 		//
 		JsonResponse<Page<WaterOrderPart>> waterOrderJson = new JsonResponse<>();
 		try {
-			List<Order> orders = new ArrayList<>();
-			orders.add(new Order(Direction.ASC, "payStatus"));
-			orders.add(new Order(Direction.DESC, "createDate"));
-			Sort sort = new Sort(orders);
-			pageable = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), sort);
+//			List<Order> orders = new ArrayList<>();
+//			orders.add(new Order(Direction.DESC, "createDate"));
+//			orders.add(new Order(Direction.ASC, "payStatus"));
+//			Sort sort = new Sort(orders);
+//			pageable = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), sort);
 			Page<WaterOrderPart> cashlist = waterOrderService.findByUserId(userId, pageable);
 			if (cashlist.getContent().size() > 0) {
 				waterOrderJson.setResult(cashlist);
