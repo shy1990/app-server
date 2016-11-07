@@ -23,9 +23,11 @@ public class OrderItem implements Serializable {
 
   private String type;
   private Integer nums;
-  
+	@Column(name = "ORDER_NUM")
+  private String orderNum;
+
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "ORDER_NUM")
+  @JoinColumn(name = "ORDER_NUM",updatable = false, insertable = false)
   private Order order;
 
   public String getId() {
@@ -71,5 +73,11 @@ public class OrderItem implements Serializable {
     this.nums = nums;
   }
 
-  
+	public String getOrderNum() {
+		return orderNum;
+	}
+
+	public void setOrderNum(String orderNum) {
+		this.orderNum = orderNum;
+	}
 }

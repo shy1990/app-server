@@ -24,8 +24,8 @@ public class Order implements Serializable {
 			return name;
 		}
 	}
-	
-	
+
+
 	public enum PayMent{
 	  PAY_ONLINE("在线支付"),PAY_OFFLINE("货到付款"),POS("POS支付");
 	  private String name;

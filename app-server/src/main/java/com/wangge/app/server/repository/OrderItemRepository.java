@@ -8,4 +8,6 @@ import com.wangge.app.server.entity.OrderItem;
 
 public interface OrderItemRepository extends JpaRepository<OrderItem, String> {
   List<OrderItem> findByOrder_Id(String orderNum);
+  List<OrderItem> findByOrderNum(String orderNum);
+
 }
