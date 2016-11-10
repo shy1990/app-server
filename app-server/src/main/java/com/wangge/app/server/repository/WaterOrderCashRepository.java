@@ -18,6 +18,8 @@ JpaSpecificationExecutor<WaterOrderCash>{
   
   Page<WaterOrderCash> findByUserId(String userId,Pageable pageable);
 
+  Page<WaterOrderCash> findByUserIdAndPayStatus(String userId, Integer status, Pageable pageable);
+
 	@Query("SELECT count(1) FROM WaterOrderCash woc where woc.userId= ?1 and woc.createDate >= TO_DATE(?2,'yyyy-mm-dd hh24:mi:ss') and woc.createDate <= TO_DATE(?3,'yyyy-mm-dd hh24:mi:ss')")
 	Long countByUserIdAndCreateDate(String userId, String startDate,String endDate);
   

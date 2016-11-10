@@ -1,6 +1,7 @@
 package com.wangge.app.server.controller;
 
 import com.wangge.app.server.pojo.CashPart;
+import com.wangge.app.server.pojo.CashShopGroup;
 import com.wangge.app.server.service.CashService;
 import com.wangge.app.util.JsonResponse;
 import org.apache.commons.lang.StringUtils;
@@ -28,15 +29,43 @@ public class CashController {
 	 * @param userId
 	 * @return
 	 */
+//	@RequestMapping(value = "/{userId}", method = RequestMethod.GET)
+//	@ResponseBody
+//	public ResponseEntity<JsonResponse<List<CashPart>>> getCsahList(HttpServletRequest request,
+//	                                                                @PathVariable("userId") String userId) {
+//		//
+//		JsonResponse<List<CashPart>> cashJson = new JsonResponse<>();
+//		try {
+//
+//			List<CashPart> cashlist = cashService.findByUserId(userId);
+//			if (cashlist.size() > 0) {
+//				cashJson.setResult(cashlist);
+//				cashJson.setSuccessMsg("操作成功");
+//			} else {
+//				cashJson.setResult(null);
+//				cashJson.setSuccessMsg("未查到相关记录");
+//			}
+//		} catch (Exception e) {
+//			logger.info(e.getMessage());
+//		}
+//		return new ResponseEntity<>(cashJson, HttpStatus.OK);
+//	}
+	/**
+	 * 现金订单购物车
+	 *
+	 * @param request
+	 * @param userId
+	 * @return
+	 */
 	@RequestMapping(value = "/{userId}", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<JsonResponse<List<CashPart>>> getCsahList(HttpServletRequest request,
-	                                                                @PathVariable("userId") String userId) {
+	public ResponseEntity<JsonResponse<List<CashShopGroup>>> getCsahList_(HttpServletRequest request,
+	                                                                     @PathVariable("userId") String userId) {
 		//
-		JsonResponse<List<CashPart>> cashJson = new JsonResponse<>();
+		JsonResponse<List<CashShopGroup>> cashJson = new JsonResponse<>();
 		try {
 
-			List<CashPart> cashlist = cashService.findByUserId(userId);
+			List<CashShopGroup> cashlist = cashService.findByUserId_(userId);
 			if (cashlist.size() > 0) {
 				cashJson.setResult(cashlist);
 				cashJson.setSuccessMsg("操作成功");

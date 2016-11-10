@@ -9,12 +9,8 @@ import com.wangge.app.server.service.WaterOrderService;
 import com.wangge.app.util.JsonResponse;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.log4j.Logger;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,16 +35,17 @@ public class WaterOrderController {
 	private CashService cashService;
 
 	/**
-	 * 结算后流水单号列表
+	 * 流水单号列表(结算后)
 	 *
 	 * @param request
-	 * @param userId
+	 * @param userId 用户ID
+	 * @param status 支付状态
 	 * @return
 	 */
 	@RequestMapping(value = "/{userId}", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<JsonResponse<Page<WaterOrderPart>>> getWaterOrderList(
-					@PathVariable("userId") String userId,
+					@PathVariable("userId") String userId, @RequestParam Integer status,
 					@PageableDefault(page = 0, size = 10, sort = {"createDate", "payStatus"}, direction = Direction.DESC) Pageable pageable,
 					HttpServletRequest request) {
 		//
@@ -59,7 +56,7 @@ public class WaterOrderController {
 //			orders.add(new Order(Direction.ASC, "payStatus"));
 //			Sort sort = new Sort(orders);
 //			pageable = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), sort);
-			Page<WaterOrderPart> cashlist = waterOrderService.findByUserId(userId, pageable);
+			Page<WaterOrderPart> cashlist = waterOrderService.findByUserId(userId, status, pageable);
 			if (cashlist.getContent().size() > 0) {
 				waterOrderJson.setResult(cashlist);
 				waterOrderJson.setSuccessMsg("操作成功");

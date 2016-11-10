@@ -20,7 +20,7 @@ public class CashPart implements Serializable{
   private Integer id;
   private String num;
   private Float cash;
-  private List<OrderDetailPart> details;
+//  private List<OrderDetailPart> details;
   
   public Integer getId() {
     return id;
@@ -40,12 +40,20 @@ public class CashPart implements Serializable{
   public void setCash(Float cash) {
     this.cash = cash;
   }
-  public List<OrderDetailPart> getDetails() {
-    return details;
-  }
-  public void setDetails(List<OrderDetailPart> details) {
-    this.details = details;
-  }
-  
-  
+//  public List<OrderDetailPart> getDetails() {
+//    return details;
+//  }
+//  public void setDetails(List<OrderDetailPart> details) {
+//    this.details = details;
+//  }
+
+
+	@Override
+	public String toString() {
+		return "CashPart{" +
+						"id=" + id +
+						", num='" + num + '\'' +
+						", cash=" + cash +
+						'}';
+	}
 }

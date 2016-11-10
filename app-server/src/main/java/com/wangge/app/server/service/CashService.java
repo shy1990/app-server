@@ -4,12 +4,14 @@ package com.wangge.app.server.service;
 import com.wangge.app.server.config.http.HttpRequestHandler;
 import com.wangge.app.server.entity.*;
 import com.wangge.app.server.pojo.CashPart;
+import com.wangge.app.server.pojo.CashShopGroup;
 import com.wangge.app.server.pojo.OrderDetailPart;
 import com.wangge.app.server.repository.CashRepository;
 import com.wangge.app.server.repository.OrderItemRepository;
 import com.wangge.app.server.repository.WaterOrderCashRepository;
 import com.wangge.app.server.repository.WaterOrderDetailRepository;
 import com.wangge.app.server.util.DateUtil;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -53,7 +56,7 @@ public class CashService {
 	 * @return
 	 */
 	public List<CashPart> findByUserId(String userId) {
-		logger.info("findByUserId-->userId:" + userId);
+		logger.info("findByUserId-->userId:" + userId+"查询收现金购物车");
 		List<Cash> cashList = null;
 		List<CashPart> cashPartList = new ArrayList<>();
 		try {
@@ -77,6 +80,65 @@ public class CashService {
 
 
 		return cashPartList;
+	}
+	/**
+	 * 现金订单购物车
+	 *
+	 * @param userId
+	 * @return
+	 */
+	public List<CashShopGroup> findByUserId_(String userId) {
+		logger.info("findByUserId-->userId:" + userId+"查询收现金购物车");
+		List<Cash> cashList = null;
+		List<CashShopGroup> cashShopGroups = new ArrayList<>();
+		Map<String,List<CashPart>> map =new HashedMap();
+		try {
+			//优化查询(使用负载图)
+			cashList = cr.findByUserIdAndStatus(userId, 0);
+			cashList.forEach(cash -> {
+				//提取ShopName分组
+				String shopName = cash.getOrder().getShopName();
+				CashPart part = new CashPart();
+				OrderSignfor order = cash.getOrder();
+				part.setId(cash.getCashId());
+				part.setNum(order.getOrderNo());
+				part.setCash(order.getActualPayNum());
+
+				if(map.get(shopName) != null){
+					//去除map中的集合加入数据
+					List<CashPart> cashParts = map.get(shopName);
+					cashParts.add(part);
+					//重新放入map（可有可无）
+					map.put(shopName,cashParts);
+
+				}else{
+					List<CashPart> cashParts = new ArrayList<CashPart>();
+					cashParts.add(part);
+					map.put(shopName,cashParts);
+				}
+
+			});
+			//组装分组数据
+			for (Map.Entry<String,List<CashPart>> entry : map.entrySet()){
+				CashShopGroup cashShopGroup = new CashShopGroup();
+				cashShopGroup.setShopName(entry.getKey());
+				cashShopGroup.setCashParts(entry.getValue());
+				BigDecimal totalMoney = new BigDecimal(0);
+				//计算总金额
+				for (CashPart cashPart : entry.getValue()){
+					totalMoney=new BigDecimal(cashPart.getCash().toString()).add(totalMoney);
+				}
+				cashShopGroup.setTotalMoney(new Float(totalMoney.floatValue()));
+
+				cashShopGroups.add(cashShopGroup);
+			}
+			System.out.println(map);
+		} catch (Exception e) {
+			logger.info(e.getMessage());
+		}
+
+
+		return cashShopGroups;
 	}
 
 	/**
