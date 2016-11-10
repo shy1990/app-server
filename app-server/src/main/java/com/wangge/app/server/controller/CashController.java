@@ -29,27 +29,27 @@ public class CashController {
 	 * @param userId
 	 * @return
 	 */
-	@RequestMapping(value = "/{userId}", method = RequestMethod.GET)
-	@ResponseBody
-	public ResponseEntity<JsonResponse<List<CashPart>>> getCsahList(HttpServletRequest request,
-	                                                                @PathVariable("userId") String userId) {
-		//
-		JsonResponse<List<CashPart>> cashJson = new JsonResponse<>();
-		try {
-
-			List<CashPart> cashlist = cashService.findByUserId(userId);
-			if (cashlist.size() > 0) {
-				cashJson.setResult(cashlist);
-				cashJson.setSuccessMsg("操作成功");
-			} else {
-				cashJson.setResult(null);
-				cashJson.setSuccessMsg("未查到相关记录");
-			}
-		} catch (Exception e) {
-			logger.info(e.getMessage());
-		}
-		return new ResponseEntity<>(cashJson, HttpStatus.OK);
-	}
+//	@RequestMapping(value = "/{userId}", method = RequestMethod.GET)
+//	@ResponseBody
+//	public ResponseEntity<JsonResponse<List<CashPart>>> getCsahList(HttpServletRequest request,
+//	                                                                @PathVariable("userId") String userId) {
+//		//
+//		JsonResponse<List<CashPart>> cashJson = new JsonResponse<>();
+//		try {
+//
+//			List<CashPart> cashlist = cashService.findByUserId(userId);
+//			if (cashlist.size() > 0) {
+//				cashJson.setResult(cashlist);
+//				cashJson.setSuccessMsg("操作成功");
+//			} else {
+//				cashJson.setResult(null);
+//				cashJson.setSuccessMsg("未查到相关记录");
+//			}
+//		} catch (Exception e) {
+//			logger.info(e.getMessage());
+//		}
+//		return new ResponseEntity<>(cashJson, HttpStatus.OK);
+//	}
 	/**
 	 * 现金订单购物车
 	 *
@@ -57,7 +57,7 @@ public class CashController {
 	 * @param userId
 	 * @return
 	 */
-	@RequestMapping(value = "/userId/{userId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{userId}", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<JsonResponse<List<CashShopGroup>>> getCsahList_(HttpServletRequest request,
 	                                                                     @PathVariable("userId") String userId) {
