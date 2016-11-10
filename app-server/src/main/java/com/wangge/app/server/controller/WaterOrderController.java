@@ -46,7 +46,7 @@ public class WaterOrderController {
 	@ResponseBody
 	public ResponseEntity<JsonResponse<Page<WaterOrderPart>>> getWaterOrderList(
 					@PathVariable("userId") String userId, @RequestParam Integer status,
-					@PageableDefault(page = 0, size = 3, sort = {"createDate", "payStatus"}, direction = Direction.DESC) Pageable pageable,
+					@PageableDefault(page = 0, size = 10, sort = {"createDate", "payStatus"}, direction = Direction.DESC) Pageable pageable,
 					HttpServletRequest request) {
 		//
 		JsonResponse<Page<WaterOrderPart>> waterOrderJson = new JsonResponse<>();
