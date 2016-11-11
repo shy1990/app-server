@@ -12,5 +12,6 @@ import com.wangge.app.server.entity.WaterOrderDetail;
 public interface WaterOrderDetailRepository extends JpaRepository<WaterOrderDetail, Integer>{
 
   List<WaterOrderDetail> findBySerialNo(String SerialNo);
-  
+
+	Long countByCashIdIn(Integer[] idsIntegers);
 }

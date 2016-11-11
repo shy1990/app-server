@@ -2,6 +2,7 @@ package com.wangge.app.server.controller;
 
 import com.wangge.app.server.pojo.CashPart;
 import com.wangge.app.server.pojo.CashShopGroup;
+import com.wangge.app.server.repository.WaterOrderDetailRepository;
 import com.wangge.app.server.service.CashService;
 import com.wangge.app.util.JsonResponse;
 import org.apache.commons.lang.StringUtils;
@@ -21,6 +22,8 @@ public class CashController {
 	private static final Logger logger = Logger.getLogger(CashController.class);
 	@Resource
 	private CashService cashService;
+	@Resource
+	private WaterOrderDetailRepository waterOrderDetailRepository;
 
 	/**
 	 * 现金订单购物车
@@ -91,7 +94,10 @@ public class CashController {
 		JsonResponse<String> json = new JsonResponse<>();
 		try {
 			String serialNo = cashService.cashToWaterOrder(userId, cashIds);
-			if (StringUtils.isNotEmpty(serialNo)) {
+			if("订单已存在".equals(serialNo)){
+				json.setErrorMsg("订单已结算");
+				return new ResponseEntity<>(json, HttpStatus.OK);
+			}else if (StringUtils.isNotEmpty(serialNo)) {
 				json.setResult(serialNo);
 				json.setSuccessMsg("结算成功");
 				return new ResponseEntity<>(json, HttpStatus.OK);
@@ -103,5 +109,4 @@ public class CashController {
 		}
 		return new ResponseEntity<>(json, HttpStatus.OK);
 	}
-
 }
