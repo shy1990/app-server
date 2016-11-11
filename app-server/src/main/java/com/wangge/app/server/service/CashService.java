@@ -56,7 +56,7 @@ public class CashService {
 	 * @return
 	 */
 	public List<CashPart> findByUserId(String userId) {
-		logger.info("findByUserId-->userId:" + userId+"查询收现金购物车");
+		logger.info("findByUserId-->userId:" + userId + "查询收现金购物车");
 		List<Cash> cashList = null;
 		List<CashPart> cashPartList = new ArrayList<>();
 		try {
@@ -81,6 +81,7 @@ public class CashService {
 
 		return cashPartList;
 	}
+
 	/**
 	 * 现金订单购物车
 	 *
@@ -88,10 +89,10 @@ public class CashService {
 	 * @return
 	 */
 	public List<CashShopGroup> findByUserId_(String userId) {
-		logger.info("findByUserId-->userId:" + userId+"查询收现金购物车");
+		logger.info("findByUserId-->userId:" + userId + "查询收现金购物车");
 		List<Cash> cashList = null;
 		List<CashShopGroup> cashShopGroups = new ArrayList<>();
-		Map<String,List<CashPart>> map =new HashedMap();
+		Map<String, List<CashPart>> map = new HashedMap();
 		try {
 			//优化查询(使用负载图)
 			cashList = cr.findByUserIdAndStatus(userId, 0);
@@ -104,29 +105,29 @@ public class CashService {
 				part.setNum(order.getOrderNo());
 				part.setCash(order.getActualPayNum());
 
-				if(map.get(shopName) != null){
+				if (map.get(shopName) != null) {
 					//去除map中的集合加入数据
 					List<CashPart> cashParts = map.get(shopName);
 					cashParts.add(part);
 					//重新放入map（可有可无）
-					map.put(shopName,cashParts);
+					map.put(shopName, cashParts);
 
-				}else{
+				} else {
 					List<CashPart> cashParts = new ArrayList<CashPart>();
 					cashParts.add(part);
-					map.put(shopName,cashParts);
+					map.put(shopName, cashParts);
 				}
 
 			});
 			//组装分组数据
-			for (Map.Entry<String,List<CashPart>> entry : map.entrySet()){
+			for (Map.Entry<String, List<CashPart>> entry : map.entrySet()) {
 				CashShopGroup cashShopGroup = new CashShopGroup();
 				cashShopGroup.setShopName(entry.getKey());
 				cashShopGroup.setCashParts(entry.getValue());
 				BigDecimal totalMoney = new BigDecimal(0);
 				//计算总金额
-				for (CashPart cashPart : entry.getValue()){
-					totalMoney=new BigDecimal(cashPart.getCash().toString()).add(totalMoney);
+				for (CashPart cashPart : entry.getValue()) {
+					totalMoney = new BigDecimal(cashPart.getCash().toString()).add(totalMoney);
 				}
 				cashShopGroup.setTotalMoney(new Float(totalMoney.floatValue()));
 
@@ -192,7 +193,7 @@ public class CashService {
 	public String cashToWaterOrder(String userId, String cashIds) {
 		String[] cashIdArr = cashIds.split(",");
 		Integer[] idsIntegers = new Integer[cashIdArr.length];
-		for(int i = 0;i<idsIntegers.length ;i++){
+		for (int i = 0; i < idsIntegers.length; i++) {
 			idsIntegers[i] = Integer.valueOf(cashIdArr[i]);
 		}
 		String msg = "";
@@ -262,17 +263,25 @@ public class CashService {
 					}
 
 				}
-
-
-				//保存流水单
-				woc = wocr.save(woc);
-				//保存流水单详情列表
-				wodr.save(detailList);
-				//修改现金列表状态
-				cr.save(cashlist);
 				msg = woc.getSerialNo();
-				//TODO 推送流水单号到老商城订单
-				pushWaterOrderToMall(woc);
+				synchronized (this) {
+					//============在保存之前再次查询详情是否存在收现金订单=========
+					Long cashNum = wodr.countByCashIdIn(idsIntegers);
+					//若不存在则保存
+					if (cashNum < 1) {
+						//保存流水单
+						woc = wocr.save(woc);
+						//保存流水单详情列表
+						wodr.save(detailList);
+						//修改现金列表状态
+						cr.save(cashlist);
+						//=============推送流水单号到老商城订单 =============
+						pushWaterOrderToMall(woc);
+					} else {
+						return "订单已存在";
+					}
+
+				}
 			}
 		} catch (Exception e) {
 			logger.info(e.getMessage());
@@ -285,13 +294,14 @@ public class CashService {
 	//推送流水单号到老商城订单
 	public void pushWaterOrderToMall(WaterOrderCash woc) {
 		try {
-			String url = "order/addNewOrder.html?orderNum="+woc.getSerialNo()+"&totalCost="+woc.getCashMoney();
-			httpRequestHandler.get(MALL_URl + url,HttpMethod.POST);
-		}catch (Exception e){
+			String url = "order/addNewOrder.html?orderNum=" + woc.getSerialNo() + "&totalCost=" + woc.getCashMoney();
+			httpRequestHandler.get(MALL_URl + url, HttpMethod.POST);
+		} catch (Exception e) {
 			e.printStackTrace();
-			logger.info("流水单推送老商城失败!",e);
+			logger.info("流水单推送老商城失败!", e);
 		}
 	}
+
 	/**
 	 * 流水单号生成策略：时间戳+4位随机码
 	 *
@@ -336,6 +346,7 @@ public class CashService {
 	public Cash save(Cash cash) {
 		return cr.save(cash);
 	}
+
 	@Transactional
 	public List<Cash> save(List<Cash> cashList) {
 		return cr.save(cashList);

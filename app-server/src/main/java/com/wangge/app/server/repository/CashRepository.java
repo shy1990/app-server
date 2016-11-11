@@ -10,8 +10,9 @@ import com.wangge.app.server.entity.Cash;
 public interface CashRepository extends JpaRepository<Cash, Integer>{
 
 	@EntityGraph("graph.Cash.orderItem")
-  List<Cash> findByUserIdAndStatus(String userId,Integer status);
+	List<Cash> findByUserIdAndStatus(String userId,Integer status);
 
+	@EntityGraph("graph.Cash.orderItem")
   List<Cash> findByUserIdAndStatusAndCashIdIn(String userId,Integer status, Integer[] ids);
-  
+
 }
