@@ -35,6 +35,7 @@ public final class JsonResponse<R> {
     private String successMsg;
 
     private String errorCode;
+    private String total;
 
     // Error message
     private String errorMsg;
@@ -88,4 +89,12 @@ public final class JsonResponse<R> {
         this.status = Status.ERROR;
         this.errorMsg = errorMsg;
     }
+
+	public String getTotal() {
+		return total;
+	}
+
+	public void setTotal(String total) {
+		this.total = total;
+	}
 }

@@ -1,6 +1,5 @@
 package com.wangge.app.server.controller;
 
-import com.wangge.app.server.pojo.CashPart;
 import com.wangge.app.server.pojo.CashShopGroup;
 import com.wangge.app.server.repository.WaterOrderDetailRepository;
 import com.wangge.app.server.service.CashService;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/v1/cash")
@@ -53,6 +53,7 @@ public class CashController {
 //		}
 //		return new ResponseEntity<>(cashJson, HttpStatus.OK);
 //	}
+
 	/**
 	 * 现金订单购物车
 	 *
@@ -63,17 +64,21 @@ public class CashController {
 	@RequestMapping(value = "/{userId}", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<JsonResponse<List<CashShopGroup>>> getCsahList_(HttpServletRequest request,
-	                                                                     @PathVariable("userId") String userId) {
+	                                                                      @PathVariable("userId") String userId) {
 		//
 		JsonResponse<List<CashShopGroup>> cashJson = new JsonResponse<>();
 		try {
 
-			List<CashShopGroup> cashlist = cashService.findByUserId_(userId);
+			Map<String, Object> stringListMap = cashService.findByUserId_(userId);
+			List<CashShopGroup> cashlist = (List<CashShopGroup>) stringListMap.get("list");
+			String total = stringListMap.get("size").toString();
 			if (cashlist.size() > 0) {
 				cashJson.setResult(cashlist);
+				cashJson.setTotal(total);
 				cashJson.setSuccessMsg("操作成功");
 			} else {
 				cashJson.setResult(null);
+				cashJson.setTotal("" + 0);
 				cashJson.setSuccessMsg("未查到相关记录");
 			}
 		} catch (Exception e) {
@@ -84,6 +89,7 @@ public class CashController {
 
 	/**
 	 * 结算收现金订单产生流水单
+	 *
 	 * @param userId
 	 * @param cashIds
 	 * @return
@@ -94,10 +100,10 @@ public class CashController {
 		JsonResponse<String> json = new JsonResponse<>();
 		try {
 			String serialNo = cashService.cashToWaterOrder(userId, cashIds);
-			if("订单已存在".equals(serialNo)){
+			if ("订单已存在".equals(serialNo)) {
 				json.setErrorMsg("订单已结算");
 				return new ResponseEntity<>(json, HttpStatus.OK);
-			}else if (StringUtils.isNotEmpty(serialNo)) {
+			} else if (StringUtils.isNotEmpty(serialNo)) {
 				json.setResult(serialNo);
 				json.setSuccessMsg("结算成功");
 				return new ResponseEntity<>(json, HttpStatus.OK);

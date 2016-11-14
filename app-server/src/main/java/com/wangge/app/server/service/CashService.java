@@ -88,9 +88,10 @@ public class CashService {
 	 * @param userId
 	 * @return
 	 */
-	public List<CashShopGroup> findByUserId_(String userId) {
+	public Map<String,Object> findByUserId_(String userId) {
 		logger.info("findByUserId-->userId:" + userId + "查询收现金购物车");
 		List<Cash> cashList = null;
+		Map<String, Object> stringListMap = new HashedMap();
 		List<CashShopGroup> cashShopGroups = new ArrayList<>();
 		Map<String, List<CashPart>> map = new HashedMap();
 		try {
@@ -136,10 +137,14 @@ public class CashService {
 			System.out.println(map);
 		} catch (Exception e) {
 			logger.info(e.getMessage());
+			stringListMap.put("size", 0);
+			stringListMap.put("list", cashShopGroups);
+			return stringListMap;
 		}
+		stringListMap.put("size", cashList.size());
+		stringListMap.put("list", cashShopGroups);
 
-
-		return cashShopGroups;
+		return stringListMap;
 	}
 
 	/**
