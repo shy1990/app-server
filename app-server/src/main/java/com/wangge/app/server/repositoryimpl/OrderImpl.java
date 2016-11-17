@@ -217,6 +217,27 @@ public class OrderImpl {
 	}
 
 	/**
+	 * 更改商城订单状态：
+	 * 发货状态 SHIP_STATUS：0 ，
+	 * 支付状态：0 未付款，1 已付款， 2待退款， 3 已退款,4 卖家拒绝退款 PAY_STATUS
+	 * 支付方式 0 网上支付 1 货到付款 2 POS PAY_MENT
+	 * 签收地点标注 CUSTOM_SIGNFOR_ADDRESS
+	 * 客户签收时间  CUSTOM_SIGNFOR_TIME
+	 * 支付时间 PAY_TIME
+	 * 支付返回银行类型，LH：联行支付,yeePay:易宝支付 为空  DEAL_TYPE
+	 * 签收时间 SIGNFORTIME
+	 * @param ordernum
+	 */
+	@Transactional
+	public void updateOrderForCash(String ordernum) {
+
+		String sql = "update SJZAIXIAN.SJ_TB_ORDER set SHIP_STATUS= 2 ,PAY_STATUS = 0 ,PAY_MENT = 1 ,CUSTOM_SIGNFOR_ADDRESS = NULL ,\n" +
+						"CUSTOM_SIGNFOR_TIME =NULL, PAY_TIME = NULL ,DEAL_TYPE = NULL,SIGNFORTIME = NULL where order_num='" + ordernum + "'";
+		Query query = em.createNativeQuery(sql);
+		query.executeUpdate();
+	}
+
+	/**
 	 *
 	 * @Description: 客户拒收原因保存
 	 * @param @param
