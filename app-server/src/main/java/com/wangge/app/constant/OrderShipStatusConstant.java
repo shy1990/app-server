@@ -22,6 +22,10 @@ public class OrderShipStatusConstant {
    * 已支付
    */
   public static final  String SHOP_ORDER_PAYSTATUS_HAVETOPAY = "1";
+	/**
+	 * 未支付
+	 */
+  public static final  String SHOP_ORDER_PAYSTATUS_NOTTOPAY = "0";
 
 //--------------------商城订单支付方式常量----------------------//
   /**

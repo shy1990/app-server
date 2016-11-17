@@ -376,7 +376,7 @@ public class CashService {
 			//修改原有订单签收状态
 			orderSignforRepository.updateOrderForCashCancel(cash.getCashId().toString());
 			//更改老商城订单状态(业务揽收)
-			opl.updateOrderShipStateByOrderNum(orderNo, OrderShipStatusConstant.SHOP_ORDER_SHIPSTATUS_YWSIGNEDFOR,null,null);
+			opl.updateOrderForCash(orderNo);
 			//冲减积分
 			pointService.addPoint((int) -(pointService.findTotalCostByOrderNum(orderNo) / 10), storePhone);
 			msg = true;
