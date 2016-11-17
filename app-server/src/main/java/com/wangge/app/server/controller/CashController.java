@@ -1,8 +1,11 @@
 package com.wangge.app.server.controller;
 
+import com.wangge.app.server.entity.Cash;
+import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.pojo.CashShopGroup;
 import com.wangge.app.server.repository.WaterOrderDetailRepository;
 import com.wangge.app.server.service.CashService;
+import com.wangge.app.server.service.PointService;
 import com.wangge.app.util.JsonResponse;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -25,34 +28,6 @@ public class CashController {
 	@Resource
 	private WaterOrderDetailRepository waterOrderDetailRepository;
 
-	/**
-	 * 现金订单购物车
-	 *
-	 * @param request
-	 * @param userId
-	 * @return
-	 */
-//	@RequestMapping(value = "/{userId}", method = RequestMethod.GET)
-//	@ResponseBody
-//	public ResponseEntity<JsonResponse<List<CashPart>>> getCsahList(HttpServletRequest request,
-//	                                                                @PathVariable("userId") String userId) {
-//		//
-//		JsonResponse<List<CashPart>> cashJson = new JsonResponse<>();
-//		try {
-//
-//			List<CashPart> cashlist = cashService.findByUserId(userId);
-//			if (cashlist.size() > 0) {
-//				cashJson.setResult(cashlist);
-//				cashJson.setSuccessMsg("操作成功");
-//			} else {
-//				cashJson.setResult(null);
-//				cashJson.setSuccessMsg("未查到相关记录");
-//			}
-//		} catch (Exception e) {
-//			logger.info(e.getMessage());
-//		}
-//		return new ResponseEntity<>(cashJson, HttpStatus.OK);
-//	}
 
 	/**
 	 * 现金订单购物车
@@ -115,4 +90,29 @@ public class CashController {
 		}
 		return new ResponseEntity<>(json, HttpStatus.OK);
 	}
+
+	/**
+	 * 取消收现金订单
+	 *
+	 * @return
+	 */
+	@RequestMapping(value = "cancel/{cashId}", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<JsonResponse<String>> cancelCashOrder(@PathVariable("cashId") Cash cash) {
+		JsonResponse<String> cashJson = new JsonResponse<>();
+		if(cash==null){
+			cashJson.setErrorMsg("订单不存在");
+			return new ResponseEntity<>(cashJson, HttpStatus.OK);
+		}
+		//清除收现金订单
+		boolean msg = cashService.cancelCashOrder(cash);
+		if (msg) {
+			cashJson.setResult("OVER");
+			cashJson.setSuccessMsg("操作成功");
+			return new ResponseEntity<>(cashJson, HttpStatus.OK);
+		}
+		cashJson.setErrorMsg("操作失败");
+		return new ResponseEntity<>(cashJson, HttpStatus.OK);
+	}
+
 }
