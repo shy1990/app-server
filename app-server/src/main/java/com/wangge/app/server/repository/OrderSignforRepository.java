@@ -9,11 +9,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.entity.dto.OrderDto;
 import com.wangge.app.server.vo.OrderVo;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long> {
   
@@ -254,7 +256,13 @@ public interface OrderSignforRepository extends JpaRepository<OrderSignfor, Long
                   "   and bos.member_phone = ?1", nativeQuery = true)
   List<OrderSignfor> findByMemberPhoneAndCreatTime(String memberPhone);
 
- 
+	@Transactional
+	@Modifying(clearAutomatically = true)
+	@Query(value = "UPDATE BIZ_ORDER_SIGNFOR o\n" +
+					"SET o.ORDER_STATUS = 2,o.ORDER_PAY_TYPE = null, o.CUSTOM_SIGNFOR_TIME = null ,\n" +
+					"o.CUSTOM_SIGNFOR_EXCEPTION = null ,o.CUSTOM_SIGNFOR_GEOPOINT = null \n" +
+					"WHERE o.SIGNID = ?1",nativeQuery = true)
+  int updateOrderForCashCancel(String SIGNID);
 
 
 

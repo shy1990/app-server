@@ -1,18 +1,18 @@
 package com.wangge.app.server.service;
 
 
+import com.wangge.app.constant.OrderShipStatusConstant;
 import com.wangge.app.server.config.http.HttpRequestHandler;
 import com.wangge.app.server.entity.*;
 import com.wangge.app.server.pojo.CashPart;
 import com.wangge.app.server.pojo.CashShopGroup;
 import com.wangge.app.server.pojo.OrderDetailPart;
-import com.wangge.app.server.repository.CashRepository;
-import com.wangge.app.server.repository.OrderItemRepository;
-import com.wangge.app.server.repository.WaterOrderCashRepository;
-import com.wangge.app.server.repository.WaterOrderDetailRepository;
+import com.wangge.app.server.repository.*;
+import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.util.DateUtil;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.log4j.Logger;
+import org.crsh.console.jline.internal.Log;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
@@ -36,14 +36,21 @@ public class CashService {
 	@Resource
 	private WaterOrderService wos;
 	@Resource
+	private OrderSignforService orderSignforService;
+	@Resource
+	private OrderImpl opl;
+	@Resource
 	private CashRepository cr;
 	@Resource
 	private OrderItemRepository oir;
 	@Resource
 	private WaterOrderCashRepository wocr;
 	@Resource
+	private OrderSignforRepository orderSignforRepository;
+	@Resource
 	private WaterOrderDetailRepository wodr;
-
+	@Resource
+	private PointService pointService;
 	@Resource
 	private HttpRequestHandler httpRequestHandler;
 	@Value("${mall.url}")
@@ -302,7 +309,6 @@ public class CashService {
 			String url = "order/addNewOrder.html?orderNum=" + woc.getSerialNo() + "&totalCost=" + woc.getCashMoney();
 			httpRequestHandler.get(MALL_URl + url, HttpMethod.POST);
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.info("流水单推送老商城失败!", e);
 		}
 	}
@@ -356,5 +362,34 @@ public class CashService {
 	public List<Cash> save(List<Cash> cashList) {
 		return cr.save(cashList);
 	}
-//  public List<Cash> findByOrderIdIn()
+
+	//取消收现金订单
+	public boolean cancelCashOrder(Cash cash){
+		boolean msg = false;
+		try {
+			OrderSignfor order = cash.getOrder();
+			String orderNo = order.getOrderNo();
+			String storePhone = order.getMemberPhone();
+
+			//删除数据
+			delete(cash);
+			//修改原有订单签收状态
+			orderSignforRepository.updateOrderForCashCancel(cash.getCashId().toString());
+			//更改老商城订单状态(业务揽收)
+			opl.updateOrderShipStateByOrderNum(orderNo, OrderShipStatusConstant.SHOP_ORDER_SHIPSTATUS_YWSIGNEDFOR,null,null);
+			//冲减积分
+			pointService.addPoint((int) -(pointService.findTotalCostByOrderNum(orderNo) / 10), storePhone);
+			msg = true;
+		}catch (Exception e){
+			logger.info("取消收现金订单失败cashId：");
+			return msg;
+		}
+
+		return msg;
+	}
+
+	@Transactional
+	public void delete(Cash cash) {
+		cr.delete(cash);
+	}
 }
