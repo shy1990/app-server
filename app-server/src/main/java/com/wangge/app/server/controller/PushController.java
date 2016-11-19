@@ -426,7 +426,7 @@ public class PushController {
   }
 
   @RequestMapping(value = {"/pushNewPosPayments"}, method = RequestMethod.POST)
-  public void updateOrderSignfor(String msg) {
+  public void pushNewPosPayments(String msg) {
     JSONObject json = new JSONObject(msg);
     String orderno = json.getString("orderNo");
     String payStatus = json.getString("payStatus");

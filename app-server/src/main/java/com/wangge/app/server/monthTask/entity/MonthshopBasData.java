@@ -1,23 +1,10 @@
 package com.wangge.app.server.monthTask.entity;
 
-import java.io.Serializable;
-
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.NamedAttributeNode;
-import javax.persistence.NamedEntityGraph;
-import javax.persistence.NamedEntityGraphs;
-import javax.persistence.NamedSubgraph;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.GenericGenerator;
-
 import com.wangge.app.server.entity.RegistData;
 import com.wangge.app.server.entity.Salesman;
+
+import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "sys_Monthshop_Basdata")
@@ -32,8 +19,8 @@ public class MonthshopBasData implements Serializable {
 	 */
 	private static final long serialVersionUID = 102L;
 	@Id
-	@GenericGenerator(name = "idgen", strategy = "increment")
-	@GeneratedValue(generator = "idgen")
+	@SequenceGenerator(name = "idgen")
+	@GeneratedValue(generator = "idgen", strategy = GenerationType.SEQUENCE)
 	private long id;
 	// 镇级区域
 	private String regionId;
