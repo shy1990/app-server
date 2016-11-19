@@ -13,6 +13,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Repository;
 
 import com.wangge.app.server.entity.OrderSignfor;
@@ -118,17 +119,21 @@ public class OrderSignforImpl {
       while(it.hasNext()){
         Object[] o = (Object[])it.next(); 
         OrderSignfor os = new OrderSignfor();
-        os.setOrderNo(o[0]+"");
+        os.setOrderNo((String) o[0]);
         os.setShopName(o[1]+"");
         try {
-          os.setCreatTime(sdf.parse(o[2]+""));
+          os.setCreatTime(sdf.parse(o[2] + ""));
         } catch (ParseException e) {
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
-         os.setOrderStatus(Integer.parseInt(o[3]+""));
-         os.setPhoneCount(Integer.parseInt(o[4]+""));
-         os.setOrderPrice((Float.valueOf(o[5]+"")));
+        if (ObjectUtils.notEqual(o[3],null)){
+          os.setOrderStatus(Integer.parseInt(o[3] + ""));
+        }else {
+          os.setOrderStatus(0);
+        }
+         os.setPhoneCount(Integer.parseInt(o[4] + ""));
+         os.setOrderPrice((Float.valueOf(o[5] + "")));
         orderSignforList.add(os);
       }
       }
