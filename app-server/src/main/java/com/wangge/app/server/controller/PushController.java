@@ -144,6 +144,7 @@ public class PushController {
   }
 
   /**
+   * todo 取消订单时间 odersingfor表
    * @param @param  msg
    * @param @return
    * @return boolean
@@ -162,7 +163,7 @@ public class PushController {
 
     JSONObject json = new JSONObject(msg);
     String send = json.getString("username") + ",订单号:" + json.getString("orderNum");
-    orderSignforService.updateMessageType(1, json.getString("orderNum"));
+    orderSignforService.updateMessageType(1, json.getString("orderNum"),new Date());
     String str = "";
     System.out.println(json.getString("mobiles"));
     try {
@@ -425,6 +426,10 @@ public class PushController {
     }
   }
 
+  /**
+   *todo 加刷pose 当前时间
+   * @param msg
+   */
   @RequestMapping(value = {"/pushNewPosPayments"}, method = RequestMethod.POST)
   public void pushNewPosPayments(String msg) {
     JSONObject json = new JSONObject(msg);

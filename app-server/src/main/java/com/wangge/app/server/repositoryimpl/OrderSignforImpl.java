@@ -1,23 +1,22 @@
 package com.wangge.app.server.repositoryimpl;
 
 
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import com.wangge.app.server.entity.OrderSignfor;
+import com.wangge.app.server.pojo.QueryResult;
+import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
-
-import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.stereotype.Repository;
-
-import com.wangge.app.server.entity.OrderSignfor;
-import com.wangge.app.server.pojo.QueryResult;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 @Repository
 public class OrderSignforImpl {
@@ -190,6 +189,25 @@ public class OrderSignforImpl {
   @Transactional
   public String updateMessageType(int status,String orderNum){
     String sql = "update BIZ_ORDER_SIGNFOR set order_status= "+status+" where order_no = '"+orderNum+"'";
+    Query query =  em.createNativeQuery(sql);
+    return query.executeUpdate()>0?"suc":"false";
+  }
+
+  /**
+   *
+   * @Description: 客户取消订单修改信息表类型
+   * @param @param MessageType mt
+   * @param @param String orderNum
+   * @param @return
+   * @param abrogateTime:取消订单时间
+   * @return String
+   * @throws
+   * @author changjun
+   * @date 2015年12月1日
+   */
+  @Transactional
+  public String updateMessageType(int status, String orderNum, Date abrogateTime){
+    String sql = "update BIZ_ORDER_SIGNFOR set order_status= "+status+",abrogate_time= " + abrogateTime + " where order_no = '"+orderNum+"'";
     Query query =  em.createNativeQuery(sql);
     return query.executeUpdate()>0?"suc":"false";
   }

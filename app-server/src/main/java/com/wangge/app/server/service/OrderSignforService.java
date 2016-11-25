@@ -6,15 +6,21 @@ import com.wangge.app.server.entity.Cash;
 import com.wangge.app.server.entity.OrderSignfor;
 import com.wangge.app.server.entity.Receipt;
 import com.wangge.app.server.entity.RegistData;
+import com.wangge.app.server.entity.dto.BillHistoryDto;
+import com.wangge.app.server.entity.dto.OrderDto;
 import com.wangge.app.server.event.afterSalesmanSignforEvent;
 import com.wangge.app.server.event.afterSignforEvent;
 import com.wangge.app.server.monthTask.service.MonthTaskServive;
+import com.wangge.app.server.pojo.QueryResult;
 import com.wangge.app.server.repository.OrderSignforRepository;
 import com.wangge.app.server.repository.ReceiptRepository;
 import com.wangge.app.server.repositoryimpl.OrderImpl;
 import com.wangge.app.server.repositoryimpl.OrderSignforImpl;
 import com.wangge.app.server.thread.OrderSignforCountDown;
-
+import com.wangge.app.server.vo.BillHistoryVo;
+import com.wangge.app.server.vo.BillVo;
+import com.wangge.app.server.vo.OrderVo;
+import com.wangge.app.util.DateUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
@@ -22,14 +28,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
-import com.wangge.app.server.entity.dto.BillHistoryDto;
-import com.wangge.app.server.entity.dto.OrderDto;
-import com.wangge.app.server.pojo.QueryResult;
-import com.wangge.app.util.DateUtil;
-import com.wangge.app.server.vo.BillHistoryVo;
-import com.wangge.app.server.vo.BillVo;
-import com.wangge.app.server.vo.OrderVo;
-
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,16 +38,10 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 @Service
 public class OrderSignforService {
 
@@ -515,6 +507,9 @@ private void createReceiptInfo(String accountId, int billStatus,
     return osi.updateMessageType(status, orderNum);
   }
 
+	public String updateMessageType(int status,String orderNum,Date abrogateTime){
+		return osi.updateMessageType(status, orderNum,abrogateTime);
+	}
   /**
    *
    * @Title: existOrder
@@ -553,11 +548,13 @@ public void updateOrderSignfor(String orderno,String payStatus) {
 			if (!StringUtils.isEmpty(payStatus)) {
 				o.setOrderStatus(OrderShipStatusConstant.ORDER_SHIPSTATUS_KHSIGNEDFOR);
 				o.setCustomSignforTime(new Date());
+				o.setBushPoseTime(new Date());//刷pose时间
 			} else {
 
 				o.setOrderStatus(OrderShipStatusConstant.ORDER_SHIPSTATUS_YWSIGNEDFOR);
 				o.setCustomSignforTime(null);
 				o.setOrderPayType(null);
+//				o.setBushPoseTime(new Date());//刷pose时间
 //				o.setCustomSignforGeopoint(null);
 				opl.updateOrderShipStateByOrderNum(orderno,
 						OrderShipStatusConstant.SHOP_ORDER_SHIPSTATUS_YWSIGNEDFOR);

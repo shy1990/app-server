@@ -84,6 +84,12 @@ public class OrderSignfor implements Serializable {
   private Date overTime ; // 订单结清日期
   
   private Date updateTime ; // 订单结清日期
+
+  @Column(name = "ABROGATE_TIME")
+  private Date abrogateOrderTime;//取消订单时间
+
+  @Column(name = "BUSH_TIME")
+  private Date bushPoseTime;//刷pose时间
   
   private String accountId;
 
@@ -322,5 +328,21 @@ public void setUpdateTime(Date updateTime) {
 
   public void setMemberPhone(String memberPhone) {
     this.memberPhone = memberPhone;
+  }
+
+  public Date getAbrogateOrderTime() {
+    return abrogateOrderTime;
+  }
+
+  public void setAbrogateOrderTime(Date abrogateOrderTime) {
+    this.abrogateOrderTime = abrogateOrderTime;
+  }
+
+  public Date getBushPoseTime() {
+    return bushPoseTime;
+  }
+
+  public void setBushPoseTime(Date bushPoseTime) {
+    this.bushPoseTime = bushPoseTime;
   }
 }
