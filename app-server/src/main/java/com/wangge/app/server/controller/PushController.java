@@ -160,7 +160,6 @@ public class PushController {
      * 订单商品:标准版Samsung/三星 三星SM-G5308W*1台,标准版Xiaomi/小米 红米 红米note2*2台
      *{"orderNum":"222222222222222","mobiles":"1561069 62989","amount":"10.0","username":"天桥魅族店"}
      */
-
     JSONObject json = new JSONObject(msg);
     String send = json.getString("username") + ",订单号:" + json.getString("orderNum");
     orderSignforService.updateMessageType(1, json.getString("orderNum"),new Date());

@@ -209,7 +209,7 @@ public class OrderSignforImpl {
   @Transactional
   public String updateMessageType(int status, String orderNum, Date abrogateTime){
     String updateTime = DateUtil.date2String(abrogateTime,"yyyy-MM-dd HH:mm:ss");
-    String sql = "update BIZ_ORDER_SIGNFOR set order_status= "+status+",abrogate_time= to_date(" + abrogateTime +",'yyyy-mm-dd hh24:mi:ss') where order_no = '"+orderNum+"'";
+    String sql = "update BIZ_ORDER_SIGNFOR set order_status= "+status+",abrogate_time= to_date('" + updateTime +"','yyyy-mm-dd hh24:mi:ss') where order_no = '"+orderNum+"'";
     Query query =  em.createNativeQuery(sql);
     return query.executeUpdate()>0?"suc":"false";
   }

@@ -79,7 +79,7 @@ public class MineController {
 //		String mobile = json.getString("mobile");
 		String ordernum = json.getString("ordernum");
 		String regionId = json.getString("regionId");
-		
+
 		JSONObject jo = new JSONObject();
 		Order order = or.findOne(ordernum);
 		
